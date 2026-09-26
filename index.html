@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <title>ABIS 員工服務</title>
+  <style>
+    :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;color:#1f2937;background:#f5f7fa}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}
+    .card{width:min(100%,420px);background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:28px;box-shadow:0 12px 34px rgba(0,0,0,.07)}
+    h1{font-size:22px;margin:0 0 8px}
+    p{margin:8px 0;line-height:1.6}
+    .muted{color:#6b7280;font-size:14px}
+    .status{margin-top:20px;padding:14px 16px;border-radius:12px;background:#f3f4f6;font-size:15px}
+    .error{background:#fff1f2;color:#9f1239}
+    .ok{background:#ecfdf5;color:#065f46}
+    .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+    button,a.btn{appearance:none;border:0;border-radius:10px;padding:11px 15px;font-size:15px;text-decoration:none;cursor:pointer;background:#111827;color:#fff}
+    a.secondary{background:#eef2f7;color:#111827}
+    .hide{display:none}
+  </style>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <main class="card">
+    <h1>ABIS 員工服務</h1>
+    <p class="muted">LINE 身分驗證中，請勿關閉此頁面。</p>
+    <div id="status" class="status">正在初始化 LINE…</div>
+    <div id="actions" class="actions hide">
+      <button type="button" id="retryBtn">重新嘗試</button>
+      <a class="btn secondary" id="webBtn" href="#">改用一般 Web 登入</a>
+    </div>
+  </main>
+
+  <script>
+  (() => {
+    'use strict';
+
+    const CONFIG = Object.freeze({
+      liffId: 'REPLACE_WITH_LIFF_ID',
+      backendUrl: 'https://script.google.com/macros/s/AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR/exec',
+      bridgeVersion: 'P5A1-03'
+    });
+
+    const statusEl = document.getElementById('status');
+    const actionsEl = document.getElementById('actions');
+    const retryBtn = document.getElementById('retryBtn');
+    const webBtn = document.getElementById('webBtn');
+
+    webBtn.href = CONFIG.backendUrl;
+    retryBtn.addEventListener('click', () => location.reload());
+
+    function setStatus(text, kind) {
+      statusEl.textContent = text;
+      statusEl.className = 'status' + (kind ? ' ' + kind : '');
+    }
+
+    function fail(message) {
+      setStatus(message || 'LINE 身分驗證失敗，請重新嘗試。', 'error');
+      actionsEl.classList.remove('hide');
+    }
+
+    function configured() {
+      return /^\d+-[A-Za-z0-9_-]+$/.test(CONFIG.liffId);
+    }
+
+    function routeToken() {
+      const value = new URLSearchParams(location.search).get('rt') || '';
+      return /^[A-Za-z0-9._~-]{1,256}$/.test(value) ? value : '';
+    }
+
+    function postToBackend(idToken, accessToken) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = CONFIG.backendUrl;
+      form.target = '_self';
+      form.acceptCharset = 'UTF-8';
+
+      const fields = {
+        mode: 'liffauth',
+        idToken: idToken,
+        accessToken: accessToken || '',
+        routeToken: routeToken(),
+        bridgeVersion: CONFIG.bridgeVersion
+      };
+
+      Object.keys(fields).forEach((name) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = fields[name];
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      setStatus('LINE 身分已取得，正在進入 ABIS…', 'ok');
+      form.submit();
+    }
+
+    async function start() {
+      if (!configured()) {
+        fail('LIFF ID 尚未設定。請先完成 LINE Developers 的 LIFF 設定。');
+        return;
+      }
+
+      try {
+        setStatus('正在連線 LINE…');
+
+        await liff.init({
+          liffId: CONFIG.liffId,
+          withLoginOnExternalBrowser: true
+        });
+
+        if (!liff.isLoggedIn()) {
+          setStatus('正在開啟 LINE 登入…');
+          liff.login({ redirectUri: location.href });
+          return;
+        }
+
+        const idToken = liff.getIDToken();
+        const accessToken = liff.getAccessToken();
+
+        if (!idToken) {
+          throw new Error('ID token unavailable');
+        }
+
+        // Never send client-decoded profile data or LINE userId to ABIS.
+        // The ABIS backend must verify the raw token with LINE and obtain the user ID there.
+        postToBackend(idToken, accessToken);
+      } catch (err) {
+        const code = err && err.code ? '（' + String(err.code) + '）' : '';
+        fail('LINE 身分驗證失敗' + code + '，請重新嘗試。');
+      }
+    }
+
+    start();
+  })();
+  </script>
+</body>
+</html>
