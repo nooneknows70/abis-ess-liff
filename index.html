@@ -130,8 +130,14 @@
         // The ABIS backend must verify the raw token with LINE and obtain the user ID there.
         postToBackend(idToken, accessToken);
       } catch (err) {
-        const code = err && err.code ? '（' + String(err.code) + '）' : '';
-        fail('LINE 身分驗證失敗' + code + '，請重新嘗試。');
+        const code = err && err.code ? String(err.code) : '';
+        const message = err && err.message ? String(err.message) : '';
+        const safeMessage = message
+          .replace(/https?:\/\/\S+/gi, '[URL]')
+          .replace(/[A-Za-z0-9_-]{24,}/g, '[redacted]')
+          .slice(0, 180);
+        const detail = [code, safeMessage].filter(Boolean).join(' / ');
+        fail('LINE 身分驗證失敗' + (detail ? '（' + detail + '）' : '') + '，請重新嘗試。');
       }
     }
 
