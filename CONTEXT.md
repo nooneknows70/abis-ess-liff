@@ -43,3 +43,11 @@ _Avoid_: Forgot PIN, Unbind LINE
 **Unbind LINE**:
 HR 解除 EmployeeID 與 LINE Identity 的正式綁定關係。
 _Avoid_: Restore First Login, Reset PIN
+
+**Leave Draft**:
+員工尚未正式送出的新請假內容；屬於該 EmployeeID，可在 LINE 與一般 Web 間接續，正式送出前不具有 LeaveID。
+_Avoid_: Leave, Returned Revision Draft
+
+**Returned Revision Draft**:
+既有 LeaveID 被退回後，用來修改並重新送出的草稿；其生命週期屬於原假單與修訂流程。
+_Avoid_: Leave Draft
