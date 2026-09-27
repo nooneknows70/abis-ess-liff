@@ -51,3 +51,11 @@ _Avoid_: Leave, Returned Revision Draft
 **Returned Revision Draft**:
 既有 LeaveID 被退回後，用來修改並重新送出的草稿；其生命週期屬於原假單與修訂流程。
 _Avoid_: Leave Draft
+
+**Draft Attachment**:
+正式送出 Leave Draft 之前，已上傳並隸屬於該 DraftID 的附件；此時尚未隸屬任何 LeaveID。
+_Avoid_: Leave Attachment, Evidence URL
+
+**Leave Attachment**:
+已隸屬正式 LeaveID 的附件；可由 Draft Attachment 在正式送出時轉成，也可於送出後依規則補上傳。
+_Avoid_: Draft Attachment
