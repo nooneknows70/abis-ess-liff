@@ -67,3 +67,11 @@ _Avoid_: Attendance Adjustment, Raw Punch edit
 **Attendance Adjustment**:
 出勤補正經必要的主管與 HR 認定後，形成可供出勤／薪資計算採用的正式調整紀錄；原始 Raw Punch 仍永久保留不覆蓋。
 _Avoid_: Attendance Correction Request, Raw Punch replacement
+
+**Monthly Attendance Confirmation**:
+HR 針對同一員工、同一月份的多筆待確認出勤異常建立的一張主管確認單；主管逐筆認定後，再以整張確認單完成送出。
+_Avoid_: Attendance Correction Request, monthly payroll approval
+
+**Attendance Appeal**:
+員工對已完成或已駁回的 Attendance Correction Request 仍有異議時建立的新爭議案件；既有補正申請、主管／HR 認定與 Attendance Adjustment 歷程均保留，不以申訴覆寫。
+_Avoid_: reopening correction, overwriting prior adjustment
