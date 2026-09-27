@@ -59,3 +59,11 @@ _Avoid_: Leave Attachment, Evidence URL
 **Leave Attachment**:
 已隸屬正式 LeaveID 的附件；可由 Draft Attachment 在正式送出時轉成，也可於送出後依規則補上傳。
 _Avoid_: Draft Attachment
+
+**Attendance Correction Request**:
+員工針對某一出勤日的系統判定提出的補正申請；它只記錄員工主張與送出當下的出勤快照，不直接修改 Raw Punch、正式出勤結果或薪資。
+_Avoid_: Attendance Adjustment, Raw Punch edit
+
+**Attendance Adjustment**:
+出勤補正經必要的主管與 HR 認定後，形成可供出勤／薪資計算採用的正式調整紀錄；原始 Raw Punch 仍永久保留不覆蓋。
+_Avoid_: Attendance Correction Request, Raw Punch replacement
