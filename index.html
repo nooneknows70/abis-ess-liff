@@ -41,7 +41,7 @@
     const CONFIG = Object.freeze({
       liffId: '2011584842-AmO1bbHY',
       backendUrl: 'https://script.google.com/macros/s/AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR/exec',
-      bridgeVersion: 'P5A1-RM-02B3A'
+      bridgeVersion: 'P5A1-RM-FAST1'
     });
 
     const statusEl = document.getElementById('status');
@@ -74,6 +74,45 @@
       'payroll',
       'inbox'
     ]);
+
+    // P5A1-RM-FAST1
+    // The GitHub bridge keeps only a short-lived hint that a full LINE
+    // verification was just completed. The actual ABIS session token remains
+    // on the Apps Script origin and is always revalidated by the backend.
+    const FAST_WINDOW_MS = 5 * 60 * 1000;
+    const FAST_UNTIL_KEY = 'abis_p5a1_line_fast_until_v1';
+
+    function forceFullAuth() {
+      return new URLSearchParams(location.search).get('force') === '1';
+    }
+
+    function fastWindowValid() {
+      if (forceFullAuth() || routeToken()) return false;
+      try {
+        return Number(localStorage.getItem(FAST_UNTIL_KEY) || 0) > Date.now();
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function markFastWindow() {
+      try {
+        localStorage.setItem(FAST_UNTIL_KEY, String(Date.now() + FAST_WINDOW_MS));
+      } catch (e) {}
+    }
+
+    function clearFastWindow() {
+      try {
+        localStorage.removeItem(FAST_UNTIL_KEY);
+      } catch (e) {}
+    }
+
+    function fastEntryUrl() {
+      const url = new URL(CONFIG.backendUrl);
+      url.searchParams.set('mode', 'linefast');
+      url.searchParams.set('route', bootRoute());
+      return url.toString();
+    }
 
     function routeToken() {
       const value = new URLSearchParams(location.search).get('rt') || '';
@@ -122,6 +161,16 @@
         return;
       }
 
+      // force=1 is used by the Apps Script fallback when the cached ABIS LINE
+      // session is missing, revoked, expired, or no longer bound.
+      if (forceFullAuth()) {
+        clearFastWindow();
+      } else if (fastWindowValid()) {
+        setStatus('正在快速開啟 ABIS…', 'ok');
+        location.replace(fastEntryUrl());
+        return;
+      }
+
       try {
         setStatus('正在連線 LINE…');
 
@@ -145,6 +194,9 @@
 
         // Never send client-decoded profile data or LINE userId to ABIS.
         // The ABIS backend must verify the raw token with LINE and obtain the user ID there.
+        // Only generic Rich Menu navigation opens the five-minute fast window.
+        // Secure rt= links always continue through the full verification path.
+        if (!routeToken()) markFastWindow();
         postToBackend(idToken, accessToken);
       } catch (err) {
         const code = err && err.code ? String(err.code) : '';
