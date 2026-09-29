@@ -41,7 +41,7 @@
     const CONFIG = Object.freeze({
       liffId: '2011584842-AmO1bbHY',
       backendUrl: 'https://script.google.com/macros/s/AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR/exec',
-      bridgeVersion: 'P5A1-03'
+      bridgeVersion: 'P5A1-RM-02B3A'
     });
 
     const statusEl = document.getElementById('status');
@@ -66,9 +66,25 @@
       return /^\d+-[A-Za-z0-9_-]+$/.test(CONFIG.liffId);
     }
 
+    const ALLOWED_BOOT_ROUTES = new Set([
+      'home',
+      'leave',
+      'leaves',
+      'attendance',
+      'payroll',
+      'inbox'
+    ]);
+
     function routeToken() {
       const value = new URLSearchParams(location.search).get('rt') || '';
       return /^[A-Za-z0-9._~-]{1,256}$/.test(value) ? value : '';
+    }
+
+    function bootRoute() {
+      const value = String(new URLSearchParams(location.search).get('route') || '')
+        .trim()
+        .toLowerCase();
+      return ALLOWED_BOOT_ROUTES.has(value) ? value : 'home';
     }
 
     function postToBackend(idToken, accessToken) {
@@ -83,6 +99,7 @@
         idToken: idToken,
         accessToken: accessToken || '',
         routeToken: routeToken(),
+        bootRoute: bootRoute(),
         bridgeVersion: CONFIG.bridgeVersion
       };
 
