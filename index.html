@@ -20,6 +20,14 @@
     button,a.btn{appearance:none;border:0;border-radius:10px;padding:11px 15px;font-size:15px;text-decoration:none;cursor:pointer;background:#111827;color:#fff}
     a.secondary{background:#eef2f7;color:#111827}
     .hide{display:none}
+    @media (max-width:600px){
+      body{min-height:100dvh;display:block;padding:max(12px,env(safe-area-inset-top)) 12px max(20px,env(safe-area-inset-bottom))}
+      .card{width:100%;max-width:none;min-height:min(520px,58dvh);margin:12px 0 0;padding:34px 24px;border-radius:22px;display:flex;flex-direction:column;justify-content:center}
+      h1{font-size:clamp(30px,7.2vw,36px);line-height:1.25;margin-bottom:14px}
+      p.muted{font-size:clamp(17px,4.3vw,20px);line-height:1.65;margin:0 0 18px}
+      .status{font-size:clamp(18px,4.6vw,21px);line-height:1.55;padding:18px;border-radius:14px;margin-top:8px;font-weight:700}
+      button,a.btn{min-height:48px;font-size:17px;padding:13px 16px}
+    }
   </style>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
@@ -41,7 +49,7 @@
     const CONFIG = Object.freeze({
       liffId: '2011584842-AmO1bbHY',
       backendUrl: 'https://script.google.com/macros/s/AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR/exec',
-      bridgeVersion: 'P5A1-RM-FAST1'
+      bridgeVersion: 'P5A1-RM-SAFE1'
     });
 
     const statusEl = document.getElementById('status');
@@ -161,15 +169,13 @@
         return;
       }
 
-      // force=1 is used by the Apps Script fallback when the cached ABIS LINE
-      // session is missing, revoked, expired, or no longer bound.
-      if (forceFullAuth()) {
-        clearFastWindow();
-      } else if (fastWindowValid()) {
-        setStatus('正在快速開啟 ABIS…', 'ok');
-        location.replace(fastEntryUrl());
-        return;
-      }
+      // P5A1-RM-SAFE1:
+      // FAST1 relied on Apps Script-origin localStorage surviving a separate
+      // LINE WebView launch. That storage context is not stable enough across
+      // launches/deployments, so the shortcut is temporarily disabled.
+      // Always perform the normal verified LIFF flow; clear any stale fast hint
+      // so a previous FAST1 state cannot create a redirect loop.
+      clearFastWindow();
 
       try {
         setStatus('正在連線 LINE…');
