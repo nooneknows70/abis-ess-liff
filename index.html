@@ -6,39 +6,43 @@
   <meta name="referrer" content="no-referrer">
   <title>ABIS 員工服務</title>
   <style>
-    :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;color:#1f2937;background:#f5f7fa}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}
-    .card{width:min(100%,420px);background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:28px;box-shadow:0 12px 34px rgba(0,0,0,.07)}
-    h1{font-size:22px;margin:0 0 8px}
-    p{margin:8px 0;line-height:1.6}
-    .muted{color:#6b7280;font-size:14px}
-    .status{margin-top:20px;padding:14px 16px;border-radius:12px;background:#f3f4f6;font-size:15px}
-    .error{background:#fff1f2;color:#9f1239}
-    .ok{background:#ecfdf5;color:#065f46}
-    .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-    button,a.btn{appearance:none;border:0;border-radius:10px;padding:11px 15px;font-size:15px;text-decoration:none;cursor:pointer;background:#111827;color:#fff}
-    a.secondary{background:#eef2f7;color:#111827}
-    .hide{display:none}
-    @media (max-width:600px){
-      body{min-height:100dvh;display:block;padding:max(12px,env(safe-area-inset-top)) 12px max(20px,env(safe-area-inset-bottom))}
-      .card{width:100%;max-width:none;min-height:min(520px,58dvh);margin:12px 0 0;padding:34px 24px;border-radius:22px;display:flex;flex-direction:column;justify-content:center}
-      h1{font-size:clamp(30px,7.2vw,36px);line-height:1.25;margin-bottom:14px}
-      p.muted{font-size:clamp(17px,4.3vw,20px);line-height:1.65;margin:0 0 18px}
-      .status{font-size:clamp(18px,4.6vw,21px);line-height:1.55;padding:18px;border-radius:14px;margin-top:8px;font-weight:700}
-      button,a.btn{min-height:48px;font-size:17px;padding:13px 16px}
+    :root{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;
+      color:#374151;background:#fff
     }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100dvh;display:grid;place-items:center;
+      padding:24px;background:#fff
+    }
+    .wrap{text-align:center;max-width:360px;width:100%}
+    .spinner{
+      width:34px;height:34px;margin:0 auto 18px;border-radius:50%;
+      border:3px solid #e5e7eb;border-top-color:#6b7280;
+      animation:spin .8s linear infinite
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    h1{font-size:20px;margin:0 0 8px}
+    .status{font-size:15px;color:#6b7280;line-height:1.6}
+    .error{color:#991b1b}
+    .actions{display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+    button,a{
+      border:0;border-radius:10px;padding:11px 15px;font-size:15px;
+      text-decoration:none;cursor:pointer;background:#111827;color:#fff
+    }
+    a{background:#eef2f7;color:#111827}
+    .hide{display:none}
   </style>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-  <main class="card">
+  <main class="wrap">
+    <div id="spinner" class="spinner"></div>
     <h1>ABIS 員工服務</h1>
-    <p class="muted">正在確認登入狀態，請勿關閉此頁面。</p>
-    <div id="status" class="status">正在初始化…</div>
+    <div id="status" class="status">正在開啟…</div>
     <div id="actions" class="actions hide">
       <button type="button" id="retryBtn">重新嘗試</button>
-      <a class="btn secondary" id="webBtn" href="#">改用一般 Web 登入</a>
+      <a id="webBtn" href="#">一般 Web 登入</a>
     </div>
   </main>
 
@@ -49,220 +53,93 @@
     const CONFIG = Object.freeze({
       liffId: '2011584842-AmO1bbHY',
       backendUrl: 'https://script.google.com/macros/s/AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR/exec',
-      bridgeVersion: 'P5A1-RM-FAST2'
+      bridgeVersion: 'P5A1-RM-FAST3'
     });
 
-    const FAST2_WINDOW_MS = 5 * 60 * 1000;
-    const FAST2_TOKEN_KEY = 'abis_p5a1_fast2_token_v1';
-    const FAST2_UNTIL_KEY = 'abis_p5a1_fast2_until_v1';
+    const ALLOWED_BOOT_ROUTES = new Set([
+      'home','leave','leaves','attendance','payroll','inbox'
+    ]);
 
     const statusEl = document.getElementById('status');
+    const spinnerEl = document.getElementById('spinner');
     const actionsEl = document.getElementById('actions');
     const retryBtn = document.getElementById('retryBtn');
     const webBtn = document.getElementById('webBtn');
 
-    const initialQuery = new URLSearchParams(location.search);
-    const initialHash = new URLSearchParams(
-      String(location.hash || '').replace(/^#/, '')
-    );
-
-    const ALLOWED_BOOT_ROUTES = new Set([
-      'home',
-      'leave',
-      'leaves',
-      'attendance',
-      'payroll',
-      'inbox'
-    ]);
-
-    function normalizeRoute(value) {
-      const route = String(value || '').trim().toLowerCase();
-      return ALLOWED_BOOT_ROUTES.has(route) ? route : 'home';
-    }
-
-    const INITIAL_ROUTE = normalizeRoute(
-      initialQuery.get('route') || initialHash.get('route') || 'home'
-    );
-
-    const rawRt = initialQuery.get('rt') || '';
-    const INITIAL_ROUTE_TOKEN =
-      /^[A-Za-z0-9._~-]{1,256}$/.test(rawRt) ? rawRt : '';
-
-    const FORCE_FULL_AUTH = initialQuery.get('force') === '1';
-
     webBtn.href = CONFIG.backendUrl;
     retryBtn.addEventListener('click', () => location.reload());
 
-    function setStatus(text, kind) {
+    function setStatus(text, isError) {
       statusEl.textContent = text;
-      statusEl.className = 'status' + (kind ? ' ' + kind : '');
+      statusEl.className = 'status' + (isError ? ' error' : '');
     }
 
     function fail(message) {
-      setStatus(message || 'LINE 身分驗證失敗，請重新嘗試。', 'error');
+      spinnerEl.classList.add('hide');
+      setStatus(message || '無法開啟 ABIS，請重新嘗試。', true);
       actionsEl.classList.remove('hide');
     }
 
-    function configured() {
-      return /^\d+-[A-Za-z0-9_-]+$/.test(CONFIG.liffId);
-    }
-
     function routeToken() {
-      return INITIAL_ROUTE_TOKEN;
+      const value = new URLSearchParams(location.search).get('rt') || '';
+      return /^[A-Za-z0-9._~-]{1,256}$/.test(value) ? value : '';
     }
 
     function bootRoute() {
-      return INITIAL_ROUTE;
+      const value = String(
+        new URLSearchParams(location.search).get('route') || ''
+      ).trim().toLowerCase();
+      return ALLOWED_BOOT_ROUTES.has(value) ? value : 'home';
     }
 
-    function clearHash() {
-      try {
-        history.replaceState(null, '', location.pathname + location.search);
-      } catch (e) {}
+    function forceFullAuth() {
+      return new URLSearchParams(location.search).get('force') === '1';
     }
 
-    function clearFast2() {
-      try {
-        localStorage.removeItem(FAST2_TOKEN_KEY);
-        localStorage.removeItem(FAST2_UNTIL_KEY);
-      } catch (e) {}
-    }
-
-    function saveFast2(token) {
-      token = String(token || '').trim();
-      if (!/^[A-Fa-f0-9]{64}$/.test(token)) return false;
-
-      try {
-        localStorage.setItem(FAST2_TOKEN_KEY, token);
-        localStorage.setItem(
-          FAST2_UNTIL_KEY,
-          String(Date.now() + FAST2_WINDOW_MS)
-        );
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function readFast2() {
-      if (FORCE_FULL_AUTH || routeToken()) return '';
-
-      try {
-        const token = String(
-          localStorage.getItem(FAST2_TOKEN_KEY) || ''
-        ).trim();
-
-        const until = Number(
-          localStorage.getItem(FAST2_UNTIL_KEY) || 0
-        );
-
-        if (
-          !/^[A-Fa-f0-9]{64}$/.test(token) ||
-          !until ||
-          until <= Date.now()
-        ) {
-          clearFast2();
-          return '';
-        }
-
-        return token;
-      } catch (e) {
-        return '';
-      }
-    }
-
-    function submitForm(fields, statusText) {
+    function submitToBackend(idToken, accessToken) {
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = CONFIG.backendUrl;
       form.target = '_self';
       form.acceptCharset = 'UTF-8';
 
-      Object.keys(fields).forEach((name) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = name;
-        input.value = fields[name] == null ? '' : String(fields[name]);
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-      setStatus(statusText, 'ok');
-      form.submit();
-    }
-
-    function postResume(resumeToken) {
-      submitForm({
-        mode: 'liffresume',
-        resumeToken: resumeToken,
-        routeToken: '',
-        bootRoute: bootRoute(),
-        bridgeVersion: CONFIG.bridgeVersion
-      }, '快速登入驗證中，正在進入 ABIS…');
-    }
-
-    function postFullAuth(idToken, accessToken) {
-      submitForm({
+      const fields = {
         mode: 'liffauth',
         idToken: idToken,
         accessToken: accessToken || '',
         routeToken: routeToken(),
         bootRoute: bootRoute(),
+        forceFullAuth: forceFullAuth() ? '1' : '',
         bridgeVersion: CONFIG.bridgeVersion
-      }, 'LINE 身分已取得，正在進入 ABIS…');
+      };
+
+      Object.keys(fields).forEach((name) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = fields[name];
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      setStatus('正在進入 ABIS…', false);
+      form.submit();
     }
 
     async function start() {
-      if (!configured()) {
-        fail('LIFF ID 尚未設定。請先完成 LINE Developers 的 LIFF 設定。');
-        return;
-      }
-
-      // Backend uses this fragment after a failed/expired FAST2 resume.
-      // Clear local token first, then continue with normal LIFF verification.
-      if (initialHash.get('fast2clear') === '1') {
-        clearFast2();
-        clearHash();
-      }
-
-      // Backend uses #fast2=... after one full verified LIFF login.
-      // The opaque token is safe to keep only on the GitHub LIFF origin.
-      const inboundFast2 = String(
-        initialHash.get('fast2') || ''
-      ).trim();
-
-      if (
-        inboundFast2 &&
-        !FORCE_FULL_AUTH &&
-        !routeToken() &&
-        saveFast2(inboundFast2)
-      ) {
-        clearHash();
-        const token = readFast2();
-        if (token) {
-          postResume(token);
-          return;
-        }
-      }
-
-      // Generic Rich Menu navigation may reuse FAST2 for at most five minutes.
-      // Secure rt= links and force=1 always perform full LIFF verification.
-      const existingFast2 = readFast2();
-      if (existingFast2) {
-        postResume(existingFast2);
+      if (!/^\d+-[A-Za-z0-9_-]+$/.test(CONFIG.liffId)) {
+        fail('LIFF 設定錯誤。');
         return;
       }
 
       try {
-        setStatus('正在連線 LINE…');
-
         await liff.init({
           liffId: CONFIG.liffId,
           withLoginOnExternalBrowser: true
         });
 
         if (!liff.isLoggedIn()) {
-          setStatus('正在開啟 LINE 登入…');
+          setStatus('正在連線 LINE…', false);
           liff.login({ redirectUri: location.href });
           return;
         }
@@ -270,30 +147,23 @@
         const idToken = liff.getIDToken();
         const accessToken = liff.getAccessToken();
 
-        if (!idToken) {
-          throw new Error('ID token unavailable');
-        }
+        if (!idToken) throw new Error('ID token unavailable');
 
-        // Never trust client-decoded LINE profile/userId.
-        // Backend verifies the raw LINE token and resolves the active binding.
-        postFullAuth(idToken, accessToken);
+        // FAST3 is server-side. The bridge keeps no resume token/localStorage.
+        // Backend decides whether the request can reuse a 5-minute cached session.
+        submitToBackend(idToken, accessToken);
 
       } catch (err) {
         const code = err && err.code ? String(err.code) : '';
         const message = err && err.message ? String(err.message) : '';
-
-        const safeMessage = message
+        const safe = [code, message]
+          .filter(Boolean)
+          .join(' / ')
           .replace(/https?:\/\/\S+/gi, '[URL]')
           .replace(/[A-Za-z0-9_-]{24,}/g, '[redacted]')
-          .slice(0, 180);
+          .slice(0,180);
 
-        const detail = [code, safeMessage].filter(Boolean).join(' / ');
-
-        fail(
-          'LINE 身分驗證失敗' +
-          (detail ? '（' + detail + '）' : '') +
-          '，請重新嘗試。'
-        );
+        fail('無法開啟 ABIS' + (safe ? '（' + safe + '）' : '') + '。');
       }
     }
 
@@ -302,3 +172,4 @@
   </script>
 </body>
 </html>
+
