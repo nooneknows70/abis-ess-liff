@@ -53,12 +53,16 @@
     const CONFIG = Object.freeze({
       liffId: '2011584842-AmO1bbHY',
       backendUrl: 'https://script.google.com/macros/s/AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR/exec',
-      bridgeVersion: 'P5A1-RM-FAST3-RC1_1_ACCOUNT_20261006'
+      bridgeVersion: 'P5A1-RM-FAST4_ROUTE_FIRST_RC1_20261006'
     });
 
     const ALLOWED_BOOT_ROUTES = new Set([
       'home','leave','leaves','attendance','payroll','inbox','account'
     ]);
+
+    const BRIDGE_T0 = performance.now();
+    const BRIDGE_EPOCH_T0 = Date.now();
+    let LIFF_INIT_MS = 0;
 
     const statusEl = document.getElementById('status');
     const spinnerEl = document.getElementById('spinner');
@@ -110,7 +114,10 @@
         routeToken: routeToken(),
         bootRoute: bootRoute(),
         forceFullAuth: forceFullAuth() ? '1' : '',
-        bridgeVersion: CONFIG.bridgeVersion
+        bridgeVersion: CONFIG.bridgeVersion,
+        bridgeStartedAt: String(BRIDGE_EPOCH_T0),
+        bridgeElapsedMs: String(Math.max(0, Math.round(performance.now() - BRIDGE_T0))),
+        liffInitMs: String(LIFF_INIT_MS)
       };
 
       Object.keys(fields).forEach((name) => {
@@ -133,10 +140,12 @@
       }
 
       try {
+        const liffT0 = performance.now();
         await liff.init({
           liffId: CONFIG.liffId,
           withLoginOnExternalBrowser: true
         });
+        LIFF_INIT_MS = Math.max(0, Math.round(performance.now() - liffT0));
 
         if (!liff.isLoggedIn()) {
           setStatus('正在連線 LINE…', false);
