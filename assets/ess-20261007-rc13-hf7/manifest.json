@@ -1,0 +1,16 @@
+{
+  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF7_ATTENDANCE_DETAIL_DESC_20261007",
+  "baseAsset": "assets/ess-20261007-rc13-hf6",
+  "scope": "CLIENT_ONLY_ATTENDANCE_DETAIL_SORT",
+  "businessRulesChanged": false,
+  "backendChanged": false,
+  "immutableAssetPath": true,
+  "changes": [
+    "My Attendance detail view sorts attendance dates from newest to oldest."
+  ],
+  "preservedOverlays": [
+    "assets/ess-20261007-rc13-hf2/leave-submit-hf2.js",
+    "assets/ess-20261007-rc13-hf3r1/leave-submit-hf3r1.js",
+    "assets/ess-20261007-rc13-hf4/ess-dialog-hf4.js"
+  ]
+}
