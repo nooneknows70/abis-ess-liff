@@ -1,0 +1,32 @@
+{
+  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF5_HOME_LIVE_ATTENDANCE_20261007",
+  "baseAsset": "assets/ess-20261007-rc13-hf1",
+  "requires": [
+    "assets/ess-20261007-rc13-hf2/leave-submit-hf2.js"
+  ],
+  "hotfix": "ABIS_HOME_LIVE_ATTENDANCE_HF5_20261007",
+  "scope": "CLIENT_HOME_ATTENDANCE_RENDERING_CACHE_BUST",
+  "businessRulesChanged": false,
+  "backendChanged": false,
+  "immutableAssetPath": true,
+  "changes": [
+    "Publish patched Home attendance bundle at a new immutable URL",
+    "Actual punch times only on Home",
+    "Lifecycle status mapping including waiting/check-in grace",
+    "Foreground and periodic attendance refresh"
+  ],
+  "backend": {
+    "liveVersion": "P5A2_5_ATTENDANCE_LIVE_INCREMENTAL_R2174_RC1_20261007",
+    "attendanceBase": "P5A2_5_ATTENDANCE_UNIFIED_R2_RC1_4_38E_CHANGBIN_CANONICAL_SHIFT_HISTORY_20261007"
+  },
+  "source": {
+    "bundleSha": "7dfd8c21b1ad86effa1fd94e649b91b606b68136",
+    "cssSha": "d592fb75ea20ec3717f1b66143226ab25a2a3d44"
+  },
+  "indexSwitch": {
+    "css": "https://nooneknows70.github.io/abis-ess-liff/assets/ess-20261007-rc13-hf5/abis-ess.css",
+    "bundle": "https://nooneknows70.github.io/abis-ess-liff/assets/ess-20261007-rc13-hf5/abis-ess.bundle.js",
+    "leaveOverlay": "https://nooneknows70.github.io/abis-ess-liff/assets/ess-20261007-rc13-hf2/leave-submit-hf2.js",
+    "bootVersion": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF5_HOME_LIVE_ATTENDANCE_20261007"
+  }
+}
