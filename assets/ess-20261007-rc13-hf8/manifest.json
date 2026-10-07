@@ -1,0 +1,33 @@
+{
+  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF8_M72_M8_STATE_UI_20261007",
+  "baseAsset": "assets/ess-20261007-rc13-hf7",
+  "scope": "CLIENT_ONLY_ATTENDANCE_MANAGEMENT_AND_REPORT_UI",
+  "businessRulesChanged": false,
+  "backendChanged": false,
+  "immutableAssetPath": true,
+  "changes": [
+    "Remove stale client-side Changbin held=true from M72; management site API is authoritative.",
+    "Hide stale Changbin held banner unless a client scope is actually held.",
+    "Harden M72 refresh/site-tab/KPI contrast and compact layout.",
+    "Fix M8 available report cards so content cannot render white-on-white.",
+    "Hide unavailable company filter instead of reserving disabled UI space.",
+    "Consolidate accurate source limitations into one compact expandable disclosure.",
+    "Preserve HF7 newest-first list ordering."
+  ],
+  "backendGate": {
+    "requiredForChangbinManagementApi": "P5A25_ATTENDANCE_BATCH_HELD_SITES must no longer contain 彰濱廠",
+    "existingReadOnlyCheck": "adminP5A25AttendanceBatchHeldSitesStatusR1",
+    "existingPreflight": "testR2163All",
+    "existingBoundedRelease": "fixR2163ReleaseChangbinHold",
+    "existingPostVerify": "postR2163Release"
+  },
+  "preservedOverlays": [
+    "assets/ess-20261007-rc13-hf2/leave-submit-hf2.js",
+    "assets/ess-20261007-rc13-hf3r1/leave-submit-hf3r1.js",
+    "assets/ess-20261007-rc13-hf4/ess-dialog-hf4.js"
+  ],
+  "preservedBackend": [
+    "P5A2_5_ATTENDANCE_UNIFIED_R2_RC1_4_38E_CHANGBIN_CANONICAL_SHIFT_HISTORY_20261007",
+    "P5A2_5_ATTENDANCE_LIVE_INCREMENTAL_R2174_RC1_20261007"
+  ]
+}
