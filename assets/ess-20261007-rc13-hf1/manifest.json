@@ -1,0 +1,22 @@
+{
+  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF1_LEAVE_SUBMIT_20261007",
+  "baseVersion": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_20261007",
+  "hotfix": "ABIS_LEAVE_SUBMIT_HOTFIX_RC1_20261007",
+  "scope": "CLIENT_ONLY_LEAVE_SUBMIT_TRANSPORT",
+  "businessRulesChanged": false,
+  "backendChanged": false,
+  "changes": [
+    "Bound draft/proxy/conflict/submit/status RPC waits",
+    "Release leave-form busy state after timeout/failure",
+    "Preserve RequestID replay safety and submitLeaveStatus reconciliation",
+    "Disable leave-form actions without relabeling all buttons as transmitting"
+  ],
+  "source": {
+    "bundleSha": "1708252073f81b43ac427aaa6819bffe8d674ff4",
+    "cssSha": "d592fb75ea20ec3717f1b66143226ab25a2a3d44"
+  },
+  "files": {
+    "css": "abis-ess.css",
+    "bundle": "abis-ess.bundle.js"
+  }
+}
