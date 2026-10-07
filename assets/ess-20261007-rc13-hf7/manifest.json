@@ -1,12 +1,26 @@
 {
-  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF7_ATTENDANCE_DETAIL_DESC_20261007",
+  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF7_GLOBAL_NEWEST_FIRST_20261007",
   "baseAsset": "assets/ess-20261007-rc13-hf6",
-  "scope": "CLIENT_ONLY_ATTENDANCE_DETAIL_SORT",
+  "scope": "CLIENT_ONLY_GLOBAL_RECORD_LIST_ORDER",
   "businessRulesChanged": false,
   "backendChanged": false,
   "immutableAssetPath": true,
-  "changes": [
-    "My Attendance detail view sorts attendance dates from newest to oldest."
+  "rule": "All user-facing record/detail lists are ordered newest to oldest by default.",
+  "appliedTo": [
+    "My Attendance detail",
+    "My Leaves",
+    "Unified Task Inbox",
+    "Notification Center",
+    "Legacy approval inbox",
+    "Management leave dashboard daily distribution",
+    "Management leave dashboard detail rows",
+    "Employee attendance follow-up list",
+    "Recent Records (already newest-first)"
+  ],
+  "excludedNaturalSequenceViews": [
+    "Calendar grids",
+    "Workflow/progress timelines",
+    "Select options / configuration order"
   ],
   "preservedOverlays": [
     "assets/ess-20261007-rc13-hf2/leave-submit-hf2.js",
