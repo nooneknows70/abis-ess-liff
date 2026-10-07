@@ -1,0 +1,2916 @@
+:root{font-family:system-ui,-apple-system,"Noto Sans TC","Noto Sans Thai",sans-serif;color:#202124;background:#f6f8fb}
+    body{margin:0}.wrap{max-width:620px;margin:0 auto;padding:16px}.card{background:#fff;border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+    h1{font-size:22px;margin:6px 0 10px}h2{font-size:17px;margin:0 0 12px}h3{font-size:15px;margin:12px 0 6px}.muted{color:#6b7280;font-size:13px}.tiny{font-size:12px;color:#6b7280}
+    .error{background:#fee2e2;padding:10px;border-radius:10px;margin:10px 0}.success{background:#dcfce7;padding:10px;border-radius:10px;margin:10px 0}.notice{background:#eef2ff;padding:10px;border-radius:10px;margin:10px 0}
+    .op-status{position:sticky;top:8px;z-index:30;border-radius:12px;padding:11px 12px;margin:10px 0;border:1px solid #d1d5db;background:#fff;box-shadow:0 3px 14px rgba(0,0,0,.08);line-height:1.5}.op-status.working{background:#eff6ff;border-color:#93c5fd;color:#1e3a8a}.op-status.success{background:#ecfdf5;border-color:#86efac;color:#166534}.op-status.warning{background:#fffbeb;border-color:#fcd34d;color:#92400e}.op-status.error{background:#fef2f2;border-color:#fecaca;color:#991b1b}.op-head{display:flex;align-items:center;gap:9px;font-weight:800;font-size:13px}.op-detail{font-size:12px;margin-top:3px}.op-time{font-size:11px;opacity:.75;margin-left:auto;white-space:nowrap}.op-spinner{width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:opspin .8s linear infinite;flex:0 0 auto}.op-status button{margin-top:8px}.status-inline-fail{background:#fff7ed;color:#9a3412;border:1px solid #fdba74;padding:9px 10px;border-radius:10px;margin-top:8px;font-size:12px;font-weight:700;line-height:1.5}@keyframes opspin{to{transform:rotate(360deg)}}
+    label{display:block;font-size:13px;margin:10px 0 5px}input,select,textarea,button{width:100%;box-sizing:border-box;font:inherit}input,select,textarea{padding:12px;border:1px solid #d1d5db;border-radius:10px;background:white}textarea{min-height:72px}
+    button{border:0;border-radius:10px;padding:12px;font-weight:700;background:#1f2937;color:#fff;margin-top:10px;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button.secondary{background:#e5e7eb;color:#111827}button.danger{background:#991b1b}button.small{padding:8px;font-size:13px;margin-top:6px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hide{display:none!important}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef2ff;font-size:12px;margin-right:5px}.leave,.approval{padding:12px 0;border-bottom:1px solid #eee}.kpi{font-size:28px;font-weight:800}
+    .nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px}.nav button{font-size:12px;padding:10px 5px;margin-top:0}.meta{line-height:1.7}.row-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.badge-count{font-size:11px;background:#b91c1c;color:#fff;border-radius:99px;padding:1px 6px}
+    .proxy-ok{background:#dcfce7;color:#166534;border:1px solid #86efac;padding:10px 12px;border-radius:10px;margin:10px 0;font-size:13px;font-weight:700;line-height:1.55}.proxy-warn{background:#fef2f2;color:#991b1b;border:1px solid #fecaca;padding:10px 12px;border-radius:10px;margin:10px 0;font-size:13px;font-weight:700}.build-tag{font-size:11px;color:#9ca3af;margin-bottom:8px}.dept-conflict{background:#fffbeb;color:#92400e;border:1px solid #fcd34d;padding:10px 12px;border-radius:10px;margin:10px 0;font-size:13px;line-height:1.55}.dept-conflict b{color:#78350f}.dept-conflict-list{margin-top:6px}
+    .leave-total-box{margin-top:16px;padding-top:14px;border-top:1px solid #e5e7eb}.leave-total-title{font-size:14px;font-weight:800;margin-bottom:8px}.leave-total-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #f3f4f6}.leave-total-row:last-child{border-bottom:0}.leave-total-name{font-size:13px}.leave-total-hours{font-size:14px;font-weight:800;white-space:nowrap}
+    .line-card{margin-top:16px;padding:14px;border:1px solid #dbeafe;border-radius:12px;background:#f8fbff}.line-card-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;font-weight:800}.line-status{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;font-weight:700}.line-dot{width:9px;height:9px;border-radius:50%;background:#9ca3af;flex:0 0 auto}.line-dot.bound{background:#16a34a}.line-dot.warn{background:#d97706}.line-meta{margin-top:7px;color:#6b7280;font-size:12px;line-height:1.65}.line-card button{margin-top:12px}.line-auth-link{display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;background:#1f2937;color:#fff;margin-top:12px}.line-reauth-gate{position:fixed;inset:0;z-index:9999;background:rgba(17,24,39,.58);display:flex;align-items:center;justify-content:center;padding:20px}.line-reauth-card{width:min(420px,100%);background:#fff;border-radius:16px;padding:20px;box-shadow:0 18px 50px rgba(0,0,0,.25)}.line-reauth-card h3{margin:0 0 8px}.line-reauth-card p{margin:0;color:#4b5563;font-size:13px;line-height:1.65}
+    .lang-switch{display:flex;gap:6px;margin:0 0 12px}.lang-switch button{width:auto;padding:7px 11px;margin:0;font-size:12px;background:#e5e7eb;color:#111827}.lang-switch button.active{background:#111827;color:#fff}
+    .line-boot-card{text-align:center;padding:28px 18px}.line-boot-spinner{width:28px;height:28px;border:3px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;display:inline-block;animation:opspin .8s linear infinite;margin:4px 0 14px}.line-boot-card h2{margin-bottom:8px}.line-boot-card .notice{margin:12px 0 0;line-height:1.65}
+    .proxy-card{margin-top:16px;padding:14px;border:1px solid #fde68a;background:#fffbeb;border-radius:12px}.proxy-item{padding:9px 0;border-bottom:1px solid #f3e7bd}.proxy-item:last-child{border-bottom:0}
+    .dash-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.dash-kpi{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:10px;text-align:center}.dash-kpi b{display:block;font-size:22px}.dash-kpi span{font-size:11px;color:#6b7280}.dist-row{padding:9px 0;border-bottom:1px solid #eee;line-height:1.55}.dist-count{font-weight:800;margin-left:6px}.dash-row{padding:12px 0;border-bottom:1px solid #eee;line-height:1.65}.dash-row:last-child,.dist-row:last-child{border-bottom:0}.month-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}.month-row button{width:auto;white-space:nowrap}
+    .confirm-backdrop{position:fixed;inset:0;z-index:120;background:rgba(17,24,39,.48);display:grid;place-items:center;padding:20px}
+    .confirm-dialog{width:min(100%,420px);background:#fff;border-radius:16px;padding:18px;box-shadow:0 18px 48px rgba(0,0,0,.24)}
+    .confirm-dialog h2{margin:0 0 8px}.confirm-body{font-size:14px;line-height:1.7;color:#374151;white-space:pre-line}
+    .confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.confirm-actions button{margin-top:0}
+    .hr-account{padding:12px 0;border-bottom:1px solid #eee}.hr-account:last-child{border-bottom:0}.hr-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.hr-status-box{border:1px solid #e5e7eb;background:#f8fafc;border-radius:10px;padding:10px}.hr-status-box span{display:block;font-size:11px;color:#6b7280;margin-bottom:4px}.hr-status-box b{font-size:13px;word-break:break-word}.temp-pin-once{background:#fff7ed;border:2px solid #fb923c;border-radius:14px;padding:16px;margin:14px 0}.temp-pin-code{font-size:30px;font-weight:900;letter-spacing:6px;text-align:center;padding:14px 0;font-variant-numeric:tabular-nums}.hr-action-box{border-top:1px solid #e5e7eb;margin-top:14px;padding-top:12px}
+
+    .att-correction-state{margin-top:8px;padding:8px 10px;border-radius:9px;background:#eef2ff;font-size:12px;line-height:1.5}.att-correction-state.pending{background:#fffbeb;color:#92400e;border:1px solid #fcd34d}.att-correction-state.done{background:#ecfdf5;color:#166534;border:1px solid #86efac}.att-correction-state.reject{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}.att-correction-actions{margin-top:8px}.att-correction-actions button{margin-top:0}.att-correction-form .current-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:10px;margin:10px 0;font-size:12px;line-height:1.6}.att-correction-form .field-note{font-size:11px;color:#6b7280;margin-top:4px}.att-correction-form .confirm-actions{margin-top:14px}
+    .att-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.att-kpi{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:10px;text-align:center}.att-kpi b{display:block;font-size:20px}.att-kpi span{font-size:11px;color:#6b7280}.att-calendar-head,.att-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.att-calendar-head div{font-size:11px;color:#6b7280;text-align:center;padding:4px}.att-day{min-height:72px;border:1px solid #e5e7eb;border-radius:9px;padding:6px;background:#fff;font-size:11px;overflow:hidden}.att-day.empty{border-color:transparent;background:transparent}.att-day-num{font-weight:800;font-size:12px}.att-day-status{margin-top:5px;font-size:10px;line-height:1.35}.att-day.warn{background:#fffbeb}.att-day.bad{background:#fef2f2}.att-day.leave-day{background:#eff6ff}.att-day.rest{background:#f8fafc}.att-detail{padding:12px 0;border-bottom:1px solid #eee;line-height:1.55}.att-detail:last-child{border-bottom:0}.att-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin-top:6px;font-size:12px}.att-punches{margin-top:7px;padding:7px 9px;background:#f8fafc;border-radius:8px;font-size:11px}.att-warning{background:#fffbeb;border:1px solid #fcd34d;color:#92400e;border-radius:10px;padding:10px;margin:10px 0;font-size:12px;line-height:1.55}.att-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.att-tabs button{margin:0}.att-tabs button.active{background:#111827;color:#fff}.att-tabs button:not(.active){background:#e5e7eb;color:#111827}@media(max-width:420px){.att-summary{grid-template-columns:1fr 1fr}.att-day{min-height:62px;padding:4px}.att-detail-grid{grid-template-columns:1fr}}
+    @media(max-width:420px){.dash-summary{grid-template-columns:1fr 1fr 1fr}.wrap{padding:12px}.card{padding:15px}}
+  
+.att-work-section{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.att-work-title{font-size:17px;font-weight:800;margin:6px 0 10px}
+.att-work-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fff}
+.att-work-card h3{margin:0 0 8px;font-size:16px}.att-work-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.att-work-card select,.att-work-card input,.att-work-card textarea{width:100%}.att-item{padding:8px 0;border-top:1px dashed var(--line)}.att-item:first-child{border-top:0}.att-work-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.att-work-card .danger{background:#b42318}.att-work-card .secondary{background:#fff}
+
+
+/* ============================================================
+   P5A1-RM-FAST1M1 | Mobile Responsive UI
+   UI-only: no business logic / route / authorization changes.
+   ============================================================ */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#f6f8fb}
+body{min-height:100vh;min-height:100dvh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+button,input,select,textarea{touch-action:manipulation}
+
+@media (max-width:640px){
+  :root{font-size:16px}
+  body{background:#f6f8fb}
+  .wrap{
+    width:100%;max-width:none;margin:0;padding:12px 12px calc(18px + env(safe-area-inset-bottom));
+  }
+  .wrap>h1{font-size:24px;line-height:1.2;margin:8px 2px 12px;font-weight:850;letter-spacing:-.02em}
+  h2{font-size:20px;line-height:1.3;margin-bottom:14px}
+  h3{font-size:17px;line-height:1.35}
+  .card{
+    width:100%;margin:10px 0;padding:18px 16px;border-radius:18px;
+    box-shadow:0 2px 14px rgba(15,23,42,.07)
+  }
+  .muted{font-size:14px;line-height:1.6}
+  .tiny{font-size:13px;line-height:1.6}
+  label{font-size:15px;margin:14px 0 7px;font-weight:650}
+  input,select,textarea{
+    min-height:50px;padding:13px 14px;border-radius:12px;font-size:16px;line-height:1.35;
+  }
+  textarea{min-height:104px;resize:vertical}
+  button,.line-auth-link,#evidenceLink{
+    min-height:48px;padding:13px 14px;border-radius:12px;font-size:15px;line-height:1.25;
+  }
+  button.small{min-height:42px;padding:10px 12px;font-size:14px}
+  .notice,.error,.success,.proxy-ok,.proxy-warn,.dept-conflict,.att-warning{
+    font-size:14px;line-height:1.6;padding:12px 13px;border-radius:12px
+  }
+
+  /* Main navigation behaves like a touch-first app toolbar. */
+  #app>.card:first-child{
+    position:sticky;top:0;z-index:45;margin:0 -12px 12px;width:calc(100% + 24px);
+    padding:10px 12px;background:rgba(246,248,251,.94);border-radius:0;
+    box-shadow:0 1px 0 rgba(15,23,42,.08);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)
+  }
+  .nav{
+    display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;
+    scroll-snap-type:x proximity;padding:2px 0 4px;scrollbar-width:none
+  }
+  .nav::-webkit-scrollbar{display:none}
+  .nav button{
+    flex:0 0 auto;width:auto;min-width:104px;min-height:46px;padding:11px 14px;
+    font-size:14px;border-radius:999px;white-space:nowrap;scroll-snap-align:start
+  }
+
+  .grid{grid-template-columns:1fr;gap:0}
+  .row-actions{grid-template-columns:1fr;gap:8px}
+  .month-row{grid-template-columns:1fr;gap:8px;align-items:stretch}
+  .month-row button{width:100%;margin-top:0}
+  .confirm-actions{grid-template-columns:1fr 1fr;gap:8px}
+  .confirm-dialog{width:100%;max-width:440px;padding:20px 16px;border-radius:18px}
+  .hr-status-grid{grid-template-columns:1fr;gap:8px}
+  .att-work-grid{grid-template-columns:1fr}
+  .att-work-actions{display:grid;grid-template-columns:1fr;gap:8px}
+  .att-work-actions button{width:100%;margin-top:0}
+
+  /* Attendance calendar stays readable instead of shrinking each day to tiny text. */
+  .att-calendar-head,.att-calendar{min-width:560px}
+  #attendanceContent{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .att-day{min-height:78px;font-size:12px}
+  .att-day-num{font-size:13px}.att-day-status{font-size:11px}
+  .att-detail{font-size:14px}.att-detail-grid{grid-template-columns:1fr;font-size:13px}
+  .att-punches{font-size:12px}
+  .att-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .att-kpi b{font-size:22px}.att-kpi span{font-size:12px}
+
+  .dash-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .dash-kpi{padding:10px 6px}.dash-kpi b{font-size:22px}.dash-kpi span{font-size:11px}
+  .leave,.approval,.dash-row,.dist-row{font-size:14px}
+  .kpi{font-size:32px}
+  .badge-count{font-size:12px;padding:2px 7px}
+
+  .lang-switch{gap:7px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+  .lang-switch::-webkit-scrollbar{display:none}
+  .lang-switch button{min-height:40px;width:auto;flex:0 0 auto;padding:9px 13px;font-size:13px}
+
+  .line-boot-card{
+    min-height:min(62vh,520px);display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:28px 22px
+  }
+  .line-boot-spinner{width:36px;height:36px;border-width:4px;margin-bottom:18px}
+  .line-boot-card h2{font-size:22px}.line-boot-card .notice{width:100%;font-size:14px}
+  .line-reauth-gate{padding:14px}.line-reauth-card{padding:22px 18px;border-radius:18px}
+
+  /* Prevent long IDs/status values from forcing the viewport wider. */
+  .meta,.line-meta,.hr-status-box,.leave,.approval,.dash-row,.dist-row{overflow-wrap:anywhere;word-break:break-word}
+}
+
+@media (max-width:380px){
+  .wrap{padding-left:10px;padding-right:10px}
+  .card{padding:16px 14px}
+  .wrap>h1{font-size:22px}
+  .nav button{min-width:96px;font-size:13px;padding-left:12px;padding-right:12px}
+  .dash-summary{grid-template-columns:1fr 1fr}
+  .confirm-actions{grid-template-columns:1fr}
+}
+
+
+
+.is-busy{opacity:.72;cursor:wait}
+
+/* ============================================================
+   P5A1-RM-FAST1M4 | Mobile Large UI + SAFE BUSY
+   UI-only: no business logic / route / authorization changes.
+   Apps Script / LINE WebView may expose an iframe viewport wider than
+   the physical phone width, so this breakpoint intentionally extends
+   to 1100px and also targets coarse-pointer devices.
+   ============================================================ */
+@media (max-width:1100px), (pointer:coarse) {
+  :root{font-size:20px}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{background:#f6f8fb;font-size:18px;line-height:1.65}
+
+  .wrap{
+    width:100%;max-width:none;margin:0;
+    padding:18px 18px calc(28px + env(safe-area-inset-bottom));
+  }
+  .wrap>h1{
+    font-size:34px;line-height:1.2;margin:10px 2px 16px;
+    font-weight:850;letter-spacing:-.02em;
+  }
+  h2{font-size:27px;line-height:1.3;margin-bottom:16px}
+  h3{font-size:22px;line-height:1.35}
+
+  .card{
+    width:100%;max-width:none;margin:14px 0;padding:24px 22px;
+    border-radius:22px;box-shadow:0 3px 18px rgba(15,23,42,.08)
+  }
+
+  .muted{font-size:17px;line-height:1.65}
+  .tiny{font-size:16px;line-height:1.65}
+  .build-tag{font-size:14px;line-height:1.5;margin-bottom:10px}
+  .meta{font-size:17px;line-height:1.75}
+
+  label{font-size:18px;margin:16px 0 8px;font-weight:700}
+  input,select,textarea{
+    min-height:58px;padding:15px 16px;border-radius:14px;
+    font-size:18px;line-height:1.4
+  }
+  textarea{min-height:120px}
+
+  button,.line-auth-link,#evidenceLink{
+    min-height:56px;padding:15px 16px;border-radius:14px;
+    font-size:18px;line-height:1.3
+  }
+  button.small{min-height:48px;padding:12px 14px;font-size:16px}
+
+  .lang-switch{gap:9px;margin-bottom:16px;flex-wrap:wrap}
+  .lang-switch button{
+    min-height:46px;width:auto;padding:11px 15px;margin:0;
+    font-size:16px;border-radius:12px
+  }
+
+  /* Six main functions: 2 columns x 3 rows on phone-sized WebViews. */
+  .nav{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+    overflow:visible!important;
+    padding:0!important;
+  }
+  .nav button{
+    width:100%!important;min-width:0!important;min-height:56px!important;
+    padding:14px 10px!important;margin:0!important;
+    font-size:17px!important;line-height:1.25!important;
+    border-radius:14px!important;white-space:normal!important;
+  }
+
+  /* Keep the navigation card visible but do not squeeze it into pill buttons. */
+  #app>.card:first-child{
+    position:static!important;width:100%!important;margin:12px 0 14px!important;
+    padding:18px!important;border-radius:20px!important;
+    background:#fff!important;box-shadow:0 3px 18px rgba(15,23,42,.08)!important;
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  }
+
+  .notice,.error,.success,.proxy-ok,.proxy-warn,.dept-conflict,.att-warning{
+    font-size:17px;line-height:1.65;padding:15px 16px;border-radius:14px
+  }
+
+  .line-card{padding:18px;border-radius:16px;margin-top:18px}
+  .line-card-title{font-size:18px}
+  .line-status{font-size:17px;margin-top:12px}
+  .line-meta{font-size:16px;line-height:1.7}
+  .line-dot{width:11px;height:11px}
+
+  .pill{font-size:15px;padding:6px 10px}
+  .badge-count{font-size:14px;padding:2px 8px}
+  .leave-total-title{font-size:18px}
+  .leave-total-name{font-size:17px}
+  .leave-total-hours{font-size:18px}
+
+  .grid{grid-template-columns:1fr;gap:0}
+  .row-actions{grid-template-columns:1fr;gap:10px}
+  .month-row{grid-template-columns:1fr;gap:10px}
+  .month-row button{width:100%;margin-top:0}
+  .hr-status-grid{grid-template-columns:1fr;gap:10px}
+  .att-work-grid{grid-template-columns:1fr}
+  .att-work-actions{display:grid;grid-template-columns:1fr;gap:10px}
+  .att-work-actions button{width:100%;margin-top:0}
+
+  .dash-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .dash-kpi{padding:14px 10px}.dash-kpi b{font-size:28px}.dash-kpi span{font-size:15px}
+  .att-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .att-kpi{padding:14px 10px}.att-kpi b{font-size:28px}.att-kpi span{font-size:15px}
+
+  .leave,.approval,.dash-row,.dist-row,.att-detail{font-size:17px;line-height:1.7}
+  .att-detail-grid{grid-template-columns:1fr;font-size:16px;gap:6px}
+  .att-punches{font-size:15px;padding:10px 12px}
+
+  .confirm-dialog{width:100%;max-width:560px;padding:24px 22px;border-radius:20px}
+  .confirm-body{font-size:17px;line-height:1.75}
+  .confirm-actions{grid-template-columns:1fr 1fr;gap:10px}
+
+  .line-boot-card{
+    min-height:min(64vh,620px);display:flex;flex-direction:column;
+    justify-content:center;align-items:center;padding:34px 24px
+  }
+  .line-boot-spinner{width:42px;height:42px;border-width:4px;margin-bottom:20px}
+  .line-boot-card h2{font-size:28px}.line-boot-card .notice{width:100%;font-size:17px}
+
+  .meta,.line-meta,.hr-status-box,.leave,.approval,.dash-row,.dist-row{
+    overflow-wrap:anywhere;word-break:break-word
+  }
+}
+
+@media (max-width:520px), (pointer:coarse) and (max-width:700px) {
+  .wrap{padding-left:14px;padding-right:14px}
+  .wrap>h1{font-size:31px}
+  .card{padding:22px 18px}
+  .nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .confirm-actions{grid-template-columns:1fr}
+}
+
+
+
+/* ============================================================
+   P5A1-RM-FAST1M8 | Minimal Cards + Auto Light/Dark + I18N Labels
+   UI-only: warm ivory page, centered company banner, larger type,
+   blue active navigation, ivory inactive navigation.
+   ============================================================ */
+:root{
+  --abis-ivory:#f7f1e8;
+  --abis-card:#fffdf9;
+  --abis-blue:#245d9c;
+  --abis-blue-dark:#183f70;
+  --abis-blue-soft:#dfeaf6;
+  --abis-ink:#222831;
+  --abis-muted:#667085;
+  --abis-border:#c9d3df;
+}
+html,body{background:var(--abis-ivory)!important;color:var(--abis-ink)}
+body{min-height:100dvh}
+.wrap{background:var(--abis-ivory)!important}
+
+.company-banner{
+  margin:0 -18px 18px;
+  padding:18px 22px 20px;
+  text-align:center;
+  background:linear-gradient(135deg,var(--abis-blue-dark),var(--abis-blue));
+  color:#fff;
+  box-shadow:0 4px 16px rgba(24,63,112,.18);
+  border-radius:0 0 22px 22px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.company-logo{
+  width:72px;
+  height:72px;
+  display:block;
+  object-fit:cover;
+  border-radius:50%;
+  margin:0 auto 10px;
+  background:#fff;
+  border:3px solid rgba(255,255,255,.92);
+  box-shadow:0 5px 16px rgba(0,0,0,.18);
+}
+.company-title{
+  width:100%;
+  text-align:center;
+  font-size:30px;
+  line-height:1.2;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.company-subtitle{
+  width:100%;
+  margin-top:6px;
+  text-align:center;
+  font-size:19px;
+  line-height:1.4;
+  font-weight:800;
+  opacity:.96;
+}
+
+.card{
+  background:var(--abis-card)!important;
+  border:1px solid rgba(36,93,156,.08);
+}
+.muted,.tiny,.line-meta{color:var(--abis-muted)!important}
+
+/* Language controls follow the same selected/unselected visual language. */
+.lang-switch{width:100%;display:flex;align-items:center;justify-content:center!important;gap:12px;margin:0 auto 18px;overflow:visible!important;padding:0!important;flex-wrap:wrap}
+.lang-switch button{
+  background:transparent!important;
+  color:var(--abis-blue-dark)!important;
+  border:1.5px solid var(--abis-border)!important;
+  box-shadow:none!important;
+}
+.lang-switch button.active{
+  background:var(--abis-blue)!important;
+  color:#fff!important;
+  border-color:var(--abis-blue)!important;
+}
+
+/* Top application navigation: inactive blends into ivory page; active = blue/white. */
+#app>.card:first-child{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:4px 0 8px!important;
+}
+.nav{gap:11px!important}
+.nav button{
+  background:var(--abis-ivory)!important;
+  color:var(--abis-blue-dark)!important;
+  border:1.5px solid #9fb2c8!important;
+  box-shadow:0 1px 4px rgba(24,63,112,.05)!important;
+  font-weight:850!important;
+  transition:background .16s ease,color .16s ease,border-color .16s ease,transform .08s ease;
+}
+.nav button:active{transform:scale(.985)}
+.nav button.active,
+.nav button[aria-current="page"]{
+  background:var(--abis-blue)!important;
+  color:#fff!important;
+  border-color:var(--abis-blue)!important;
+  box-shadow:0 4px 12px rgba(36,93,156,.22)!important;
+}
+.nav button.active .badge-count,
+.nav button[aria-current="page"] .badge-count{
+  background:#fff!important;
+  color:var(--abis-blue-dark)!important;
+}
+.nav button.is-busy.active,
+.nav button.is-busy[aria-current="page"]{
+  background:var(--abis-blue)!important;
+  color:#fff!important;
+  opacity:.72!important;
+}
+
+.badge-count{background:#b42318;color:#fff}
+.notice{background:#eef4fb}
+.line-card{background:#f8fbff}
+
+@media (max-width:1100px), (pointer:coarse) {
+  body{font-size:19px!important;line-height:1.65}
+  .wrap{padding-top:0!important;background:var(--abis-ivory)!important}
+  .company-title{font-size:32px}
+  .company-subtitle{font-size:18px}
+  h2{font-size:28px!important}
+  h3{font-size:22px!important}
+  .muted{font-size:17px!important}
+  .tiny{font-size:16px!important}
+  .meta{font-size:18px!important}
+  .nav button{font-size:19px!important;min-height:62px!important;padding:15px 11px!important}
+  .card{border-radius:20px!important}
+}
+
+@media (max-width:520px), (pointer:coarse) and (max-width:700px) {
+  .company-banner{margin-left:-14px;margin-right:-14px;padding:19px 16px 17px}
+  .company-title{font-size:30px}
+  .company-subtitle{font-size:17px}
+  .nav button{font-size:18px!important;min-height:60px!important}
+}
+
+
+/* FAST1M8 minimal light/dark refinements */
+@media (max-width:1100px){
+  .company-banner{padding-top:16px!important;padding-bottom:18px!important}
+  .company-logo{width:68px;height:68px;margin-bottom:9px}
+  .company-title{font-size:29px!important}
+  .company-subtitle{font-size:20px!important;margin-top:5px!important}
+  .lang-switch{justify-content:center!important;gap:12px!important;margin-left:auto!important;margin-right:auto!important}
+  .lang-switch button{min-width:88px!important;text-align:center!important}
+}
+
+
+
+/* ============================================================
+   P5A1-RM-FAST1M8 | Minimal cards + automatic light/dark theme
+   Six-card labels remain true I18N nodes; icons are never replaced.
+   ============================================================ */
+:root{
+  --m8-page:#f7f2ea;
+  --m8-surface:#fffdfa;
+  --m8-surface-2:#fbf7f1;
+  --m8-ink:#172238;
+  --m8-muted:#667085;
+  --m8-border:#ddd7cf;
+  --m8-blue:#0b6de8;
+  --m8-blue-deep:#064fae;
+  --m8-blue-soft:#eaf3ff;
+  --m8-shadow:0 3px 12px rgba(25,34,48,.08);
+}
+html{color-scheme:light}
+html,body,.wrap{background:var(--m8-page)!important;color:var(--m8-ink)!important}
+.company-banner{
+  margin:0 auto 6px!important;padding:18px 0 8px!important;background:transparent!important;
+  box-shadow:none!important;border-radius:0!important;color:var(--m8-ink)!important;
+}
+.company-title{display:none!important}
+.company-logo{width:90px!important;height:90px!important;margin:0 auto 12px!important;border:2px solid rgba(11,109,232,.22)!important;box-shadow:0 6px 20px rgba(16,54,105,.16)!important}
+.company-subtitle{font-size:29px!important;font-weight:900!important;letter-spacing:.025em!important;color:var(--m8-ink)!important;margin:0!important}
+.lang-switch{margin:8px auto 18px!important;gap:0!important;max-width:390px!important;flex-wrap:nowrap!important;border:1px solid var(--m8-border)!important;border-radius:999px!important;padding:3px!important;background:var(--m8-surface)!important;box-shadow:var(--m8-shadow)!important}
+.lang-switch button{flex:1 1 0!important;min-width:0!important;min-height:42px!important;border:0!important;border-radius:999px!important;background:transparent!important;color:var(--m8-ink)!important;font-size:15px!important;font-weight:800!important;padding:8px 6px!important}
+.lang-switch button.active{background:var(--m8-blue)!important;color:#fff!important;box-shadow:0 2px 8px rgba(11,109,232,.28)!important}
+.card{background:var(--m8-surface)!important;border:1px solid var(--m8-border)!important;box-shadow:var(--m8-shadow)!important}
+#app>.nav-shell{background:transparent!important;border:0!important;box-shadow:none!important;padding:4px 0 10px!important}
+.nav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+.nav button{
+  position:relative!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  min-width:0!important;min-height:118px!important;margin:0!important;padding:14px 8px 12px!important;border-radius:16px!important;
+  background:var(--m8-surface)!important;color:var(--m8-blue-deep)!important;border:1px solid var(--m8-border)!important;
+  box-shadow:var(--m8-shadow)!important;font-size:15px!important;line-height:1.25!important;font-weight:850!important;
+  transition:transform .08s ease,background .16s ease,color .16s ease,border-color .16s ease,box-shadow .16s ease!important;
+}
+.nav button:active{transform:scale(.98)!important}
+.nav-icon{width:38px;height:38px;display:grid;place-items:center;margin:0 auto 9px;color:currentColor;position:relative;flex:0 0 auto}
+.nav-icon svg{width:36px;height:36px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-label{display:block;width:100%;text-align:center;overflow-wrap:anywhere;word-break:normal}
+.nav button.active,.nav button[aria-current="page"]{background:var(--m8-blue)!important;color:#fff!important;border-color:var(--m8-blue)!important;box-shadow:0 5px 15px rgba(11,109,232,.28)!important}
+.nav button.is-busy.active,.nav button.is-busy[aria-current="page"]{background:var(--m8-blue)!important;color:#fff!important;opacity:.72!important}
+.nav-icon-badged .badge-count{position:absolute;top:-7px;right:-10px;min-width:22px;height:22px;display:grid;place-items:center;padding:0 5px!important;border-radius:999px!important;background:#ef4444!important;color:#fff!important;font-size:12px!important;font-weight:900!important;border:2px solid var(--m8-surface)!important}
+.nav button.active .nav-icon-badged .badge-count,.nav button[aria-current="page"] .nav-icon-badged .badge-count{border-color:var(--m8-blue)!important}
+.notice{background:var(--m8-blue-soft)!important;color:var(--m8-ink)!important}
+.line-card,.dash-kpi,.hr-status-box,.att-kpi,.att-punches,.att-correction-form .current-box{background:var(--m8-surface-2)!important;border-color:var(--m8-border)!important}
+.muted,.tiny,.line-meta,.dash-kpi span,.hr-status-box span,.att-kpi span,.att-calendar-head div,.att-correction-form .field-note{color:var(--m8-muted)!important}
+input,select,textarea{background:var(--m8-surface)!important;color:var(--m8-ink)!important;border-color:var(--m8-border)!important}
+button.secondary{background:#e9e6e1!important;color:var(--m8-ink)!important}
+.att-tabs button.active{background:var(--m8-blue)!important;color:#fff!important}
+.att-tabs button:not(.active){background:var(--m8-surface-2)!important;color:var(--m8-ink)!important;border:1px solid var(--m8-border)!important}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --m8-page:#071426;
+    --m8-surface:#0f2138;
+    --m8-surface-2:#142a45;
+    --m8-ink:#f5f8ff;
+    --m8-muted:#aebbd0;
+    --m8-border:#29415f;
+    --m8-blue:#1686ff;
+    --m8-blue-deep:#83c5ff;
+    --m8-blue-soft:#16385e;
+    --m8-shadow:0 4px 16px rgba(0,0,0,.28);
+  }
+  html{color-scheme:dark}
+  .company-logo{border-color:#79b8ff!important;box-shadow:0 0 22px rgba(22,134,255,.24)!important}
+  .lang-switch{background:#0d1c31!important}
+  .nav button{background:linear-gradient(180deg,#162b46,#102138)!important;color:#8dccff!important;border-color:#2d4564!important}
+  .nav button.active,.nav button[aria-current="page"]{background:linear-gradient(180deg,#1686ff,#0b6de8)!important;color:#fff!important;border-color:#47a2ff!important}
+  .nav-icon-badged .badge-count{border-color:#162b46!important}
+  .nav button.active .nav-icon-badged .badge-count,.nav button[aria-current="page"] .nav-icon-badged .badge-count{border-color:#1686ff!important}
+  button.secondary{background:#223650!important;color:#f5f8ff!important}
+  .error{background:#451d26!important;color:#fecdd3!important}
+  .success{background:#123b2d!important;color:#bbf7d0!important}
+  .proxy-ok{background:#123b2d!important;color:#bbf7d0!important;border-color:#2d6a50!important}
+  .proxy-warn{background:#451d26!important;color:#fecdd3!important;border-color:#7f3341!important}
+  .dept-conflict,.att-warning{background:#463614!important;color:#fde68a!important;border-color:#7c641e!important}
+  .att-day{background:var(--m8-surface)!important;border-color:var(--m8-border)!important;color:var(--m8-ink)!important}
+  .att-day.warn{background:#463614!important}.att-day.bad{background:#451d26!important}.att-day.leave-day{background:#16385e!important}.att-day.rest{background:#11243b!important}
+  .line-auth-link{background:var(--m8-blue)!important;color:#fff!important}
+}
+
+@media (max-width:520px), (pointer:coarse) and (max-width:700px){
+  .wrap{padding-left:14px!important;padding-right:14px!important}
+  .company-logo{width:86px!important;height:86px!important}
+  .company-subtitle{font-size:28px!important}
+  .lang-switch{max-width:360px!important;margin-bottom:18px!important}
+  .nav{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}
+  .nav button{min-height:112px!important;padding:13px 5px 10px!important;font-size:14px!important;border-radius:15px!important}
+  .nav-icon{width:36px;height:36px;margin-bottom:8px}.nav-icon svg{width:34px;height:34px}
+}
+
+/* ============================================================
+   P5A1-RM-FAST1M9 | Larger card labels + Account gear icon
+   Card labels intentionally match the ABIS 員工系統 subtitle size.
+   ============================================================ */
+:root{--m9-nav-title-size:29px}
+.company-subtitle,.nav-label{font-size:var(--m9-nav-title-size)!important}
+.nav-label{font-weight:900!important;line-height:1.16!important;letter-spacing:.01em!important}
+.nav button{min-height:154px!important;padding:16px 8px 14px!important}
+.nav-icon{width:46px!important;height:46px!important;margin-bottom:11px!important}
+.nav-icon svg{width:43px!important;height:43px!important;stroke-width:1.9!important}
+@media (max-width:520px), (pointer:coarse) and (max-width:700px){
+  :root{--m9-nav-title-size:28px}
+  .company-subtitle,.nav-label{font-size:var(--m9-nav-title-size)!important}
+  .nav button{min-height:150px!important;padding:15px 6px 13px!important}
+  .nav-icon{width:44px!important;height:44px!important;margin-bottom:10px!important}
+  .nav-icon svg{width:41px!important;height:41px!important}
+}
+
+
+/* ============================================================
+   P5A1-RM-FAST1M10 | Manual light/dark theme toggle
+   Default follows device; first manual toggle persists locally.
+   ============================================================ */
+.company-banner{position:relative!important}
+.theme-toggle{
+  position:absolute!important;right:4px!important;top:18px!important;z-index:5!important;
+  width:50px!important;height:50px!important;min-width:50px!important;min-height:50px!important;
+  margin:0!important;padding:0!important;border-radius:999px!important;
+  display:grid!important;place-items:center!important;
+  background:var(--m8-surface)!important;color:var(--m8-blue-deep)!important;
+  border:1px solid var(--m8-border)!important;box-shadow:var(--m8-shadow)!important;
+  font-size:27px!important;line-height:1!important;font-weight:900!important;
+}
+.theme-toggle:active{transform:scale(.96)!important}
+.theme-toggle .theme-glyph{display:block;transform:translateY(-1px)}
+
+/* Explicit LIGHT always wins, even if the phone itself is in Dark Mode. */
+html[data-theme="light"]{
+  color-scheme:light!important;
+  --m8-page:#f7f2ea;--m8-surface:#fffdfa;--m8-surface-2:#fbf7f1;--m8-ink:#172238;
+  --m8-muted:#667085;--m8-border:#ddd7cf;--m8-blue:#0b6de8;--m8-blue-deep:#064fae;
+  --m8-blue-soft:#eaf3ff;--m8-shadow:0 3px 12px rgba(25,34,48,.08);
+}
+html[data-theme="light"] .company-logo{border-color:rgba(11,109,232,.22)!important;box-shadow:0 6px 20px rgba(16,54,105,.16)!important}
+html[data-theme="light"] .lang-switch{background:var(--m8-surface)!important}
+html[data-theme="light"] .nav button{background:var(--m8-surface)!important;color:var(--m8-blue-deep)!important;border-color:var(--m8-border)!important}
+html[data-theme="light"] .nav button.active,html[data-theme="light"] .nav button[aria-current="page"]{background:var(--m8-blue)!important;color:#fff!important;border-color:var(--m8-blue)!important}
+html[data-theme="light"] .nav-icon-badged .badge-count{border-color:var(--m8-surface)!important}
+html[data-theme="light"] .nav button.active .nav-icon-badged .badge-count,html[data-theme="light"] .nav button[aria-current="page"] .nav-icon-badged .badge-count{border-color:var(--m8-blue)!important}
+html[data-theme="light"] button.secondary{background:#e9e6e1!important;color:var(--m8-ink)!important}
+html[data-theme="light"] .error{background:#fee2e2!important;color:#991b1b!important}
+html[data-theme="light"] .success{background:#dcfce7!important;color:#166534!important}
+html[data-theme="light"] .proxy-ok{background:#dcfce7!important;color:#166534!important;border-color:#86efac!important}
+html[data-theme="light"] .proxy-warn{background:#fef2f2!important;color:#991b1b!important;border-color:#fecaca!important}
+html[data-theme="light"] .dept-conflict,html[data-theme="light"] .att-warning{background:#fffbeb!important;color:#92400e!important;border-color:#fcd34d!important}
+html[data-theme="light"] .att-day{background:var(--m8-surface)!important;border-color:var(--m8-border)!important;color:var(--m8-ink)!important}
+html[data-theme="light"] .att-day.warn{background:#fffbeb!important}html[data-theme="light"] .att-day.bad{background:#fef2f2!important}html[data-theme="light"] .att-day.leave-day{background:#eef6ff!important}html[data-theme="light"] .att-day.rest{background:#f4f4f5!important}
+html[data-theme="light"] .line-auth-link{background:var(--m8-blue)!important;color:#fff!important}
+
+/* Explicit DARK always wins, even if the phone itself is in Light Mode. */
+html[data-theme="dark"]{
+  color-scheme:dark!important;
+  --m8-page:#071426;--m8-surface:#0f2138;--m8-surface-2:#142a45;--m8-ink:#f5f8ff;
+  --m8-muted:#aebbd0;--m8-border:#29415f;--m8-blue:#1686ff;--m8-blue-deep:#83c5ff;
+  --m8-blue-soft:#16385e;--m8-shadow:0 4px 16px rgba(0,0,0,.28);
+}
+html[data-theme="dark"] .company-logo{border-color:#79b8ff!important;box-shadow:0 0 22px rgba(22,134,255,.24)!important}
+html[data-theme="dark"] .lang-switch{background:#0d1c31!important}
+html[data-theme="dark"] .nav button{background:linear-gradient(180deg,#162b46,#102138)!important;color:#8dccff!important;border-color:#2d4564!important}
+html[data-theme="dark"] .nav button.active,html[data-theme="dark"] .nav button[aria-current="page"]{background:linear-gradient(180deg,#1686ff,#0b6de8)!important;color:#fff!important;border-color:#47a2ff!important}
+html[data-theme="dark"] .nav-icon-badged .badge-count{border-color:#162b46!important}
+html[data-theme="dark"] .nav button.active .nav-icon-badged .badge-count,html[data-theme="dark"] .nav button[aria-current="page"] .nav-icon-badged .badge-count{border-color:#1686ff!important}
+html[data-theme="dark"] button.secondary{background:#223650!important;color:#f5f8ff!important}
+html[data-theme="dark"] .error{background:#451d26!important;color:#fecdd3!important}
+html[data-theme="dark"] .success{background:#123b2d!important;color:#bbf7d0!important}
+html[data-theme="dark"] .proxy-ok{background:#123b2d!important;color:#bbf7d0!important;border-color:#2d6a50!important}
+html[data-theme="dark"] .proxy-warn{background:#451d26!important;color:#fecdd3!important;border-color:#7f3341!important}
+html[data-theme="dark"] .dept-conflict,html[data-theme="dark"] .att-warning{background:#463614!important;color:#fde68a!important;border-color:#7c641e!important}
+html[data-theme="dark"] .att-day{background:var(--m8-surface)!important;border-color:var(--m8-border)!important;color:var(--m8-ink)!important}
+html[data-theme="dark"] .att-day.warn{background:#463614!important}html[data-theme="dark"] .att-day.bad{background:#451d26!important}html[data-theme="dark"] .att-day.leave-day{background:#16385e!important}html[data-theme="dark"] .att-day.rest{background:#11243b!important}
+html[data-theme="dark"] .line-auth-link{background:var(--m8-blue)!important;color:#fff!important}
+
+@media (max-width:520px), (pointer:coarse) and (max-width:700px){
+  .theme-toggle{right:0!important;top:12px!important;width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important;font-size:25px!important}
+}
+
+
+
+/* ============================================================
+   P5A1-RM-HOME-FROZEN-20260930
+   Frozen UI contract: header + today + tasks + recent + 4 quick actions + notices.
+   No business-rule changes. Home paints immediately from server boot data, then hydrates.
+   ============================================================ */
+:root{
+  --fh-page:#f4f8fb;--fh-card:#ffffff;--fh-ink:#0d2345;--fh-muted:#6d7c90;
+  --fh-line:#e7edf3;--fh-blue:#0d57aa;--fh-green:#12a66a;--fh-mint:#e7faf2;
+  --fh-shadow:0 7px 24px rgba(30,61,91,.08);--fh-radius:20px;
+}
+body.home-view{background:linear-gradient(180deg,#f4fbff 0,#f7fafc 28%,#f5f7fa 100%)!important}
+body.home-view .wrap{width:100%!important;max-width:none!important;margin:0!important;padding:0 14px calc(26px + env(safe-area-inset-bottom))!important;background:transparent!important;box-sizing:border-box!important}
+body.home-view .lang-switch,body.home-view #opStatus:empty{display:none!important}
+body.home-view #app>.nav-shell{display:none!important}
+body.home-view #home{margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.frozen-company-banner{position:relative!important;margin:0 -14px 12px!important;padding:calc(12px + env(safe-area-inset-top)) 18px 22px!important;background:linear-gradient(145deg,#f7fdff 0%,#edf9f5 58%,#eaf5ff 100%)!important;color:var(--fh-ink)!important;border-radius:0 0 28px 28px!important;box-shadow:0 2px 18px rgba(30,75,112,.06)!important;text-align:left!important;display:block!important;overflow:hidden}
+.frozen-company-banner:after{content:"";position:absolute;right:-48px;bottom:-80px;width:270px;height:190px;border-radius:48% 52% 0 0;background:radial-gradient(circle at 40% 30%,rgba(82,194,154,.16),transparent 60%),linear-gradient(145deg,rgba(33,120,196,.06),rgba(26,169,104,.09));transform:rotate(-7deg);pointer-events:none}
+.frozen-topline{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:42px}
+.frozen-entry-source{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#183652;white-space:nowrap}
+.frozen-line-mark{display:grid;place-items:center;width:31px;height:31px;border-radius:9px;background:#16c45b;color:#fff;font-size:9px;font-weight:950;letter-spacing:-.04em;box-shadow:0 3px 8px rgba(22,196,91,.18)}
+.frozen-head-actions{display:flex;align-items:center;gap:9px}
+.frozen-icon-btn,.frozen-user-chip{width:auto!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;background:transparent!important;color:var(--fh-ink)!important;border:0!important;box-shadow:none!important}
+.frozen-icon-btn{position:relative;width:39px!important;height:39px!important;display:grid!important;place-items:center!important;border-radius:50%!important}
+.frozen-icon-btn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.frozen-bell-dot{position:absolute;right:6px;top:5px;width:8px;height:8px;border-radius:50%;background:#ef4444;border:2px solid #fff}
+.frozen-user-chip{display:flex!important;align-items:center!important;gap:7px!important;font-size:13px!important;font-weight:850!important}
+.frozen-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#dcecff,#cce8e0);color:#164b77;border:2px solid #fff;box-shadow:0 2px 8px rgba(20,57,90,.10);font-weight:900}
+.frozen-brand-row{position:relative;z-index:1;display:flex;align-items:center;gap:13px;margin-top:9px}
+.frozen-company-banner .company-logo{width:64px!important;height:64px!important;min-width:64px!important;margin:0!important;border:0!important;border-radius:50%!important;box-shadow:0 6px 18px rgba(14,71,143,.14)!important;background:#fff!important}
+.frozen-brand-copy{min-width:0}
+.frozen-company-banner .company-title{display:block!important;font-size:28px!important;line-height:1.13!important;letter-spacing:.01em!important;font-weight:950!important;color:#0b438c!important;text-align:left!important}
+.frozen-company-banner .company-subtitle{display:block!important;font-size:14px!important;line-height:1.4!important;font-weight:700!important;color:#607287!important;text-align:left!important;margin-top:6px!important;letter-spacing:.02em!important}
+.frozen-theme-toggle{right:10px!important;top:auto!important;bottom:12px!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;font-size:18px!important;opacity:.75!important;z-index:3!important}
+.home-dashboard{display:block;color:var(--fh-ink)}
+.home-dashboard-title{display:flex;align-items:baseline;gap:10px;margin:4px 4px 14px}.home-dashboard-title strong{font-size:28px;line-height:1;font-weight:950}.home-dashboard-title span{font-size:16px;color:#8390a1;font-weight:800}
+.fh-card{background:var(--fh-card);border:1px solid rgba(24,75,118,.07);border-radius:var(--fh-radius);box-shadow:var(--fh-shadow);margin:12px 0;padding:16px}
+.fh-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.fh-head-left{display:flex;align-items:center;gap:9px;min-width:0}.fh-card-title{font-size:18px;font-weight:950;color:var(--fh-ink);white-space:nowrap}.fh-head-action{width:auto!important;min-height:0!important;margin:0!important;padding:5px 0!important;background:transparent!important;color:#758397!important;border:0!important;font-size:13px!important;font-weight:750!important}.fh-round-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:var(--fh-mint);color:#08785a;flex:0 0 auto}.fh-round-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fh-date{font-size:13px;color:#708095;font-weight:650;text-align:right}
+.fh-today-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center}.fh-status-list{display:grid;gap:9px}.fh-status-row{display:grid;grid-template-columns:24px 94px 1fr;align-items:center;gap:5px;font-size:14px}.fh-status-row svg{width:19px;height:19px;fill:none;stroke:#8090a2;stroke-width:2}.fh-status-label{color:#718094}.fh-status-value{font-weight:900;color:#162b46;overflow-wrap:anywhere}.fh-status-pill{display:inline-flex;align-items:center;padding:5px 14px;border-radius:999px;background:#baf5d2;color:#087343;font-weight:900;width:max-content}.fh-today-art{width:128px;height:105px;border-radius:48% 52% 42% 58%;background:linear-gradient(150deg,#f0fbf7,#eaf4ff);position:relative;display:grid;place-items:center;color:#537b8d;font-size:11px;text-align:center;font-weight:750;line-height:1.4;padding:15px}.fh-today-art:before{content:"✓";display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:#fff;color:#1aa16a;font-size:25px;box-shadow:0 4px 13px rgba(28,112,83,.10);margin-bottom:4px}
+.fh-task-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.fh-task{width:100%!important;min-width:0!important;min-height:88px!important;margin:0!important;padding:10px 5px!important;border-radius:14px!important;border:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;color:#172238!important;box-shadow:none!important}.fh-task span{font-size:12px;font-weight:850;white-space:nowrap}.fh-task b{font-size:25px;line-height:1.05;font-weight:950}.fh-task.red{background:#fff0ef!important;color:#c72525!important}.fh-task.orange{background:#fff7e9!important;color:#df7d00!important}.fh-task.blue{background:#edf5ff!important;color:#1163c6!important}.fh-task.purple{background:#f5efff!important;color:#6d39b6!important}.fh-task .fh-task-label{color:#243244!important}
+.fh-list{display:grid}.fh-list-row{width:100%!important;min-height:0!important;margin:0!important;padding:10px 2px!important;border:0!important;border-top:1px solid var(--fh-line)!important;border-radius:0!important;background:transparent!important;color:inherit!important;display:grid!important;grid-template-columns:58px minmax(0,1fr) auto 18px;align-items:center;gap:8px;text-align:left!important;box-shadow:none!important;font-size:14px!important}.fh-list-row:first-child{border-top:0!important}.fh-list-date{color:#66788c;font-variant-numeric:tabular-nums}.fh-list-main{font-weight:850;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fh-list-state{padding:4px 9px;border-radius:999px;background:#fff3cf;color:#bd7300;font-size:12px;font-weight:900;white-space:nowrap}.fh-list-state.bad{background:#ffe9ec;color:#d02d43}.fh-chevron{font-size:22px;color:#75879b}
+.fh-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fh-quick{width:100%!important;min-height:95px!important;margin:0!important;padding:14px!important;border-radius:16px!important;border:0!important;display:grid!important;grid-template-columns:45px minmax(0,1fr) 18px;align-items:center!important;gap:10px!important;text-align:left!important;color:#102848!important;box-shadow:none!important}.fh-quick.green{background:linear-gradient(135deg,#e5faef,#dff6e9)!important}.fh-quick.blue{background:linear-gradient(135deg,#edf6ff,#e3f1ff)!important}.fh-quick.teal{background:linear-gradient(135deg,#e7faf8,#def5f2)!important}.fh-quick.orange{background:linear-gradient(135deg,#fff8e8,#fff2cf)!important}.fh-quick-icon{width:45px;height:45px;display:grid;place-items:center;color:#079566}.fh-quick.blue .fh-quick-icon{color:#156bd3}.fh-quick.teal .fh-quick-icon{color:#10a696}.fh-quick.orange .fh-quick-icon{color:#f59b0b}.fh-quick-icon svg{width:39px;height:39px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.fh-quick-copy{min-width:0}.fh-quick-copy b{display:block;font-size:17px;line-height:1.25;font-weight:950}.fh-quick-copy span{display:block;margin-top:4px;font-size:12px;color:#64748b;font-weight:650;line-height:1.35}.fh-quick .fh-chevron{justify-self:end}
+.fh-notice-row{display:grid;grid-template-columns:10px minmax(0,1fr) auto;align-items:start;gap:9px;padding:10px 2px;border-top:1px solid var(--fh-line);font-size:13px}.fh-notice-row:first-child{border-top:0}.fh-notice-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;margin-top:5px}.fh-notice-dot.orange{background:#f59e0b}.fh-notice-dot.blue{background:#3b82f6}.fh-notice-text{line-height:1.5;font-weight:750;color:#26384e}.fh-notice-time{color:#8692a2;font-size:11px;white-space:nowrap}.fh-empty{padding:10px 2px;color:#7a8899;font-size:13px}
+#notifications .fh-notice-row{padding:13px 0}.frozen-build-note{font-size:10px;color:#a0a9b4;text-align:center;margin:14px 0 2px}
+@media(max-width:430px){.frozen-company-banner .company-title{font-size:25px!important}.frozen-company-banner .company-logo{width:58px!important;height:58px!important;min-width:58px!important}.fh-task-grid{gap:6px}.fh-task{min-height:83px!important}.fh-task span{font-size:11px}.fh-task b{font-size:23px}.fh-today-grid{grid-template-columns:1fr}.fh-today-art{display:none}.fh-status-row{grid-template-columns:22px 88px 1fr}.fh-quick{padding:12px 10px!important;grid-template-columns:40px minmax(0,1fr) 14px}.fh-quick-icon{width:40px;height:40px}.fh-quick-icon svg{width:34px;height:34px}.fh-quick-copy b{font-size:16px}.fh-list-row{grid-template-columns:50px minmax(0,1fr) auto 14px}}
+@media(max-width:350px){.fh-task-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fh-quick-grid{grid-template-columns:1fr}}
+@media(prefers-color-scheme:dark){html:not([data-theme="light"]) body.home-view{background:#071426!important}html:not([data-theme="light"]) .fh-card{background:#0f2138;color:#f5f8ff;border-color:#29415f}html:not([data-theme="light"]) .fh-card-title,html:not([data-theme="light"]) .fh-status-value,html:not([data-theme="light"]) .fh-quick{color:#f5f8ff!important}html:not([data-theme="light"]) .fh-status-label,html:not([data-theme="light"]) .fh-date,html:not([data-theme="light"]) .fh-notice-time{color:#aebbd0}html:not([data-theme="light"]) .fh-list-row,html:not([data-theme="light"]) .fh-notice-row{border-color:#29415f!important}html:not([data-theme="light"]) .frozen-company-banner{background:linear-gradient(145deg,#0b1c32,#10304b)!important}html:not([data-theme="light"]) .frozen-company-banner .company-title,html:not([data-theme="light"]) .frozen-entry-source,html:not([data-theme="light"]) .frozen-user-chip{color:#f5f8ff!important}html:not([data-theme="light"]) .frozen-company-banner .company-subtitle{color:#b8c7d8!important}}
+html[data-theme="dark"] body.home-view{background:#071426!important}html[data-theme="dark"] .fh-card{background:#0f2138;color:#f5f8ff;border-color:#29415f}html[data-theme="dark"] .fh-card-title,html[data-theme="dark"] .fh-status-value{color:#f5f8ff}html[data-theme="dark"] .fh-status-label,html[data-theme="dark"] .fh-date,html[data-theme="dark"] .fh-notice-time{color:#aebbd0}html[data-theme="dark"] .fh-list-row,html[data-theme="dark"] .fh-notice-row{border-color:#29415f!important}html[data-theme="dark"] .frozen-company-banner{background:linear-gradient(145deg,#0b1c32,#10304b)!important}html[data-theme="dark"] .frozen-company-banner .company-title,html[data-theme="dark"] .frozen-entry-source,html[data-theme="dark"] .frozen-user-chip{color:#f5f8ff!important}html[data-theme="dark"] .frozen-company-banner .company-subtitle{color:#b8c7d8!important}
+
+
+
+/* ============================================================
+   P5A1-RM-HOME-RC2-04 | Account + management tools + direct detail
+   Q41/Q42/Q43/Q48. Frontend routing only; existing domain APIs remain SSOT.
+   ============================================================ */
+.fh-today-clickable{cursor:pointer;transition:transform .08s ease,box-shadow .16s ease}
+.fh-today-clickable:active{transform:scale(.992)}
+.fh-today-clickable:focus-visible{outline:3px solid rgba(13,87,170,.25);outline-offset:2px}
+.rc2-account-wrap{display:grid;gap:12px}
+.rc2-account-profile{display:flex;align-items:center;gap:14px;padding:4px 2px 12px;border-bottom:1px solid var(--fh-line)}
+.rc2-account-avatar{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#dcecff,#cce8e0);color:#164b77;font-size:24px;font-weight:950;flex:0 0 auto}
+.rc2-account-name{font-size:20px;font-weight:950;color:var(--fh-ink)}
+.rc2-account-meta{margin-top:3px;color:#718094;font-size:13px;line-height:1.5}
+.rc2-account-menu{display:grid;border:1px solid var(--fh-line);border-radius:16px;overflow:hidden;background:var(--fh-card)}
+.rc2-account-row{width:100%!important;min-height:54px!important;margin:0!important;padding:13px 14px!important;border:0!important;border-bottom:1px solid var(--fh-line)!important;border-radius:0!important;background:transparent!important;color:var(--fh-ink)!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto 18px;align-items:center;gap:8px;text-align:left!important;box-shadow:none!important}
+.rc2-account-row:last-child{border-bottom:0!important}.rc2-account-row b{font-size:15px}.rc2-account-row .rc2-value{font-size:12px;color:#708095;text-align:right;overflow-wrap:anywhere}.rc2-account-chevron{font-size:20px;color:#8290a2;text-align:right}
+.rc2-account-panel{padding:14px;border:1px solid var(--fh-line);border-radius:16px;background:var(--fh-card);line-height:1.65}
+.rc2-account-panel h3{margin:0 0 10px;font-size:17px}.rc2-account-detail{display:grid;grid-template-columns:105px minmax(0,1fr);gap:7px 10px;font-size:13px}.rc2-account-detail span:nth-child(odd){color:#718094}.rc2-account-detail span:nth-child(even){font-weight:800;overflow-wrap:anywhere}
+.rc2-lang-grid,.rc2-management-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rc2-lang-grid button,.rc2-management-grid button{margin:0!important}
+.rc2-account-logout{background:#b42318!important;color:#fff!important;margin-top:2px!important}
+.rc2-focus-target{animation:rc2FocusFlash 1.4s ease}
+@keyframes rc2FocusFlash{0%,100%{box-shadow:none}25%,70%{box-shadow:0 0 0 3px rgba(13,87,170,.22);border-radius:12px}}
+.rc2-recent-page-list{display:grid}.rc2-recent-page-list .fh-list-row{padding:13px 2px!important}
+@media(max-width:430px){.rc2-account-detail{grid-template-columns:88px minmax(0,1fr)}.rc2-lang-grid,.rc2-management-grid{grid-template-columns:1fr}}
+@media(prefers-color-scheme:dark){html:not([data-theme="light"]) .rc2-account-menu,html:not([data-theme="light"]) .rc2-account-panel{background:#0f2138;border-color:#29415f}html:not([data-theme="light"]) .rc2-account-name,html:not([data-theme="light"]) .rc2-account-row{color:#f5f8ff!important}html:not([data-theme="light"]) .rc2-account-row{border-color:#29415f!important}}
+html[data-theme="dark"] .rc2-account-menu,html[data-theme="dark"] .rc2-account-panel{background:#0f2138;border-color:#29415f}html[data-theme="dark"] .rc2-account-name,html[data-theme="dark"] .rc2-account-row{color:#f5f8ff!important}html[data-theme="dark"] .rc2-account-row{border-color:#29415f!important}
+
+
+/* ============================================================
+   P5A1-RM-RC2-05 | Formal Notification Center
+   Notification state is server-side; actionable work stays in Task Engine.
+   ============================================================ */
+.notification-center-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.notification-center-head h2{margin:0}
+.notification-mark-all{width:auto!important;min-height:0!important;margin:0!important;padding:8px 10px!important;font-size:12px!important}
+.notification-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 14px}
+.notification-tabs button{width:auto!important;min-height:0!important;margin:0!important;padding:8px 10px!important;font-size:12px!important}
+.notification-row{position:relative;padding:14px 4px 14px 18px;border-top:1px solid var(--fh-line);cursor:pointer}
+.notification-row:first-child{border-top:0}
+.notification-row.unread{background:rgba(13,87,170,.035)}
+.notification-row-title{font-size:14px;font-weight:900;color:var(--fh-ink);line-height:1.45;padding-right:76px}
+.notification-row-body{margin-top:5px;font-size:13px;line-height:1.55;color:#596b80;white-space:pre-line}
+.notification-row-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px;font-size:11px;color:#8995a5}
+.notification-unread-dot{position:absolute;left:3px;top:20px;width:8px;height:8px;border-radius:50%;background:#ef4444}
+.notification-category{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;background:#eef4fb;color:#3b5e83;font-size:10px;font-weight:850}
+.notification-task-link{background:#fff3cf;color:#9a6200}
+.notification-empty{padding:18px 4px;color:#7a8899;font-size:13px;text-align:center}
+@media(max-width:430px){.notification-row-title{padding-right:0}.notification-center-head{align-items:flex-start}.notification-mark-all{white-space:nowrap!important}}
+@media(prefers-color-scheme:dark){html:not([data-theme="light"]) .notification-row{border-color:#29415f}html:not([data-theme="light"]) .notification-row.unread{background:rgba(22,134,255,.07)}html:not([data-theme="light"]) .notification-row-title{color:#f5f8ff}html:not([data-theme="light"]) .notification-row-body{color:#b8c7d8}html:not([data-theme="light"]) .notification-category{background:#16385e;color:#b9dcff}}
+html[data-theme="dark"] .notification-row{border-color:#29415f}html[data-theme="dark"] .notification-row.unread{background:rgba(22,134,255,.07)}html[data-theme="dark"] .notification-row-title{color:#f5f8ff}html[data-theme="dark"] .notification-row-body{color:#b8c7d8}html[data-theme="dark"] .notification-category{background:#16385e;color:#b9dcff}
+
+
+/* ============================================================
+   P5A1-RM-RC2-07 | Unified Mobile App Inner UI
+   UI-only shell. No business-rule / auth / FAST3 / LIFF changes.
+   Design basis: ABIS Employee Service app blueprint.
+   ============================================================ */
+:root{
+  --rc2-app-bg:#f4f7fb;
+  --rc2-app-surface:#ffffff;
+  --rc2-app-header:#10233f;
+  --rc2-app-header-2:#172f50;
+  --rc2-app-blue:#1768e8;
+  --rc2-app-blue-soft:#edf5ff;
+  --rc2-app-ink:#12233d;
+  --rc2-app-muted:#718096;
+  --rc2-app-line:#e6ebf2;
+  --rc2-app-shadow:0 5px 20px rgba(31,55,86,.07);
+  --rc2-app-radius:16px;
+}
+body.inner-view{background:var(--rc2-app-bg)!important;color:var(--rc2-app-ink)!important}
+body.inner-view .wrap{max-width:620px!important;margin:0 auto!important;padding:0 14px calc(30px + env(safe-area-inset-bottom))!important;background:var(--rc2-app-bg)!important}
+body.inner-view .frozen-company-banner,
+body.inner-view .lang-switch,
+body.inner-view #app>.nav-shell{display:none!important}
+body.inner-view #app{display:block!important}
+
+.rc2-inner-topbar{display:none}
+body.inner-view .rc2-inner-topbar{
+  position:sticky;top:0;z-index:55;
+  display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;
+  min-height:58px;margin:0 -14px 14px;padding:calc(7px + env(safe-area-inset-top)) 14px 7px;
+  background:linear-gradient(180deg,var(--rc2-app-header),var(--rc2-app-header-2));
+  color:#fff;box-shadow:0 3px 14px rgba(16,35,63,.16)
+}
+.rc2-inner-back,.rc2-inner-spacer{
+  width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;
+  margin:0!important;padding:0!important;border:0!important;border-radius:50%!important;
+  background:transparent!important;color:#fff!important;box-shadow:none!important
+}
+.rc2-inner-back{display:grid!important;place-items:center!important;font-size:32px!important;font-weight:400!important;line-height:1!important}
+.rc2-inner-back:active{background:rgba(255,255,255,.10)!important}
+.rc2-inner-title{text-align:center;font-size:18px;font-weight:900;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc2-inner-spacer{pointer-events:none}
+body.inner-view #opStatus:not(.hide){position:sticky;top:calc(60px + env(safe-area-inset-top));z-index:48;margin:8px 0 12px!important}
+
+body.inner-view #app>section.card:not(#home){
+  margin:0!important;padding:0 0 84px!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;color:var(--rc2-app-ink)!important
+}
+body.inner-view #app>section.card>h2,
+body.inner-view #accountContent .rc2-account-wrap>h2{display:none!important}
+body.inner-view #notifications .notification-center-head h2{display:none!important}
+body.inner-view #notifications .notification-center-head{justify-content:flex-end;margin:0 0 12px}
+body.inner-view #recentRecordsTitle{display:none!important}
+
+/* Shared mobile typography and controls */
+body.inner-view h3{font-size:15px!important;line-height:1.4!important;color:var(--rc2-app-ink)!important;margin:18px 2px 9px!important}
+body.inner-view label{font-size:13px!important;font-weight:800!important;color:#506078!important;margin:12px 2px 6px!important}
+body.inner-view input,
+body.inner-view select,
+body.inner-view textarea{
+  min-height:48px!important;padding:12px 13px!important;border:1px solid #dbe2eb!important;
+  border-radius:12px!important;background:var(--rc2-app-surface)!important;color:var(--rc2-app-ink)!important;
+  font-size:15px!important;box-shadow:none!important
+}
+body.inner-view textarea{min-height:92px!important;resize:vertical}
+body.inner-view button:not(.rc2-inner-back):not(.frozen-icon-btn):not(.frozen-user-chip){
+  border-radius:12px!important;min-height:46px!important;font-size:14px!important;font-weight:850!important
+}
+body.inner-view button:not(.secondary):not(.danger):not(.rc2-inner-back):not(.frozen-icon-btn):not(.frozen-user-chip){background:var(--rc2-app-blue)!important;color:#fff!important}
+body.inner-view button.secondary{background:#fff!important;color:#24405f!important;border:1px solid #d9e1eb!important}
+body.inner-view button.danger,body.inner-view .rc2-account-logout{background:#e63838!important;color:#fff!important;border-color:#e63838!important}
+body.inner-view .muted,body.inner-view .tiny{color:var(--rc2-app-muted)!important}
+body.inner-view .build-tag{display:none!important}
+body.inner-view .notice,
+body.inner-view .success,
+body.inner-view .error,
+body.inner-view .dept-conflict,
+body.inner-view .proxy-warn,
+body.inner-view .proxy-ok,
+body.inner-view .att-warning{
+  border-radius:13px!important;padding:11px 12px!important;font-size:13px!important;line-height:1.55!important
+}
+body.inner-view .pill{border-radius:999px!important;padding:4px 9px!important;font-size:11px!important;font-weight:850!important}
+
+/* Leave request */
+body.inner-view #leaveForm>.grid{gap:9px!important}
+body.inner-view #draftAttachmentBox,
+body.inner-view #leaveRuleHint,
+body.inner-view #returnedEditHint{
+  background:#fff!important;border:1px solid var(--rc2-app-line)!important;box-shadow:var(--rc2-app-shadow)!important
+}
+body.inner-view #draftAttachmentBox{border-radius:15px!important;padding:13px!important}
+body.inner-view #submitLeaveBtn{margin-top:14px!important;box-shadow:0 5px 14px rgba(23,104,232,.18)!important}
+body.inner-view #evidenceLink{
+  min-height:46px!important;display:grid!important;place-items:center!important;
+  border-radius:12px!important;background:#fff!important;color:#24405f!important;
+  border:1px solid #d9e1eb!important;text-decoration:none!important;font-weight:850!important
+}
+
+/* My leave cards */
+body.inner-view #leaveList{display:grid;gap:10px}
+body.inner-view .leave{
+  padding:14px!important;margin:0!important;border:1px solid var(--rc2-app-line)!important;border-radius:var(--rc2-app-radius)!important;
+  background:var(--rc2-app-surface)!important;box-shadow:var(--rc2-app-shadow)!important;line-height:1.65!important
+}
+body.inner-view .leave .notice{box-shadow:none!important;margin:10px 0!important}
+body.inner-view .leave .row-actions{gap:8px!important}
+
+/* Attendance */
+body.inner-view .month-row{align-items:end!important;gap:8px!important;margin-bottom:10px}
+body.inner-view .month-row button{margin:0!important;width:auto!important;min-width:92px!important}
+body.inner-view .att-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+body.inner-view .att-kpi{
+  padding:10px 7px!important;border:1px solid var(--rc2-app-line)!important;border-radius:13px!important;
+  background:var(--rc2-app-surface)!important;box-shadow:none!important
+}
+body.inner-view .att-kpi b{font-size:18px!important;color:#173657!important}
+body.inner-view .att-kpi span{font-size:10px!important;line-height:1.35!important}
+body.inner-view .att-tabs{
+  display:flex!important;gap:3px!important;padding:3px!important;margin:12px 0!important;
+  border:1px solid var(--rc2-app-line)!important;border-radius:999px!important;background:#fff!important
+}
+body.inner-view .att-tabs button{flex:1!important;margin:0!important;min-height:38px!important;border:0!important;border-radius:999px!important;background:transparent!important;color:#627187!important}
+body.inner-view .att-tabs button.active{background:var(--rc2-app-header)!important;color:#fff!important}
+body.inner-view .att-calendar-head,body.inner-view .att-calendar{gap:4px!important}
+body.inner-view .att-day{min-height:66px!important;border-radius:10px!important;border-color:#e7ecf3!important;background:#fff!important}
+body.inner-view .att-detail{
+  margin:10px 0 0!important;padding:14px!important;border:1px solid var(--rc2-app-line)!important;border-radius:var(--rc2-app-radius)!important;
+  background:#fff!important;box-shadow:var(--rc2-app-shadow)!important
+}
+body.inner-view .att-detail-grid{gap:5px 10px!important}
+body.inner-view .att-punches{background:#f6f8fb!important;border-radius:10px!important}
+body.inner-view .att-correction-state{border-radius:10px!important}
+
+/* Task inbox */
+body.inner-view #inboxList>div:first-child{scrollbar-width:none}
+body.inner-view #inboxList>div:first-child::-webkit-scrollbar{display:none}
+body.inner-view #inboxList .att-work-card{
+  padding:14px!important;margin:10px 0!important;border:1px solid var(--rc2-app-line)!important;border-radius:var(--rc2-app-radius)!important;
+  background:#fff!important;box-shadow:var(--rc2-app-shadow)!important
+}
+body.inner-view #inboxList .att-work-card button{width:auto!important;min-width:110px!important;margin-top:10px!important}
+body.inner-view .att-work-section{border-top:0!important;margin-top:14px!important;padding-top:0!important}
+body.inner-view .att-work-title{font-size:16px!important;color:var(--rc2-app-ink)!important}
+
+/* Notification center */
+body.inner-view .notification-tabs{
+  display:flex!important;gap:5px!important;flex-wrap:nowrap!important;overflow-x:auto!important;
+  scrollbar-width:none;padding:3px!important;margin:0 0 12px!important;border-radius:999px!important;background:#e8edf4!important
+}
+body.inner-view .notification-tabs::-webkit-scrollbar{display:none}
+body.inner-view .notification-tabs button{flex:0 0 auto!important;min-height:36px!important;border:0!important;border-radius:999px!important;background:transparent!important;color:#53657d!important}
+body.inner-view .notification-tabs button:not(.secondary){background:var(--rc2-app-header)!important;color:#fff!important}
+body.inner-view .notification-tabs button.secondary{border:0!important;background:transparent!important}
+body.inner-view .notification-mark-all{min-height:36px!important;padding:7px 10px!important}
+body.inner-view #notificationCenterList{display:grid;gap:8px}
+body.inner-view .notification-row{
+  margin:0!important;padding:13px 12px 13px 28px!important;border:1px solid var(--rc2-app-line)!important;border-radius:14px!important;
+  background:#fff!important;box-shadow:var(--rc2-app-shadow)!important
+}
+body.inner-view .notification-row.unread{background:#fbfdff!important;border-color:#d8e8fb!important}
+body.inner-view .notification-unread-dot{left:12px!important;top:19px!important}
+body.inner-view .notification-row-title{font-size:14px!important;color:var(--rc2-app-ink)!important}
+body.inner-view .notification-row-body{font-size:12px!important;color:#64748b!important}
+
+/* Account / management */
+body.inner-view .rc2-account-wrap{gap:10px!important}
+body.inner-view .rc2-account-profile{
+  padding:14px!important;border:1px solid var(--rc2-app-line)!important;border-radius:var(--rc2-app-radius)!important;
+  background:#fff!important;box-shadow:var(--rc2-app-shadow)!important
+}
+body.inner-view .rc2-account-menu{
+  border:1px solid var(--rc2-app-line)!important;border-radius:var(--rc2-app-radius)!important;background:#fff!important;box-shadow:var(--rc2-app-shadow)!important
+}
+body.inner-view .rc2-account-row{min-height:56px!important;padding:12px 14px!important;border-color:var(--rc2-app-line)!important}
+body.inner-view .rc2-account-panel{
+  padding:15px!important;border:1px solid var(--rc2-app-line)!important;border-radius:var(--rc2-app-radius)!important;background:#fff!important;box-shadow:var(--rc2-app-shadow)!important
+}
+body.inner-view .rc2-account-panel h3{margin-top:0!important}
+body.inner-view .rc2-lang-grid button,body.inner-view .rc2-management-grid button{min-height:48px!important}
+body.inner-view .rc2-account-logout{margin-top:4px!important}
+
+/* Recent records */
+body.inner-view .rc2-recent-page-list{display:grid!important;gap:8px!important}
+body.inner-view .rc2-recent-page-list .fh-list-row{
+  padding:13px!important;border:1px solid var(--rc2-app-line)!important;border-radius:14px!important;background:#fff!important;box-shadow:var(--rc2-app-shadow)!important
+}
+
+/* Dashboard / HR tools */
+body.inner-view .dash-summary{gap:8px!important}
+body.inner-view .dash-kpi,
+body.inner-view .hr-status-box{
+  background:#fff!important;border:1px solid var(--rc2-app-line)!important;border-radius:13px!important;box-shadow:none!important
+}
+body.inner-view .dist-row,
+body.inner-view .dash-row,
+body.inner-view .hr-account{
+  margin:8px 0!important;padding:13px!important;border:1px solid var(--rc2-app-line)!important;border-radius:14px!important;background:#fff!important;box-shadow:var(--rc2-app-shadow)!important
+}
+body.inner-view .dist-row,body.inner-view .dash-row,body.inner-view .hr-account{border-bottom:1px solid var(--rc2-app-line)!important}
+body.inner-view #hrCredentialResults,body.inner-view #hrCredentialDetail{display:grid;gap:8px}
+
+@media(max-width:430px){
+  body.inner-view .grid{grid-template-columns:1fr!important;gap:0!important}
+  body.inner-view .month-row{grid-template-columns:1fr!important;align-items:stretch!important}
+  body.inner-view .month-row button{width:100%!important}
+  body.inner-view .att-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.inner-view .dash-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  body.inner-view .rc2-account-detail{grid-template-columns:92px minmax(0,1fr)!important}
+  .rc2-inner-title{font-size:17px}
+}
+
+@media(prefers-color-scheme:dark){
+  html:not([data-theme="light"]) body.inner-view{
+    --rc2-app-bg:#071426;--rc2-app-surface:#0f2138;--rc2-app-header:#0b1c32;--rc2-app-header-2:#102a47;
+    --rc2-app-ink:#f5f8ff;--rc2-app-muted:#aebbd0;--rc2-app-line:#29415f
+  }
+}
+html[data-theme="dark"] body.inner-view{
+  --rc2-app-bg:#071426;--rc2-app-surface:#0f2138;--rc2-app-header:#0b1c32;--rc2-app-header-2:#102a47;
+  --rc2-app-ink:#f5f8ff;--rc2-app-muted:#aebbd0;--rc2-app-line:#29415f
+}
+html[data-theme="dark"] body.inner-view input,html[data-theme="dark"] body.inner-view select,html[data-theme="dark"] body.inner-view textarea,
+html[data-theme="dark"] body.inner-view .leave,html[data-theme="dark"] body.inner-view .att-detail,html[data-theme="dark"] body.inner-view .att-work-card,
+html[data-theme="dark"] body.inner-view .notification-row,html[data-theme="dark"] body.inner-view .rc2-account-profile,html[data-theme="dark"] body.inner-view .rc2-account-menu,
+html[data-theme="dark"] body.inner-view .rc2-account-panel,html[data-theme="dark"] body.inner-view .rc2-recent-page-list .fh-list-row,
+html[data-theme="dark"] body.inner-view .dash-kpi,html[data-theme="dark"] body.inner-view .hr-status-box,html[data-theme="dark"] body.inner-view .dist-row,
+html[data-theme="dark"] body.inner-view .dash-row,html[data-theme="dark"] body.inner-view .hr-account{background:#0f2138!important;color:#f5f8ff!important;border-color:#29415f!important}
+html[data-theme="dark"] body.inner-view button.secondary{background:#142a45!important;color:#e5efff!important;border-color:#29415f!important}
+html[data-theme="dark"] body.inner-view .att-punches{background:#142a45!important}
+
+
+
+/* ============================================================
+   P5A1-RM-HOME-RC2-08B | HOME FULL-WIDTH HOTFIX 2026-10-01
+   Basis: ABIS ESS full-page UI presentation spec.
+   UI-only hotfix. No Leave / Attendance / Task / Notification
+   business-rule changes. No FAST3 / LIFF / Schedule Hub changes.
+   ============================================================ */
+:root{
+  --rc208-blue:#0d57aa;
+  --rc208-green:#12a66a;
+  --rc208-info:#2563eb;
+  --rc208-orange:#f59e0b;
+  --rc208-yellow:#eab308;
+  --rc208-red:#dc2626;
+  --rc208-purple:#7c3aed;
+  --rc208-gray:#94a3b8;
+}
+
+/* LINE LIFF / mobile WebView must occupy the full available viewport.
+   Apps Script WebView can report a wider layout viewport than the physical
+   phone, so no app-level max-width is allowed on touch devices. */
+html,body{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:none!important;
+  min-height:100%!important;
+  margin:0!important;
+}
+body{
+  min-height:100vh!important;
+  min-height:100svh!important;
+  min-height:100dvh!important;
+  overflow-x:hidden!important;
+}
+.wrap{
+  width:100%!important;
+  max-width:none!important;
+  min-height:100dvh!important;margin:0!important;
+  box-sizing:border-box!important;
+}
+#app,#home,.home-dashboard{
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+body.home-view .wrap,
+body.inner-view .wrap{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+body.home-view #home{min-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+
+/* Preserve a comfortable desktop reading width only on precise-pointer desktop.
+   Mobile/LIFF remains edge-to-edge within safe horizontal padding. */
+@media (min-width:900px) and (pointer:fine){
+  body:not(.home-view):not(.inner-view) .wrap{max-width:760px!important;margin:0 auto!important}
+  body.inner-view .wrap{max-width:760px!important;margin:0 auto!important}
+}
+@media (pointer:coarse), (max-width:899px){
+  body.home-view .wrap,
+  body.inner-view .wrap,
+  .wrap{max-width:none!important;width:100%!important}
+  .frozen-company-banner{width:auto!important}
+}
+
+/* Common mobile-app presentation from the UI spec. */
+body.inner-view section.card{
+  border-radius:16px!important;
+  box-shadow:0 5px 20px rgba(31,55,86,.07)!important;
+}
+body.inner-view .rc2-inner-topbar{
+  width:auto!important;
+  border-radius:0 0 16px 16px!important;
+}
+body.inner-view .leave,
+body.inner-view .approval,
+body.inner-view .notification-row,
+body.inner-view .att-detail,
+body.inner-view .att-work-card{
+  border-radius:14px!important;
+}
+
+/* Notification Center UI spec: primary tabs are All / Unread / System / HR.
+   Announcement records remain visible under All and retain their category. */
+body.inner-view .notification-tabs{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important}
+
+/* ============================================================
+   Attendance calendar — compact symbol presentation.
+   Normal attendance intentionally shows date only: no text, symbol or color.
+   ============================================================ */
+#attendanceContent{
+  overflow-x:visible!important;
+  width:100%!important;
+}
+.att-calendar-wrap{width:100%;overflow:visible}
+.att-calendar-head,.att-calendar{
+  min-width:0!important;
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(7,minmax(0,1fr))!important;
+  gap:4px!important;
+}
+.att-calendar-head{margin-top:8px}
+.att-calendar-head div{
+  min-width:0!important;
+  padding:5px 0!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  text-align:center!important;
+}
+.att-day{
+  min-width:0!important;
+  min-height:58px!important;
+  padding:6px 2px!important;
+  border:1px solid var(--rc2-app-line,#e6ebf2)!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  color:var(--rc2-app-ink,#12233d)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:4px!important;
+  cursor:pointer!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  transition:transform .08s ease,border-color .15s ease,box-shadow .15s ease!important;
+}
+.att-day:active{transform:scale(.97)}
+.att-day:focus-visible{outline:2px solid rgba(13,87,170,.35);outline-offset:1px}
+.att-day.empty{border-color:transparent!important;background:transparent!important;cursor:default!important}
+.att-day-num{font-size:12px!important;font-weight:850!important;line-height:1.15!important}
+.att-day-status{
+  min-height:20px!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  flex-wrap:wrap!important;
+  line-height:1!important;
+}
+/* RC2-08A explicitly removes status background fills from calendar cells. */
+.att-day.warn,.att-day.bad,.att-day.leave-day,.att-day.rest,.att-day.normal{
+  background:#fff!important;
+}
+.att-symbol{
+  width:17px;height:17px;
+  display:inline-grid;place-items:center;
+  font-size:11px;line-height:1;
+  font-weight:950;
+  border-radius:50%;
+  box-sizing:border-box;
+}
+.att-symbol.leave{color:var(--rc208-info);background:#dbeafe}
+.att-symbol.late{color:#fff;background:var(--rc208-orange);border-radius:5px}
+.att-symbol.early{color:#713f12;background:#fde047;border-radius:5px}
+.att-symbol.anomaly{color:#fff;background:var(--rc208-red)}
+.att-symbol.rest{color:#64748b;border:2px solid #cbd5e1;background:transparent}
+.att-symbol.pending{color:#fff;background:var(--rc208-purple);border-radius:4px;transform:rotate(45deg)}
+.att-symbol.pending > span{transform:rotate(-45deg)}
+
+.att-calendar-legend{
+  display:flex;align-items:center;gap:7px 10px;flex-wrap:wrap;
+  padding:8px 10px;margin:8px 0 10px;
+  border:1px solid var(--rc2-app-line,#e6ebf2);
+  border-radius:12px;background:rgba(255,255,255,.68);
+  font-size:11px;color:var(--rc2-app-muted,#718096);
+}
+.att-legend-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.att-legend-item .att-symbol{width:15px;height:15px;font-size:9px}
+.att-calendar-hint{font-size:11px;color:var(--rc2-app-muted,#718096);margin:2px 0 8px}
+
+@media(max-width:430px),(pointer:coarse){
+  .att-calendar-head,.att-calendar{gap:3px!important}
+  .att-day{min-height:54px!important;padding:5px 1px!important;border-radius:9px!important}
+  .att-day-num{font-size:12px!important}
+  .att-symbol{width:16px;height:16px;font-size:10px}
+  .att-calendar-legend{gap:6px 8px;padding:8px;font-size:10px}
+}
+
+@media(prefers-color-scheme:dark){
+  html:not([data-theme="light"]) .att-day{background:#0f2138!important;color:#f5f8ff!important;border-color:#29415f!important}
+  html:not([data-theme="light"]) .att-day.warn,
+  html:not([data-theme="light"]) .att-day.bad,
+  html:not([data-theme="light"]) .att-day.leave-day,
+  html:not([data-theme="light"]) .att-day.rest,
+  html:not([data-theme="light"]) .att-day.normal{background:#0f2138!important}
+  html:not([data-theme="light"]) .att-calendar-legend{background:#0f2138!important;border-color:#29415f!important;color:#aebbd0!important}
+}
+html[data-theme="dark"] .att-day{background:#0f2138!important;color:#f5f8ff!important;border-color:#29415f!important}
+html[data-theme="dark"] .att-day.warn,
+html[data-theme="dark"] .att-day.bad,
+html[data-theme="dark"] .att-day.leave-day,
+html[data-theme="dark"] .att-day.rest,
+html[data-theme="dark"] .att-day.normal{background:#0f2138!important}
+html[data-theme="dark"] .att-calendar-legend{background:#0f2138!important;border-color:#29415f!important;color:#aebbd0!important}
+
+
+/* RC2-08B | HOME FULL-WIDTH HOTFIX
+   LINE/LIFF can report a desktop-like viewport/pointer combination inside the WebView.
+   Home must therefore never inherit the desktop reading-width cap. */
+body.home-view .wrap{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important}
+body.home-view #app,body.home-view #home,body.home-view .home-dashboard{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important}
+
+
+/* ============================================================
+   P5A1-RM-HOME-RC2-08C | MOBILE TYPOGRAPHY + DARK CONTRAST
+   2026-10-01
+   Presentation-only. No business-rule / Backend / FAST3 / LIFF /
+   Schedule Hub behavior changes.
+   ============================================================ */
+
+/* Larger mobile-first typography for the full-width HOME layout. */
+body.home-view .frozen-entry-source{font-size:15px!important}
+body.home-view .frozen-user-chip{font-size:15px!important}
+body.home-view .frozen-company-banner .company-subtitle{font-size:16px!important;line-height:1.45!important}
+body.home-view .home-dashboard-title strong{font-size:31px!important;line-height:1.05!important}
+body.home-view .home-dashboard-title span{font-size:18px!important}
+body.home-view .fh-card{padding:18px!important}
+body.home-view .fh-card-title{font-size:20px!important}
+body.home-view .fh-head-action{font-size:15px!important}
+body.home-view .fh-date{font-size:15px!important}
+body.home-view .fh-status-list{gap:11px!important}
+body.home-view .fh-status-row{grid-template-columns:24px 112px minmax(0,1fr)!important;gap:7px!important;font-size:17px!important;line-height:1.35!important}
+body.home-view .fh-status-label{font-size:17px!important;font-weight:750!important}
+body.home-view .fh-status-value{font-size:17px!important}
+body.home-view .fh-status-pill{font-size:16px!important;padding:7px 15px!important}
+body.home-view .fh-task{min-height:96px!important;padding:12px 6px!important}
+body.home-view .fh-task span{font-size:14px!important;line-height:1.25!important}
+body.home-view .fh-task b{font-size:28px!important}
+body.home-view .fh-list-row{font-size:16px!important;line-height:1.4!important;padding:12px 2px!important;grid-template-columns:62px minmax(0,1fr) auto 18px!important}
+body.home-view .fh-list-date{font-size:15px!important}
+body.home-view .fh-list-main{font-size:16px!important}
+body.home-view .fh-list-state{font-size:13px!important;padding:5px 10px!important}
+body.home-view .fh-quick{min-height:106px!important;padding:16px!important}
+body.home-view .fh-quick-copy b{font-size:19px!important;line-height:1.3!important}
+body.home-view .fh-quick-copy span{font-size:14px!important;line-height:1.45!important}
+body.home-view .fh-notice-row{font-size:15px!important;line-height:1.5!important;padding:12px 2px!important}
+body.home-view .fh-notice-text{font-size:15px!important}
+body.home-view .fh-notice-time{font-size:13px!important}
+body.home-view .fh-empty{font-size:15px!important;line-height:1.5!important}
+body.home-view .frozen-build-note{font-size:11px!important}
+
+/* Keep the larger type on iPhone / LIFF. The older <=430px rules must not
+   shrink the important dashboard text back down. */
+@media(max-width:430px),(pointer:coarse){
+  body.home-view .frozen-company-banner .company-title{font-size:28px!important}
+  body.home-view .frozen-company-banner .company-subtitle{font-size:15px!important}
+  body.home-view .home-dashboard-title strong{font-size:30px!important}
+  body.home-view .home-dashboard-title span{font-size:18px!important}
+  body.home-view .fh-card-title{font-size:20px!important}
+  body.home-view .fh-head-action{font-size:15px!important}
+  body.home-view .fh-date{font-size:15px!important}
+  body.home-view .fh-status-row{grid-template-columns:22px 108px minmax(0,1fr)!important;font-size:17px!important}
+  body.home-view .fh-status-label,body.home-view .fh-status-value{font-size:17px!important}
+  body.home-view .fh-task{min-height:94px!important}
+  body.home-view .fh-task span{font-size:14px!important}
+  body.home-view .fh-task b{font-size:28px!important}
+  body.home-view .fh-list-row{font-size:16px!important;grid-template-columns:56px minmax(0,1fr) auto 14px!important}
+  body.home-view .fh-list-date{font-size:14px!important}
+  body.home-view .fh-quick{min-height:104px!important;padding:14px 12px!important}
+  body.home-view .fh-quick-copy b{font-size:19px!important}
+  body.home-view .fh-quick-copy span{font-size:14px!important}
+  body.home-view .fh-notice-row,body.home-view .fh-notice-text{font-size:15px!important}
+  body.home-view .fh-notice-time{font-size:13px!important}
+}
+
+/* Dark mode: every text item sitting directly on a dark HOME surface is white.
+   Colored task / quick-action tiles keep their own high-contrast palette. */
+@media(prefers-color-scheme:dark){
+  html:not([data-theme="light"]) body.home-view .home-dashboard,
+  html:not([data-theme="light"]) body.home-view .home-dashboard-title strong,
+  html:not([data-theme="light"]) body.home-view .home-dashboard-title span,
+  html:not([data-theme="light"]) body.home-view .fh-card,
+  html:not([data-theme="light"]) body.home-view .fh-card-title,
+  html:not([data-theme="light"]) body.home-view .fh-head-action,
+  html:not([data-theme="light"]) body.home-view .fh-date,
+  html:not([data-theme="light"]) body.home-view .fh-status-label,
+  html:not([data-theme="light"]) body.home-view .fh-status-value,
+  html:not([data-theme="light"]) body.home-view .fh-list-row,
+  html:not([data-theme="light"]) body.home-view .fh-list-date,
+  html:not([data-theme="light"]) body.home-view .fh-list-main,
+  html:not([data-theme="light"]) body.home-view .fh-chevron,
+  html:not([data-theme="light"]) body.home-view .fh-notice-text,
+  html:not([data-theme="light"]) body.home-view .fh-notice-time,
+  html:not([data-theme="light"]) body.home-view .fh-empty,
+  html:not([data-theme="light"]) body.home-view .frozen-build-note,
+  html:not([data-theme="light"]) body.home-view .frozen-company-banner .company-subtitle{
+    color:#ffffff!important;
+  }
+  html:not([data-theme="light"]) body.home-view .fh-status-row svg{stroke:#ffffff!important}
+}
+
+html[data-theme="dark"] body.home-view .home-dashboard,
+html[data-theme="dark"] body.home-view .home-dashboard-title strong,
+html[data-theme="dark"] body.home-view .home-dashboard-title span,
+html[data-theme="dark"] body.home-view .fh-card,
+html[data-theme="dark"] body.home-view .fh-card-title,
+html[data-theme="dark"] body.home-view .fh-head-action,
+html[data-theme="dark"] body.home-view .fh-date,
+html[data-theme="dark"] body.home-view .fh-status-label,
+html[data-theme="dark"] body.home-view .fh-status-value,
+html[data-theme="dark"] body.home-view .fh-list-row,
+html[data-theme="dark"] body.home-view .fh-list-date,
+html[data-theme="dark"] body.home-view .fh-list-main,
+html[data-theme="dark"] body.home-view .fh-chevron,
+html[data-theme="dark"] body.home-view .fh-notice-text,
+html[data-theme="dark"] body.home-view .fh-notice-time,
+html[data-theme="dark"] body.home-view .fh-empty,
+html[data-theme="dark"] body.home-view .frozen-build-note,
+html[data-theme="dark"] body.home-view .frozen-company-banner .company-subtitle{
+  color:#ffffff!important;
+}
+html[data-theme="dark"] body.home-view .fh-status-row svg{stroke:#ffffff!important}
+
+
+/* ============================================================
+   P5A1-RM-HOME-RC2-08G | TASK + ATTENDANCE CALENDAR TYPOGRAPHY
+   2026-10-01
+   Presentation-only. No business-rule / Backend / Schedule Hub changes.
+   ============================================================ */
+
+/* 1) HOME four actionable cards: labels are intentionally large for phone use. */
+body.home-view .fh-task{min-height:108px!important;padding:12px 5px!important}
+body.home-view .fh-task span{font-size:20px!important;line-height:1.2!important;white-space:normal!important;text-align:center!important}
+body.home-view .fh-task b{font-size:30px!important;line-height:1!important}
+
+/* 2) Attendance monthly KPI labels: 20px under the numeric value. */
+body.inner-view .att-kpi{padding:14px 8px!important;min-height:92px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important}
+body.inner-view .att-kpi b{font-size:23px!important;line-height:1.15!important}
+body.inner-view .att-kpi span{font-size:20px!important;line-height:1.25!important;font-weight:750!important;text-align:center!important}
+
+/* 3) Calendar geometry: larger date and symbol area, but still 7 columns. */
+body.inner-view .att-calendar-head div{font-size:13px!important;padding:6px 0!important}
+body.inner-view .att-day{min-height:76px!important;padding:8px 2px!important;gap:7px!important}
+body.inner-view .att-day-num{font-size:14px!important;line-height:1.15!important;font-weight:900!important}
+body.inner-view .att-day-status{min-height:24px!important;gap:4px!important}
+
+/* Main calendar symbol target: 20px badge, 13px glyph. */
+body.inner-view .att-symbol{width:20px!important;height:20px!important;font-size:13px!important}
+
+/* Rest day / public holiday day number is red. Missing calendar data is not. */
+body.inner-view .att-day.is-rest-date .att-day-num{color:#d92d20!important}
+
+/* 4) Calendar legend / hint: 15px and readable in both themes. */
+body.inner-view .att-calendar-legend{font-size:15px!important;line-height:1.4!important;gap:9px 13px!important;padding:10px 12px!important}
+body.inner-view .att-legend-item{gap:6px!important}
+body.inner-view .att-legend-item .att-symbol{width:18px!important;height:18px!important;font-size:11px!important}
+body.inner-view .att-calendar-hint{font-size:15px!important;line-height:1.45!important;margin:4px 0 10px!important}
+
+@media(max-width:430px),(pointer:coarse){
+  body.home-view .fh-task{min-height:108px!important}
+  body.home-view .fh-task span{font-size:20px!important}
+  body.home-view .fh-task b{font-size:30px!important}
+  body.inner-view .att-day{min-height:72px!important;padding:7px 1px!important}
+  body.inner-view .att-day-num{font-size:14px!important}
+  body.inner-view .att-symbol{width:20px!important;height:20px!important;font-size:13px!important}
+  body.inner-view .att-calendar-legend{font-size:15px!important;gap:8px 10px!important;padding:10px!important}
+  body.inner-view .att-legend-item .att-symbol{width:18px!important;height:18px!important;font-size:11px!important}
+  body.inner-view .att-calendar-hint{font-size:15px!important}
+}
+
+/* Dark theme contrast for monthly summary, legend and red rest-day date. */
+@media(prefers-color-scheme:dark){
+  html:not([data-theme="light"]) body.inner-view .att-kpi span,
+  html:not([data-theme="light"]) body.inner-view .att-kpi b,
+  html:not([data-theme="light"]) body.inner-view .att-calendar-legend,
+  html:not([data-theme="light"]) body.inner-view .att-calendar-hint,
+  html:not([data-theme="light"]) body.inner-view .att-calendar-head div{
+    color:#ffffff!important;
+  }
+  html:not([data-theme="light"]) body.inner-view .att-day.is-rest-date .att-day-num{color:#ff6b6b!important}
+}
+html[data-theme="dark"] body.inner-view .att-kpi span,
+html[data-theme="dark"] body.inner-view .att-kpi b,
+html[data-theme="dark"] body.inner-view .att-calendar-legend,
+html[data-theme="dark"] body.inner-view .att-calendar-hint,
+html[data-theme="dark"] body.inner-view .att-calendar-head div{
+  color:#ffffff!important;
+}
+html[data-theme="dark"] body.inner-view .att-day.is-rest-date .att-day-num{color:#ff6b6b!important}
+
+
+.r2-deeplink-focus{z-index:9999}.r2-deeplink-focus .confirm-dialog{max-width:520px}.r2-deeplink-focus .att-correction-form{width:min(520px,calc(100vw - 24px))}
+</style>
+
+<style>
+/* RC2-08F Factory Weekly Rest Management */
+.rc208f-schedule-wrap{display:grid;gap:14px}
+.rc208f-schedule-note{padding:12px 14px;border-radius:14px;border:1px solid var(--rc2-app-line,#dfe5ee);background:var(--rc2-app-surface,#fff);line-height:1.55}
+.rc208f-schedule-form{display:grid;gap:12px;padding:14px;border:1px solid var(--rc2-app-line,#dfe5ee);border-radius:16px;background:var(--rc2-app-surface,#fff)}
+.rc208f-schedule-meta{display:grid;grid-template-columns:96px minmax(0,1fr);gap:6px 10px;font-size:14px;line-height:1.45}
+.rc208f-schedule-meta span:nth-child(odd){opacity:.72}
+.rc208f-weekdays{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rc208f-weekday{display:flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:8px;border:1px solid var(--rc2-app-line,#dfe5ee);border-radius:12px;background:var(--rc2-app-surface,#fff);font-size:15px;font-weight:700;cursor:pointer}
+.rc208f-weekday input{width:18px;height:18px;margin:0}
+.rc208f-schedule-actions{display:grid;grid-template-columns:1fr;gap:8px}
+.rc208f-schedule-actions button{min-height:48px!important;margin:0!important}
+.rc208f-schedule-form select,.rc208f-schedule-form input[type="date"]{width:100%;min-height:46px;font-size:16px}
+.rc208f-current-rule{font-size:14px;line-height:1.5}
+body.dark .rc208f-schedule-note,body.dark .rc208f-schedule-form,body[data-theme="dark"] .rc208f-schedule-note,body[data-theme="dark"] .rc208f-schedule-form{color:#fff;background:#101b2b;border-color:#2c3c51}
+body.dark .rc208f-weekday,body[data-theme="dark"] .rc208f-weekday{color:#fff;background:#172438;border-color:#33465f}
+body.dark .rc208f-schedule-meta span,body[data-theme="dark"] .rc208f-schedule-meta span{color:#fff}
+@media(max-width:430px){.rc208f-weekdays{grid-template-columns:repeat(2,minmax(0,1fr))}.rc208f-schedule-meta{grid-template-columns:82px minmax(0,1fr)}}
+
+
+/* ============================================================================
+   P5A1-RM-HOME-RC2-08G | MANAGEMENT MENU VISIBILITY + LARGE MENU TYPE
+   - HR / ADMIN schedule-management visibility no longer depends only on a cached
+     scheduleManagement payload.
+   - Opening Management Tools refreshes HOME authorization in the background so
+     Production Control users recover from stale FAST3/server-boot home payloads.
+   - Navigation/menu button text is minimum 26px (>25px) for phone readability.
+   ============================================================================ */
+body.inner-view .rc2-account-row b{
+  font-size:26px!important;
+  line-height:1.32!important;
+}
+body.inner-view .rc2-account-row{
+  min-height:68px!important;
+  padding:15px 16px!important;
+}
+body.inner-view .rc2-management-grid button,
+body.inner-view .rc2-lang-grid button{
+  min-height:68px!important;
+  font-size:26px!important;
+  line-height:1.28!important;
+  font-weight:900!important;
+  padding:14px 16px!important;
+}
+body.home-view .fh-quick-copy b{
+  font-size:26px!important;
+  line-height:1.25!important;
+}
+body.home-view .fh-quick{
+  min-height:116px!important;
+}
+body.inner-view .rc208f-weekday{
+  min-height:62px!important;
+  font-size:26px!important;
+  line-height:1.2!important;
+  font-weight:850!important;
+}
+body.inner-view .rc208f-weekday input{
+  width:24px!important;
+  height:24px!important;
+}
+@media(max-width:430px),(pointer:coarse){
+  body.inner-view .rc2-account-row b,
+  body.inner-view .rc2-management-grid button,
+  body.inner-view .rc2-lang-grid button,
+  body.home-view .fh-quick-copy b,
+  body.inner-view .rc208f-weekday{
+    font-size:26px!important;
+  }
+}
+
+
+/* ============================================================================
+   P5A1-RM-HOME-RC2-08H | BULK WEEKLY REST + LARGE MOBILE CONTROLS
+   ============================================================================ */
+body.inner-view .rc2-management-grid{grid-template-columns:1fr!important;gap:14px!important}
+body.inner-view .rc2-management-grid button{
+  min-height:92px!important;
+  font-size:32px!important;
+  line-height:1.24!important;
+  font-weight:900!important;
+  padding:20px 18px!important;
+  border-radius:16px!important;
+}
+body.inner-view .rc2-account-row{min-height:82px!important;padding:18px 18px!important}
+body.inner-view .rc2-account-row b{font-size:30px!important;line-height:1.25!important}
+body.inner-view .rc2-lang-grid button,
+body.home-view .fh-quick-copy b{
+  font-size:30px!important;
+}
+body.inner-view .rc208h-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:end;padding:16px;border:1px solid var(--rc2-app-line,#dfe5ee);border-radius:16px;background:var(--rc2-app-surface,#fff)}
+body.inner-view .rc208h-toolbar label{margin:0;font-size:20px}
+body.inner-view .rc208h-toolbar input[type="date"]{min-height:60px;font-size:24px!important}
+body.inner-view .rc208h-change-count{font-size:22px;font-weight:800;white-space:nowrap;padding-bottom:12px}
+body.inner-view .rc208h-bulk-list{display:grid;gap:10px}
+body.inner-view .rc208h-bulk-head{display:grid;grid-template-columns:minmax(120px,34%) minmax(0,66%);gap:10px;padding:0 8px;font-size:20px;font-weight:900;color:var(--fh-muted,#64748b)}
+body.inner-view .rc208h-bulk-row{display:grid;grid-template-columns:minmax(120px,34%) minmax(0,66%);gap:10px;align-items:center;padding:14px;border:2px solid var(--rc2-app-line,#dfe5ee);border-radius:16px;background:var(--rc2-app-surface,#fff)}
+body.inner-view .rc208h-bulk-row.is-dirty{border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.10)}
+body.inner-view .rc208h-employee-cell{display:flex;flex-direction:column;gap:5px;min-width:0}
+body.inner-view .rc208h-employee-cell b{font-size:24px;line-height:1.22;overflow-wrap:anywhere}
+body.inner-view .rc208h-employee-cell span{font-size:16px;line-height:1.35;color:var(--fh-muted,#64748b);overflow-wrap:anywhere}
+body.inner-view .rc208h-employee-cell em{font-style:normal;display:inline-block;width:max-content;max-width:100%;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:14px;font-weight:800}
+body.inner-view .rc208h-change-badge{color:#2563eb!important;font-weight:900!important}
+body.inner-view .rc208h-rest-cell{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+body.inner-view .rc208h-day{display:flex;align-items:center;justify-content:center;gap:6px;min-height:58px;margin:0!important;padding:8px 6px;border:1px solid var(--rc2-app-line,#dfe5ee);border-radius:12px;background:var(--rc2-app-surface,#fff);cursor:pointer}
+body.inner-view .rc208h-day span{font-size:26px!important;line-height:1.15;font-weight:900;white-space:nowrap}
+body.inner-view .rc208h-day input{width:25px!important;height:25px!important;margin:0!important;flex:0 0 auto}
+body.inner-view .rc208f-schedule-actions button{min-height:88px!important;font-size:30px!important;line-height:1.25!important;font-weight:900!important;border-radius:16px!important}
+body.inner-view .confirm-dialog{width:min(92vw,560px)!important;padding:24px!important;border-radius:22px!important}
+body.inner-view .confirm-dialog h2{font-size:30px!important;line-height:1.25!important}
+body.inner-view .confirm-body{font-size:22px!important;line-height:1.55!important}
+body.inner-view .confirm-actions button{min-height:70px!important;font-size:28px!important;font-weight:900!important}
+body.dark .rc208h-toolbar,body.dark .rc208h-bulk-row,body.dark .rc208h-day,
+body[data-theme="dark"] .rc208h-toolbar,body[data-theme="dark"] .rc208h-bulk-row,body[data-theme="dark"] .rc208h-day{background:#101b2b;color:#fff;border-color:#33465f}
+body.dark .rc208h-employee-cell span,body[data-theme="dark"] .rc208h-employee-cell span{color:#d5deea}
+@media(max-width:430px),(pointer:coarse){
+  body.inner-view .rc2-management-grid button{font-size:32px!important;min-height:92px!important}
+  body.inner-view .rc2-account-row b{font-size:30px!important}
+  body.inner-view .rc208h-bulk-row,body.inner-view .rc208h-bulk-head{grid-template-columns:minmax(108px,34%) minmax(0,66%)}
+  body.inner-view .rc208h-rest-cell{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  body.inner-view .rc208h-day span{font-size:26px!important}
+}
+</style>
+
+<style id="abisEssM8ReportsStyle">
+  .abis-m8-root{display:grid;gap:14px;min-width:0;color:var(--abis-ui-text-strong,#142640)}
+  .abis-m8-root *{box-sizing:border-box}
+  .abis-m8-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-width:0}
+  .abis-m8-head>div{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
+  .abis-m8-head h3{margin:0;font-size:18px;line-height:1.35;color:var(--abis-ui-text-strong,#142640)}
+  .abis-m8-head>strong{font-size:13px;line-height:1.35;color:#53677e;text-align:right;overflow-wrap:anywhere}
+  .abis-m8-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:12px;border:1px solid #dbe6ef;border-radius:16px;background:#fff;min-width:0}
+  .abis-m8-filter{display:grid;gap:5px;min-width:0;margin:0}
+  .abis-m8-filter>span{font-size:12px;line-height:1.35;font-weight:800;color:#53677e}
+  .abis-m8-filter input,.abis-m8-filter select{width:100%;min-width:0;min-height:44px;margin:0;padding:9px 10px;border:1px solid #cbd8e5;border-radius:11px;background:#fff;color:#142640;font:inherit}
+  .abis-m8-filter select:disabled{background:#f2f5f8;color:#8192a6;opacity:1}
+  .abis-m8-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .abis-m8-actions>button,.abis-m8-export button,.abis-m8-back,.abis-m8-source-btn{min-height:44px;padding:10px 16px;line-height:1.25}
+  .abis-m8-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0}
+  .abis-m8-report-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"text value" "text arrow";gap:5px 12px;align-items:center;min-height:104px;margin:0;padding:16px;border:1px solid #0f5fcf!important;border-radius:16px;background:#1768e8!important;color:#fff!important;text-align:left;box-shadow:0 3px 10px rgba(23,104,232,.18);cursor:pointer}
+  .abis-m8-report-card>div{grid-area:text;display:grid;gap:7px;min-width:0;color:#fff!important}
+  .abis-m8-report-card>div>b{font-size:17px;line-height:1.35;color:#fff!important;font-weight:900}
+  .abis-m8-report-card>div>span{font-size:14px;line-height:1.45;color:rgba(255,255,255,.92)!important;font-weight:700;overflow-wrap:anywhere}
+  .abis-m8-report-card>strong{grid-area:value;font-size:25px;line-height:1;color:#fff!important;text-align:right;font-weight:900}
+  .abis-m8-report-card>i{grid-area:arrow;font-style:normal;font-size:26px;line-height:1;color:#fff!important;text-align:right;font-weight:900}
+  .abis-m8-report-card>small{position:absolute;right:14px;bottom:12px;font-size:13px;line-height:1.3;color:rgba(255,255,255,.94)!important;font-weight:800}
+  .abis-m8-report-card:active{transform:scale(.995)}
+  .abis-m8-report-card.is-disabled{cursor:default;background:#e8eef6!important;color:#475569!important;border-color:#cbd5e1!important;box-shadow:none}
+  .abis-m8-report-card.is-disabled>div,.abis-m8-report-card.is-disabled>div>b{color:#475569!important}
+  .abis-m8-report-card.is-disabled>div>span,.abis-m8-report-card.is-disabled>small{color:#64748b!important}
+  .abis-m8-report-card.is-disabled>strong,.abis-m8-report-card.is-disabled>i{color:#64748b!important}
+  .abis-m8-info,.abis-m8-note,.abis-m8-boundary-list>div{padding:11px 12px;border-radius:12px;font-size:12px;line-height:1.55}
+  .abis-m8-info{background:#eef5fb;color:#31516f;border:1px solid #d4e4f1}
+  .abis-m8-note{background:#f6f8fa;color:#53677e;border:1px solid #e2e8ef}
+  .abis-m8-boundary-list{display:grid;gap:7px}
+  .abis-m8-boundary-list>div{background:#fff8e7;color:#74531b;border:1px solid #f0dfad}
+  .abis-m8-error{padding:11px 12px;border-radius:12px;background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;font-size:13px;line-height:1.5}
+  .abis-m8-success{display:grid;gap:5px;padding:11px 12px;border-radius:12px;background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0;font-size:13px;line-height:1.45}
+  .abis-m8-success a{justify-self:start;color:#0f5a43;font-weight:800;text-decoration:underline}
+  .abis-m8-skeleton{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .abis-m8-skeleton i{display:block;height:96px;border-radius:16px;background:linear-gradient(90deg,#eef2f6,#f8fafc,#eef2f6);background-size:220% 100%;animation:abisM8Skeleton 1.3s linear infinite}
+  @keyframes abisM8Skeleton{0%{background-position:100% 0}100%{background-position:-100% 0}}
+  .abis-m8-kpi-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;min-width:0}
+  .abis-m8-kpi{display:grid;gap:5px;min-height:84px;padding:12px;border:1px solid #dbe6ef;border-radius:14px;background:#fff;align-content:center;min-width:0}
+  .abis-m8-kpi>b{font-size:20px;line-height:1.1;color:#0f4f83;overflow-wrap:anywhere}
+  .abis-m8-kpi>span{font-size:12px;line-height:1.35;color:#53677e;font-weight:700}
+  .abis-m8-kpi>small{font-size:11px;color:#8192a6}
+  .abis-m8-analysis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .abis-m8-dist{padding:12px;border:1px solid #dbe6ef;border-radius:14px;background:#fff;min-width:0}
+  .abis-m8-dist h4{margin:0 0 10px;font-size:13px;color:#142640}
+  .abis-m8-dist>div{display:grid;grid-template-columns:minmax(70px,1fr) minmax(80px,2fr) auto;align-items:center;gap:8px;margin:7px 0;min-width:0}
+  .abis-m8-dist span{font-size:12px;color:#53677e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .abis-m8-dist i{display:block;height:8px;border-radius:99px;background:#eef2f6;overflow:hidden}
+  .abis-m8-dist em{display:block;height:100%;border-radius:inherit;background:#5a87ad}
+  .abis-m8-dist b{font-size:12px;color:#142640}
+  .abis-m8-export{display:grid;gap:9px;padding:12px;border:1px solid #dbe6ef;border-radius:14px;background:#fff}
+  .abis-m8-export>div:not(.abis-m8-error):not(.abis-m8-success){display:flex;gap:8px;flex-wrap:wrap}
+  .abis-m8-back{justify-self:start;width:auto;margin:0;background:#eef3f7;color:#163955;border:1px solid #d7e2eb}
+  .abis-m8-row-count{font-size:12px;color:#53677e;font-weight:700}
+  .abis-m8-mobile-rows{display:none}
+  .abis-m8-row-card{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 14px;border:1px solid #dbe6ef;border-radius:14px;background:#fff;min-width:0}
+  .abis-m8-row-card>div{display:grid;gap:4px;min-width:0}
+  .abis-m8-row-card b{font-size:14px;line-height:1.35;color:#142640;overflow-wrap:anywhere}
+  .abis-m8-row-card span,.abis-m8-row-card small{font-size:12px;line-height:1.45;color:#53677e;overflow-wrap:anywhere}
+  .abis-m8-source-btn{width:auto;min-width:86px;flex:0 0 auto;background:#eef5fb;color:#1e557f;border:1px solid #cfdfec}
+  .abis-m8-desktop-table{overflow:auto;border:1px solid #dbe6ef;border-radius:14px;background:#fff;max-width:100%}
+  .abis-m8-desktop-table table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
+  .abis-m8-desktop-table th,.abis-m8-desktop-table td{padding:10px 11px;border-bottom:1px solid #e8eef4;text-align:left;vertical-align:middle;color:#243c55}
+  .abis-m8-desktop-table th{position:sticky;top:0;background:#f5f8fb;color:#53677e;font-weight:800;z-index:1}
+  .abis-m8-desktop-table tr:last-child td{border-bottom:0}
+  .abis-m8-desktop-table .abis-m8-source-btn{min-height:36px;padding:7px 10px;min-width:0}
+  .abis-m8-empty{display:grid;gap:5px;padding:22px 14px;border:1px dashed #cbd8e5;border-radius:14px;background:#fafcfd;text-align:center;color:#53677e}
+  .abis-m8-empty b{color:#324a61}
+  .abis-m8-snapshot-list{display:grid;gap:9px}
+  .abis-m8-snapshot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 14px;border:1px solid #dbe6ef;border-radius:14px;background:#fff;min-width:0}
+  .abis-m8-snapshot>div{display:grid;gap:4px;min-width:0}
+  .abis-m8-snapshot b{font-size:14px;color:#142640}
+  .abis-m8-snapshot span,.abis-m8-snapshot small{font-size:12px;color:#53677e;line-height:1.45;overflow-wrap:anywhere}
+  .abis-m8-snapshot>a{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 12px;border-radius:10px;background:#eef5fb;color:#1e557f;font-size:12px;font-weight:800;text-decoration:none;border:1px solid #cfdfec}
+  @media(max-width:767px){
+    .abis-m8-root{gap:12px}
+    .abis-m8-head h3{font-size:18px}
+    .abis-m8-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:11px}
+    .abis-m8-filter input,.abis-m8-filter select{min-height:48px;padding:10px 11px;font-size:16px}
+    .abis-m8-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .abis-m8-actions>button{min-height:48px;padding:11px 12px}
+    .abis-m8-actions>button:first-child{grid-column:span 2}
+    .abis-m8-report-grid{grid-template-columns:1fr}
+    .abis-m8-report-card{min-height:96px;padding:15px}
+    .abis-m8-report-card>div>b{font-size:18px}
+    .abis-m8-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .abis-m8-kpi{min-height:82px}
+    .abis-m8-analysis{grid-template-columns:1fr}
+    .abis-m8-export>div:not(.abis-m8-error):not(.abis-m8-success){display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .abis-m8-export button{min-height:48px;padding:11px 12px}
+    .abis-m8-mobile-rows{display:grid;gap:8px}
+    .abis-m8-desktop-table{display:none}
+    .abis-m8-row-card{align-items:flex-start;padding:14px}
+    .abis-m8-source-btn{min-height:40px;padding:8px 12px}
+    .abis-m8-snapshot{align-items:flex-start;flex-direction:column}
+    .abis-m8-snapshot>a{width:100%;min-height:44px}
+  }
+  @media(max-width:380px){
+    .abis-m8-filter-grid{grid-template-columns:1fr}
+    .abis-m8-actions{grid-template-columns:1fr}
+    .abis-m8-actions>button:first-child{grid-column:auto}
+    .abis-m8-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+</style>
+
+<!-- ========================================================================
+     ABIS ESS GLOBAL CONTRAST HARDENING RC1.3 | 2026-10-05
+     Scope: ALL current ESS pages in light mode.
+     Purpose:
+       - Restore component-specific light-card styles that were unintentionally
+         overridden by the generic inner-view primary-button rule.
+       - Ensure text/background contrast for muted, disabled, status and card text.
+       - No business logic, API, permission, attendance, leave, task or payroll changes.
+     ===================================================================== -->
+<style id="abisGlobalContrastHardenRc13">
+  :root{
+    --abis-ui-text-strong:#142640!important;
+    --abis-ui-text-muted:#53657d!important;
+    --abis-ui-text-disabled:#475569!important;
+    --rc2-app-muted:#53657d!important;
+    --fh-muted:#53657d!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Global readable secondary text on light surfaces
+     ------------------------------------------------------------------- */
+  .muted,
+  .tiny,
+  .line-meta,
+  .dash-kpi span,
+  .hr-status-box span,
+  .att-correction-form .field-note,
+  .att-kpi span,
+  .att-calendar-head div,
+  .notification-row-meta,
+  .notification-empty,
+  .rc2-account-meta,
+  .rc2-account-detail span:nth-child(odd),
+  .fh-list-date,
+  .fh-chevron,
+  .fh-notice-time,
+  .fh-empty,
+  .frozen-build-note,
+  body.inner-view .notification-row-body{
+    color:#53657d!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Primary / danger buttons: every child follows the readable foreground.
+     This prevents nested <span>/<b>/<small>/<i> from keeping gray text on
+     a blue/red button background.
+     ------------------------------------------------------------------- */
+  body.inner-view button.secondary,
+  body.inner-view button.secondary > *,
+  body.inner-view button.secondary > * > *{
+    color:#24405f!important;
+  }
+
+  body.inner-view button.danger,
+  body.inner-view button.danger > *,
+  body.inner-view .rc2-account-logout,
+  body.inner-view .rc2-account-logout > *{
+    background:#c62828!important;
+    color:#ffffff!important;
+    border-color:#c62828!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Account / Personal Settings
+     These rows are navigation rows, not primary action buttons. Restore the
+     intended white surface + dark text instead of blue background + gray value.
+     ------------------------------------------------------------------- */
+  body.inner-view .rc2-account-menu{
+    background:#ffffff!important;
+    border-color:#dbe4ee!important;
+  }
+  body.inner-view .rc2-account-row{
+    background:#ffffff!important;
+    color:#142640!important;
+    border-bottom-color:#e1e8f0!important;
+  }
+  body.inner-view .rc2-account-row b{
+    color:#142640!important;
+  }
+  body.inner-view .rc2-account-row .rc2-value{
+    color:#425a73!important;
+    font-weight:800!important;
+  }
+  body.inner-view .rc2-account-row .rc2-account-chevron,
+  body.inner-view .rc2-account-chevron{
+    color:#425a73!important;
+  }
+  body.inner-view .rc2-account-detail span:nth-child(odd){
+    color:#53657d!important;
+  }
+  body.inner-view .rc2-account-detail span:nth-child(even){
+    color:#142640!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     M7-1 Employee Management list cards
+     ------------------------------------------------------------------- */
+  body.inner-view .abis-m71-employee-row{
+    background:#ffffff!important;
+    color:#142640!important;
+    border-bottom-color:#e1e8f0!important;
+  }
+  body.inner-view .abis-m71-employee-main b{
+    color:#142640!important;
+  }
+  body.inner-view .abis-m71-employee-main span,
+  body.inner-view .abis-m71-employee-location,
+  body.inner-view .abis-m71-inline-loading,
+  body.inner-view .abis-m71-loading-label{
+    color:#53657d!important;
+  }
+  body.inner-view .abis-m71-avatar{
+    color:#13406a!important;
+  }
+  body.inner-view .abis-m71-chevron{
+    color:#425a73!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     M7-2 Attendance Management tabs / KPI / case cards
+     ------------------------------------------------------------------- */
+  body.inner-view .abis-m72-site-tabs button{
+    background:#ffffff!important;
+    color:#203750!important;
+    border-color:#cbd8e5!important;
+  }
+  body.inner-view .abis-m72-site-tabs button > *{
+    color:inherit!important;
+  }
+  body.inner-view .abis-m72-site-tabs button.is-active{
+    background:#1768e8!important;
+    color:#ffffff!important;
+    border-color:#1768e8!important;
+  }
+  body.inner-view .abis-m72-site-tabs button.is-held{
+    background:#eef2f6!important;
+    color:#475569!important;
+    border-color:#cbd5e1!important;
+    opacity:1!important;
+  }
+  body.inner-view .abis-m72-summary-card{
+    background:#ffffff!important;
+    color:#142640!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m72-summary-card b{
+    color:#0f5fcf!important;
+  }
+  body.inner-view .abis-m72-summary-card span{
+    color:#425a73!important;
+  }
+  body.inner-view .abis-m72-summary-card.is-active,
+  body.inner-view .abis-m72-summary-card.is-active b,
+  body.inner-view .abis-m72-summary-card.is-active span{
+    background:#1768e8!important;
+    color:#ffffff!important;
+    border-color:#1768e8!important;
+  }
+  body.inner-view .abis-m72-case{
+    background:#ffffff!important;
+    color:#142640!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m72-case-main b,
+  body.inner-view .abis-m72-case-meta b{
+    color:#142640!important;
+  }
+  body.inner-view .abis-m72-case-main span,
+  body.inner-view .abis-m72-case-meta small,
+  body.inner-view .abis-m72-chevron{
+    color:#53657d!important;
+  }
+  body.inner-view .abis-m72-case-status{
+    background:#fff4e5!important;
+    color:#7a3f00!important;
+  }
+  body.inner-view .abis-m72-case-meta span{
+    background:#f8fafc!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     M7 integrated Leave / Team / legacy report list cards
+     ------------------------------------------------------------------- */
+  body.inner-view .abis-m7x-row{
+    background:#ffffff!important;
+    color:#142640!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m7x-row-main b,
+  body.inner-view .abis-m7x-row-mid b{
+    color:#142640!important;
+  }
+  body.inner-view .abis-m7x-row-main span,
+  body.inner-view .abis-m7x-row-mid span,
+  body.inner-view .abis-m7x-chevron{
+    color:#53657d!important;
+  }
+  body.inner-view .abis-m7x-pill{
+    background:#eef4fb!important;
+    color:#244764!important;
+  }
+  body.inner-view .abis-m7x-report-card:not(.is-disabled){
+    background:#ffffff!important;
+    color:#142640!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m7x-report-card:not(.is-disabled) b{
+    color:#142640!important;
+  }
+  body.inner-view .abis-m7x-report-card:not(.is-disabled) strong{
+    color:#0f5fcf!important;
+  }
+  body.inner-view .abis-m7x-report-card:not(.is-disabled) span,
+  body.inner-view .abis-m7x-report-card:not(.is-disabled) i{
+    color:#53657d!important;
+  }
+  body.inner-view .abis-m7x-report-card.is-disabled,
+  body.inner-view .abis-m7x-report-card.is-disabled > *{
+    background:#e8eef6!important;
+    color:#475569!important;
+    opacity:1!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     M8 Reports
+     Active cards stay blue; all text is explicitly white.
+     Disabled cards use darker text on a light disabled surface.
+     ------------------------------------------------------------------- */
+  body.inner-view .abis-m8-report-card:not(.is-disabled),
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > div,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > div > b,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > div > span,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > strong,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > i,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > small{
+    color:#ffffff!important;
+  }
+  body.inner-view .abis-m8-report-card.is-disabled,
+  body.inner-view .abis-m8-report-card.is-disabled > div,
+  body.inner-view .abis-m8-report-card.is-disabled > div > b,
+  body.inner-view .abis-m8-report-card.is-disabled > div > span,
+  body.inner-view .abis-m8-report-card.is-disabled > strong,
+  body.inner-view .abis-m8-report-card.is-disabled > i,
+  body.inner-view .abis-m8-report-card.is-disabled > small{
+    background:#e8eef6!important;
+    color:#475569!important;
+    opacity:1!important;
+  }
+  .abis-m8-filter select:disabled{
+    background:#f2f5f8!important;
+    color:#475569!important;
+    opacity:1!important;
+  }
+  .abis-m8-kpi>small,
+  .abis-m8-row-count,
+  .abis-m8-row-card span,
+  .abis-m8-row-card small,
+  .abis-m8-snapshot span,
+  .abis-m8-snapshot small{
+    color:#53657d!important;
+  }
+
+  /* M8 light secondary controls retain a light surface + dark foreground. */
+  body.inner-view .abis-m8-back,
+  body.inner-view .abis-m8-source-btn{
+    background:#eef5fb!important;
+    color:#1e557f!important;
+    border-color:#cfdfec!important;
+  }
+  body.inner-view .abis-m8-back > *,
+  body.inner-view .abis-m8-source-btn > *{
+    color:inherit!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Home status / badges / notices
+     ------------------------------------------------------------------- */
+  .nav-icon-badged .badge-count,
+  .badge-count{
+    background:#b91c1c!important;
+    color:#ffffff!important;
+  }
+  .frozen-line-mark{
+    background:#087a3d!important;
+    color:#ffffff!important;
+  }
+  .fh-task.orange{
+    background:#fff7e9!important;
+    color:#8a4b08!important;
+  }
+  .fh-list-state{
+    background:#fff3cf!important;
+    color:#8a4b08!important;
+  }
+  .fh-list-state.bad{
+    background:#ffe9ec!important;
+    color:#b4233a!important;
+  }
+  .fh-quick-copy span,
+  .fh-task .fh-task-label,
+  .fh-status-label,
+  .fh-date{
+    color:#53657d!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Notification Center
+     ------------------------------------------------------------------- */
+  body.inner-view .notification-row-meta,
+  body.inner-view .notification-empty{
+    color:#53657d!important;
+  }
+  body.inner-view .notification-category{
+    background:#eef4fb!important;
+    color:#244764!important;
+  }
+  body.inner-view .notification-task-link{
+    background:#fff3cf!important;
+    color:#8a4b08!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Attendance calendar / status labels
+     ------------------------------------------------------------------- */
+  body.inner-view .att-calendar-head div,
+  body.inner-view .att-calendar-hint,
+  body.inner-view .att-calendar-legend,
+  body.inner-view .att-day-status{
+    color:#53657d!important;
+  }
+  body.inner-view .att-symbol.rest{
+    color:#475569!important;
+    border-color:#94a3b8!important;
+  }
+  body.inner-view .att-symbol.early{
+    color:#5b3600!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Keyboard focus visibility across all pages
+     ------------------------------------------------------------------- */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible{
+    outline:3px solid #0b5ed7!important;
+    outline-offset:2px!important;
+  }
+</style>
+
+
+<!-- ========================================================================
+     ABIS ESS GLOBAL CONTRAST AUDIT RC1.4 | 2026-10-05
+     Full light-mode visual QA hardening after live screenshots.
+
+     Root cause fixed:
+       A generic inner-view primary-button rule was painting navigation/list
+       buttons ABIS blue while several nested labels kept gray/navy colors.
+       RC1.4 restores semantic list/navigation cards to light surfaces and keeps
+       true primary actions blue with white text.
+
+     Contrast target:
+       - Normal text: >= 4.5:1 where practical.
+       - Large text / non-text UI indicators: >= 3:1.
+       - Disabled states remain visually disabled but intentionally readable.
+
+     Presentation only. No API / permission / business-rule / data mutation.
+     ===================================================================== -->
+<style id="abisGlobalContrastAuditRc14">
+  :root{
+    --abis-contrast-ink:#142640!important;
+    --abis-contrast-muted:#53657d!important;
+    --abis-contrast-muted-strong:#425a73!important;
+    --abis-contrast-disabled:#475569!important;
+    --abis-contrast-blue:#1768e8!important;
+    --abis-contrast-on-blue:#ffffff!important;
+    --abis-contrast-light:#ffffff!important;
+    --abis-contrast-line:#dbe4ee!important;
+  }
+
+  /* ======================================================================
+     1. Global readable typography on light surfaces
+     =================================================================== */
+  body,
+  body.inner-view,
+  body.home-view{
+    color:var(--abis-contrast-ink)!important;
+  }
+
+  .muted,
+  .tiny,
+  .line-meta,
+  .home-dashboard-title span,
+  .fh-head-action,
+  .fh-date,
+  .fh-status-label,
+  .fh-list-date,
+  .fh-chevron,
+  .fh-notice-time,
+  .fh-empty,
+  .frozen-build-note,
+  .rc2-account-meta,
+  .notification-row-meta,
+  .notification-empty,
+  body.inner-view .notification-row-body,
+  body.inner-view .att-calendar-head div,
+  body.inner-view .att-calendar-hint,
+  body.inner-view .att-calendar-legend,
+  body.inner-view .att-day-status,
+  body.inner-view .abis-m71-count span,
+  body.inner-view .abis-m71-detail-item span,
+  body.inner-view .abis-m71-inline-loading,
+  body.inner-view .abis-m71-loading-label,
+  body.inner-view .abis-m8-kpi>small,
+  body.inner-view .abis-m8-row-count,
+  body.inner-view .abis-m8-row-card span,
+  body.inner-view .abis-m8-row-card small,
+  body.inner-view .abis-m8-snapshot span,
+  body.inner-view .abis-m8-snapshot small{
+    color:var(--abis-contrast-muted)!important;
+  }
+
+  /* Small chevrons are functional navigation cues, so keep them readable. */
+  .abis-m2-chevron,
+  body.inner-view .rc2-account-chevron,
+  body.inner-view .abis-m71-chevron,
+  body.inner-view .abis-m72-chevron,
+  body.inner-view .abis-m7x-chevron{
+    color:var(--abis-contrast-muted-strong)!important;
+  }
+
+  /* ======================================================================
+     2. True primary / secondary / danger controls
+     =================================================================== */
+  body.inner-view button:not(.secondary):not(.danger):not(:disabled):not(.is-disabled):not(.rc2-inner-back):not(.frozen-icon-btn):not(.frozen-user-chip):not(.rc2-account-row):not(.abis-m2-tool-row):not(.abis-m71-employee-row):not(.abis-m72-case):not(.abis-m7x-row):not(.abis-m7x-report-card),
+  body.inner-view button:not(.secondary):not(.danger):not(:disabled):not(.is-disabled):not(.rc2-inner-back):not(.frozen-icon-btn):not(.frozen-user-chip):not(.rc2-account-row):not(.abis-m2-tool-row):not(.abis-m71-employee-row):not(.abis-m72-case):not(.abis-m7x-row):not(.abis-m7x-report-card) > *{
+    background-color:var(--abis-contrast-blue)!important;
+    color:var(--abis-contrast-on-blue)!important;
+  }
+
+  body.inner-view button.secondary,
+  body.inner-view button.secondary > *,
+  body.inner-view .abis-m8-back,
+  body.inner-view .abis-m8-back > *,
+  body.inner-view .abis-m8-source-btn,
+  body.inner-view .abis-m8-source-btn > *{
+    background:#ffffff!important;
+    color:#24405f!important;
+    border-color:#cfdbe7!important;
+  }
+
+  body.inner-view button.danger,
+  body.inner-view button.danger > *,
+  body.inner-view .rc2-account-logout,
+  body.inner-view .rc2-account-logout > *{
+    background:#c62828!important;
+    color:#ffffff!important;
+    border-color:#c62828!important;
+  }
+
+  /* Disabled controls: readable, but unmistakably inactive. */
+  body.inner-view button:disabled,
+  body.inner-view button:disabled > *,
+  body.inner-view button.is-disabled,
+  body.inner-view button.is-disabled > *,
+  .abis-m8-filter select:disabled{
+    background:#e8eef6!important;
+    color:var(--abis-contrast-disabled)!important;
+    border-color:#cbd5e1!important;
+    opacity:1!important;
+  }
+
+  /* ======================================================================
+     3. Account / Personal settings
+     Fixes the live screenshot: gray values and chevrons on blue navigation rows.
+     Navigation rows are light cards; only actual actions use blue.
+     =================================================================== */
+  body.inner-view .rc2-account-menu{
+    background:#ffffff!important;
+    border-color:var(--abis-contrast-line)!important;
+  }
+  body.inner-view .rc2-account-row,
+  body.inner-view .rc2-account-row:hover,
+  body.inner-view .rc2-account-row:focus{
+    background:#ffffff!important;
+    color:var(--abis-contrast-ink)!important;
+    border-bottom-color:#e1e8f0!important;
+  }
+  body.inner-view .rc2-account-row b{
+    color:var(--abis-contrast-ink)!important;
+  }
+  body.inner-view .rc2-account-row .rc2-value{
+    color:var(--abis-contrast-muted-strong)!important;
+    font-weight:850!important;
+  }
+  body.inner-view .rc2-account-row .rc2-account-chevron,
+  body.inner-view .rc2-account-row .abis-m2-chevron{
+    color:var(--abis-contrast-muted-strong)!important;
+  }
+  body.inner-view .rc2-account-detail span:nth-child(odd){
+    color:var(--abis-contrast-muted)!important;
+  }
+  body.inner-view .rc2-account-detail span:nth-child(even){
+    color:var(--abis-contrast-ink)!important;
+  }
+
+  /* Management-tool navigation rows are also navigation cards, not CTA buttons. */
+  body.inner-view .abis-m2-tool-list{
+    background:#ffffff!important;
+    border-color:var(--abis-contrast-line)!important;
+  }
+  body.inner-view .abis-m2-tool-row,
+  body.inner-view .abis-m2-tool-row:hover,
+  body.inner-view .abis-m2-tool-row:focus{
+    background:#ffffff!important;
+    color:#142640!important;
+    border-bottom-color:#e1e8f0!important;
+  }
+  body.inner-view .abis-m2-tool-row .abis-m2-chevron{
+    color:var(--abis-contrast-muted-strong)!important;
+  }
+
+  /* ======================================================================
+     4. Employee management
+     =================================================================== */
+  body.inner-view .abis-m71-employee-row{
+    background:#ffffff!important;
+    color:var(--abis-contrast-ink)!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m71-employee-main b{
+    color:var(--abis-contrast-ink)!important;
+  }
+  body.inner-view .abis-m71-employee-main span,
+  body.inner-view .abis-m71-employee-location{
+    color:var(--abis-contrast-muted)!important;
+  }
+  body.inner-view .abis-m71-avatar{
+    color:#13406a!important;
+  }
+  body.inner-view .abis-m71-detail-item span{
+    color:var(--abis-contrast-muted)!important;
+  }
+  body.inner-view .abis-m71-detail-item b{
+    color:var(--abis-contrast-ink)!important;
+  }
+
+  /* ======================================================================
+     5. Attendance management
+     =================================================================== */
+  body.inner-view .abis-m72-site-tabs button{
+    background:#ffffff!important;
+    color:#203750!important;
+    border-color:#cbd8e5!important;
+  }
+  body.inner-view .abis-m72-site-tabs button > *{
+    color:inherit!important;
+  }
+  body.inner-view .abis-m72-site-tabs button.is-active{
+    background:var(--abis-contrast-blue)!important;
+    color:#ffffff!important;
+    border-color:var(--abis-contrast-blue)!important;
+  }
+  body.inner-view .abis-m72-site-tabs button.is-held{
+    background:#e8eef6!important;
+    color:var(--abis-contrast-disabled)!important;
+    border-color:#cbd5e1!important;
+    opacity:1!important;
+  }
+  body.inner-view .abis-m72-summary-card{
+    background:#ffffff!important;
+    color:var(--abis-contrast-ink)!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m72-summary-card b{color:#0f5fcf!important;}
+  body.inner-view .abis-m72-summary-card span{color:var(--abis-contrast-muted-strong)!important;}
+  body.inner-view .abis-m72-summary-card.is-active,
+  body.inner-view .abis-m72-summary-card.is-active b,
+  body.inner-view .abis-m72-summary-card.is-active span{
+    background:var(--abis-contrast-blue)!important;
+    color:#ffffff!important;
+    border-color:var(--abis-contrast-blue)!important;
+  }
+  body.inner-view .abis-m72-case{
+    background:#ffffff!important;
+    color:var(--abis-contrast-ink)!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m72-case-main b,
+  body.inner-view .abis-m72-case-meta b{
+    color:var(--abis-contrast-ink)!important;
+  }
+  body.inner-view .abis-m72-case-main span,
+  body.inner-view .abis-m72-case-meta small,
+  body.inner-view .abis-m72-chevron{
+    color:var(--abis-contrast-muted)!important;
+  }
+  body.inner-view .abis-m72-case-status{
+    background:#fff4e5!important;
+    color:#7a3f00!important;
+  }
+
+  /* ======================================================================
+     6. Leave management / Team management / M7 report list cards
+     =================================================================== */
+  body.inner-view .abis-m7x-row{
+    background:#ffffff!important;
+    color:var(--abis-contrast-ink)!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m7x-row-main b,
+  body.inner-view .abis-m7x-row-mid b{
+    color:var(--abis-contrast-ink)!important;
+  }
+  body.inner-view .abis-m7x-row-main span,
+  body.inner-view .abis-m7x-row-mid span,
+  body.inner-view .abis-m7x-chevron{
+    color:var(--abis-contrast-muted)!important;
+  }
+  body.inner-view .abis-m7x-pill{
+    background:#eef4fb!important;
+    color:#244764!important;
+  }
+
+  body.inner-view .abis-m7x-report-card:not(.is-disabled){
+    background:#ffffff!important;
+    color:var(--abis-contrast-ink)!important;
+    border-color:#dce6ef!important;
+  }
+  body.inner-view .abis-m7x-report-card:not(.is-disabled) b{color:var(--abis-contrast-ink)!important;}
+  body.inner-view .abis-m7x-report-card:not(.is-disabled) strong{color:#0f5fcf!important;}
+  body.inner-view .abis-m7x-report-card:not(.is-disabled) span,
+  body.inner-view .abis-m7x-report-card:not(.is-disabled) i{color:var(--abis-contrast-muted)!important;}
+  body.inner-view .abis-m7x-report-card.is-disabled,
+  body.inner-view .abis-m7x-report-card.is-disabled > *{
+    background:#e8eef6!important;
+    color:var(--abis-contrast-disabled)!important;
+    opacity:1!important;
+  }
+
+  /* ======================================================================
+     7. M8 management reports
+     Active report cards are genuine CTA cards: blue + white.
+     =================================================================== */
+  body.inner-view .abis-m8-report-card:not(.is-disabled),
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > div,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > div > b,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > div > span,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > strong,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > i,
+  body.inner-view .abis-m8-report-card:not(.is-disabled) > small{
+    background:var(--abis-contrast-blue)!important;
+    color:#ffffff!important;
+  }
+  body.inner-view .abis-m8-report-card.is-disabled,
+  body.inner-view .abis-m8-report-card.is-disabled > div,
+  body.inner-view .abis-m8-report-card.is-disabled > div > b,
+  body.inner-view .abis-m8-report-card.is-disabled > div > span,
+  body.inner-view .abis-m8-report-card.is-disabled > strong,
+  body.inner-view .abis-m8-report-card.is-disabled > i,
+  body.inner-view .abis-m8-report-card.is-disabled > small{
+    background:#e8eef6!important;
+    color:var(--abis-contrast-disabled)!important;
+    opacity:1!important;
+  }
+
+  /* ======================================================================
+     8. Home Dashboard
+     =================================================================== */
+  .home-dashboard-title span,
+  .fh-head-action,
+  .fh-date,
+  .fh-status-label,
+  .fh-chevron,
+  .fh-notice-time,
+  .fh-empty,
+  .frozen-build-note{
+    color:var(--abis-contrast-muted)!important;
+  }
+  .fh-task.orange{
+    background:#fff7e9!important;
+    color:#8a4b08!important;
+  }
+  .fh-task.orange b{color:#8a4b08!important;}
+  .fh-task .fh-task-label{color:#243244!important;}
+  .fh-list-state{
+    background:#fff3cf!important;
+    color:#8a4b08!important;
+  }
+  .fh-list-state.bad{
+    background:#ffe9ec!important;
+    color:#b4233a!important;
+  }
+  .fh-quick-copy span{color:var(--abis-contrast-muted)!important;}
+  .fh-quick.orange .fh-quick-icon{color:#9a4f00!important;}
+  .fh-quick.teal .fh-quick-icon{color:#0b6b66!important;}
+  .fh-quick.green .fh-quick-icon,
+  .fh-quick-icon{color:#08734f!important;}
+
+  /* ======================================================================
+     9. Notification / status badges
+     =================================================================== */
+  .nav-icon-badged .badge-count,
+  .badge-count{
+    background:#b91c1c!important;
+    color:#ffffff!important;
+  }
+  .frozen-line-mark{
+    background:#087a3d!important;
+    color:#ffffff!important;
+  }
+  body.inner-view .notification-category{
+    background:#eef4fb!important;
+    color:#244764!important;
+  }
+  body.inner-view .notification-task-link{
+    background:#fff3cf!important;
+    color:#8a4b08!important;
+  }
+
+  /* ======================================================================
+     10. Form / feedback surfaces
+     =================================================================== */
+  body.inner-view input,
+  body.inner-view select,
+  body.inner-view textarea{
+    background:#ffffff!important;
+    color:var(--abis-contrast-ink)!important;
+    border-color:#cfd9e4!important;
+  }
+  body.inner-view input::placeholder,
+  body.inner-view textarea::placeholder{
+    color:#66788b!important;
+    opacity:1!important;
+  }
+  body.inner-view .notice{
+    color:#425a73!important;
+  }
+  body.inner-view .success,
+  body.inner-view .proxy-ok{
+    color:#166534!important;
+  }
+  body.inner-view .error,
+  body.inner-view .proxy-warn{
+    color:#991b1b!important;
+  }
+  body.inner-view .dept-conflict,
+  body.inner-view .att-warning{
+    color:#7a3f00!important;
+  }
+
+  /* ======================================================================
+     11. Focus visibility / keyboard accessibility
+     =================================================================== */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible{
+    outline:3px solid #0b5ed7!important;
+    outline-offset:2px!important;
+  }
+</style>
+
+<!-- ========================================================================
+     ABIS ESS GLOBAL CONTRAST RC1.5 | 2026-10-05
+     Final specificity guard for light-mode Frozen UI.
+
+     Purpose:
+       - Navigation/list cards stay light, never inherit generic primary blue.
+       - True primary actions remain ABIS blue + white.
+       - Status pills keep semantic light backgrounds + dark readable text.
+       - Fix M71 / M72 / M7 / M8 / Account specificity collisions.
+       - Improve login/build secondary-text contrast.
+
+     Presentation only.
+     No API / permission / business-rule / attendance / leave / task /
+     payroll / schedule mutation.
+     ===================================================================== -->
+<style id="abisGlobalContrastRc15">
+
+  :root{
+    --abis-c15-ink:#142640;
+    --abis-c15-muted:#53657d;
+    --abis-c15-muted-strong:#425a73;
+    --abis-c15-blue:#1768e8;
+    --abis-c15-line:#dbe4ee;
+    --abis-c15-soft:#f8fafc;
+    --abis-c15-disabled-bg:#e8eef6;
+    --abis-c15-disabled-text:#475569;
+    --abis-c15-info-bg:#eef4fb;
+    --abis-c15-info-text:#244764;
+    --abis-c15-warning-bg:#fff4e5;
+    --abis-c15-warning-text:#7a3f00;
+    --abis-c15-success-bg:#ecfdf3;
+    --abis-c15-success-text:#166534;
+  }
+
+  /* ----------------------------------------------------------------------
+     1. Login / boot / general secondary copy
+     ------------------------------------------------------------------- */
+  .build-tag{
+    color:#64748b!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     2. Account / management navigation
+     These are navigation cards, NOT primary CTA buttons.
+     #account intentionally raises specificity above legacy generic button rules.
+     ------------------------------------------------------------------- */
+  body.inner-view #account button.rc2-account-row,
+  body.inner-view #account button.abis-m2-tool-row,
+  body.inner-view #account button.abis-m71-employee-row,
+  body.inner-view #account button.abis-m72-case,
+  body.inner-view #account button.abis-m7x-row{
+    background:#ffffff!important;
+    color:var(--abis-c15-ink)!important;
+    border-color:var(--abis-c15-line)!important;
+  }
+
+  body.inner-view #account button.rc2-account-row > *,
+  body.inner-view #account button.abis-m2-tool-row > *,
+  body.inner-view #account button.abis-m71-employee-row > *,
+  body.inner-view #account button.abis-m72-case > *,
+  body.inner-view #account button.abis-m7x-row > *{
+    background-color:transparent!important;
+  }
+
+  /* Management tool label insurance: keep the label dark on white cards. */
+  body.inner-view #account button.abis-m2-tool-row > span:not(.abis-m2-chevron){
+    color:#142640!important;
+    background:transparent!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     3. Account rows
+     ------------------------------------------------------------------- */
+  body.inner-view #account .rc2-account-row b{
+    color:var(--abis-c15-ink)!important;
+  }
+
+  body.inner-view #account .rc2-account-row .rc2-value,
+  body.inner-view #account .rc2-account-meta{
+    color:var(--abis-c15-muted-strong)!important;
+  }
+
+  body.inner-view #account .rc2-account-row .rc2-account-chevron,
+  body.inner-view #account .abis-m2-tool-row .abis-m2-chevron{
+    color:var(--abis-c15-muted-strong)!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     4. Employee Management M71
+     ------------------------------------------------------------------- */
+  body.inner-view #account button.abis-m71-employee-row{
+    background:#ffffff!important;
+    color:var(--abis-c15-ink)!important;
+  }
+
+  body.inner-view #account .abis-m71-employee-main b{
+    color:var(--abis-c15-ink)!important;
+    text-shadow:none!important;
+  }
+
+  body.inner-view #account .abis-m71-employee-main span,
+  body.inner-view #account .abis-m71-employee-location{
+    color:var(--abis-c15-muted)!important;
+    text-shadow:none!important;
+  }
+
+  body.inner-view #account .abis-m71-chevron{
+    color:var(--abis-c15-muted-strong)!important;
+  }
+
+  body.inner-view #account .abis-m71-status{
+    background:var(--abis-c15-success-bg)!important;
+    color:var(--abis-c15-success-text)!important;
+    border-color:#bbdfc8!important;
+  }
+
+  body.inner-view #account .abis-m71-detail-hero{
+    background:#ffffff!important;
+    color:var(--abis-c15-ink)!important;
+    border-color:var(--abis-c15-line)!important;
+  }
+
+  body.inner-view #account .abis-m71-detail-hero h3{
+    color:var(--abis-c15-ink)!important;
+    text-shadow:none!important;
+  }
+
+  body.inner-view #account
+    .abis-m71-detail-hero
+    span:not(.abis-m71-avatar):not(.abis-m71-readonly){
+    color:var(--abis-c15-muted)!important;
+  }
+
+  body.inner-view #account .abis-m71-readonly{
+    background:var(--abis-c15-info-bg)!important;
+    color:var(--abis-c15-info-text)!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     5. Attendance Management M72
+     ------------------------------------------------------------------- */
+  body.inner-view #account .abis-m72-site-tabs button{
+    background:#ffffff!important;
+    color:#203750!important;
+    border-color:#cbd8e5!important;
+  }
+
+  body.inner-view #account .abis-m72-site-tabs button > *{
+    color:inherit!important;
+    background-color:transparent!important;
+  }
+
+  body.inner-view #account .abis-m72-site-tabs button.is-active{
+    background:var(--abis-c15-blue)!important;
+    color:#ffffff!important;
+    border-color:var(--abis-c15-blue)!important;
+  }
+
+  body.inner-view #account .abis-m72-site-tabs button.is-held{
+    background:var(--abis-c15-disabled-bg)!important;
+    color:var(--abis-c15-disabled-text)!important;
+    border-color:#cbd5e1!important;
+    opacity:1!important;
+  }
+
+  body.inner-view #account button.abis-m72-summary-card{
+    background:#ffffff!important;
+    color:var(--abis-c15-ink)!important;
+    border-color:var(--abis-c15-line)!important;
+  }
+
+  body.inner-view #account button.abis-m72-summary-card b{
+    color:#0f5fcf!important;
+    background:transparent!important;
+  }
+
+  body.inner-view #account button.abis-m72-summary-card span{
+    color:var(--abis-c15-muted-strong)!important;
+    background:transparent!important;
+  }
+
+  body.inner-view #account button.abis-m72-summary-card.is-active,
+  body.inner-view #account button.abis-m72-summary-card.is-active b,
+  body.inner-view #account button.abis-m72-summary-card.is-active span{
+    background:var(--abis-c15-blue)!important;
+    color:#ffffff!important;
+    border-color:var(--abis-c15-blue)!important;
+  }
+
+  body.inner-view #account button.abis-m72-case{
+    background:#ffffff!important;
+    color:var(--abis-c15-ink)!important;
+    border-color:var(--abis-c15-line)!important;
+  }
+
+  body.inner-view #account .abis-m72-case-head{
+    background:transparent!important;
+  }
+
+  body.inner-view #account .abis-m72-case-main b,
+  body.inner-view #account .abis-m72-case-meta b{
+    color:var(--abis-c15-ink)!important;
+  }
+
+  body.inner-view #account .abis-m72-case-main span,
+  body.inner-view #account .abis-m72-case-meta small,
+  body.inner-view #account .abis-m72-chevron{
+    color:var(--abis-c15-muted)!important;
+  }
+
+  body.inner-view #account .abis-m72-case-meta{
+    background:transparent!important;
+  }
+
+  body.inner-view #account .abis-m72-case-meta > span{
+    background:var(--abis-c15-soft)!important;
+    color:var(--abis-c15-ink)!important;
+  }
+
+  body.inner-view #account .abis-m72-case-status{
+    background:var(--abis-c15-warning-bg)!important;
+    color:var(--abis-c15-warning-text)!important;
+    border-color:#f0d3a6!important;
+  }
+
+  body.inner-view #account .abis-m72-detail-hero,
+  body.inner-view #account .abis-m72-detail-card{
+    background:#ffffff!important;
+    color:var(--abis-c15-ink)!important;
+    border-color:var(--abis-c15-line)!important;
+  }
+
+  body.inner-view #account .abis-m72-detail-hero h3{
+    color:var(--abis-c15-ink)!important;
+  }
+
+  body.inner-view #account
+    .abis-m72-detail-hero
+    span:not(.abis-m72-case-status),
+  body.inner-view #account .abis-m72-detail-item span{
+    color:var(--abis-c15-muted)!important;
+  }
+
+  body.inner-view #account .abis-m72-detail-item b{
+    color:var(--abis-c15-ink)!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     6. Leave Management / Team Management / M7 rows
+     ------------------------------------------------------------------- */
+  body.inner-view #account button.abis-m7x-row{
+    background:#ffffff!important;
+    color:var(--abis-c15-ink)!important;
+    border-color:var(--abis-c15-line)!important;
+  }
+
+  body.inner-view #account .abis-m7x-row-main b,
+  body.inner-view #account .abis-m7x-row-mid b{
+    color:var(--abis-c15-ink)!important;
+  }
+
+  body.inner-view #account .abis-m7x-row-main span,
+  body.inner-view #account .abis-m7x-row-mid span,
+  body.inner-view #account .abis-m7x-chevron{
+    color:var(--abis-c15-muted)!important;
+  }
+
+  body.inner-view #account .abis-m7x-pill{
+    background:var(--abis-c15-info-bg)!important;
+    color:var(--abis-c15-info-text)!important;
+  }
+
+  body.inner-view #account .abis-m7x-report-card:not(.is-disabled){
+    background:#ffffff!important;
+    color:var(--abis-c15-ink)!important;
+    border-color:var(--abis-c15-line)!important;
+  }
+
+  body.inner-view #account .abis-m7x-report-card:not(.is-disabled) b{
+    color:var(--abis-c15-ink)!important;
+  }
+
+  body.inner-view #account .abis-m7x-report-card:not(.is-disabled) span,
+  body.inner-view #account .abis-m7x-report-card:not(.is-disabled) i{
+    color:var(--abis-c15-muted)!important;
+  }
+
+  body.inner-view #account .abis-m7x-report-card.is-disabled,
+  body.inner-view #account .abis-m7x-report-card.is-disabled > *{
+    background:var(--abis-c15-disabled-bg)!important;
+    color:var(--abis-c15-disabled-text)!important;
+    opacity:1!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     7. M8 Management Reports
+     Available report card = genuine CTA => blue + white.
+     Disabled card = light disabled surface.
+     ------------------------------------------------------------------- */
+  body.inner-view #account .abis-m8-report-card:not(.is-disabled){
+    background:var(--abis-c15-blue)!important;
+    color:#ffffff!important;
+    border-color:var(--abis-c15-blue)!important;
+  }
+
+  body.inner-view #account .abis-m8-report-card:not(.is-disabled) > *,
+  body.inner-view #account .abis-m8-report-card:not(.is-disabled) > * > *{
+    color:#ffffff!important;
+  }
+
+  body.inner-view #account .abis-m8-report-card.is-disabled,
+  body.inner-view #account .abis-m8-report-card.is-disabled > *,
+  body.inner-view #account .abis-m8-report-card.is-disabled > * > *{
+    background:var(--abis-c15-disabled-bg)!important;
+    color:var(--abis-c15-disabled-text)!important;
+    opacity:1!important;
+  }
+
+  /* ----------------------------------------------------------------------
+     8. Final focus visibility
+     ------------------------------------------------------------------- */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible{
+    outline:3px solid #0b5ed7!important;
+    outline-offset:2px!important;
+  }
+
+</style>
+
+<!-- ========================================================================
+     ABIS ESS CONTRAST FOLLOW-UP RC1.5.1-1.5.3 | 2026-10-06
+     Preserve the validated M71 / M72 mobile fixes added after RC1.5.
+     ===================================================================== -->
+<style id="abisGlobalContrastRc151to153">
+
+/* RC1.5.1 | M71 Employee Row visual restore */
+body.inner-view #account button.abis-m71-employee-row{
+  display:grid!important;
+  grid-template-columns:44px minmax(0,1fr) auto 18px!important;
+  align-items:center!important;
+  gap:10px!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:76px!important;
+  margin:0!important;
+  padding:13px 12px!important;
+  background:#ffffff!important;
+  color:#142640!important;
+  border:0!important;
+  border-bottom:1px solid #e1e8f0!important;
+  border-radius:0!important;
+  text-align:left!important;
+  box-shadow:none!important;
+}
+body.inner-view #account button.abis-m71-employee-row:last-child{border-bottom:0!important;}
+body.inner-view #account button.abis-m71-employee-row > .abis-m71-avatar{
+  width:42px!important;height:42px!important;display:grid!important;place-items:center!important;
+  border-radius:50%!important;background:linear-gradient(145deg,#dcecff,#cce8e0)!important;
+  color:#13406a!important;font-weight:950!important;line-height:1!important;
+}
+body.inner-view #account button.abis-m71-employee-row > .abis-m71-employee-main{
+  min-width:0!important;display:grid!important;grid-template-columns:1fr!important;gap:3px!important;
+  justify-items:start!important;background:transparent!important;text-align:left!important;
+}
+body.inner-view #account .abis-m71-employee-main > b{
+  display:block!important;max-width:100%!important;color:#142640!important;font-size:18px!important;
+  line-height:1.3!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;text-shadow:none!important;
+}
+body.inner-view #account .abis-m71-employee-main > span{
+  display:block!important;max-width:100%!important;color:#53657d!important;font-size:14px!important;
+  line-height:1.4!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+}
+body.inner-view #account button.abis-m71-employee-row > .abis-m71-status{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:0!important;
+  padding:5px 9px!important;border:1px solid #bbdfc8!important;border-radius:999px!important;
+  background:#ecfdf3!important;color:#166534!important;font-size:13px!important;font-weight:850!important;line-height:1.25!important;white-space:nowrap!important;
+}
+body.inner-view #account button.abis-m71-employee-row > .abis-m71-chevron{
+  display:block!important;background:transparent!important;color:#425a73!important;font-size:24px!important;line-height:1!important;
+}
+@media(max-width:767px){body.inner-view #account .abis-m71-employee-location{display:none!important;}}
+
+/* RC1.5.2 | M71 Employee Detail visual restore */
+body.inner-view #account .abis-m71-detail-hero{
+  display:grid!important;grid-template-columns:58px minmax(0,1fr)!important;align-items:center!important;gap:12px!important;
+  padding:14px!important;border:1px solid #dce6ef!important;border-radius:16px!important;background:#ffffff!important;color:#142640!important;
+  box-shadow:0 3px 12px rgba(31,55,86,.05)!important;
+}
+body.inner-view #account .abis-m71-detail-hero > .abis-m71-avatar{
+  width:58px!important;height:58px!important;display:grid!important;place-items:center!important;border-radius:50%!important;
+  background:linear-gradient(145deg,#dcecff,#cce8e0)!important;color:#13406a!important;font-size:23px!important;font-weight:950!important;line-height:1!important;
+}
+body.inner-view #account .abis-m71-detail-hero > div{min-width:0!important;}
+body.inner-view #account .abis-m71-detail-hero h3{
+  margin:0!important;color:#142640!important;font-size:22px!important;line-height:1.3!important;text-shadow:none!important;
+}
+body.inner-view #account .abis-m71-detail-hero span:not(.abis-m71-avatar):not(.abis-m71-readonly){
+  display:block!important;margin-top:4px!important;color:#53657d!important;font-size:14px!important;line-height:1.45!important;
+}
+body.inner-view #account .abis-m71-detail-hero .abis-m71-readonly{
+  grid-column:1 / -1!important;justify-self:start!important;display:inline-flex!important;align-items:center!important;width:auto!important;
+  margin-top:0!important;padding:5px 10px!important;border-radius:999px!important;background:#eef4fb!important;color:#244764!important;
+  font-size:13px!important;font-weight:850!important;
+}
+body.inner-view #account .abis-m71-detail-section{
+  display:block!important;overflow:hidden!important;margin:0!important;border:1px solid #dce6ef!important;border-radius:16px!important;
+  background:#ffffff!important;box-shadow:0 3px 12px rgba(31,55,86,.04)!important;
+}
+body.inner-view #account .abis-m71-detail-section > h4{
+  display:block!important;margin:0!important;padding:12px 14px!important;border-bottom:1px solid #e8eef4!important;
+  background:#f8fafc!important;color:#263e57!important;font-size:17px!important;font-weight:850!important;line-height:1.4!important;
+}
+body.inner-view #account .abis-m71-detail-grid{display:grid!important;grid-template-columns:1fr!important;width:100%!important;background:#ffffff!important;}
+body.inner-view #account .abis-m71-detail-item{
+  min-width:0!important;display:grid!important;grid-template-columns:1fr!important;gap:4px!important;padding:12px 14px!important;
+  border-bottom:1px solid #edf1f5!important;background:#ffffff!important;
+}
+body.inner-view #account .abis-m71-detail-item:last-child{border-bottom:0!important;}
+body.inner-view #account .abis-m71-detail-item > span{
+  display:block!important;color:#53657d!important;font-size:14px!important;font-weight:700!important;line-height:1.4!important;
+}
+body.inner-view #account .abis-m71-detail-item > b{
+  display:block!important;min-width:0!important;color:#172238!important;font-size:16px!important;font-weight:850!important;line-height:1.45!important;
+  text-align:left!important;overflow-wrap:anywhere!important;word-break:break-word!important;
+}
+body.inner-view #account .abis-m71-source-note{
+  padding:11px 13px!important;border-radius:12px!important;background:#f8fafc!important;color:#53657d!important;font-size:13px!important;line-height:1.55!important;
+}
+@media(min-width:768px){
+  body.inner-view #account .abis-m71-detail-hero{grid-template-columns:58px minmax(0,1fr) auto!important;}
+  body.inner-view #account .abis-m71-detail-hero .abis-m71-readonly{grid-column:auto!important;justify-self:end!important;}
+  body.inner-view #account .abis-m71-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  body.inner-view #account .abis-m71-detail-item{grid-template-columns:minmax(100px,.8fr) minmax(0,1.2fr)!important;gap:10px!important;border-right:1px solid #edf1f5!important;}
+  body.inner-view #account .abis-m71-detail-item:nth-child(even){border-right:0!important;}
+  body.inner-view #account .abis-m71-detail-item > b{text-align:right!important;}
+}
+
+/* RC1.5.3 | M72 mobile case header placement */
+@media(max-width:767px){
+  body.inner-view #account .abis-m72-case-head{
+    display:grid!important;grid-template-columns:minmax(0,1fr) 24px!important;grid-template-rows:auto auto!important;
+    align-items:center!important;column-gap:10px!important;row-gap:8px!important;
+  }
+  body.inner-view #account .abis-m72-case-main{grid-column:1!important;grid-row:1!important;min-width:0!important;}
+  body.inner-view #account .abis-m72-chevron{
+    grid-column:2!important;grid-row:1!important;align-self:center!important;justify-self:end!important;display:block!important;
+    background:transparent!important;color:#425a73!important;font-size:26px!important;line-height:1!important;
+  }
+  body.inner-view #account .abis-m72-case-status{
+    grid-column:1 / -1!important;grid-row:2!important;justify-self:start!important;width:auto!important;max-width:100%!important;
+    background:#fff4e5!important;color:#7a3f00!important;
+  }
+}
+</style>
+
+<!-- ========================================================================
+     ABIS ESS GLOBAL ASYNC BUTTON RC1.4 STRUCTURED CARD CONTRAST | 2026-10-06
+     Global visual state for user-triggered backend operations.
+     ===================================================================== -->
+<style id="abisGlobalAsyncButtonRc1">
+  button.abis-async-busy{
+    position:relative!important;
+    cursor:wait!important;
+    pointer-events:none!important;
+    color:transparent!important;
+    opacity:1!important;
+  }
+
+  button.abis-async-busy:not(.abis-async-structured) > *:not(.abis-async-button-overlay){
+    visibility:hidden!important;
+  }
+
+  /* Structured navigation/list cards keep their context visible while loading. */
+  button.abis-async-busy.abis-async-structured{
+    color:inherit!important;
+  }
+
+  button.abis-async-busy.abis-async-structured > *:not(.abis-async-button-overlay){
+    visibility:visible!important;
+  }
+
+  button.abis-async-busy.abis-async-structured .abis-m7x-chevron,
+  button.abis-async-busy.abis-async-structured .abis-m72-chevron,
+  button.abis-async-busy.abis-async-structured .abis-m71-chevron,
+  button.abis-async-busy.abis-async-structured .rc2-account-chevron,
+  button.abis-async-busy.abis-async-structured .abis-m2-chevron{
+    visibility:hidden!important;
+  }
+
+  button.abis-async-busy > .abis-async-button-overlay{
+    position:absolute!important;
+    inset:0!important;
+    z-index:20!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:8px!important;
+    min-width:0!important;
+    width:100%!important;
+    height:100%!important;
+    margin:0!important;
+    padding:0 10px!important;
+    border:0!important;
+    border-radius:inherit!important;
+    background:transparent!important;
+    color:var(--abis-async-busy-fg,#142640)!important;
+    font:inherit!important;
+    font-weight:850!important;
+    line-height:1.25!important;
+    text-align:center!important;
+    visibility:visible!important;
+    pointer-events:none!important;
+    opacity:1!important;
+  }
+
+  button.abis-async-busy.abis-async-structured > .abis-async-button-overlay{
+    inset:auto 12px 12px auto!important;
+    width:auto!important;
+    height:auto!important;
+    min-height:34px!important;
+    max-width:calc(100% - 24px)!important;
+    padding:7px 10px!important;
+    border:1px solid rgba(255,255,255,.34)!important;
+    border-radius:999px!important;
+    background:rgba(20,38,64,.94)!important;
+    color:#ffffff!important;
+    box-shadow:0 6px 18px rgba(20,38,64,.28)!important;
+  }
+
+  button.abis-async-busy.abis-async-structured > .abis-async-button-overlay.is-spinner-only{
+    width:34px!important;
+    min-width:34px!important;
+    padding:7px!important;
+  }
+
+  .abis-async-button-spinner{
+    width:15px!important;
+    height:15px!important;
+    flex:0 0 15px!important;
+    display:inline-block!important;
+    border:2px solid currentColor!important;
+    border-right-color:transparent!important;
+    border-radius:50%!important;
+    animation:abisAsyncSpin .75s linear infinite!important;
+  }
+
+  .abis-async-button-label{
+    display:block!important;
+    min-width:0!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    color:inherit!important;
+    background:transparent!important;
+    visibility:visible!important;
+  }
+
+  button.abis-async-busy > .abis-async-button-overlay.is-spinner-only{
+    gap:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+
+  button.abis-async-busy > .abis-async-button-overlay.is-spinner-only .abis-async-button-label{
+    display:none!important;
+  }
+
+  button.abis-async-busy:disabled{
+    opacity:1!important;
+    filter:none!important;
+  }
+
+  @keyframes abisAsyncSpin{
+    to{transform:rotate(360deg)}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .abis-async-button-spinner{animation-duration:1.4s!important;}
+  }

@@ -1,0 +1,24 @@
+{
+  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF6_ATTENDANCE_SEMANTICS_TASK_UX_20261007",
+  "baseAsset": "assets/ess-20261007-rc13-hf5",
+  "scope": "CLIENT_ONLY_ATTENDANCE_DISPLAY_AND_TASK_INBOX_UX",
+  "businessRulesChanged": false,
+  "backendChanged": false,
+  "immutableAssetPath": true,
+  "changes": [
+    "Recent records no longer treat a projected attendanceStatus row as a real attendance record when there is no punch or attendance fact",
+    "Pending/approved leave workflow has display precedence over no-punch attendance placeholders",
+    "Attendance detail no longer labels no-punch pending-leave days as normal attendance",
+    "Attendance exception task cards show human-readable dates and issue labels instead of raw Date strings, exception codes, and ISO timestamps",
+    "Unified Task Inbox build tag removed and count summary simplified"
+  ],
+  "preservedOverlays": [
+    "assets/ess-20261007-rc13-hf2/leave-submit-hf2.js",
+    "assets/ess-20261007-rc13-hf3r1/leave-submit-hf3r1.js",
+    "assets/ess-20261007-rc13-hf4/ess-dialog-hf4.js"
+  ],
+  "backend": {
+    "liveVersion": "P5A2_5_ATTENDANCE_LIVE_INCREMENTAL_R2174_RC1_20261007",
+    "attendanceBase": "P5A2_5_ATTENDANCE_UNIFIED_R2_RC1_4_38E_CHANGBIN_CANONICAL_SHIFT_HISTORY_20261007"
+  }
+}
