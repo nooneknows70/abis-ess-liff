@@ -512,7 +512,7 @@ async function prefetchSecondaryData(){
   if(failures.length)message(nt('partialLoadFail')+'：'+failures.join('、'),'warning')
 }
 async function hydrateFrozenHome_(){if(!sessionToken||attendanceCache||!$('home')||$('home').classList.contains('hide'))return;try{await abisPerf2LoadAttendance_(currentMonthKey());if(!$('home').classList.contains('hide'))renderHome()}catch(e){/* Home remains usable without attendance hydration. */}}
-let FH_ATTENDANCE_FOREGROUND_INSTALLED_=false;
+let FH_ATTENDANCE_FOREGROUND_INSTALLED_=false,FH_ATTENDANCE_REFRESH_TIMER_=0;
 function fhRefreshAttendanceIfStale_(){
   if(!sessionToken||document.hidden||!$('home')||$('home').classList.contains('hide'))return;
   const month=currentMonthKey(),key='attendance:'+month;
@@ -526,6 +526,7 @@ function fhInstallAttendanceForegroundRefresh_(){
   FH_ATTENDANCE_FOREGROUND_INSTALLED_=true;
   document.addEventListener('visibilitychange',function(){if(!document.hidden)fhRefreshAttendanceIfStale_()});
   window.addEventListener('focus',function(){fhRefreshAttendanceIfStale_()});
+  FH_ATTENDANCE_REFRESH_TIMER_=window.setInterval(function(){fhRefreshAttendanceIfStale_()},60000);
 }
 function canManageCredentials_(){const p=String(homeData&&homeData.employee&&homeData.employee.approvalPermission||'').toUpperCase();return p==='HR'||p==='ADMIN'}
 function configureHrCredentialNav(){const nav=$('hrCredentialNav');if(!nav)return;nav.classList.toggle('hide',!canManageCredentials_());const label=nav.querySelector('.nav-label');if(label){label.dataset.i18n='hrCredentialAdmin';label.textContent=tr('hrCredentialAdmin')}}
@@ -763,8 +764,8 @@ function fhTodayStatus_(d){
   const code=raw.toUpperCase().replace(/[\s-]+/g,'_');
   const direct={
     '尚未到班':'notYet','待出勤':'notYet','NOT_STARTED':'notYet','WAITING':'notYet','PENDING':'notYet',
-    '出勤中':'inProgress','WORKING':'inProgress','IN_PROGRESS':'inProgress','ON_DUTY':'inProgress',
-    '正常':'normal','NORMAL':'normal','COMPLETE':'normal','COMPLETED':'normal',
+    '出勤中':'inProgress','出勤進行中':'inProgress','部分請假（當日進行中）':'inProgress','WORKING':'inProgress','IN_PROGRESS':'inProgress','ON_DUTY':'inProgress',
+    '正常':'normal','出勤':'normal','NORMAL':'normal','COMPLETE':'normal','COMPLETED':'normal',
     '請假':'leaveDay','LEAVE':'leaveDay','LEAVE_DAY':'leaveDay',
     '排休':'restDay','休假':'restDay','OFF':'restDay','REST':'restDay','REST_DAY':'restDay',
     '缺上班卡':'missingIn','MISSING_IN':'missingIn',
