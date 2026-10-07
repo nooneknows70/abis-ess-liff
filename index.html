@@ -53,7 +53,7 @@
     const CONFIG = Object.freeze({
       liffId: '2011584842-AmO1bbHY',
       backendUrl: 'https://script.google.com/macros/s/AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR/exec',
-      bridgeVersion: 'P5A1-RM-FAST4_ROUTE_FIRST_RC1_20261006'
+      bridgeVersion: 'P5A1-RM-FAST4_ROUTE_FIRST_RC1_1_TOKEN_REFRESH_20261007'
     });
 
     const ALLOWED_BOOT_ROUTES = new Set([
@@ -71,7 +71,13 @@
     const webBtn = document.getElementById('webBtn');
 
     webBtn.href = CONFIG.backendUrl;
-    retryBtn.addEventListener('click', () => location.reload());
+    retryBtn.addEventListener('click', () => {
+      if (typeof window.ABIS_FORCE_LIFF_REAUTH === 'function') {
+        window.ABIS_FORCE_LIFF_REAUTH('MANUAL_RETRY');
+      } else {
+        location.reload();
+      }
+    });
 
     function setStatus(text, isError) {
       statusEl.textContent = text;
@@ -99,6 +105,83 @@
     function forceFullAuth() {
       return new URLSearchParams(location.search).get('force') === '1';
     }
+
+    const REAUTH_FLAG = '__abisReauth';
+    const REAUTH_SESSION_KEY = 'abis_liff_reauth_once';
+
+    function tokenExpiryMs(idToken) {
+      try {
+        if (typeof liff.getDecodedIDToken === 'function') {
+          const decoded = liff.getDecodedIDToken();
+          const exp = Number(decoded && decoded.exp || 0);
+          if (exp > 0) return exp * 1000;
+        }
+      } catch (ignore) {}
+
+      try {
+        const parts = String(idToken || '').split('.');
+        if (parts.length < 2) return 0;
+        let payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+        while (payload.length % 4) payload += '=';
+        const obj = JSON.parse(decodeURIComponent(Array.prototype.map.call(
+          atob(payload),
+          (c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join('')));
+        const exp = Number(obj && obj.exp || 0);
+        return exp > 0 ? exp * 1000 : 0;
+      } catch (ignore) {
+        return 0;
+      }
+    }
+
+    function reauthRedirectUri() {
+      const params = new URLSearchParams(location.search);
+      const liffState = params.get('liff.state');
+      const target = liffState
+        ? new URL('.' + liffState, location.href)
+        : new URL(location.href);
+      target.searchParams.set(REAUTH_FLAG, '1');
+      return target.toString();
+    }
+
+    function reauthAlreadyAttempted() {
+      try {
+        if (sessionStorage.getItem(REAUTH_SESSION_KEY) === '1') return true;
+      } catch (ignore) {}
+      return new URLSearchParams(location.search).get(REAUTH_FLAG) === '1';
+    }
+
+    function clearReauthMarker() {
+      try { sessionStorage.removeItem(REAUTH_SESSION_KEY); } catch (ignore) {}
+      try {
+        const u = new URL(location.href);
+        if (u.searchParams.has(REAUTH_FLAG)) {
+          u.searchParams.delete(REAUTH_FLAG);
+          history.replaceState(null, '', u.toString());
+        }
+      } catch (ignore) {}
+    }
+
+    function forceLiffReauth(reason) {
+      if (reauthAlreadyAttempted()) {
+        throw new Error(
+          'LINE 登入憑證仍失效。請先更新 LINE App 後，再重新開啟此通知。'
+        );
+      }
+
+      try { sessionStorage.setItem(REAUTH_SESSION_KEY, '1'); } catch (ignore) {}
+      setStatus('LINE 登入已過期，正在重新驗證…', false);
+
+      const redirectUri = reauthRedirectUri();
+
+      try {
+        if (liff.isLoggedIn()) liff.logout();
+      } catch (ignore) {}
+
+      liff.login({ redirectUri });
+    }
+
+    window.ABIS_FORCE_LIFF_REAUTH = forceLiffReauth;
 
     function submitToBackend(idToken, accessToken) {
       const form = document.createElement('form');
@@ -156,7 +239,19 @@
         const idToken = liff.getIDToken();
         const accessToken = liff.getAccessToken();
 
-        if (!idToken) throw new Error('ID token unavailable');
+        if (!idToken) {
+          forceLiffReauth('ID_TOKEN_UNAVAILABLE');
+          return;
+        }
+
+        // Freshness check only. Identity is still verified by the backend.
+        const expMs = tokenExpiryMs(idToken);
+        if (expMs > 0 && expMs <= Date.now() + 60 * 1000) {
+          forceLiffReauth('ID_TOKEN_EXPIRED_OR_NEAR_EXPIRY');
+          return;
+        }
+
+        clearReauthMarker();
 
         // FAST3 is server-side. The bridge keeps no resume token/localStorage.
         // Backend decides whether the request can reuse a 5-minute cached session.
