@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "project": "ABIS_ESS",
   "controlModel": "ABIS_ESS_RELEASE_CONTROL_V1",
-  "authorityState": "PENDING_MERGE",
+  "authorityState": "ACTIVE",
   "intendedPrimaryAuthority": {
     "repository": "nooneknows70/abis-ess-liff",
     "branch": "main",
@@ -149,5 +149,7 @@
       "RELEASE_SET_INCOMPLETE"
     ],
     "successCode": "BOOTSTRAP_PASS"
-  }
+  },
+  "governanceMergedAt": "2026-10-07T19:40:59+08:00",
+  "governanceMergeCommit": "d34964553baec96693f333f2ce11201c2ff661a0"
 }
