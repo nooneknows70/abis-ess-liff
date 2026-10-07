@@ -1,0 +1,16 @@
+{
+  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF2_LEAVE_SUBMIT_20261007",
+  "baseAsset": "assets/ess-20261007-rc13-hf1",
+  "patch": "leave-submit-hf2.js",
+  "hotfix": "ABIS_LEAVE_SUBMIT_HOTFIX_HF2_PLAIN_PROGRESS_20261007",
+  "scope": "CLIENT_ONLY_LEAVE_SUBMIT_VISUAL_AND_BUSY_STATE",
+  "businessRulesChanged": false,
+  "backendChanged": false,
+  "boundedTransportFromHF1": true,
+  "changes": [
+    "Keep leave form visible during submit",
+    "Suppress global async overlay for submitLeave",
+    "Preserve labels on non-submit buttons while disabled",
+    "Show plain submit text instead of spinner overlay"
+  ]
+}
