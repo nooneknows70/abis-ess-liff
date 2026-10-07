@@ -1,0 +1,23 @@
+{
+  "version": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF4_DIALOG_UX_20261007",
+  "baseAsset": "assets/ess-20261007-rc13-hf1",
+  "requires": [
+    "assets/ess-20261007-rc13-hf2/leave-submit-hf2.js",
+    "assets/ess-20261007-rc13-hf3r1/leave-submit-hf3r1.js"
+  ],
+  "patch": "ess-dialog-hf4.js",
+  "hotfix": "ABIS_ESS_DIALOG_HF4_UNIFIED_IN_APP_20261007",
+  "scope": "CLIENT_ONLY_UNIFIED_IN_APP_DIALOGS",
+  "businessRulesChanged": false,
+  "backendChanged": false,
+  "nativeBrowserDialogsSuperseded": true,
+  "changes": [
+    "Replace remaining native browser confirmation/input dialogs with ESS viewport modals",
+    "Rewrite leave-withdraw copy and combine reason input with final confirmation",
+    "Rewrite leave draft discard copy",
+    "Use concise non-blocking leave overlap wording from HF3",
+    "Replace draft attachment delete, draft conflict, returned resubmit, attendance appeal, and Temporary PIN confirmation dialogs",
+    "Use PreferredLanguage/current ESS language for zh-TW, vi-VN, th-TH",
+    "Keep existing business rules, RequestID behavior, backend APIs, and mutation semantics unchanged"
+  ]
+}
