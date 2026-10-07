@@ -11,6 +11,9 @@
 - Initialization branch: `release-control-v1`
 - Initialization base: `main@531819441f5d40c53ed9423a3bd0dadf9343ea6a`
 - Release status: `INITIALIZING`
+- Release authority: `ACTIVE`
+- Governance merged at: `2026-10-07T19:40:59+08:00`
+- Governance merge commit: `d34964553baec96693f333f2ce11201c2ff661a0`
 - PROD_CURRENT Release Set: **尚未建立**
 - Production mutation during initialization: **NONE**
 
