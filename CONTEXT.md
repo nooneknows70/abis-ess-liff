@@ -75,3 +75,50 @@ _Avoid_: Attendance Correction Request, monthly payroll approval
 **Attendance Appeal**:
 員工對已完成或已駁回的 Attendance Correction Request 仍有異議時建立的新爭議案件；既有補正申請、主管／HR 認定與 Attendance Adjustment 歷程均保留，不以申訴覆寫。
 _Avoid_: reopening correction, overwriting prior adjustment
+
+
+## Release Control Language
+
+**Release Set**:
+一組已明確界定、彼此相容，且作為同一次正式發布單位的系統元件版本集合。
+_Avoid_: latest files, newest file
+
+**Release Authority**:
+用來判定目前正式 Release Set 的唯一版本權威來源。
+_Avoid_: chat history, handoff, filename
+
+**Candidate**:
+已形成 Release Set，但尚未完成全部正式發布驗證，因此還不能代表目前 Production 的版本狀態。
+_Avoid_: PROD_CURRENT, deployed
+
+**Deployed**:
+某 Release Set 或 Component 已被放入 Production 環境，但不代表已完成正式驗證或已成為 PROD_CURRENT。
+_Avoid_: PROD_CURRENT
+
+**PROD_CURRENT**:
+已完成必要驗證，且目前被 Release Authority 指定為正式 Production 的 Release Set。
+_Avoid_: latest, newest, deployed
+
+**Runtime**:
+Production 環境實際正在執行的系統狀態。
+_Avoid_: source version, intended version
+
+**Bootstrap Gate**:
+在允許正式系統修改前，用來確認 Release Authority、Source、內容完整性、Runtime 與目前工作階段彼此一致的必要檢查。
+_Avoid_: smoke test
+
+**Version Drift**:
+同一 Component 的版本識別在應一致的來源之間不相符。
+_Avoid_: Content Drift
+
+**Content Drift**:
+同一版本識別下的實際內容不一致。
+_Avoid_: Version Drift
+
+**Runtime Drift**:
+Release Authority 所宣告的正式狀態與 Production Runtime 實際狀態不一致。
+_Avoid_: Version Drift, Content Drift
+
+**Deployment Drift**:
+Source 或 Candidate 已前進，但 Production 的已部署狀態仍停留在另一組版本。
+_Avoid_: Runtime Drift

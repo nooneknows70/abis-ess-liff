@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0",
+  "project": "ABIS_ESS",
+  "controlModel": "ABIS_ESS_RELEASE_CONTROL_V1",
+  "authorityState": "PENDING_MERGE",
+  "intendedPrimaryAuthority": {
+    "repository": "nooneknows70/abis-ess-liff",
+    "branch": "main",
+    "path": "ABIS_ESS_RELEASE_MANIFEST.json"
+  },
+  "releaseSet": "ABIS_ESS_INITIALIZING_20261007_RC1",
+  "releaseStatus": "INITIALIZING",
+  "prodCurrentReleaseSet": null,
+  "initializedAt": "2026-10-07T18:56:00+08:00",
+  "initializedFrom": {
+    "branch": "main",
+    "commit": "531819441f5d40c53ed9423a3bd0dadf9343ea6a"
+  },
+  "verifiedAt": null,
+  "verification": {
+    "bootstrapInventory": "PASS",
+    "sourceAlignment": "PARTIAL",
+    "sha256Alignment": "NOT_CHECKED",
+    "runtimeAlignment": "NOT_CHECKED",
+    "preflight": "NOT_ASSERTED",
+    "shadow": "NOT_ASSERTED",
+    "deploy": "NOT_ASSERTED",
+    "postDeploySmoke": "NOT_ASSERTED"
+  },
+  "components": {
+    "liffBridge": {
+      "componentType": "FRONTEND_BRIDGE",
+      "sourceLocation": "GIT",
+      "path": "index.html",
+      "observedVersion": "P5A1-RM-FAST4_ROUTE_FIRST_RC1_1_TOKEN_REFRESH_20261007",
+      "sourceStatus": "SOURCE_PRESENT",
+      "authorityStatus": "UNVERIFIED",
+      "deploymentStatus": "UNVERIFIED",
+      "gitBlobSha": "634ecd1669b270b5a3e9c9985351fa25f8ae5d94",
+      "sha256": null,
+      "runtimeVerification": "PENDING"
+    },
+    "frontendBaseBundle": {
+      "componentType": "FRONTEND_BASE_BUNDLE",
+      "sourceLocation": "GIT",
+      "baseAsset": "assets/ess-20261007-rc13-hf7",
+      "path": "assets/ess-20261007-rc13-hf8",
+      "observedVersion": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF8_M72_M8_STATE_UI_20261007",
+      "sourceStatus": "SOURCE_PRESENT",
+      "authorityStatus": "UNVERIFIED",
+      "deploymentStatus": "UNVERIFIED",
+      "files": {
+        "bundle": {
+          "path": "assets/ess-20261007-rc13-hf8/abis-ess.bundle.js",
+          "gitBlobSha": "24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b",
+          "sha256": null
+        },
+        "css": {
+          "path": "assets/ess-20261007-rc13-hf8/abis-ess.css",
+          "gitBlobSha": "7b5f33279cefce5d04383771632600a106d648c2",
+          "sha256": null
+        },
+        "assetManifest": {
+          "path": "assets/ess-20261007-rc13-hf8/manifest.json",
+          "gitBlobSha": "7ca3b07b0710e63352ff300c1e9fb0a51ecdb148",
+          "sha256": null
+        }
+      },
+      "runtimeVerification": "PENDING"
+    },
+    "frontendAttendanceHoldOverlay": {
+      "componentType": "FRONTEND_OVERLAY",
+      "sourceLocation": "GIT",
+      "requires": "frontendBaseBundle",
+      "path": "assets/ess-20261007-rc13-hf81/attendance-hold-hf81.js",
+      "observedVersion": "ABIS_ESS_HF81_ATTENDANCE_HOLD_BACKEND_SSOT_20261007",
+      "sourceStatus": "SOURCE_PRESENT",
+      "authorityStatus": "UNVERIFIED",
+      "deploymentStatus": "UNVERIFIED",
+      "gitBlobSha": "78eff0f85ae2df2075a45b47b84c332c1b4f1958",
+      "sha256": null,
+      "runtimeVerification": "PENDING"
+    },
+    "backend": {
+      "componentType": "APPS_SCRIPT_BACKEND",
+      "sourceLocation": "APPS_SCRIPT_EXTERNAL",
+      "path": null,
+      "reportedVersion": "P5A1_HF81_ATTENDANCE_HOLD_BACKEND_SSOT_20261007",
+      "sourceStatus": "EXTERNAL_NOT_CAPTURED",
+      "authorityStatus": "UNVERIFIED",
+      "deploymentStatus": "UNVERIFIED",
+      "gitCommit": null,
+      "sha256": null,
+      "runtimeVerification": "PENDING"
+    },
+    "attendanceSchedule": {
+      "componentType": "APPS_SCRIPT_ATTENDANCE_SCHEDULE",
+      "sourceLocation": "APPS_SCRIPT_EXTERNAL",
+      "reportedFile": "P5A2_5_SCHEDULE_HUB_ATTENDANCE_UNIFIED_R2_RC1_4_38E.gs",
+      "reportedVersion": "P5A2_5_ATTENDANCE_UNIFIED_R2_RC1_4_38E_CHANGBIN_CANONICAL_SHIFT_HISTORY_20261007",
+      "evidence": "HF8 asset manifest preservedBackend declaration; runtime not yet checked",
+      "sourceStatus": "EXTERNAL_NOT_CAPTURED",
+      "authorityStatus": "UNVERIFIED",
+      "deploymentStatus": "UNVERIFIED",
+      "gitCommit": null,
+      "sha256": null,
+      "runtimeVerification": "PENDING"
+    },
+    "attendanceLiveIncremental": {
+      "componentType": "APPS_SCRIPT_ATTENDANCE_LIVE",
+      "sourceLocation": "APPS_SCRIPT_EXTERNAL",
+      "reportedVersion": "P5A2_5_ATTENDANCE_LIVE_INCREMENTAL_R2174_RC1_20261007",
+      "evidence": "HF8 asset manifest preservedBackend declaration; runtime not yet checked",
+      "sourceStatus": "EXTERNAL_NOT_CAPTURED",
+      "authorityStatus": "UNVERIFIED",
+      "deploymentStatus": "UNVERIFIED",
+      "gitCommit": null,
+      "sha256": null,
+      "runtimeVerification": "PENDING"
+    }
+  },
+  "runtimeExpectations": {
+    "environment": "PRODUCTION",
+    "systemReleaseStatusApi": "NOT_IMPLEMENTED",
+    "attendanceHoldSource": "BACKEND_P5A25_ATTENDANCE_BATCH_HELD_SITES",
+    "heldSites": "UNVERIFIED",
+    "properties": "UNVERIFIED",
+    "writesPerformedByReleaseStatusCheck": 0
+  },
+  "nextWork": {
+    "module": "R2180",
+    "name": "PUNCH_EXEMPT_PERIOD",
+    "stage": "R2180-A",
+    "status": "PLANNED"
+  },
+  "governance": {
+    "productionModificationRequiresBootstrapPass": true,
+    "unverifiedComponentMayBeProdCurrent": false,
+    "manifestUpdatedOnlyAfterPostDeployVerification": true,
+    "handoffMayOverrideManifest": false,
+    "fileNameOrModifiedTimeMayDefineCurrentVersion": false,
+    "requiredIntegrityAlgorithm": "SHA-256",
+    "driftCodes": [
+      "VERSION_AUTHORITY_UNAVAILABLE",
+      "VERSION_DRIFT",
+      "CONTENT_DRIFT",
+      "RUNTIME_DRIFT",
+      "DEPLOYMENT_DRIFT",
+      "RELEASE_SET_INCOMPLETE"
+    ],
+    "successCode": "BOOTSTRAP_PASS"
+  }
+}
