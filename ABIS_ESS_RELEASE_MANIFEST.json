@@ -20,12 +20,13 @@
   "verification": {
     "bootstrapInventory": "PASS",
     "sourceAlignment": "PARTIAL",
-    "sha256Alignment": "NOT_CHECKED",
+    "sha256Alignment": "PARTIAL",
     "runtimeAlignment": "NOT_CHECKED",
     "preflight": "NOT_ASSERTED",
     "shadow": "NOT_ASSERTED",
     "deploy": "NOT_ASSERTED",
-    "postDeploySmoke": "NOT_ASSERTED"
+    "postDeploySmoke": "NOT_ASSERTED",
+    "gitSourceIntegrity": "PASS"
   },
   "components": {
     "liffBridge": {
@@ -37,8 +38,10 @@
       "authorityStatus": "UNVERIFIED",
       "deploymentStatus": "UNVERIFIED",
       "gitBlobSha": "634ecd1669b270b5a3e9c9985351fa25f8ae5d94",
-      "sha256": null,
-      "runtimeVerification": "PENDING"
+      "sha256": "830b8133233296317a5cb5f91284206796d766273aac68e77f4ea56c3e24bb90",
+      "runtimeVerification": "PENDING",
+      "sourceIntegrity": "VERIFIED",
+      "sourceIntegrityRef": "main@0b95cb4507e12da05d3223001ac0140f02180b46"
     },
     "frontendBaseBundle": {
       "componentType": "FRONTEND_BASE_BUNDLE",
@@ -53,20 +56,22 @@
         "bundle": {
           "path": "assets/ess-20261007-rc13-hf8/abis-ess.bundle.js",
           "gitBlobSha": "24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b",
-          "sha256": null
+          "sha256": "f1294196a5e002b09c020634fb707f7f525c6ff9c3d8e4a36d3b907a907d0015"
         },
         "css": {
           "path": "assets/ess-20261007-rc13-hf8/abis-ess.css",
           "gitBlobSha": "7b5f33279cefce5d04383771632600a106d648c2",
-          "sha256": null
+          "sha256": "4533261b2379155cb4a4b30e1d60f8b30b7437637b56a1258e4f049ca39061bb"
         },
         "assetManifest": {
           "path": "assets/ess-20261007-rc13-hf8/manifest.json",
           "gitBlobSha": "7ca3b07b0710e63352ff300c1e9fb0a51ecdb148",
-          "sha256": null
+          "sha256": "f7e5a9b86dfec19cf04738e49d1a53db0abc1c910163dc4aec840789f5dcd2c2"
         }
       },
-      "runtimeVerification": "PENDING"
+      "runtimeVerification": "PENDING",
+      "sourceIntegrity": "VERIFIED",
+      "sourceIntegrityRef": "main@0b95cb4507e12da05d3223001ac0140f02180b46"
     },
     "frontendAttendanceHoldOverlay": {
       "componentType": "FRONTEND_OVERLAY",
@@ -78,8 +83,10 @@
       "authorityStatus": "UNVERIFIED",
       "deploymentStatus": "UNVERIFIED",
       "gitBlobSha": "78eff0f85ae2df2075a45b47b84c332c1b4f1958",
-      "sha256": null,
-      "runtimeVerification": "PENDING"
+      "sha256": "2a335d7f17a018276c9d8b73f109432fa559e70fedad3306190aae3341409bbc",
+      "runtimeVerification": "PENDING",
+      "sourceIntegrity": "VERIFIED",
+      "sourceIntegrityRef": "main@0b95cb4507e12da05d3223001ac0140f02180b46"
     },
     "backend": {
       "componentType": "APPS_SCRIPT_BACKEND",
@@ -151,5 +158,12 @@
     "successCode": "BOOTSTRAP_PASS"
   },
   "governanceMergedAt": "2026-10-07T19:40:59+08:00",
-  "governanceMergeCommit": "d34964553baec96693f333f2ce11201c2ff661a0"
+  "governanceMergeCommit": "d34964553baec96693f333f2ce11201c2ff661a0",
+  "sourceIntegrity": {
+    "algorithm": "SHA-256",
+    "scope": "GIT_COMPONENTS_ONLY",
+    "status": "PASS",
+    "sourceIntegrityRef": "main@0b95cb4507e12da05d3223001ac0140f02180b46",
+    "capturedAt": "2026-10-07T19:57:00+08:00"
+  }
 }
