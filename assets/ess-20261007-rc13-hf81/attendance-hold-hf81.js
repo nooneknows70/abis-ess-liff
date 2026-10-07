@@ -100,6 +100,12 @@
     HOLD_STATE.error='';
     HOLD_STATE.heldScopeCodes=Object.keys(held).sort();
     HOLD_STATE.lastSyncAt=new Date().toISOString();
+
+    if(typeof ABIS_ESS_M72_STATE_!=='undefined' && ABIS_ESS_M72_STATE_){
+      const selected=String(ABIS_ESS_M72_STATE_.site||'ALL').toUpperCase();
+      if(selected!=='ALL' && held[selected])ABIS_ESS_M72_STATE_.site='ALL';
+    }
+
     setHint_('KNOWN');
   }
 
@@ -122,6 +128,7 @@
     if(typeof ABIS_ESS_M72_STATE_!=='undefined' && ABIS_ESS_M72_STATE_){
       ABIS_ESS_M72_STATE_.loading=false;
       ABIS_ESS_M72_STATE_.loaded=true;
+      ABIS_ESS_M72_STATE_.site='ALL';
       ABIS_ESS_M72_STATE_.bySite={};
       ABIS_ESS_M72_STATE_.errors=[{
         scopeCode:'HOLD_STATUS',
@@ -225,8 +232,16 @@
       out.backendDrivenHold=true;
       out.holdStatus=status_();
       out.holdStatusApi='attendanceUnifiedHeldSites';
+      out.ok=!!out.ok && HOLD_STATE.known && !HOLD_STATE.error;
       return out;
     };
+  }
+
+  /* Fail closed until the first authenticated backend sync completes. */
+  if(typeof ABIS_ESS_M72_SCOPES_!=='undefined' &&
+     Array.isArray(ABIS_ESS_M72_SCOPES_)){
+    ABIS_ESS_M72_SCOPES_.forEach(function(scope){scope.held=true;});
+    setHint_('UNKNOWN');
   }
 
   window.ABIS_ESS_HF81_HOLD = {
