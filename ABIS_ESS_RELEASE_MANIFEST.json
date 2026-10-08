@@ -8,24 +8,24 @@
     "branch": "main",
     "path": "ABIS_ESS_RELEASE_MANIFEST.json"
   },
-  "releaseSet": "ABIS_ESS_INITIALIZING_20261007_RC1",
-  "releaseStatus": "INITIALIZING",
-  "prodCurrentReleaseSet": null,
+  "releaseSet": "ABIS_ESS_R2180_PROD_20261008_V142",
+  "releaseStatus": "PROD_CURRENT",
+  "prodCurrentReleaseSet": "ABIS_ESS_R2180_PROD_20261008_V142",
   "initializedAt": "2026-10-07T18:56:00+08:00",
   "initializedFrom": {
     "branch": "main",
     "commit": "531819441f5d40c53ed9423a3bd0dadf9343ea6a"
   },
-  "verifiedAt": null,
+  "verifiedAt": "2026-10-08T18:24:00+08:00",
   "verification": {
     "bootstrapInventory": "PASS",
-    "sourceAlignment": "PARTIAL",
-    "sha256Alignment": "PARTIAL",
-    "runtimeAlignment": "NOT_CHECKED",
-    "preflight": "NOT_ASSERTED",
-    "shadow": "NOT_ASSERTED",
-    "deploy": "NOT_ASSERTED",
-    "postDeploySmoke": "NOT_ASSERTED",
+    "sourceAlignment": "PASS",
+    "sha256Alignment": "PASS",
+    "runtimeAlignment": "PASS",
+    "preflight": "PASS",
+    "shadow": "PASS",
+    "deploy": "PASS",
+    "postDeploySmoke": "PASS",
     "gitSourceIntegrity": "PASS"
   },
   "components": {
@@ -35,13 +35,13 @@
       "path": "index.html",
       "observedVersion": "P5A1-RM-FAST4_ROUTE_FIRST_RC1_1_TOKEN_REFRESH_20261007",
       "sourceStatus": "SOURCE_PRESENT",
-      "authorityStatus": "UNVERIFIED",
-      "deploymentStatus": "UNVERIFIED",
+      "authorityStatus": "VERIFIED",
+      "deploymentStatus": "VERIFIED",
       "gitBlobSha": "634ecd1669b270b5a3e9c9985351fa25f8ae5d94",
       "sha256": "830b8133233296317a5cb5f91284206796d766273aac68e77f4ea56c3e24bb90",
-      "runtimeVerification": "PENDING",
+      "runtimeVerification": "PASS",
       "sourceIntegrity": "VERIFIED",
-      "sourceIntegrityRef": "main@0b95cb4507e12da05d3223001ac0140f02180b46"
+      "sourceIntegrityRef": "main@29aa02d08221694305cc6bc4197208a66b2359fb"
     },
     "frontendBaseBundle": {
       "componentType": "FRONTEND_BASE_BUNDLE",
@@ -50,8 +50,8 @@
       "path": "assets/ess-20261007-rc13-hf8",
       "observedVersion": "P5A1_RM_FAST4_STATIC_ASSET_RC1_3_HF8_M72_M8_STATE_UI_20261007",
       "sourceStatus": "SOURCE_PRESENT",
-      "authorityStatus": "UNVERIFIED",
-      "deploymentStatus": "UNVERIFIED",
+      "authorityStatus": "VERIFIED",
+      "deploymentStatus": "VERIFIED",
       "files": {
         "bundle": {
           "path": "assets/ess-20261007-rc13-hf8/abis-ess.bundle.js",
@@ -69,9 +69,9 @@
           "sha256": "f7e5a9b86dfec19cf04738e49d1a53db0abc1c910163dc4aec840789f5dcd2c2"
         }
       },
-      "runtimeVerification": "PENDING",
+      "runtimeVerification": "PASS",
       "sourceIntegrity": "VERIFIED",
-      "sourceIntegrityRef": "main@0b95cb4507e12da05d3223001ac0140f02180b46"
+      "sourceIntegrityRef": "main@29aa02d08221694305cc6bc4197208a66b2359fb"
     },
     "frontendAttendanceHoldOverlay": {
       "componentType": "FRONTEND_OVERLAY",
@@ -80,50 +80,56 @@
       "path": "assets/ess-20261007-rc13-hf81/attendance-hold-hf81.js",
       "observedVersion": "ABIS_ESS_HF81_ATTENDANCE_HOLD_BACKEND_SSOT_20261007",
       "sourceStatus": "SOURCE_PRESENT",
-      "authorityStatus": "UNVERIFIED",
-      "deploymentStatus": "UNVERIFIED",
+      "authorityStatus": "VERIFIED",
+      "deploymentStatus": "VERIFIED",
       "gitBlobSha": "78eff0f85ae2df2075a45b47b84c332c1b4f1958",
       "sha256": "2a335d7f17a018276c9d8b73f109432fa559e70fedad3306190aae3341409bbc",
-      "runtimeVerification": "PENDING",
+      "runtimeVerification": "PASS",
       "sourceIntegrity": "VERIFIED",
-      "sourceIntegrityRef": "main@0b95cb4507e12da05d3223001ac0140f02180b46"
+      "sourceIntegrityRef": "main@29aa02d08221694305cc6bc4197208a66b2359fb"
     },
     "backend": {
       "componentType": "APPS_SCRIPT_BACKEND",
-      "sourceLocation": "APPS_SCRIPT_EXTERNAL",
-      "path": null,
-      "reportedVersion": "P5A1_HF81_ATTENDANCE_HOLD_BACKEND_SSOT_20261007",
-      "sourceStatus": "EXTERNAL_NOT_CAPTURED",
-      "authorityStatus": "UNVERIFIED",
-      "deploymentStatus": "UNVERIFIED",
-      "gitCommit": null,
-      "sha256": null,
-      "runtimeVerification": "PENDING"
+      "sourceLocation": "GIT_EXTERNAL_PRIVATE",
+      "authorityRepository": "nooneknows70/abis-ess-backend",
+      "authorityPath": "ABIS_ESS_BACKEND_RELEASE_MANIFEST.json",
+      "deployedSourceCommit": "7427577f8db2fca30b150025de0d76b39e1028a3",
+      "sourceStatus": "CAPTURED_AND_ALIGNED",
+      "authorityStatus": "VERIFIED",
+      "deploymentStatus": "VERIFIED",
+      "runtimeVerification": "PASS"
     },
     "attendanceSchedule": {
       "componentType": "APPS_SCRIPT_ATTENDANCE_SCHEDULE",
-      "sourceLocation": "APPS_SCRIPT_EXTERNAL",
+      "sourceLocation": "GIT_EXTERNAL_PRIVATE",
+      "authorityRepository": "nooneknows70/abis-ess-backend",
       "reportedFile": "P5A2_5_SCHEDULE_HUB_ATTENDANCE_UNIFIED_R2_RC1_4_38E.gs",
       "reportedVersion": "P5A2_5_ATTENDANCE_UNIFIED_R2_RC1_4_38E_CHANGBIN_CANONICAL_SHIFT_HISTORY_20261007",
-      "evidence": "HF8 asset manifest preservedBackend declaration; runtime not yet checked",
-      "sourceStatus": "EXTERNAL_NOT_CAPTURED",
-      "authorityStatus": "UNVERIFIED",
-      "deploymentStatus": "UNVERIFIED",
-      "gitCommit": null,
-      "sha256": null,
-      "runtimeVerification": "PENDING"
+      "sourceStatus": "CAPTURED_AND_ALIGNED",
+      "authorityStatus": "VERIFIED",
+      "deploymentStatus": "VERIFIED",
+      "runtimeVerification": "PASS"
     },
     "attendanceLiveIncremental": {
       "componentType": "APPS_SCRIPT_ATTENDANCE_LIVE",
-      "sourceLocation": "APPS_SCRIPT_EXTERNAL",
-      "reportedVersion": "P5A2_5_ATTENDANCE_LIVE_INCREMENTAL_R2174_RC1_20261007",
-      "evidence": "HF8 asset manifest preservedBackend declaration; runtime not yet checked",
-      "sourceStatus": "EXTERNAL_NOT_CAPTURED",
-      "authorityStatus": "UNVERIFIED",
-      "deploymentStatus": "UNVERIFIED",
-      "gitCommit": null,
-      "sha256": null,
-      "runtimeVerification": "PENDING"
+      "sourceLocation": "GIT_EXTERNAL_PRIVATE",
+      "authorityRepository": "nooneknows70/abis-ess-backend",
+      "reportedVersion": "P5A2_5_ATTENDANCE_LIVE_INCREMENTAL_R2174INC_RC4_2_R2180B_20261008",
+      "sourceStatus": "CAPTURED_AND_ALIGNED",
+      "authorityStatus": "VERIFIED",
+      "deploymentStatus": "VERIFIED",
+      "runtimeVerification": "PASS"
+    },
+    "punchExemptAdmin": {
+      "componentType": "FRONTEND_FEATURE_ASSET",
+      "sourceLocation": "GIT",
+      "path": "assets/ess-20261008-r2180d-rc1_1/punch-exempt-admin.js",
+      "observedVersion": "P5A2_5_ATTENDANCE_PUNCH_EXEMPT_PERIOD_R1_R2180D_UI_RC1_1_20261008",
+      "sourceStatus": "SOURCE_PRESENT",
+      "authorityStatus": "VERIFIED",
+      "deploymentStatus": "VERIFIED",
+      "sourceCommit": "29aa02d08221694305cc6bc4197208a66b2359fb",
+      "runtimeVerification": "PASS"
     }
   },
   "runtimeExpectations": {
@@ -132,13 +138,20 @@
     "attendanceHoldSource": "BACKEND_P5A25_ATTENDANCE_BATCH_HELD_SITES",
     "heldSites": "UNVERIFIED",
     "properties": "UNVERIFIED",
-    "writesPerformedByReleaseStatusCheck": 0
+    "writesPerformedByReleaseStatusCheck": 0,
+    "manualRuntimeGate": "PASS"
   },
   "nextWork": {
     "module": "R2180",
     "name": "PUNCH_EXEMPT_PERIOD",
-    "stage": "R2180-A",
-    "status": "PLANNED"
+    "stage": "R2180-D-RC1.2",
+    "status": "PLANNED",
+    "scope": [
+      "auto_active_upcoming_list",
+      "status_summary_counts",
+      "collapsed_history",
+      "read_only_summary_api"
+    ]
   },
   "governance": {
     "productionModificationRequiresBootstrapPass": true,
@@ -161,9 +174,45 @@
   "governanceMergeCommit": "d34964553baec96693f333f2ce11201c2ff661a0",
   "sourceIntegrity": {
     "algorithm": "SHA-256",
-    "scope": "GIT_COMPONENTS_ONLY",
+    "scope": "PROD_CURRENT_RELEASE_SET",
     "status": "PASS",
-    "sourceIntegrityRef": "main@0b95cb4507e12da05d3223001ac0140f02180b46",
-    "capturedAt": "2026-10-07T19:57:00+08:00"
+    "backendSourceCommit": "7427577f8db2fca30b150025de0d76b39e1028a3",
+    "liffSourceCommit": "29aa02d08221694305cc6bc4197208a66b2359fb",
+    "capturedAt": "2026-10-08T18:24:00+08:00"
+  },
+  "prodCurrent": {
+    "releaseSet": "ABIS_ESS_R2180_PROD_20261008_V142",
+    "backendSource": {
+      "repository": "nooneknows70/abis-ess-backend",
+      "sourceCommit": "7427577f8db2fca30b150025de0d76b39e1028a3",
+      "backendManifestAuthorityCommit": "9cc2718cd57aa29451046486b6b1067fb17143f5"
+    },
+    "liffSource": {
+      "repository": "nooneknows70/abis-ess-liff",
+      "sourceCommit": "29aa02d08221694305cc6bc4197208a66b2359fb"
+    },
+    "productionDeployment": {
+      "deploymentId": "AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR",
+      "version": 142,
+      "description": "R2180D RC1.1 UI FIX git7427577f"
+    },
+    "alignment": {
+      "gitToHead": "PASS_49_49",
+      "gitToDeployment": "PASS_49_49"
+    },
+    "runtime": {
+      "R2174": "PASS_LIVE",
+      "R2180A": "PASS",
+      "R2180B": "PASS_LIVE",
+      "R2180C": "PASS"
+    },
+    "postDeploySmoke": {
+      "web": "PASS",
+      "liff": "PASS"
+    },
+    "releaseEvidence": {
+      "repository": "nooneknows70/abis-ess-backend",
+      "path": "release/PROD_CURRENT_V142_20261008.json"
+    }
   }
 }
