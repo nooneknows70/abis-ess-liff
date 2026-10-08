@@ -43,7 +43,7 @@ No V143 was created for this metadata convergence. Production remains `@142`.
 - Module: `R2180`
 - Name: `PUNCH_EXEMPT_PERIOD`
 - Stage: `R2180-D-RC1.2`
-- Status: `PLANNED`
+- Status: `IN_PROGRESS`
 
 ### Frozen RC1.2 scope
 
@@ -66,3 +66,11 @@ Before RC1.2 source mutation:
 5. Implement immutable RC1.2 UI asset and update backend Index reference.
 6. Run Git → HEAD alignment, runtime gate, Web/LIFF smoke.
 7. Create the next Production deployment only after all gates PASS.
+
+
+## RC1.2 source progress
+
+- LIFF immutable asset merged: `e0f59278df2ded20534c0dc727826407beabeac0`
+- Backend summary API + Index reference merged: `b026e9add3f6ba78286d961d7b5d3fa3a662ced5`
+- Production deployment: **not yet created**
+- Current PROD_CURRENT remains `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142`
