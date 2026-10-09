@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Cache-Control" content="no-store">
+<title>ABIS HF2｜LINE 隔離驗證</title>
+<style>
+body{font:16px/1.6 system-ui,sans-serif;background:#eef4fa;color:#172e44;margin:0;padding:25px}
+main{max-width:490px;margin:32px auto;padding:22px;border-radius:16px;background:#fff;border:1px solid #c9dae8}
+small{color:#667c8e}#status{white-space:pre-wrap}button{padding:11px 16px;border:0;border-radius:10px;color:white;background:#1764ac}
+</style>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+<main>
+<h2>ABIS HF2｜LINE 隔離測試</h2>
+<p>此站僅驗證 LINE 身分及測試連結，不讀取正式員工、出勤或薪資資料。</p>
+<p id="status" role="status" aria-live="polite">準備 LINE 測試驗證…</p>
+<small>請勿輸入正式帳號密碼；本測試只讀取 LINE 核發的 ID Token，直接送至獨立測試 Backend 進行驗證，不顯示或儲存 Token。</small>
+</main>
+<script>
+(function(){
+'use strict';
+// Configure only for a NEW staging LIFF app + NEW isolated Apps Script /exec.
+// These are invalid placeholders until explicitly set during staging deployment.
+const cfg=Object.freeze({
+  liffId:'__HF2_TEST_LIFF_ID__',
+  stageBackendUrl:'__HF2_TEST_BACKEND_EXEC_URL__',
+  version:'HF2_P2A_TEST_LIFF_ENTRY_20261010'
+});
+const PROD_LIFF_ID='2011584842-AmO1bbHY';
+const PROD_BACKEND_DEPLOYMENT='AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR';
+function fail(code){
+ const e=document.getElementById('status');
+ e.textContent='測試入口停止：'+code+'。請檢查測試 LIFF 與測試 Backend 設定。';
+ e.style.color='#9b1c32';
+}
+function validConfig(){
+ const url=new URL(cfg.stageBackendUrl);
+ const appId=/^[0-9]{8,14}-[A-Za-z0-9]+$/.test(cfg.liffId);
+ const correctHost=url.protocol==='https:'&&url.hostname==='script.google.com';
+ const validPath=/^\/(?:macros\/s|a\/macros\/[^/]+\/s)\/[A-Za-z0-9_-]+\/exec$/.test(url.pathname);
+ return appId && cfg.liffId!==PROD_LIFF_ID && correctHost && validPath &&
+   url.pathname.indexOf(PROD_BACKEND_DEPLOYMENT)<0 && !url.search && !url.hash;
+}
+function readRouteToken(){
+ const top=new URLSearchParams(location.search);
+ const raw=top.get('liff.state')||'';
+ // LINE redirects may retain a route query inside liff.state.
+ const state=raw.includes('?')?raw.slice(raw.indexOf('?')+1):raw.replace(/^\//,'').replace(/^\?/,'');
+ const inner=new URLSearchParams(state);
+ const candidate=String(top.get('rt')||inner.get('rt')||'').trim();
+ return /^[0-9a-f]{32}$/i.test(candidate)?candidate.toLowerCase():'';
+}
+function submitToIsolatedBackend(idToken,routeToken){
+ const form=document.createElement('form');
+ form.method='POST';form.target='_self';form.action=cfg.stageBackendUrl;
+ form.acceptCharset='UTF-8';form.style.display='none';
+ const payload={mode:'hf2p2auth',idToken:idToken,routeToken:routeToken,
+   bridgeVersion:cfg.version};
+ Object.keys(payload).forEach(function(k){
+   const field=document.createElement('input');field.type='hidden';
+   field.name=k;field.value=payload[k];form.appendChild(field);
+ });
+ document.body.appendChild(form);
+ document.getElementById('status').textContent='LINE 已完成初始化，正在由獨立測試 Backend 驗證…';
+ form.submit();
+}
+async function main(){
+ try {
+   if(!validConfig())return fail('STAGING_CONFIG_INVALID');
+   if(typeof liff==='undefined')return fail('LIFF_SDK_UNAVAILABLE');
+   await liff.init({liffId:cfg.liffId,withLoginOnExternalBrowser:true});
+   if(!liff.isLoggedIn()){liff.login({redirectUri:location.href});return;}
+   const idToken=liff.getIDToken();
+   if(!idToken)return fail('LINE_ID_TOKEN_UNAVAILABLE');
+   // In first-time enrollment, the operator may use a staging LIFF URL without rt.
+   const rt=readRouteToken();
+   submitToIsolatedBackend(idToken,rt);
+ } catch(ignore) {
+   fail('LIFF_INITIALIZATION_FAILED');
+ }
+}
+main();
+})();
+</script>
+</body>
+</html>

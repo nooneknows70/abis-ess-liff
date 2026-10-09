@@ -1,0 +1,25 @@
+name: HF2 candidate checks (no deploy)
+on:
+  push:
+    branches:
+      - fix/attendance-deeplink-rc1-20261009
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  hf2-standalone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: node --check assets/ess-20261009-attendance-deeplink-hf2/attendance-deeplink-hf2.js
+      - name: Hermetic regression tests
+        run: node --test tests/attendance-deeplink-hf2.test.cjs
+      - name: Phase2 LIFF staging gateway checks
+        run: node --test tests/hf2-phase2-liff.test.cjs
+      - name: Isolated LIFF Worker configuration safety checks
+        run: node --test tests/hf2-phase2-worker.test.mjs
