@@ -57,6 +57,11 @@ test('liff.state route token is preserved after LINE redirects',async()=>{
  assert.equal(dataOf(out.submitted[0]).routeToken,'c'.repeat(32));
 });
 
+test('LINE original Channel with distinct LIFF App posts only to stage backend',async()=>{
+ const out=await render({liffId:'2011584842-qk2mOOxp'});
+ assert.equal(out.submitted.length,1);
+ assert.match(out.submitted[0].action,/AKfTestStage123456\/exec$/);
+});
 test('no test credentials or untrusted backend URL means no POST',async()=>{
  const examples=[
   {liffId:'2011584842-AmO1bbHY'},
