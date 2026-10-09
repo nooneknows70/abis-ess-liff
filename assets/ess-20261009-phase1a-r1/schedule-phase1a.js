@@ -220,7 +220,7 @@
     const byDate=(state.data&&state.data.shiftOptionsByDate)||{};
     const opts=(byDate&&byDate[date])||(state.data&&state.data.shiftOptions)||[];
     return opts.map(function(x){
-      return '<option value="'+esc(x.code)+'" '+(x.code===selected?'selected':'')+'>'+esc(x.name||x.code)+'</option>';
+      return '<option value="'+esc(x.code)+'" data-default-ot-min="'+esc(Number(x.defaultOvertimeMinutes||0))+'" '+(x.code===selected?'selected':'')+'>'+esc(x.name||x.code)+'</option>';
     }).join('');
   }
 
@@ -257,7 +257,15 @@
       const d=dateObj(date);
       if(d&&(d.getDay()===0||d.getDay()===6)&&nature.value==='NORMAL_WORK') nature.value='REST_DAY_OVERTIME';
     }
-    nature.onchange=sync; sync();
+    function applyShiftDefaultOt(){
+      if(nature.value==='REST') return;
+      const opt=shift.options[shift.selectedIndex];
+      const min=opt?Number(opt.getAttribute('data-default-ot-min')||0):0;
+      ot.value=String(Math.round(min/6)/10);
+    }
+    nature.onchange=sync;
+    shift.onchange=function(){applyShiftDefaultOt();sync();};
+    sync();
     el('p1aCancel').onclick=function(){b.remove();};
     el('p1aSave').onclick=async function(){
       this.disabled=true;
