@@ -21,3 +21,5 @@ jobs:
         run: node --test tests/attendance-deeplink-hf2.test.cjs
       - name: Phase2 LIFF staging gateway checks
         run: node --test tests/hf2-phase2-liff.test.cjs
+      - name: Isolated LIFF Worker configuration safety checks
+        run: node --test tests/hf2-phase2-worker.test.mjs
