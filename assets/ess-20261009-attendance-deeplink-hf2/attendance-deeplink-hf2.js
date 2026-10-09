@@ -22,6 +22,8 @@
     ? p5a25R29ApplyBootRouteContext_ : null;
   var originalCall = typeof call === 'function' ? call : null;
   var originalEnter = typeof enterApp === 'function' ? enterApp : null;
+  var originalBootRoute = typeof p5rmApplyBootRoute_ === 'function'
+    ? p5rmApplyBootRoute_ : null;
 
   var state = {
     phase: 'WAITING', kind: kind, attempts: 0, generation: 0,
@@ -183,6 +185,16 @@
         state.apiErrorCode = classifyError(err);
         throw err;
       }
+    };
+  }
+
+  // In HF8, invoking p5rmApplyBootRoute_ a second time unconditionally calls
+  // showHome(). A repeated enterApp must not erase an authorized deep link.
+  // Normal non-deep-link routes are not touched by this candidate.
+  if (originalBootRoute) {
+    p5rmApplyBootRoute_ = function () {
+      if (state.attempts > 0) return;
+      return originalBootRoute.apply(this, arguments);
     };
   }
 
