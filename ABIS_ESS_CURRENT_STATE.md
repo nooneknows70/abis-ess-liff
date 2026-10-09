@@ -59,13 +59,13 @@ No V143 was created for this metadata convergence. Production remains `@142`.
 
 Current RC1.2.2 gate:
 
-1. Keep `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142` frozen as PROD_CURRENT.
-2. READ_ONLY summary API preflight is PASS and direct READ_ONLY runtime call is PASS with zero writes.
-3. Immutable RC1.2.2 UI is merged and fixes summary initialization/recovery plus ENDED/CANCELLED history navigation.
-4. Backend `Index.html` points to the immutable RC1.2.2 asset.
-5. Apps Script editable HEAD is the NEXT source surface.
-6. RC1.2.2 HEAD Web smoke is PASS: summary auto-load, ACTIVE_NOW/UPCOMING default list, ENDED lazy-load, CANCELLED lazy-load, and Manage-assignment navigation.
-7. Next gate: create an immutable Apps Script candidate version from the verified NEXT HEAD, then verify candidate source alignment before any Production cutover.
+1. Keep `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142` frozen as PROD_CURRENT until an explicit Production cutover.
+2. READ_ONLY summary API preflight and runtime verification are PASS with zero writes.
+3. RC1.2.2 HEAD Web smoke is PASS.
+4. Immutable Apps Script candidate `V143` has been created from the verified NEXT HEAD.
+5. V143 candidate source alignment is PASS: Git authority `50` files ↔ V143 `50` files, no missing/extra/mismatch.
+6. Final Pre-Deployment Gate is PASS with no business mutation, no LINE send, no deployment mutation, and LINE delivery row count unchanged `241 → 241`.
+7. Next gate: explicit Production cutover decision for the existing Production deployment `@142 → @143`. Do not create another Apps Script version unless V143 changes.
 
 
 ## RC1.2 source progress
@@ -75,7 +75,11 @@ Current RC1.2.2 gate:
 - Backend summary API + RC1.2.2 Index reference merged: `e2ddf2312b6bc6ccd1066005ba331d1521173b67`
 - Backend summary source: `src/P5A2_5_ATTENDANCE_PUNCH_EXEMPT_R2180D_RC1_2_SUMMARY.js`
 - HEAD smoke: **PASS**
-- HEAD smoke UI version: `P5A2_5_ATTENDANCE_PUNCH_EXEMPT_PERIOD_R1_R2180D_UI_RC1_2_2_20261009`
-- READ_ONLY summary runtime: **PASS**, writes observed: `0`
-- Production deployment: **not yet created**
+- Immutable Apps Script candidate: **V143**
+- V143 description: `R2180D RC1.2.2 CANDIDATE git e2ddf231`
+- V143 ↔ Git authority: **PASS 50/50**, missing `0`, extra `0`, mismatch `0`
+- Final Pre-Deployment Gate: **PASS**
+- Final gate writes: attendance `0`, exception `0`, payroll `0`, LINE `0`
+- LINE delivery rows unchanged: `241 → 241`
+- Production deployment: **not yet updated**
 - Current PROD_CURRENT remains `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142`
