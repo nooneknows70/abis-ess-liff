@@ -145,7 +145,7 @@
     "module": "R2180",
     "name": "PUNCH_EXEMPT_PERIOD",
     "stage": "R2180-D-RC1.2",
-    "status": "IN_PROGRESS",
+    "status": "READY_FOR_PRODUCTION_CUTOVER_DECISION",
     "scope": [
       "auto_active_upcoming_list",
       "status_summary_counts",
@@ -177,6 +177,45 @@
         ],
         "readOnlyBackendSummary": "PASS",
         "writesObserved": 0
+      },
+      "immutableCandidate": {
+        "status": "PASS",
+        "appsScriptVersion": 143,
+        "description": "R2180D RC1.2.2 CANDIDATE git e2ddf231",
+        "backendAuthorityCommit": "e2ddf2312b6bc6ccd1066005ba331d1521173b67",
+        "sourceAlignment": {
+          "status": "PASS",
+          "authorityFiles": 50,
+          "candidateFiles": 50,
+          "exact": 50,
+          "missing": 0,
+          "extra": 0,
+          "mismatch": 0
+        }
+      },
+      "finalPreDeploymentGate": {
+        "status": "PASS",
+        "gate": "P5A1-RM-HOME-RC2-FINAL-PREDEPLOYMENT-GATE",
+        "version": "P5A1-RM-HOME-RC2-FINAL-PREDEPLOYMENT-GATE-V1",
+        "verificationOnly": true,
+        "mutationPerformed": false,
+        "businessDataMutationPerformed": false,
+        "productionSendCalled": false,
+        "triggerMutationPerformed": false,
+        "deploymentMutationPerformed": false,
+        "lineSent": 0,
+        "attendanceWrites": 0,
+        "exceptionWrites": 0,
+        "payrollWrites": 0,
+        "task": "PASS",
+        "notificationCenter": "PASS",
+        "preferredLanguage": "PASS",
+        "fast3Liff": "PASS",
+        "scheduleHub": "PASS",
+        "lineDeliveryRowsBefore": 241,
+        "lineDeliveryRowsAfter": 241,
+        "lineDeliveryStateUnchanged": true,
+        "errors": []
       }
     }
   },
