@@ -57,20 +57,22 @@ No V143 was created for this metadata convergence. Production remains `@142`.
 
 ## Next implementation gate
 
-Before RC1.2 source mutation:
+Current RC1.2.1 gate:
 
-1. Bootstrap from this `PROD_CURRENT` Release Set.
-2. Branch from current source authority.
-3. Implement READ_ONLY summary API first.
-4. Run read-only contract/preflight.
-5. Implement immutable RC1.2 UI asset and update backend Index reference.
-6. Run Git → HEAD alignment, runtime gate, Web/LIFF smoke.
-7. Create the next Production deployment only after all gates PASS.
+1. Keep `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142` frozen as PROD_CURRENT.
+2. READ_ONLY summary API is merged and its preflight has passed.
+3. Immutable RC1.2 UI is merged; RC1.2.1 follow-up fixes the visible Manage-assignment interaction by scrolling the selected employee editor into view.
+4. Backend `Index.html` now points to the immutable RC1.2.1 asset.
+5. Apps Script editable HEAD is the NEXT source surface; RC1.2.1 Manage-assignment HEAD smoke has passed.
+6. Complete remaining READ_ONLY Web/LIFF smoke before creating an immutable V143 candidate.
+7. Create the next Production deployment only after all RC1.2 gates PASS.
 
 
 ## RC1.2 source progress
 
-- LIFF immutable asset merged: `e0f59278df2ded20534c0dc727826407beabeac0`
-- Backend summary API + Index reference merged: `b026e9add3f6ba78286d961d7b5d3fa3a662ced5`
+- LIFF immutable RC1.2.1 asset merged: `7472e564cdea0566477e8581b65afe62e64843b3`
+- LIFF asset: `assets/ess-20261008-r2180d-rc1_2_1/punch-exempt-admin.js`
+- Backend summary API + RC1.2.1 Index reference merged: `894cb1108e7c7dd4e321152b2f7bbe693f01babe`
+- Backend summary source: `src/P5A2_5_ATTENDANCE_PUNCH_EXEMPT_R2180D_RC1_2_SUMMARY.js`
 - Production deployment: **not yet created**
 - Current PROD_CURRENT remains `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142`

@@ -155,12 +155,12 @@
     "sourceProgress": {
       "liffAsset": {
         "status": "MERGED",
-        "commit": "e0f59278df2ded20534c0dc727826407beabeac0",
-        "path": "assets/ess-20261008-r2180d-rc1_2/punch-exempt-admin.js"
+        "commit": "7472e564cdea0566477e8581b65afe62e64843b3",
+        "path": "assets/ess-20261008-r2180d-rc1_2_1/punch-exempt-admin.js"
       },
       "backend": {
         "status": "MERGED",
-        "commit": "b026e9add3f6ba78286d961d7b5d3fa3a662ced5",
+        "commit": "894cb1108e7c7dd4e321152b2f7bbe693f01babe",
         "summaryPath": "src/P5A2_5_ATTENDANCE_PUNCH_EXEMPT_R2180D_RC1_2_SUMMARY.js",
         "indexReference": "src/Index.html"
       },
