@@ -8,15 +8,15 @@
     "branch": "main",
     "path": "ABIS_ESS_RELEASE_MANIFEST.json"
   },
-  "releaseSet": "ABIS_ESS_R2180_PROD_20261008_V142",
+  "releaseSet": "ABIS_ESS_R2180_PROD_20261009_V143",
   "releaseStatus": "PROD_CURRENT",
-  "prodCurrentReleaseSet": "ABIS_ESS_R2180_PROD_20261008_V142",
+  "prodCurrentReleaseSet": "ABIS_ESS_R2180_PROD_20261009_V143",
   "initializedAt": "2026-10-07T18:56:00+08:00",
   "initializedFrom": {
     "branch": "main",
     "commit": "531819441f5d40c53ed9423a3bd0dadf9343ea6a"
   },
-  "verifiedAt": "2026-10-08T18:24:00+08:00",
+  "verifiedAt": "2026-10-09",
   "verification": {
     "bootstrapInventory": "PASS",
     "sourceAlignment": "PASS",
@@ -93,7 +93,7 @@
       "sourceLocation": "GIT_EXTERNAL_PRIVATE",
       "authorityRepository": "nooneknows70/abis-ess-backend",
       "authorityPath": "ABIS_ESS_BACKEND_RELEASE_MANIFEST.json",
-      "deployedSourceCommit": "7427577f8db2fca30b150025de0d76b39e1028a3",
+      "deployedSourceCommit": "e2ddf2312b6bc6ccd1066005ba331d1521173b67",
       "sourceStatus": "CAPTURED_AND_ALIGNED",
       "authorityStatus": "VERIFIED",
       "deploymentStatus": "VERIFIED",
@@ -123,12 +123,12 @@
     "punchExemptAdmin": {
       "componentType": "FRONTEND_FEATURE_ASSET",
       "sourceLocation": "GIT",
-      "path": "assets/ess-20261008-r2180d-rc1_1/punch-exempt-admin.js",
-      "observedVersion": "P5A2_5_ATTENDANCE_PUNCH_EXEMPT_PERIOD_R1_R2180D_UI_RC1_1_20261008",
+      "path": "assets/ess-20261009-r2180d-rc1_2_2/punch-exempt-admin.js",
+      "observedVersion": "P5A2_5_ATTENDANCE_PUNCH_EXEMPT_PERIOD_R1_R2180D_UI_RC1_2_2_20261009",
       "sourceStatus": "SOURCE_PRESENT",
       "authorityStatus": "VERIFIED",
       "deploymentStatus": "VERIFIED",
-      "sourceCommit": "29aa02d08221694305cc6bc4197208a66b2359fb",
+      "sourceCommit": "b3427432864aeb3832e1088230c7e6de94818e5c",
       "runtimeVerification": "PASS"
     }
   },
@@ -145,7 +145,7 @@
     "module": "R2180",
     "name": "PUNCH_EXEMPT_PERIOD",
     "stage": "R2180-D-RC1.2",
-    "status": "READY_FOR_PRODUCTION_CUTOVER_DECISION",
+    "status": "COMPLETED_IN_PROD_CURRENT",
     "scope": [
       "auto_active_upcoming_list",
       "status_summary_counts",
@@ -164,7 +164,12 @@
         "summaryPath": "src/P5A2_5_ATTENDANCE_PUNCH_EXEMPT_R2180D_RC1_2_SUMMARY.js",
         "indexReference": "src/Index.html"
       },
-      "productionDeployment": "NOT_YET_CREATED",
+      "productionDeployment": {
+        "status": "DEPLOYED",
+        "deploymentId": "AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR",
+        "appsScriptVersion": 143,
+        "description": "R2180D RC1.2.2 PROD git e2ddf231"
+      },
       "headSmoke": {
         "status": "PASS",
         "uiVersion": "P5A2_5_ATTENDANCE_PUNCH_EXEMPT_PERIOD_R1_R2180D_UI_RC1_2_2_20261009",
@@ -216,6 +221,12 @@
         "lineDeliveryRowsAfter": 241,
         "lineDeliveryStateUnchanged": true,
         "errors": []
+      },
+      "postDeploySmoke": {
+        "status": "PASS",
+        "web": "PASS",
+        "liff": "PASS",
+        "productionUiVersion": "P5A2_5_ATTENDANCE_PUNCH_EXEMPT_PERIOD_R1_R2180D_UI_RC1_2_2_20261009"
       }
     }
   },
@@ -242,35 +253,36 @@
     "algorithm": "SHA-256",
     "scope": "PROD_CURRENT_RELEASE_SET",
     "status": "PASS",
-    "backendSourceCommit": "7427577f8db2fca30b150025de0d76b39e1028a3",
-    "liffSourceCommit": "29aa02d08221694305cc6bc4197208a66b2359fb",
-    "capturedAt": "2026-10-08T18:24:00+08:00"
+    "backendSourceCommit": "e2ddf2312b6bc6ccd1066005ba331d1521173b67",
+    "liffSourceCommit": "b3427432864aeb3832e1088230c7e6de94818e5c",
+    "capturedAt": "2026-10-09"
   },
   "prodCurrent": {
-    "releaseSet": "ABIS_ESS_R2180_PROD_20261008_V142",
+    "releaseSet": "ABIS_ESS_R2180_PROD_20261009_V143",
     "backendSource": {
       "repository": "nooneknows70/abis-ess-backend",
-      "sourceCommit": "7427577f8db2fca30b150025de0d76b39e1028a3",
-      "backendManifestAuthorityCommit": "9cc2718cd57aa29451046486b6b1067fb17143f5"
+      "sourceCommit": "e2ddf2312b6bc6ccd1066005ba331d1521173b67",
+      "backendManifestAuthorityCommit": "45e8927fa6d4d1bd9a059e95c4b9ed9525a1c9a0"
     },
     "liffSource": {
       "repository": "nooneknows70/abis-ess-liff",
-      "sourceCommit": "29aa02d08221694305cc6bc4197208a66b2359fb"
+      "sourceCommit": "b3427432864aeb3832e1088230c7e6de94818e5c"
     },
     "productionDeployment": {
       "deploymentId": "AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR",
-      "version": 142,
-      "description": "R2180D RC1.1 UI FIX git7427577f"
+      "version": 143,
+      "description": "R2180D RC1.2.2 PROD git e2ddf231"
     },
     "alignment": {
-      "gitToHead": "PASS_49_49",
-      "gitToDeployment": "PASS_49_49"
+      "gitToHead": "PASS_50_50",
+      "gitToDeployment": "PASS_50_50"
     },
     "runtime": {
       "R2174": "PASS_LIVE",
       "R2180A": "PASS",
       "R2180B": "PASS_LIVE",
-      "R2180C": "PASS"
+      "R2180C": "PASS",
+      "R2180D": "PASS_PRODUCTION"
     },
     "postDeploySmoke": {
       "web": "PASS",
@@ -278,7 +290,7 @@
     },
     "releaseEvidence": {
       "repository": "nooneknows70/abis-ess-backend",
-      "path": "release/PROD_CURRENT_V142_20261008.json"
+      "path": "release/PROD_CURRENT_V143_20261009.json"
     }
   }
 }

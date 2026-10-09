@@ -43,43 +43,36 @@ No V143 was created for this metadata convergence. Production remains `@142`.
 - Module: `R2180`
 - Name: `PUNCH_EXEMPT_PERIOD`
 - Stage: `R2180-D-RC1.2`
-- Status: `IN_PROGRESS`
+- Status: `PROD_CURRENT`
+- Release Set: `ABIS_ESS_R2180_PROD_20261009_V143`
+- Apps Script Production: `@143`
+- Backend deployed source: `e2ddf2312b6bc6ccd1066005ba331d1521173b67`
+- LIFF RC1.2.2 source: `b3427432864aeb3832e1088230c7e6de94818e5c`
 
-### Frozen RC1.2 scope
+### Production verification
 
-1. Auto-load `ACTIVE_NOW` and `UPCOMING` employees when entering the admin page.
-2. Add 2×2 status summary counts: active now / upcoming / ended / cancelled.
-3. Keep `ENDED` and `CANCELLED` history collapsed by default.
-4. Retain employee search for new employees and targeted lookup.
-5. Add one HR/Admin-only READ_ONLY summary API to avoid N+1 requests.
-6. Do not add fake application/approval states.
-7. Do not change persisted SSOT status values.
+1. RC1.2.2 Summary API preflight: **PASS**
+2. READ_ONLY Summary runtime: **PASS**, writes observed `0`
+3. HEAD Web smoke: **PASS**
+4. Immutable candidate V143 ↔ Git source: **PASS 50/50**
+5. Final Pre-Deployment Gate: **PASS**
+6. Production cutover `@142 → @143`: **PASS**
+7. Production Web smoke: **PASS**
+8. Production LIFF smoke: **PASS**
+9. Release evidence: `release/PROD_CURRENT_V143_20261009.json`
+
+### Frozen RC1.2 production scope
+
+1. Auto-load `ACTIVE_NOW` and `UPCOMING` periods when entering the admin page.
+2. 2×2 status summary counts: active now / upcoming / ended / cancelled.
+3. `ENDED` and `CANCELLED` history lazy-loaded and collapsed by default.
+4. Employee search retained for new employees and targeted lookup.
+5. HR/Admin-only READ_ONLY summary API.
+6. No fake application/approval states.
+7. Persisted SSOT status values remain unchanged.
+8. Manage-assignment navigation automatically brings the selected employee management area into view.
 
 ## Next implementation gate
 
-Current RC1.2.2 gate:
+R2180-D RC1.2 is complete in PROD_CURRENT V143. Any further functional change must start as a new NEXT change from this frozen release set; do not overwrite V143 metadata or reuse the immutable RC1.2.2 asset path.
 
-1. Keep `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142` frozen as PROD_CURRENT until an explicit Production cutover.
-2. READ_ONLY summary API preflight and runtime verification are PASS with zero writes.
-3. RC1.2.2 HEAD Web smoke is PASS.
-4. Immutable Apps Script candidate `V143` has been created from the verified NEXT HEAD.
-5. V143 candidate source alignment is PASS: Git authority `50` files ↔ V143 `50` files, no missing/extra/mismatch.
-6. Final Pre-Deployment Gate is PASS with no business mutation, no LINE send, no deployment mutation, and LINE delivery row count unchanged `241 → 241`.
-7. Next gate: explicit Production cutover decision for the existing Production deployment `@142 → @143`. Do not create another Apps Script version unless V143 changes.
-
-
-## RC1.2 source progress
-
-- LIFF immutable RC1.2.2 asset merged: `b3427432864aeb3832e1088230c7e6de94818e5c`
-- LIFF asset: `assets/ess-20261009-r2180d-rc1_2_2/punch-exempt-admin.js`
-- Backend summary API + RC1.2.2 Index reference merged: `e2ddf2312b6bc6ccd1066005ba331d1521173b67`
-- Backend summary source: `src/P5A2_5_ATTENDANCE_PUNCH_EXEMPT_R2180D_RC1_2_SUMMARY.js`
-- HEAD smoke: **PASS**
-- Immutable Apps Script candidate: **V143**
-- V143 description: `R2180D RC1.2.2 CANDIDATE git e2ddf231`
-- V143 ↔ Git authority: **PASS 50/50**, missing `0`, extra `0`, mismatch `0`
-- Final Pre-Deployment Gate: **PASS**
-- Final gate writes: attendance `0`, exception `0`, payroll `0`, LINE `0`
-- LINE delivery rows unchanged: `241 → 241`
-- Production deployment: **not yet updated**
-- Current PROD_CURRENT remains `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142`
