@@ -7,7 +7,7 @@ const PROD_LIFF = "2011584842-AmO1bbHY";
 const PROD_BACKEND = "AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR";
 function validStageConfig(liffId, backend){
  if (!/^[0-9]{8,14}-[A-Za-z0-9]+$/.test(liffId) ||
-     liffId===PROD_LIFF || liffId.split("-")[0]===PROD_LIFF.split("-")[0]) return false;
+     liffId===PROD_LIFF) return false;
  try {
   const u=new URL(backend);
   return u.protocol==="https:"&&u.hostname==="script.google.com"&&!u.search&&!u.hash &&
