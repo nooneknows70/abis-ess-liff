@@ -5,29 +5,30 @@
 
 ## PROD_CURRENT
 
-- Release Set: `ABIS_ESS_R2180_PROD_20261008_V142`
+- Release Set: `ABIS_ESS_R2180_PROD_20261009_V143`
 - Release status: `PROD_CURRENT`
-- Production deployment: `@142 - R2180D RC1.1 UI FIX git7427577f`
+- Production deployment: `@143 - R2180D RC1.2.2 PROD git e2ddf231`
 - Deployment ID: `AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR`
-- Backend deployed source: `nooneknows70/abis-ess-backend@7427577f8db2fca30b150025de0d76b39e1028a3`
-- LIFF deployed source: `nooneknows70/abis-ess-liff@29aa02d08221694305cc6bc4197208a66b2359fb`
-- Backend release evidence: `release/PROD_CURRENT_V142_20261008.json`
+- Backend deployed source: `nooneknows70/abis-ess-backend@e2ddf2312b6bc6ccd1066005ba331d1521173b67`
+- LIFF deployed source: `nooneknows70/abis-ess-liff@b3427432864aeb3832e1088230c7e6de94818e5c`
+- Backend release evidence: `release/PROD_CURRENT_V143_20261009.json`
 
 ## Release verification
 
 | Gate | Result |
 | --- | --- |
-| Git → Apps Script HEAD | PASS 49/49 |
-| Git → immutable V142 / Production | PASS 49/49 |
+| Git → Apps Script HEAD | PASS 50/50 |
+| Git → immutable V143 / Production | PASS 50/50 |
 | R2174 Runtime | PASS / LIVE |
 | R2180-A | PASS |
 | R2180-B | PASS / LIVE |
 | R2180-C Compact Gate | PASS |
+| R2180-D RC1.2.2 Production | PASS |
 | Final Pre-Deployment Gate | PASS |
 | Web smoke | PASS |
 | LINE/LIFF smoke | PASS |
 
-No V143 was created for this metadata convergence. Production remains `@142`.
+V143 is the current frozen Production release. V142 is superseded and retained only as historical release evidence.
 
 ## R2180 current production behavior
 
@@ -36,7 +37,9 @@ No V143 was created for this metadata convergence. Production remains `@142`.
 - R2180-B is LIVE and performs bounded DAILY_ATTENDANCE recalculation for affected dates.
 - Raw punch evidence is preserved.
 - R2180-C punch-derived exception/notification suppression gate is verified.
-- R2180-D RC1.1 production UI notice is active.
+- R2180-D RC1.2.2 is active in Production.
+- Admin entry auto-loads ACTIVE_NOW / UPCOMING, lazy-loads ENDED / CANCELLED history, and retains employee search.
+- Manage-assignment navigation moves the selected employee management area into view.
 
 ## Current work
 
