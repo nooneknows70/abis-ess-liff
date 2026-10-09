@@ -19,3 +19,5 @@ jobs:
         run: node --check assets/ess-20261009-attendance-deeplink-hf2/attendance-deeplink-hf2.js
       - name: Hermetic regression tests
         run: node --test tests/attendance-deeplink-hf2.test.cjs
+      - name: Phase2 LIFF staging gateway checks
+        run: node --test tests/hf2-phase2-liff.test.cjs
