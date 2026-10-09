@@ -217,7 +217,8 @@
   }
 
   function shiftOptions(emp,date,selected){
-    const opts=(state.data&&state.data.shiftOptions)||[];
+    const byDate=(state.data&&state.data.shiftOptionsByDate)||{};
+    const opts=(byDate&&byDate[date])||(state.data&&state.data.shiftOptions)||[];
     return opts.map(function(x){
       return '<option value="'+esc(x.code)+'" '+(x.code===selected?'selected':'')+'>'+esc(x.name||x.code)+'</option>';
     }).join('');
