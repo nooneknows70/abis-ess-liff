@@ -57,22 +57,25 @@ No V143 was created for this metadata convergence. Production remains `@142`.
 
 ## Next implementation gate
 
-Current RC1.2.1 gate:
+Current RC1.2.2 gate:
 
 1. Keep `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142` frozen as PROD_CURRENT.
-2. READ_ONLY summary API is merged and its preflight has passed.
-3. Immutable RC1.2 UI is merged; RC1.2.1 follow-up fixes the visible Manage-assignment interaction by scrolling the selected employee editor into view.
-4. Backend `Index.html` now points to the immutable RC1.2.1 asset.
-5. Apps Script editable HEAD is the NEXT source surface; RC1.2.1 Manage-assignment HEAD smoke has passed.
-6. Complete remaining READ_ONLY Web/LIFF smoke before creating an immutable V143 candidate.
-7. Create the next Production deployment only after all RC1.2 gates PASS.
+2. READ_ONLY summary API preflight is PASS and direct READ_ONLY runtime call is PASS with zero writes.
+3. Immutable RC1.2.2 UI is merged and fixes summary initialization/recovery plus ENDED/CANCELLED history navigation.
+4. Backend `Index.html` points to the immutable RC1.2.2 asset.
+5. Apps Script editable HEAD is the NEXT source surface.
+6. RC1.2.2 HEAD Web smoke is PASS: summary auto-load, ACTIVE_NOW/UPCOMING default list, ENDED lazy-load, CANCELLED lazy-load, and Manage-assignment navigation.
+7. Next gate: create an immutable Apps Script candidate version from the verified NEXT HEAD, then verify candidate source alignment before any Production cutover.
 
 
 ## RC1.2 source progress
 
-- LIFF immutable RC1.2.1 asset merged: `7472e564cdea0566477e8581b65afe62e64843b3`
-- LIFF asset: `assets/ess-20261008-r2180d-rc1_2_1/punch-exempt-admin.js`
-- Backend summary API + RC1.2.1 Index reference merged: `894cb1108e7c7dd4e321152b2f7bbe693f01babe`
+- LIFF immutable RC1.2.2 asset merged: `b3427432864aeb3832e1088230c7e6de94818e5c`
+- LIFF asset: `assets/ess-20261009-r2180d-rc1_2_2/punch-exempt-admin.js`
+- Backend summary API + RC1.2.2 Index reference merged: `e2ddf2312b6bc6ccd1066005ba331d1521173b67`
 - Backend summary source: `src/P5A2_5_ATTENDANCE_PUNCH_EXEMPT_R2180D_RC1_2_SUMMARY.js`
+- HEAD smoke: **PASS**
+- HEAD smoke UI version: `P5A2_5_ATTENDANCE_PUNCH_EXEMPT_PERIOD_R1_R2180D_UI_RC1_2_2_20261009`
+- READ_ONLY summary runtime: **PASS**, writes observed: `0`
 - Production deployment: **not yet created**
 - Current PROD_CURRENT remains `ABIS_ESS_R2180_PROD_20261008_V142` / Apps Script `@142`
