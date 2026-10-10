@@ -1,0 +1,63 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>ABIS HF2 A09701 真實 API Canary</title>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<style>
+body{font:16px/1.6 system-ui;background:#f2f6fb;color:#233c50;padding:20px;margin:0}
+main{background:#fff;border:1px solid #d7e3ed;border-radius:14px;padding:24px;max-width:540px;margin:40px auto}
+h1{font-size:22px}.small{color:#516e80;font-size:13px}
+</style></head><body><main>
+<h1>ABIS HF2｜A09701 專用測試</h1>
+<p id="status" role="status" aria-live="polite">等待測試 LINE 身分驗證…</p>
+<p class="small">僅供 A09701 使用正式 R2 出勤連結讀取統計；不開放正式 ESS、打卡修改、請假送出或薪資操作。</p>
+</main>
+<script>(function(){
+'use strict';
+const LIFF_ID='2011584842-qk2mOOxp';
+const BACKEND='__HF2_CANARY_BACKEND_URL__';
+const PROD_ID='AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR';
+const P2A_ID='AKfycbzvWV5n4ouINYgN5oLAau-uetJQJqVkVJ3lf1u-Ibz33A1AbIVUkaj029JFDpOLlyUA';
+function status(code){document.getElementById('status').textContent=code;}
+function urlOK(){
+ try{
+   const u=new URL(BACKEND);
+   return u.protocol==='https:'&&u.hostname==='script.google.com'&&!u.search&&!u.hash&&
+    /^\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(u.pathname)&&
+    !u.pathname.includes(PROD_ID)&&!u.pathname.includes(P2A_ID);
+ }catch(ignore){return false;}
+}
+function rawToken(){
+ const outer=new URLSearchParams(location.search);
+ const state=outer.get('liff.state')||'';
+ const inner=new URLSearchParams(state.includes('?')?state.slice(state.indexOf('?')+1):state.replace(/^\/?/,''));
+ const rt=String(outer.get('rt')||inner.get('rt')||'').trim();
+ return /^[0-9a-f]{64}$/i.test(rt)?rt:'';
+}
+function post(idToken,rt){
+ const form=document.createElement('form');
+ form.method='POST';form.target='_self';form.action=BACKEND;form.style.display='none';
+ const fields={mode:'liffauth',idToken:idToken,routeToken:rt,bootRoute:'attendance'};
+ Object.keys(fields).forEach(function(k){
+  const field=document.createElement('input');field.name=k;field.type='hidden';field.value=fields[k];
+  form.appendChild(field);
+ });
+ document.body.appendChild(form);
+ status('LINE 已初始化，正在由獨立候選 Backend 驗證 A09701 …');
+ form.submit();
+}
+async function start(){
+ try{
+  if(!urlOK())return status('CANARY_BACKEND_NOT_CONFIGURED');
+  const rt=rawToken();
+  if(!rt)return status('CANARY_ROUTE_TOKEN_REQUIRED');
+  if(typeof liff==='undefined')return status('CANARY_LIFF_SDK_UNAVAILABLE');
+  await liff.init({liffId:LIFF_ID,withLoginOnExternalBrowser:true});
+  if(!liff.isLoggedIn()){liff.login({redirectUri:location.href});return;}
+  const id=liff.getIDToken();
+  if(!id)return status('CANARY_ID_TOKEN_UNAVAILABLE');
+  post(id,rt);
+ }catch(ignore){status('CANARY_LIFF_LOGIN_FAILED');}
+}
+start();
+})();</script></body></html>
