@@ -46,7 +46,7 @@ test('correct distinct canary web app route only serves isolated LIFF for A09701
  assert.match(html,/mode:'liffauth'/);
  assert.match(html,/routeToken:rt/);
  assert.match(html,/bootRoute:'attendance'/);
- assert.ok(html.includes('^[0-9a-f]{64}
+ assert.ok(html.includes('^[0-9a-f]{64}$'));
 });
 
 test('worker exposes no broad proxied endpoint',async()=>{
