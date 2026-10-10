@@ -1,0 +1,21 @@
+name: HF2 A09701 canary LIFF candidate checks (no deploy)
+on:
+  push:
+    branches:
+      - canary/hf2-a09701-live-readonly-20261010
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  canary-liff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Isolated Worker JavaScript syntax
+        run: node --check staging/hf2/canary-liff-worker.mjs
+      - name: HF2 canary LIFF fail-closed and production endpoint blocking
+        run: node --test tests/hf2-a09701-canary-worker.test.mjs
