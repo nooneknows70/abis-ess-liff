@@ -46,7 +46,25 @@ test('correct distinct canary web app route only serves isolated LIFF for A09701
  assert.match(html,/mode:'liffauth'/);
  assert.match(html,/routeToken:rt/);
  assert.match(html,/bootRoute:'attendance'/);
- assert.match(html,/^[\s\S]*\/\^\[0-9a-f\]\{64\}\$\//i);
+ assert.ok(html.includes('^[0-9a-f]{64}
+});
+
+test('worker exposes no broad proxied endpoint',async()=>{
+ const env={HF2_CANARY_BACKEND_EXEC_URL:candidate};
+ assert.equal((await worker.fetch(new Request('https://abis-hf2-real-canary.example.workers.dev/'),env)).status,404);
+ assert.equal((await worker.fetch(new Request(url,{method:'POST'}),env)).status,404);
+});
+
+test('client never sends session, RT, LINE token to worker or logs',()=>{
+ const html=fs.readFileSync(path.join(import.meta.dirname,'../staging/hf2/canary-liff-entry.html'),'utf8');
+ assert.ok(html.includes("form.action=BACKEND"));
+ assert.ok(!html.includes('console.log'));
+ assert.ok(!html.includes('localStorage'));
+ assert.ok(!html.includes('getDecodedIDToken'));
+ assert.ok(!html.includes('getProfile'));
+ assert.ok(!html.includes('google.script.run'));
+});
+));
 });
 
 test('worker exposes no broad proxied endpoint',async()=>{
