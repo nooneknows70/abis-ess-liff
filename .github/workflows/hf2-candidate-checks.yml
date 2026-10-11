@@ -21,6 +21,10 @@ jobs:
         run: node --test tests/attendance-deeplink-hf2.test.cjs
       - name: HF2 official LIFF route-token / liff.state regression checks
         run: node --test tests/hf2-liff-route-intent.test.cjs
+      - name: HF2 A09701 real @144 independent LIFF probe (NO PROD DEPLOY)
+        run: |
+          node --check staging/hf2/v144-a09701-probe-worker.mjs
+          node --test tests/hf2-v144-probe-worker.test.mjs
       - name: Phase2 LIFF staging gateway checks
         run: node --test tests/hf2-phase2-liff.test.cjs
       - name: Isolated LIFF Worker configuration safety checks
