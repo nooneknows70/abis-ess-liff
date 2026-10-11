@@ -22,6 +22,12 @@
     ? p5a25R29ApplyBootRouteContext_ : null;
   var originalCall = typeof call === 'function' ? call : null;
   var originalEnter = typeof enterApp === 'function' ? enterApp : null;
+  // Defer nonessential background fetches while a security-authorized
+  // attendance route is unresolved. The original @144 boot kicks off six
+  // prefetch jobs within ~800ms of starting a potentially >56-second read.
+  var originalPrefetch = typeof prefetchSecondaryData === 'function'
+    ? prefetchSecondaryData : null;
+  var prefetchWaiting = false, prefetchReleased = false;
   var originalBootRoute = typeof p5rmApplyBootRoute_ === 'function'
     ? p5rmApplyBootRoute_ : null;
 
@@ -33,6 +39,14 @@
   // Soft notices never abort in-flight attendance RPCs. A real @144 call
   // was observed running 56 seconds; a 45-second hard timeout was unsafe.
   var slowTimer = 0, delayedTimer = 0;
+
+  function releaseDeferredPrefetch() {
+    // Never fetch twice. Does not alter or replace normal business data reads.
+    if (!prefetchWaiting || prefetchReleased || !originalPrefetch) return;
+    prefetchReleased = true;
+    prefetchWaiting = false;
+    try { originalPrefetch(); } catch (ignore) {}
+  }
 
   function targetVisible() {
     var id = kind === 'MANAGEMENT_SITE_DAY' ? 'r2SiteDetailOverlay'
@@ -114,12 +128,14 @@
     if (result === true && targetVisible()) {
       state.failureCode = '';
       panel('DONE');
+      releaseDeferredPrefetch();
       return;
     }
     state.failureCode = state.apiStatus === 'FAILED' ? 'API_FAILED'
       : state.apiStatus === 'NOT_STARTED' ? 'ROUTE_NOT_DISPATCHED'
       : result === true ? 'TARGET_NOT_VISIBLE' : 'ROUTE_FAILED';
     panel('FAILED');
+    releaseDeferredPrefetch();
   }
 
   function applyRoute() {
@@ -200,6 +216,18 @@
     };
   }
 
+  // Only deep-link-specific early background traffic is delayed. On ordinary
+  // HOME, CORRECTION or management CASE, leave existing prefetch untouched.
+  if (originalPrefetch &&
+      (kind === 'MANAGEMENT_SITE_DAY' || kind === 'EMPLOYEE_FOLLOWUP')) {
+    prefetchSecondaryData = function () {
+      if (state.phase === 'DONE' || state.phase === 'FAILED')
+        return originalPrefetch.apply(this, arguments);
+      prefetchWaiting = true;
+      return Promise.resolve();
+    };
+  }
+
   // In HF8, invoking p5rmApplyBootRoute_ a second time unconditionally calls
   // showHome(). A repeated enterApp must not erase an authorized deep link.
   // Normal non-deep-link routes are not touched by this candidate.
@@ -229,6 +257,7 @@
       if (state.attempts === 0) {
         state.failureCode = 'BOOT_ROUTE_SKIPPED';
         panel('FAILED');
+        releaseDeferredPrefetch();
       }
       return result;
     };
