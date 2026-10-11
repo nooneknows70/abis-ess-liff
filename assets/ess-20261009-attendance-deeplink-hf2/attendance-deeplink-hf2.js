@@ -30,7 +30,9 @@
     inFlight: false, apiStatus: 'NOT_STARTED', apiErrorCode: '',
     failureCode: '', activePromise: null
   };
-  var timer = 0;
+  // Soft notices never abort in-flight attendance RPCs. A real @144 call
+  // was observed running 56 seconds; a 45-second hard timeout was unsafe.
+  var slowTimer = 0, delayedTimer = 0;
 
   function targetVisible() {
     var id = kind === 'MANAGEMENT_SITE_DAY' ? 'r2SiteDetailOverlay'
@@ -71,12 +73,15 @@
     el.replaceChildren();
     var title = document.createElement('strong');
     title.textContent = phase === 'FAILED' ? '出勤連結無法開啟'
+      : phase === 'SLOW' || phase === 'DELAYED' ? '出勤資料仍在讀取中'
       : phase === 'WAITING' ? '準備開啟出勤頁面' : '正在開啟出勤頁面';
     el.appendChild(title);
     var message = document.createElement('p');
     message.style.margin = '8px 0';
     message.textContent = phase === 'FAILED'
       ? '未能開啟指定出勤畫面。可重新嘗試；若持續失敗，請提供下方診斷代碼給管理員。'
+      : phase === 'DELAYED' ? '已等候超過 90 秒；原始查詢仍在進行。為避免重複讀取，請勿再次點擊測試連結。'
+      : phase === 'SLOW' ? '已等候超過 30 秒；正在等待既有出勤 API 回覆，請勿重新送出。'
       : '正在透過既有登入授權與出勤 API 載入內容。';
     el.appendChild(message);
     if (phase === 'FAILED') {
@@ -86,7 +91,8 @@
         ' / API=' + state.apiStatus +
         (state.apiErrorCode ? ':' + state.apiErrorCode : '');
       el.appendChild(info);
-      if (state.attempts < 3 && originalApply) {
+      // Never offer Retry while the original attendance read is unresolved.
+      if (!state.inFlight && state.attempts < 3 && originalApply) {
         var retry = document.createElement('button');
         retry.type = 'button';
         retry.textContent = '重新嘗試';
@@ -101,7 +107,8 @@
 
   function finish(gen, result) {
     if (gen !== state.generation || !state.inFlight) return;
-    if (timer) { clearTimeout(timer); timer = 0; }
+    if (slowTimer) { clearTimeout(slowTimer); slowTimer = 0; }
+    if (delayedTimer) { clearTimeout(delayedTimer); delayedTimer = 0; }
     state.inFlight = false;
     state.activePromise = null;
     if (result === true && targetVisible()) {
@@ -135,13 +142,18 @@
     state.failureCode = '';
     var gen = state.generation;
     panel('LOADING');
-    timer = setTimeout(function () {
+    slowTimer = setTimeout(function () {
       if (gen !== state.generation || !state.inFlight) return;
-      state.inFlight = false;
-      state.activePromise = null;
-      state.failureCode = 'ROUTE_TIMEOUT';
-      panel('FAILED');
-    }, 45000);
+      // A 30s notice is NOT a failed RPC or permission rejection.
+      panel('SLOW');
+    }, 30000);
+    delayedTimer = setTimeout(function () {
+      if (gen !== state.generation || !state.inFlight) return;
+      // Do not release inFlight here: google.script.run cannot be cancelled.
+      // Let the original Promise settle so a 56s+ backend read does not cause
+      // a second overlapping production query or false timeout.
+      panel('DELAYED');
+    }, 90000);
     var args = arguments;
     state.activePromise = Promise.resolve()
       .then(function () { return originalApply.apply(null, args); })
@@ -223,10 +235,11 @@
   }
 
   window.ABIS_ATTENDANCE_DEEPLINK_HF2 = {
-    version: 'HF2_CANDIDATE_20261009_RC2',
+    version: 'HF2_CANDIDATE_20261011_RC3_LONG_READ_SAFE',
     status: function () {
       return {
         phase: state.phase, kind: state.kind, attempts: state.attempts,
+        inFlight: state.inFlight,
         apiStatus: state.apiStatus, apiErrorCode: state.apiErrorCode,
         failureCode: state.failureCode
       };
