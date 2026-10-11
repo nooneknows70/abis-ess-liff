@@ -158,7 +158,11 @@ export default {
       }),{status:200,headers:standardHeaders('application/json; charset=utf-8')});
     }
     if(url.pathname==='/')return new Response(launcherHtml(),{status:200,headers:standardHeaders('text/html; charset=utf-8')});
-    if(url.pathname==='/hf2/'||url.pathname==='/hf2')return new Response(bridgeHtml(),{status:200,headers:standardHeaders('text/html; charset=utf-8')});
+    // LINE secondary redirects can append the LIFF URL's trailing slash to the
+    // configured endpoint path (e.g. /hf2//). Normalize only the pathname;
+    // leave all liff.* query parameters untouched until liff.init resolves.
+    const canonicalPath=url.pathname.replace(/\/+/g,'/');
+    if(canonicalPath==='/hf2/'||canonicalPath==='/hf2')return new Response(bridgeHtml(),{status:200,headers:standardHeaders('text/html; charset=utf-8')});
     return new Response('Not Found',{status:404,headers:standardHeaders('text/plain; charset=utf-8')});
   }
 };
