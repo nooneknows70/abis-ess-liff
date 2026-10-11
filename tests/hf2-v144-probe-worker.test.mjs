@@ -69,6 +69,8 @@ test('Worker only serves static launcher / bridge / health; never proxies or acc
  assert.equal(h.version,PROBE_VERSION);
  assert.equal((await probe.fetch(req('/'))).status,200);
  assert.equal((await probe.fetch(req('/hf2/'))).status,200);
+ assert.equal((await probe.fetch(req('/hf2//'))).status,200); // LINE secondary redirect
+ assert.equal((await probe.fetch(req('/hf2//?liff.state=%2F%3Froute%3Dattendance'))).status,200);
  assert.equal((await probe.fetch(req('/bad/path'))).status,404);
  assert.equal((await probe.fetch(req('/hf2/','POST'))).status,405);
 });
