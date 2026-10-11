@@ -149,7 +149,7 @@
     }, 30000);
     delayedTimer = setTimeout(function () {
       if (gen !== state.generation || !state.inFlight) return;
-      // Do not release inFlight here: google.script.run cannot be cancelled.
+      // Do not release inFlight here: Apps Script RPCs cannot be cancelled.
       // Let the original Promise settle so a 56s+ backend read does not cause
       // a second overlapping production query or false timeout.
       panel('DELAYED');
