@@ -33,7 +33,7 @@
 
   var state = {
     phase: 'WAITING', kind: kind, attempts: 0, generation: 0,
-    inFlight: false, apiStatus: 'NOT_STARTED', apiErrorCode: '',
+    inFlight: false, apiStatus: 'NOT_STARTED', apiErrorCode: '', perfWarningCode: '',
     failureCode: '', activePromise: null
   };
   // Soft notices never abort in-flight attendance RPCs. A real @144 call
@@ -94,8 +94,8 @@
     message.style.margin = '8px 0';
     message.textContent = phase === 'FAILED'
       ? '未能開啟指定出勤畫面。可重新嘗試；若持續失敗，請提供下方診斷代碼給管理員。'
-      : phase === 'DELAYED' ? '已等候超過 90 秒；原始查詢仍在進行。為避免重複讀取，請勿再次點擊測試連結。'
-      : phase === 'SLOW' ? '已等候超過 30 秒；正在等待既有出勤 API 回覆，請勿重新送出。'
+      : phase === 'DELAYED' ? '已超過 20 秒，出勤查詢速度異常；系統仍在等待原請求回覆，請勿重複操作。'
+      : phase === 'SLOW' ? '已超過 10 秒，出勤資料讀取過慢；仍在等待回覆，請勿重複操作。'
       : '正在透過既有登入授權與出勤 API 載入內容。';
     el.appendChild(message);
     if (phase === 'FAILED') {
@@ -160,16 +160,17 @@
     panel('LOADING');
     slowTimer = setTimeout(function () {
       if (gen !== state.generation || !state.inFlight) return;
-      // A 30s notice is NOT a failed RPC or permission rejection.
+      // A 10s notice is a latency warning, NOT an RPC or permission failure.
+      state.perfWarningCode = 'ATTENDANCE_API_SLOW_GT_10S';
       panel('SLOW');
-    }, 30000);
+    }, 10000);
     delayedTimer = setTimeout(function () {
       if (gen !== state.generation || !state.inFlight) return;
-      // Do not release inFlight here: Apps Script RPCs cannot be cancelled.
-      // Let the original Promise settle so a 56s+ backend read does not cause
-      // a second overlapping production query or false timeout.
+      // At 20s classify a performance incident, not a permission failure.
+      // Do not cancel or duplicate the original Apps Script RPC.
+      state.perfWarningCode = 'ATTENDANCE_API_SLOW_GT_20S';
       panel('DELAYED');
-    }, 90000);
+    }, 20000);
     var args = arguments;
     state.activePromise = Promise.resolve()
       .then(function () { return originalApply.apply(null, args); })
@@ -264,11 +265,11 @@
   }
 
   window.ABIS_ATTENDANCE_DEEPLINK_HF2 = {
-    version: 'HF2_CANDIDATE_20261011_RC3_LONG_READ_SAFE',
+    version: 'HF2_CANDIDATE_20261011_RC4_10S_20S_FAST_READ_ALERTS',
     status: function () {
       return {
         phase: state.phase, kind: state.kind, attempts: state.attempts,
-        inFlight: state.inFlight,
+        inFlight: state.inFlight, perfWarningCode: state.perfWarningCode,
         apiStatus: state.apiStatus, apiErrorCode: state.apiErrorCode,
         failureCode: state.failureCode
       };
