@@ -15,6 +15,7 @@ function build(options = {}) {
   let releaseHeldCall = null;
   let bootApplied = false;
   let homeFallbacks = 0;
+  let backgroundPrefetchCalls = 0;
   const kind = options.kind || 'MANAGEMENT_SITE_DAY';
 
   function element(tag) {
@@ -82,6 +83,7 @@ function build(options = {}) {
       }
     },
     showHome() { homeFallbacks++; },
+    prefetchSecondaryData() { backgroundPrefetchCalls++; return Promise.resolve(true); },
     p5rmApplyBootRoute_() {
       if (bootApplied) { sandbox.showHome(); return; }
       bootApplied = true;
@@ -98,6 +100,7 @@ function build(options = {}) {
     tickTimer(delay) { for(const [id,t] of timers){if(t.delay===delay){timers.delete(id);t.fn();return true;}}return false; },
     scheduledDelays() {return Array.from(timers.values()).map(t=>t.delay).sort((a,b)=>a-b);},
     getFallbacks() { return homeFallbacks; },
+    getPrefetchCalls() { return backgroundPrefetchCalls; },
     status() { return sandbox.window.ABIS_ATTENDANCE_DEEPLINK_HF2.status(); }
   };
 }
@@ -244,4 +247,41 @@ test('delayed API rejection becomes visible failure only after the actual RPC se
   assert.ok(panel.children.some(c=>c.tagName==='button'));
   const text=panel.children.map(x=>x.textContent||'').join(' ');
   assert.ok(!text.includes('secret-not-for-UI'));
+});
+
+
+test('authorized site link delays background RPC prefetch until long site request settles', async()=>{
+ const t=build({holdRpc:true});
+ t.sandbox.enterApp();
+ await settle();
+ assert.equal(t.events.length,1);
+ const prefetched=t.sandbox.prefetchSecondaryData();
+ await prefetched;
+ assert.equal(t.getPrefetchCalls(),0,'must not contend with live site-detail read');
+ assert.equal(t.tickTimer(30000),true);
+ assert.equal(t.tickTimer(90000),true);
+ assert.equal(t.status().inFlight,true);
+ assert.equal(t.getPrefetchCalls(),0);
+ t.releaseRpc();
+ await settle();
+ assert.equal(t.status().phase,'DONE');
+ assert.equal(t.getPrefetchCalls(),1,'background fetch resumes exactly once');
+});
+
+test('failed site link releases delayed background tasks after failure, not during request',async()=>{
+ const t=build({holdRpc:true,fail:true});
+ t.sandbox.enterApp();
+ await settle();
+ await t.sandbox.prefetchSecondaryData();
+ assert.equal(t.getPrefetchCalls(),0);
+ t.releaseRpc();
+ await settle();
+ assert.equal(t.status().phase,'FAILED');
+ assert.equal(t.getPrefetchCalls(),1);
+});
+
+test('normal HOME without route context does not intercept background work',()=>{
+ const t=build({noContext:true});
+ t.sandbox.prefetchSecondaryData();
+ assert.equal(t.getPrefetchCalls(),1);
 });
