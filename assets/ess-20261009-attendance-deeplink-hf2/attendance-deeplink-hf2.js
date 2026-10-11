@@ -143,9 +143,9 @@
       return;
     }
     state.failureCode = state.apiStatus === 'FAILED' ? 'API_FAILED'
-      : state.apiStatus === 'NOT_STARTED' ? 'ROUTE_NOT_DISPATCHED'
       : kind === 'EMPLOYEE_CORRECTION' && result === true
         ? 'CORRECTION_FORM_NOT_VISIBLE'
+      : state.apiStatus === 'NOT_STARTED' ? 'ROUTE_NOT_DISPATCHED'
       : result === true ? 'TARGET_NOT_VISIBLE' : 'ROUTE_FAILED';
     panel('FAILED');
     releaseDeferredPrefetch();
