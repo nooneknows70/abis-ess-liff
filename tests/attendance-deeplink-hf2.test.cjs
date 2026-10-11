@@ -186,15 +186,16 @@ test('permanent failure is bounded to three attempts', async () => {
 });
 
 
-test('long 56s read: 30-second notice does not cause a false 45s failure or duplicate RPC', async () => {
+test('long 56s read: 10-second notice does not cause a false 45s failure or duplicate RPC', async () => {
   const t=build({holdRpc:true});
   t.sandbox.enterApp();
   await settle();
   assert.equal(t.events.length,1);
-  assert.deepEqual(t.scheduledDelays(),[30000,90000]);
+  assert.deepEqual(t.scheduledDelays(),[10000,20000]);
   assert.equal(t.status().inFlight,true);
-  assert.equal(t.tickTimer(30000),true);
+  assert.equal(t.tickTimer(10000),true);
   assert.equal(t.status().phase,'SLOW');
+  assert.equal(t.status().perfWarningCode,'ATTENDANCE_API_SLOW_GT_10S');
   assert.equal(t.status().inFlight,true);
   assert.equal(t.status().attempts,1);
   t.sandbox.enterApp();
@@ -209,12 +210,13 @@ test('long 56s read: 30-second notice does not cause a false 45s failure or dupl
   assert.equal(t.timers.size,0);
 });
 
-test('90-second delayed-read notice never cancels the original RPC or opens Retry', async()=>{
+test('20-second delayed-read notice never cancels the original RPC or opens Retry', async()=>{
   const t=build({holdRpc:true});
   t.sandbox.enterApp();
   await settle();
-  assert.equal(t.tickTimer(90000),true);
+  assert.equal(t.tickTimer(20000),true);
   assert.equal(t.status().phase,'DELAYED');
+  assert.equal(t.status().perfWarningCode,'ATTENDANCE_API_SLOW_GT_20S');
   assert.equal(t.status().inFlight,true);
   const panel=t.elements.get('abisDeeplinkGateHF2');
   assert.ok(panel);
@@ -234,8 +236,8 @@ test('delayed API rejection becomes visible failure only after the actual RPC se
   const t=build({holdRpc:true,fail:true});
   t.sandbox.enterApp();
   await settle();
-  t.tickTimer(30000);
-  t.tickTimer(90000);
+  t.tickTimer(10000);
+  t.tickTimer(20000);
   assert.equal(t.status().phase,'DELAYED');
   assert.equal(t.status().apiStatus,'PENDING');
   t.releaseRpc();
@@ -258,8 +260,8 @@ test('authorized site link delays background RPC prefetch until long site reques
  const prefetched=t.sandbox.prefetchSecondaryData();
  await prefetched;
  assert.equal(t.getPrefetchCalls(),0,'must not contend with live site-detail read');
- assert.equal(t.tickTimer(30000),true);
- assert.equal(t.tickTimer(90000),true);
+ assert.equal(t.tickTimer(10000),true);
+ assert.equal(t.tickTimer(20000),true);
  assert.equal(t.status().inFlight,true);
  assert.equal(t.getPrefetchCalls(),0);
  t.releaseRpc();
