@@ -25,6 +25,8 @@ jobs:
         run: |
           node --check staging/hf2/v144-a09701-probe-worker.mjs
           node --test tests/hf2-v144-probe-worker.test.mjs
+      - name: V144 production HF8 HOME fallback characterization (no deploy)
+        run: node --test tests/hf2-v144-home-fallback-characterization.test.cjs
       - name: Phase2 LIFF staging gateway checks
         run: node --test tests/hf2-phase2-liff.test.cjs
       - name: Isolated LIFF Worker configuration safety checks
