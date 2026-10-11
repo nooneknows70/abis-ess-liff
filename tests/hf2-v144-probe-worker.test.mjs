@@ -18,7 +18,7 @@ test('real route contract accepts official raw R2 opaque token without decoding 
  assert.equal(OFFICIAL_LIFF_ID,'2011584842-AmO1bbHY');
  assert.equal(TEST_LIFF_ID,'2011584842-qk2mOOxp');
  assert.match(OFFICIAL_BACKEND_URL,/^https:\/\/script\.google\.com\/macros\/s\/AKfycbxWY.*\/exec$/);
- assert.ok(OFFICIAL_BACKEND_URL.includes('E-U331X0kiweR'));
+ assert.ok(OFFICIAL_BACKEND_URL.includes('H-EU331X0kiweR'));
 });
 
 test('LINE liff.state wrapper transports route and rt even if top-level query has none',()=>{
