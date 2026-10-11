@@ -216,10 +216,11 @@ test('90-second delayed-read notice never cancels the original RPC or opens Retr
   const panel=t.elements.get('abisDeeplinkGateHF2');
   assert.ok(panel);
   assert.equal(panel.children.some(c=>c.tagName==='button'),false);
-  await t.sandbox.p5a25R29ApplyBootRouteContext_();
+  const stillPending=t.sandbox.p5a25R29ApplyBootRouteContext_();
   assert.equal(t.events.length,1);
   assert.equal(t.status().attempts,1);
   t.releaseRpc();
+  await stillPending;
   await settle();
   assert.equal(t.status().phase,'DONE');
   assert.equal(t.status().inFlight,false);
