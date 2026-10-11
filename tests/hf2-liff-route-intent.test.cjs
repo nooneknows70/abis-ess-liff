@@ -44,7 +44,7 @@ test('direct valid rt is forwarded with the attendance route', () => {
 });
 
 test('LINE liff.state wrapper recovers the original opaque rt', () => {
-  const wrapped = '?' + params('liff.state=/?rt=synthetic-token.2&route=attendance');
+  const wrapped = '?liff.state=' + encodeURIComponent('/?rt=synthetic-token.2&route=attendance');
   const t = harness(wrapped);
   assert.equal(t.api.current().routeToken, 'synthetic-token.2');
   assert.equal(t.api.current().bootRoute, 'attendance');
