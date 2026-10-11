@@ -34,7 +34,7 @@
   var state = {
     phase: 'WAITING', kind: kind, attempts: 0, generation: 0,
     inFlight: false, apiStatus: 'NOT_STARTED', apiErrorCode: '', perfWarningCode: '',
-    failureCode: '', activePromise: null
+    failureCode: '', activePromise: null, routeStartedAt: 0, clientRouteToVisibleMs: null
   };
   // Soft notices never abort in-flight attendance RPCs. A real @144 call
   // was observed running 56 seconds; a 45-second hard timeout was unsafe.
@@ -48,11 +48,18 @@
     try { originalPrefetch(); } catch (ignore) {}
   }
 
-  function targetVisible() {
-    var id = kind === 'MANAGEMENT_SITE_DAY' ? 'r2SiteDetailOverlay'
+  // A general attendance page is NOT an actionable correction form.
+  // The frozen HF8 opener may show attendance after a failed/no-op correction;
+  // never count that as successful EMPLOYEE_CORRECTION deep-link navigation.
+  function targetId() {
+    return kind === 'EMPLOYEE_CORRECTION' ? 'attendanceCorrectionOverlay'
+      : kind === 'MANAGEMENT_SITE_DAY' ? 'r2SiteDetailOverlay'
       : kind === 'EMPLOYEE_FOLLOWUP' ? 'r2FollowupOverlay'
-      : kind === 'MANAGEMENT_CASE' ? 'inbox' : 'attendance';
-    var el = document.getElementById(id);
+      : kind === 'MANAGEMENT_CASE' ? 'inbox' : '';
+  }
+
+  function targetVisible() {
+    var id = targetId(), el = id && document.getElementById(id);
     return !!(el && (!el.classList || !el.classList.contains('hide')));
   }
 
@@ -126,6 +133,10 @@
     state.inFlight = false;
     state.activePromise = null;
     if (result === true && targetVisible()) {
+      // This starts when the authenticated HTML route is applied, NOT when
+      // the original LINE notification was tapped. It is NOT the 3s E2E SLO.
+      state.clientRouteToVisibleMs = state.routeStartedAt
+        ? Math.max(0, Date.now() - state.routeStartedAt) : null;
       state.failureCode = '';
       panel('DONE');
       releaseDeferredPrefetch();
@@ -133,6 +144,8 @@
     }
     state.failureCode = state.apiStatus === 'FAILED' ? 'API_FAILED'
       : state.apiStatus === 'NOT_STARTED' ? 'ROUTE_NOT_DISPATCHED'
+      : kind === 'EMPLOYEE_CORRECTION' && result === true
+        ? 'CORRECTION_FORM_NOT_VISIBLE'
       : result === true ? 'TARGET_NOT_VISIBLE' : 'ROUTE_FAILED';
     panel('FAILED');
     releaseDeferredPrefetch();
@@ -153,6 +166,8 @@
     state.attempts++;
     state.generation++;
     state.inFlight = true;
+    state.routeStartedAt = Date.now();
+    state.clientRouteToVisibleMs = null;
     state.apiStatus = 'NOT_STARTED';
     state.apiErrorCode = '';
     state.failureCode = '';
@@ -265,13 +280,16 @@
   }
 
   window.ABIS_ATTENDANCE_DEEPLINK_HF2 = {
-    version: 'HF2_CANDIDATE_20261011_RC4_10S_20S_FAST_READ_ALERTS',
+    version: 'HF2_CANDIDATE_20261011_RC5_ACTIONABLE_CORRECTION_GATE',
     status: function () {
       return {
         phase: state.phase, kind: state.kind, attempts: state.attempts,
         inFlight: state.inFlight, perfWarningCode: state.perfWarningCode,
         apiStatus: state.apiStatus, apiErrorCode: state.apiErrorCode,
-        failureCode: state.failureCode
+        failureCode: state.failureCode,
+        targetId: targetId(), targetVisible: targetVisible(),
+        // Only measures within the Apps Script iframe, not the LINE tap.
+        clientRouteToVisibleMs: state.clientRouteToVisibleMs
       };
     }
   };
