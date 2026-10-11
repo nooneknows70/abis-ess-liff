@@ -12,6 +12,7 @@ function build(options = {}) {
   const timers = new Map();
   let nextTimer = 1;
   let callShouldFail = !!options.fail;
+  let releaseHeldCall = null;
   let bootApplied = false;
   let homeFallbacks = 0;
   const kind = options.kind || 'MANAGEMENT_SITE_DAY';
@@ -47,10 +48,11 @@ function build(options = {}) {
   const sandbox = {
     document, window: {},
     ABIS_SERVER_BOOT: { routeContext: ctx },
-    setTimeout(fn) { const id = nextTimer++; timers.set(id, fn); return id; },
+    setTimeout(fn, delay) { const id = nextTimer++; timers.set(id, {fn, delay}); return id; },
     clearTimeout(id) { timers.delete(id); },
     async call(action, payload) {
       events.push({ action, payload });
+      if (options.holdRpc) await new Promise(resolve => { releaseHeldCall = resolve; });
       if (callShouldFail) throw new Error('sensitive token=secret-not-for-UI');
       return { rows: [] };
     },
@@ -92,6 +94,9 @@ function build(options = {}) {
   return {
     sandbox, events, elements, timers,
     setFailure(value) { callShouldFail = !!value; },
+    releaseRpc() { if (!releaseHeldCall) throw new Error('No RPC pending'); const done=releaseHeldCall; releaseHeldCall=null; done(); },
+    tickTimer(delay) { for(const [id,t] of timers){if(t.delay===delay){timers.delete(id);t.fn();return true;}}return false; },
+    scheduledDelays() {return Array.from(timers.values()).map(t=>t.delay).sort((a,b)=>a-b);},
     getFallbacks() { return homeFallbacks; },
     status() { return sandbox.window.ABIS_ATTENDANCE_DEEPLINK_HF2.status(); }
   };
@@ -175,4 +180,67 @@ test('permanent failure is bounded to three attempts', async () => {
   assert.equal(t.status().failureCode, 'MAX_RETRIES');
   assert.equal(t.status().attempts, 3);
   assert.equal(t.events.length, 3);
+});
+
+
+test('long 56s read: 30-second notice does not cause a false 45s failure or duplicate RPC', async () => {
+  const t=build({holdRpc:true});
+  t.sandbox.enterApp();
+  await settle();
+  assert.equal(t.events.length,1);
+  assert.deepEqual(t.scheduledDelays(),[30000,90000]);
+  assert.equal(t.status().inFlight,true);
+  assert.equal(t.tickTimer(30000),true);
+  assert.equal(t.status().phase,'SLOW');
+  assert.equal(t.status().inFlight,true);
+  assert.equal(t.status().attempts,1);
+  t.sandbox.enterApp();
+  await settle();
+  assert.equal(t.getFallbacks(),0);
+  assert.equal(t.events.length,1);
+  assert.equal(t.status().attempts,1);
+  t.releaseRpc();
+  await settle();
+  assert.equal(t.status().phase,'DONE');
+  assert.equal(t.status().inFlight,false);
+  assert.equal(t.timers.size,0);
+});
+
+test('90-second delayed-read notice never cancels the original RPC or opens Retry', async()=>{
+  const t=build({holdRpc:true});
+  t.sandbox.enterApp();
+  await settle();
+  assert.equal(t.tickTimer(90000),true);
+  assert.equal(t.status().phase,'DELAYED');
+  assert.equal(t.status().inFlight,true);
+  const panel=t.elements.get('abisDeeplinkGateHF2');
+  assert.ok(panel);
+  assert.equal(panel.children.some(c=>c.tagName==='button'),false);
+  await t.sandbox.p5a25R29ApplyBootRouteContext_();
+  assert.equal(t.events.length,1);
+  assert.equal(t.status().attempts,1);
+  t.releaseRpc();
+  await settle();
+  assert.equal(t.status().phase,'DONE');
+  assert.equal(t.status().inFlight,false);
+  assert.equal(t.timers.size,0);
+});
+
+test('delayed API rejection becomes visible failure only after the actual RPC settles',async()=>{
+  const t=build({holdRpc:true,fail:true});
+  t.sandbox.enterApp();
+  await settle();
+  t.tickTimer(30000);
+  t.tickTimer(90000);
+  assert.equal(t.status().phase,'DELAYED');
+  assert.equal(t.status().apiStatus,'PENDING');
+  t.releaseRpc();
+  await settle();
+  assert.equal(t.status().phase,'FAILED');
+  assert.equal(t.status().failureCode,'API_FAILED');
+  assert.equal(t.status().inFlight,false);
+  const panel=t.elements.get('abisDeeplinkGateHF2');
+  assert.ok(panel.children.some(c=>c.tagName==='button'));
+  const text=panel.children.map(x=>x.textContent||'').join(' ');
+  assert.ok(!text.includes('secret-not-for-UI'));
 });
