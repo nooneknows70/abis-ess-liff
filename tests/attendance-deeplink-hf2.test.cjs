@@ -63,7 +63,10 @@ function build(options = {}) {
         return true;
       }
       if (kind === 'EMPLOYEE_CORRECTION') {
-        const el = element('section'); el.id = 'attendance'; body.appendChild(el);
+        const el = element('section');
+        el.id = options.correctionStuckOnAttendance
+          ? 'attendance' : 'attendanceCorrectionOverlay';
+        body.appendChild(el);
         return true;
       }
       const action = kind === 'EMPLOYEE_FOLLOWUP'
@@ -147,6 +150,36 @@ test('repeated enterApp never resets an authorized target to HOME', async () => 
   assert.equal(t.getFallbacks(), 0);
   assert.equal(t.status().phase, 'DONE');
   assert.equal(t.status().attempts, 1);
+});
+
+test('employee correction counts PASS only when the actual form is visible', async () => {
+  const t = build({ kind: 'EMPLOYEE_CORRECTION' });
+  t.sandbox.enterApp();
+  await settle();
+  const st = t.status();
+  assert.equal(st.phase, 'DONE');
+  assert.equal(st.targetId, 'attendanceCorrectionOverlay');
+  assert.equal(st.targetVisible, true);
+  assert.equal(typeof st.clientRouteToVisibleMs, 'number');
+  assert.ok(st.clientRouteToVisibleMs >= 0);
+  assert.equal(t.events.length, 0);
+});
+
+test('generic attendance page cannot falsely satisfy the correction deep link', async () => {
+  const t = build({ kind: 'EMPLOYEE_CORRECTION', correctionStuckOnAttendance: true });
+  t.sandbox.enterApp();
+  await settle();
+  assert.equal(t.elements.has('attendance'), true);
+  assert.equal(t.elements.has('attendanceCorrectionOverlay'), false);
+  const st = t.status();
+  assert.equal(st.phase, 'FAILED');
+  assert.equal(st.targetId, 'attendanceCorrectionOverlay');
+  assert.equal(st.targetVisible, false);
+  assert.equal(st.failureCode, 'CORRECTION_FORM_NOT_VISIBLE');
+  assert.equal(st.clientRouteToVisibleMs, null);
+  t.sandbox.enterApp();
+  await settle();
+  assert.equal(t.getFallbacks(), 0);
 });
 
 test('employee follow-up route reads the correct API and opens its overlay', async () => {
