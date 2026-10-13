@@ -71,3 +71,17 @@ Manifest 的 `PROD_CURRENT` 指標只能在部署後驗證完成時切換。
 Release Control v1 目前先在 `release-control-v1` branch 建立治理層。
 
 第一階段只建立治理檔案與語彙，不修改 Production runtime code、GitHub Pages runtime behavior 或 Apps Script Production。
+
+
+## ABIS Release Flow V2
+
+自 2026-10-13 起，本專案採中央凍結的 **ABIS Release Flow V2**：
+`nooneknows70/abis-release-control/ABIS_RELEASE_FLOW_V2_FROZEN.md`
+
+操作端正式發布流程固定簡化為：
+
+```text
+RELEASE -> GO-LIVE -> FINAL VERIFY
+```
+
+既有低階 Gate 不取消，但改為內嵌在上述三階段或僅於 drift、不可逆 migration、權限/驗證、跨系統相容性、rollback 等例外狀況使用，不再作為每次發布都要人工逐項執行的預設流程。
