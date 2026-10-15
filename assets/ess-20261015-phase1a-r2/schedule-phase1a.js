@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_2_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_3_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -63,6 +63,11 @@
       .p1a-editor .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
       .p1a-editor .actions button{width:auto}
       .p1a-note{font-size:12px;color:#667085}
+      #rc208fScheduleRestPanel.p1a-refreshing{cursor:progress}
+      #rc208fScheduleRestPanel.p1a-refreshing .p1a-cell,
+      #rc208fScheduleRestPanel.p1a-refreshing .p1a-toolbar button,
+      #rc208fScheduleRestPanel.p1a-refreshing .p1a-toolbar select,
+      #rc208fScheduleRestPanel.p1a-refreshing .p1a-toolbar input{pointer-events:none!important}
       @media(max-width:900px){.p1a-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
     `;
     document.head.appendChild(s);
@@ -99,6 +104,43 @@
     if(typeof message==='function') message(t,'success');
   }
 
+  function clearGlobalAsyncCapture_(){
+    try{
+      if(typeof ABIS_ASYNC_RECENT_CLICK_!=='undefined') ABIS_ASYNC_RECENT_CLICK_=null;
+    }catch(ignore){}
+    try{
+      if(typeof p5a114LastClickedButton_!=='undefined') p5a114LastClickedButton_=null;
+    }catch(ignore){}
+  }
+
+  async function p1aCall(action,payload){
+    clearGlobalAsyncCapture_();
+    return call(action,payload);
+  }
+
+  function captureView_(box){
+    const table=box&&box.querySelector?box.querySelector('.p1a-table-wrap'):null;
+    return {
+      windowY:Number(window.scrollY||0),
+      tableLeft:table?Number(table.scrollLeft||0):0,
+      tableTop:table?Number(table.scrollTop||0):0
+    };
+  }
+
+  function restoreView_(box,view){
+    if(!view)return;
+    const run=function(){
+      const table=box&&box.querySelector?box.querySelector('.p1a-table-wrap'):null;
+      if(table){
+        table.scrollLeft=Number(view.tableLeft||0);
+        table.scrollTop=Number(view.tableTop||0);
+      }
+      try{window.scrollTo(0,Number(view.windowY||0));}catch(ignore){}
+    };
+    if(typeof requestAnimationFrame==='function')requestAnimationFrame(run);
+    else setTimeout(run,0);
+  }
+
   function confirmBox(title,body,okText){
     return new Promise(function(resolve){
       const b=document.createElement('div');
@@ -114,12 +156,24 @@
     });
   }
 
-  async function load(){
+  async function load(options){
+    const opts=options||{};
     const box=panel(); if(!box||state.loading)return;
     state.loading=true; ensureStyle();
-    box.innerHTML='<div class="muted">載入週排班…</div>';
+
+    const preserve=opts.preserveView===true && !!state.data && !!box.querySelector('.p1a-wrap');
+    const view=preserve?captureView_(box):null;
+
+    if(preserve){
+      box.classList.add('p1a-refreshing');
+      box.setAttribute('aria-busy','true');
+      setDiag('REFRESHING','','',txt(opts.reason)||'SYNC','');
+    }else{
+      box.innerHTML='<div class="muted">載入週排班…</div>';
+    }
+
     try{
-      const data=await call('phase1ScheduleWeek',{
+      const data=await p1aCall('phase1ScheduleWeek',{
         sessionToken:sessionToken,
         weekStart:state.weekStart||'',
         site:state.site||''
@@ -128,9 +182,23 @@
       state.weekStart=txt(data&&data.week&&data.week.weekStart)||monday('');
       if(!state.site) state.site=txt(data&&data.site)||txt((data&&data.availableSites||[])[0]);
       render();
+      if(preserve)restoreView_(panel(),view);
+      setDiag('REFRESH_DONE','','',txt(opts.reason)||'LOAD','');
     }catch(e){
-      box.innerHTML='<div class="notice error">'+esc(e&&e.message?e.message:String(e))+'</div>';
-    }finally{ state.loading=false; }
+      if(preserve){
+        showErr(e);
+        setDiag('REFRESH_ERROR','','',txt(opts.reason)||'SYNC',e&&e.message?e.message:String(e));
+      }else{
+        box.innerHTML='<div class="notice error">'+esc(e&&e.message?e.message:String(e))+'</div>';
+      }
+    }finally{
+      state.loading=false;
+      const current=panel();
+      if(current){
+        current.classList.remove('p1a-refreshing');
+        current.removeAttribute('aria-busy');
+      }
+    }
   }
 
   function topHtml(){
@@ -312,9 +380,12 @@
     sync();
     el('p1aCancel').onclick=function(){b.remove();};
     el('p1aSave').onclick=async function(){
-      this.disabled=true;
+      const btn=this;
+      const originalText=btn.textContent;
+      btn.disabled=true;
+      btn.textContent='儲存中…';
       try{
-        await call('phase1ScheduleSaveDraft',{
+        await p1aCall('phase1ScheduleSaveDraft',{
           sessionToken:sessionToken,
           employeeId:employeeId,
           date:date,
@@ -326,8 +397,16 @@
           baseSourceType:c.sourceType||'',
           baseSourceRef:c.sourceRef||''
         });
-        b.remove(); showOk('排班草稿已儲存'); await load();
-      }catch(e){showErr(e);this.disabled=false;}
+        b.remove();
+        showOk('排班草稿已儲存');
+        await load({preserveView:true,reason:'SAVE_DRAFT'});
+      }catch(e){
+        showErr(e);
+        if(btn&&btn.isConnected){
+          btn.disabled=false;
+          btn.textContent=originalText;
+        }
+      }
     };
   }
 
@@ -340,8 +419,8 @@
     const ok=await confirmBox('沿用'+label+'排班','將班別／排休與預計加班帶入目前週的草稿。工作安排預設不複製。','建立草稿');
     if(!ok)return;
     try{
-      const r=await call('phase1ScheduleCopy',{sessionToken:sessionToken,weekStart:state.weekStart,site:state.site,mode:mode,includeWorkItems:false});
-      showOk('已建立 '+Number(r.draftWrites||0)+' 筆草稿'); await load();
+      const r=await p1aCall('phase1ScheduleCopy',{sessionToken:sessionToken,weekStart:state.weekStart,site:state.site,mode:mode,includeWorkItems:false});
+      showOk('已建立 '+Number(r.draftWrites||0)+' 筆草稿'); await load({preserveView:true,reason:'COPY'});
     }catch(e){showErr(e);}
   }
 
@@ -351,9 +430,9 @@
     const ok=await confirmBox('確認發布班表','發布後會成為正式 DAILY_SCHEDULE，並對有異動的員工發送自己的班表與工作安排。LINE 失敗不會回滾正式班表。','確認發布');
     if(!ok)return;
     try{
-      const r=await call('phase1SchedulePublish',{sessionToken:sessionToken,weekStart:state.weekStart,site:state.site});
+      const r=await p1aCall('phase1SchedulePublish',{sessionToken:sessionToken,weekStart:state.weekStart,site:state.site});
       showOk('發布完成：'+Number(r.scheduleWrites||0)+' 筆；LINE '+Number(r.notificationSentCount||0)+' 成功 / '+Number(r.notificationFailedCount||0)+' 未送達');
-      await load();
+      await load({preserveView:true,reason:'PUBLISH'});
     }catch(e){showErr(e);}
   }
 
@@ -390,6 +469,39 @@
     if(typeof rc2UpdateInnerBar_==='function') rc2UpdateInnerBar_();
     await load();
   }
+
+  function installStableViewportGate_(){
+    if(window.__ABIS_P1A_STABLE_VIEWPORT_GATE__)return;
+    if(typeof abisEssM1ApplyFeatureGate_!=='function')return;
+
+    const legacy=abisEssM1ApplyFeatureGate_;
+    try{window.removeEventListener('resize',legacy,false);}catch(ignore){}
+    try{window.removeEventListener('orientationchange',legacy,false);}catch(ignore){}
+
+    const stable=function(){
+      const inSchedule=typeof accountPanel_!=='undefined' && String(accountPanel_||'')==='scheduleRest';
+      const schedulingAllowed=
+        typeof abisEssMobileSchedulingAllowed_!=='function' ||
+        abisEssMobileSchedulingAllowed_();
+
+      if(inSchedule&&schedulingAllowed){
+        if(typeof rc208ForceViewport_==='function')rc208ForceViewport_();
+        setDiag('VIEWPORT_STABLE','','','WIDTH='+Number(window.innerWidth||0),'');
+        return;
+      }
+
+      legacy();
+    };
+
+    window.addEventListener('resize',stable,{passive:true});
+    window.addEventListener('orientationchange',stable,{passive:true});
+    window.__ABIS_P1A_STABLE_VIEWPORT_GATE__={
+      legacy:legacy,
+      handler:stable
+    };
+  }
+
+  installStableViewportGate_();
 
   function moveWeek(delta){ state.weekStart=addDays(state.weekStart||monday(''),Number(delta||0)*7); load(); }
   function thisWeek(){ state.weekStart=monday(''); load(); }
