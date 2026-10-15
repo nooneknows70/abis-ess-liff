@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_11_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_12_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -585,12 +585,24 @@
   }
 
   async function copy(mode){
-    const label=mode==='PREVIOUS_WEEK'?'上週':'上月';
-    const ok=await confirmBox('沿用'+label+'排班','會把來源週畫面中的班別／排休／預計加班同步到目前週。若目前週已有草稿，會更新核心排班欄位；本週已填的工作安排會保留。','同步草稿');
+    const previousWeek=mode==='PREVIOUS_WEEK';
+    const label=previousWeek?'上週':'上月';
+    const detail=previousWeek
+      ? '會把來源週畫面中的班別／排休／預計加班，以及工作安排／工段／工作內容，一起同步到目前週。若目前週已有草稿，對應格的排班與工作安排會以來源週內容更新。'
+      : '會把來源月對應週次中的班別／排休／預計加班同步到目前週；目前週已填的工作安排會保留。';
+    const ok=await confirmBox('沿用'+label+'排班',detail,'同步草稿');
     if(!ok)return;
     try{
-      const r=await p1aCall('phase1ScheduleCopy',{sessionToken:sessionToken,weekStart:state.weekStart,site:state.site,mode:mode,includeWorkItems:false});
-      showOk('已同步 '+Number(r.draftWrites||0)+' 筆草稿（新增 '+Number(r.draftInserts||0)+'／更新 '+Number(r.draftUpdates||0)+'）'); await load({preserveView:true,reason:'COPY'});
+      const r=await p1aCall('phase1ScheduleCopy',{
+        sessionToken:sessionToken,
+        weekStart:state.weekStart,
+        site:state.site,
+        mode:mode,
+        includeWorkItems:previousWeek
+      });
+      const workText=previousWeek?'；工作安排已同步':'';
+      showOk('已同步 '+Number(r.draftWrites||0)+' 筆草稿（新增 '+Number(r.draftInserts||0)+'／更新 '+Number(r.draftUpdates||0)+'）'+workText);
+      await load({preserveView:true,reason:'COPY'});
     }catch(e){showErr(e);}
   }
 
