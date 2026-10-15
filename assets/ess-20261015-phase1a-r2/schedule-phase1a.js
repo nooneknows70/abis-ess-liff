@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_3_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_4_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -30,8 +30,8 @@
     const s=document.createElement('style');
     s.id='abisP1aStyle';
     s.textContent=`
-      .p1a-wrap{display:flex;flex-direction:column;gap:14px}
-      .p1a-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end}
+      .p1a-wrap{display:flex;flex-direction:column;gap:14px;min-width:0;max-width:100%}
+      .p1a-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;min-width:0}
       .p1a-toolbar .field{display:flex;flex-direction:column;gap:4px;min-width:145px}
       .p1a-toolbar label{font-size:12px;color:#667085}
       .p1a-toolbar button{width:auto}
@@ -39,7 +39,13 @@
       .p1a-metric{border:1px solid #dbe4ee;border-radius:12px;padding:12px;background:#fff}
       .p1a-metric b{display:block;font-size:22px;margin-top:4px}
       .p1a-metric.alert{border-color:#f4b6b6;background:#fff7f7}
-      .p1a-table-wrap{overflow:auto;border:1px solid #dbe4ee;border-radius:12px}
+      .p1a-table-wrap{width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:visible;border:1px solid #dbe4ee;border-radius:12px;overscroll-behavior-x:contain;scrollbar-gutter:stable both-edges}
+      .p1a-bottom-scroll{display:none;position:sticky;bottom:8px;z-index:40;width:100%;height:18px;overflow-x:auto;overflow-y:hidden;background:rgba(248,250,252,.96);border:1px solid #cbd5e1;border-radius:999px;box-shadow:0 4px 16px rgba(15,23,42,.10)}
+      .p1a-bottom-scroll-inner{height:1px}
+      .p1a-toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483200;min-width:min(360px,calc(100vw - 32px));max-width:min(620px,calc(100vw - 32px));padding:12px 16px;border-radius:12px;background:#0f5132;color:#fff;font-weight:800;line-height:1.45;box-shadow:0 12px 32px rgba(15,23,42,.28);text-align:center}
+      .p1a-toast.error{background:#991b1b}
+      .p1a-toast.warning{background:#92400e}
+      @media(max-width:1215px) and (min-width:768px){.p1a-bottom-scroll{display:block}}
       .p1a-table{border-collapse:separate;border-spacing:0;min-width:1180px;width:100%;background:#fff}
       .p1a-table th,.p1a-table td{border-right:1px solid #e6edf4;border-bottom:1px solid #e6edf4;padding:8px;vertical-align:top}
       .p1a-table th{position:sticky;top:0;background:#f7f9fc;z-index:1;font-size:12px}
@@ -97,10 +103,33 @@
     }
   }
 
+  let toastTimer_=null;
+
+  function showToast_(text,type){
+    let toast=el('p1aViewportToast');
+    if(!toast){
+      toast=document.createElement('div');
+      toast.id='p1aViewportToast';
+      toast.setAttribute('role','status');
+      toast.setAttribute('aria-live','polite');
+      document.body.appendChild(toast);
+    }
+    toast.className='p1a-toast'+(type?' '+type:'');
+    toast.textContent=txt(text);
+    toast.hidden=false;
+    if(toastTimer_)clearTimeout(toastTimer_);
+    toastTimer_=setTimeout(function(){
+      if(toast)toast.hidden=true;
+    },5000);
+  }
+
   function showErr(e){
-    if(typeof message==='function') message(e&&e.message?e.message:String(e),'error');
+    const msg=e&&e.message?e.message:String(e);
+    showToast_(msg,'error');
+    if(typeof message==='function') message(msg,'error');
   }
   function showOk(t){
+    showToast_(t,'');
     if(typeof message==='function') message(t,'success');
   }
 
@@ -264,7 +293,8 @@
         return '<tr><td><div class="p1a-employee"><b>'+esc(emp.name)+'</b><span>'+esc(emp.employeeId)+'｜'+esc(emp.site)+'</span><span>本週OT '+esc((emp.analysis&&emp.analysis.plannedOvertimeHours)||0)+'h</span></div></td>'+
           (emp.cells||[]).map(function(c){return '<td>'+cellHtml(emp,c)+'</td>';}).join('')+'</tr>';
       }).join('')+
-      '</tbody></table></div>';
+      '</tbody></table></div>'+
+      '<div class="p1a-bottom-scroll" id="p1aBottomScroll" aria-label="班表水平捲動"><div class="p1a-bottom-scroll-inner" id="p1aBottomScrollInner"></div></div>';
   }
 
   function render(){
@@ -274,6 +304,37 @@
     if(site)site.onchange=function(){state.site=this.value;load();};
     const wk=el('p1aWeekStart');
     if(wk)wk.onchange=function(){state.weekStart=monday(this.value);load();};
+    const tableWrap=box.querySelector('.p1a-table-wrap');
+    const tableEl=box.querySelector('.p1a-table');
+    const bottomScroll=el('p1aBottomScroll');
+    const bottomInner=el('p1aBottomScrollInner');
+
+    if(tableWrap&&tableEl&&bottomScroll&&bottomInner){
+      const syncWidth=function(){
+        bottomInner.style.width=Math.max(tableEl.scrollWidth,tableWrap.clientWidth)+'px';
+        bottomScroll.scrollLeft=tableWrap.scrollLeft;
+      };
+      let syncing=false;
+      tableWrap.addEventListener('scroll',function(){
+        if(syncing)return;
+        syncing=true;
+        bottomScroll.scrollLeft=tableWrap.scrollLeft;
+        syncing=false;
+      },{passive:true});
+      bottomScroll.addEventListener('scroll',function(){
+        if(syncing)return;
+        syncing=true;
+        tableWrap.scrollLeft=bottomScroll.scrollLeft;
+        syncing=false;
+      },{passive:true});
+      syncWidth();
+      if(typeof ResizeObserver==='function'){
+        const ro=new ResizeObserver(syncWidth);
+        ro.observe(tableWrap);
+        ro.observe(tableEl);
+      }
+    }
+
     const cellButtons=box.querySelectorAll('.p1a-cell[data-p1a-employee-id][data-p1a-date]');
     cellButtons.forEach(function(btn){
       btn.disabled=false;
