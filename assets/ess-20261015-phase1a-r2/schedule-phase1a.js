@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_9_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_10_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -55,6 +55,12 @@
       .p1a-table th:first-child,.p1a-table td:first-child{position:sticky;left:0;background:#fff;z-index:30;width:170px;min-width:170px;max-width:170px;overflow:hidden;box-shadow:5px 0 8px -7px rgba(15,23,42,.45)}
       .p1a-table th:first-child{z-index:35;background:#f7f9fc}
       .p1a-table td:first-child .p1a-employee{position:relative;z-index:1;background:#fff}
+      .p1a-frozen-head{display:none;position:fixed;top:0;z-index:2147482200;height:46px;grid-template-columns:170px minmax(0,1fr);overflow:hidden;background:#f7f9fc;border:1px solid #dbe4ee;border-radius:0 0 10px 10px;box-shadow:0 5px 16px rgba(15,23,42,.16);box-sizing:border-box}
+      .p1a-frozen-head.is-visible{display:grid}
+      .p1a-frozen-employee{display:flex;align-items:center;justify-content:center;width:170px;min-width:170px;max-width:170px;background:#f7f9fc;border-right:1px solid #e6edf4;font-size:12px;font-weight:800;position:relative;z-index:2}
+      .p1a-frozen-dates-viewport{min-width:0;overflow:hidden}
+      .p1a-frozen-dates-track{display:grid;grid-template-columns:repeat(7,150px);width:1050px;height:100%;will-change:transform}
+      .p1a-frozen-date{display:flex;align-items:center;justify-content:center;width:150px;min-width:150px;max-width:150px;border-right:1px solid #e6edf4;font-size:12px;font-weight:800;background:#f7f9fc;box-sizing:border-box}
       .p1a-cell{width:100%;max-width:100%;min-width:0;min-height:94px;text-align:left;border:1px solid #dbe4ee;background:#fff;border-radius:10px;padding:8px;overflow:hidden}
       .p1a-cell.rest{background:#f8fafc}
       .p1a-cell.ot{background:#fff9ee}
@@ -293,7 +299,9 @@
     const w=(state.data&&state.data.week)||{},rows=Array.isArray(w.employees)?w.employees:[];
     const dates=Array.isArray(w.dates)?w.dates:[];
     const visible=state.missingOnly?rows.filter(function(r){return r.analysis&&r.analysis.missingDates&&r.analysis.missingDates.length;}):rows;
-    return '<div class="p1a-table-wrap"><table class="p1a-table"><thead><tr><th>員工</th>'+
+    const frozenDates=dates.map(function(d){const o=dateObj(d);const wk=['日','一','二','三','四','五','六'][o.getDay()];return '<div class="p1a-frozen-date">'+esc(wk+' '+fmt(d))+'</div>';}).join('');
+    return '<div class="p1a-frozen-head" id="p1aFrozenHead"><div class="p1a-frozen-employee">員工</div><div class="p1a-frozen-dates-viewport"><div class="p1a-frozen-dates-track" id="p1aFrozenDatesTrack">'+frozenDates+'</div></div></div>'+
+      '<div class="p1a-table-wrap"><table class="p1a-table"><thead><tr><th>員工</th>'+
       dates.map(function(d){const o=dateObj(d);const wk=['日','一','二','三','四','五','六'][o.getDay()];return '<th>'+esc(wk+' '+fmt(d))+'</th>';}).join('')+
       '</tr></thead><tbody>'+
       visible.map(function(emp){
@@ -313,8 +321,28 @@
     if(wk)wk.onchange=function(){state.weekStart=monday(this.value);load();};
     const tableWrap=box.querySelector('.p1a-table-wrap');
     const tableEl=box.querySelector('.p1a-table');
+    const tableHead=box.querySelector('.p1a-table thead');
+    const frozenHead=el('p1aFrozenHead');
+    const frozenTrack=el('p1aFrozenDatesTrack');
     const hScroll=el('p1aHScroll');
     const hTrack=el('p1aHScrollTrack');
+
+    function updateFrozenHead(){
+      if(!tableWrap||!tableHead||!frozenHead||!frozenTrack)return;
+      const viewportWidth=Number(document.documentElement&&document.documentElement.clientWidth||0)||Number(window.innerWidth||0);
+      const viewportHeight=Number(window.innerHeight||0);
+      const tableRect=tableWrap.getBoundingClientRect();
+      const headRect=tableHead.getBoundingClientRect();
+      const left=Math.max(12,Number(tableRect.left||0));
+      const availableWidth=Math.max(320,Math.min(1220,viewportWidth-left-12));
+      frozenHead.style.left=left+'px';
+      frozenHead.style.width=availableWidth+'px';
+      frozenHead.style.maxWidth=availableWidth+'px';
+      frozenTrack.style.transform='translateX('+(-Number(tableWrap.scrollLeft||0))+'px)';
+      const inSchedule=typeof accountPanel_==='undefined'||String(accountPanel_||'')==='scheduleRest';
+      const visible=inSchedule&&viewportWidth>=768&&headRect.bottom<=0&&tableRect.bottom>46&&tableRect.top<viewportHeight;
+      frozenHead.classList.toggle('is-visible',visible);
+    }
 
     function updateHScroll(){
       if(!tableWrap||!tableEl||!hScroll||!hTrack)return;
@@ -374,6 +402,7 @@
         if(syncing)return;
         syncing=true;
         hScroll.scrollLeft=tableWrap.scrollLeft;
+        if(frozenTrack)frozenTrack.style.transform='translateX('+(-Number(tableWrap.scrollLeft||0))+'px)';
         syncing=false;
       },{passive:true});
 
@@ -389,6 +418,18 @@
     }
 
     window.__ABIS_P1A_UPDATE_HSCROLL__=updateHScroll;
+    window.__ABIS_P1A_UPDATE_FROZEN_HEAD__=updateFrozenHead;
+    updateFrozenHead();
+
+    if(!window.__ABIS_P1A_FROZEN_HEAD_WINDOW_BOUND__){
+      window.__ABIS_P1A_FROZEN_HEAD_WINDOW_BOUND__=true;
+      window.addEventListener('scroll',function(){
+        try{if(typeof window.__ABIS_P1A_UPDATE_FROZEN_HEAD__==='function')window.__ABIS_P1A_UPDATE_FROZEN_HEAD__();}catch(ignore){}
+      },{passive:true});
+      window.addEventListener('resize',function(){
+        try{if(typeof window.__ABIS_P1A_UPDATE_FROZEN_HEAD__==='function')window.__ABIS_P1A_UPDATE_FROZEN_HEAD__();}catch(ignore){}
+      },{passive:true});
+    }
 
     if(!window.__ABIS_P1A_HSCROLL_WINDOW_BOUND__){
       window.__ABIS_P1A_HSCROLL_WINDOW_BOUND__=true;
@@ -543,11 +584,11 @@
 
   async function copy(mode){
     const label=mode==='PREVIOUS_WEEK'?'上週':'上月';
-    const ok=await confirmBox('沿用'+label+'排班','將班別／排休與預計加班帶入目前週的草稿。工作安排預設不複製。','建立草稿');
+    const ok=await confirmBox('沿用'+label+'排班','會把來源週畫面中的班別／排休／預計加班同步到目前週。若目前週已有草稿，會更新核心排班欄位；本週已填的工作安排會保留。','同步草稿');
     if(!ok)return;
     try{
       const r=await p1aCall('phase1ScheduleCopy',{sessionToken:sessionToken,weekStart:state.weekStart,site:state.site,mode:mode,includeWorkItems:false});
-      showOk('已建立 '+Number(r.draftWrites||0)+' 筆草稿'); await load({preserveView:true,reason:'COPY'});
+      showOk('已同步 '+Number(r.draftWrites||0)+' 筆草稿（新增 '+Number(r.draftInserts||0)+'／更新 '+Number(r.draftUpdates||0)+'）'); await load({preserveView:true,reason:'COPY'});
     }catch(e){showErr(e);}
   }
 
@@ -620,6 +661,7 @@
         if(typeof rc208ForceViewport_==='function')rc208ForceViewport_();
         try{
           if(typeof window.__ABIS_P1A_UPDATE_HSCROLL__==='function')window.__ABIS_P1A_UPDATE_HSCROLL__();
+          if(typeof window.__ABIS_P1A_UPDATE_FROZEN_HEAD__==='function')window.__ABIS_P1A_UPDATE_FROZEN_HEAD__();
         }catch(ignore){}
         setDiag('VIEWPORT_STABLE','','','WIDTH='+Number(window.innerWidth||0),'');
         return;
