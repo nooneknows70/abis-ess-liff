@@ -56,7 +56,7 @@
       .p1a-employee b{display:block}.p1a-employee span{font-size:12px;color:#667085}
       .p1a-tabs{display:flex;gap:8px}.p1a-tabs button{width:auto}
       .p1a-analysis-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-      .p1a-editor-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:9998;display:flex;align-items:center;justify-content:center;padding:18px}
+      .p1a-editor-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:18px}
       .p1a-editor{width:min(94vw,640px);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.22)}
       .p1a-editor .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
       .p1a-editor textarea{min-height:110px}
@@ -269,6 +269,7 @@
     }
     const c=x.cell,emp=x.emp;
     setDiag('EDIT_LOOKUP_OK',employeeId,date,'MODAL_BUILD','');
+    const old=el('p1aEditor'); if(old)old.remove();
     const b=document.createElement('div');
     b.className='p1a-editor-backdrop'; b.id='p1aEditor';
     b.innerHTML='<div class="p1a-editor" role="dialog" aria-modal="true">'+
@@ -396,7 +397,7 @@
 
   if(!window.__ABIS_P1A_CELL_CAPTURE_BOUND__){
     window.__ABIS_P1A_CELL_CAPTURE_BOUND__=true;
-    document.addEventListener('click',function(ev){
+    window.addEventListener('click',function(ev){
       const raw=ev&&ev.target;
       const btn=raw&&raw.closest?raw.closest('.p1a-cell[data-p1a-employee-id][data-p1a-date]'):null;
       if(!btn)return;
