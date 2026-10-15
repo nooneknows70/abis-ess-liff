@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_4_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_5_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -39,26 +39,29 @@
       .p1a-metric{border:1px solid #dbe4ee;border-radius:12px;padding:12px;background:#fff}
       .p1a-metric b{display:block;font-size:22px;margin-top:4px}
       .p1a-metric.alert{border-color:#f4b6b6;background:#fff7f7}
-      .p1a-table-wrap{width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:visible;border:1px solid #dbe4ee;border-radius:12px;overscroll-behavior-x:contain;scrollbar-gutter:stable both-edges}
-      .p1a-bottom-scroll{display:none;position:sticky;bottom:8px;z-index:40;width:100%;height:18px;overflow-x:auto;overflow-y:hidden;background:rgba(248,250,252,.96);border:1px solid #cbd5e1;border-radius:999px;box-shadow:0 4px 16px rgba(15,23,42,.10)}
-      .p1a-bottom-scroll-inner{height:1px}
+      #rc208fScheduleRestPanel{width:100%;max-width:100%;min-width:0;overflow:hidden}
+      .p1a-table-wrap{width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:visible;border:1px solid #dbe4ee;border-radius:12px;overscroll-behavior-x:contain}
+      .p1a-hscroll{display:none;position:sticky;bottom:8px;z-index:40;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;max-width:100%;padding:6px 8px;box-sizing:border-box;background:rgba(248,250,252,.97);border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 4px 16px rgba(15,23,42,.12)}
+      .p1a-hscroll.is-visible{display:grid}
+      .p1a-hscroll button{width:40px!important;min-width:40px!important;height:36px!important;min-height:36px!important;margin:0!important;padding:0!important;border-radius:9px!important}
+      .p1a-hscroll input[type="range"]{width:100%;min-width:0;margin:0;padding:0}
       .p1a-toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483200;min-width:min(360px,calc(100vw - 32px));max-width:min(620px,calc(100vw - 32px));padding:12px 16px;border-radius:12px;background:#0f5132;color:#fff;font-weight:800;line-height:1.45;box-shadow:0 12px 32px rgba(15,23,42,.28);text-align:center}
       .p1a-toast.error{background:#991b1b}
       .p1a-toast.warning{background:#92400e}
-      @media(max-width:1215px) and (min-width:768px){.p1a-bottom-scroll{display:block}}
-      .p1a-table{border-collapse:separate;border-spacing:0;min-width:1180px;width:100%;background:#fff}
-      .p1a-table th,.p1a-table td{border-right:1px solid #e6edf4;border-bottom:1px solid #e6edf4;padding:8px;vertical-align:top}
+      @media(max-width:767px){.p1a-hscroll{display:none!important}}
+      .p1a-table{border-collapse:separate;border-spacing:0;table-layout:fixed;width:1220px;min-width:1220px;max-width:1220px;background:#fff}
+      .p1a-table th,.p1a-table td{width:150px;min-width:150px;max-width:150px;border-right:1px solid #e6edf4;border-bottom:1px solid #e6edf4;padding:8px;vertical-align:top;box-sizing:border-box}
       .p1a-table th{position:sticky;top:0;background:#f7f9fc;z-index:1;font-size:12px}
-      .p1a-table th:first-child,.p1a-table td:first-child{position:sticky;left:0;background:#fff;z-index:2;min-width:150px}
+      .p1a-table th:first-child,.p1a-table td:first-child{position:sticky;left:0;background:#fff;z-index:2;width:170px;min-width:170px;max-width:170px}
       .p1a-table th:first-child{z-index:3;background:#f7f9fc}
-      .p1a-cell{width:100%;min-height:94px;text-align:left;border:1px solid #dbe4ee;background:#fff;border-radius:10px;padding:8px}
+      .p1a-cell{width:100%;max-width:100%;min-width:0;min-height:94px;text-align:left;border:1px solid #dbe4ee;background:#fff;border-radius:10px;padding:8px;overflow:hidden}
       .p1a-cell.rest{background:#f8fafc}
       .p1a-cell.ot{background:#fff9ee}
       .p1a-cell.missing{background:#fff2f2;border-color:#ef9a9a}
       .p1a-cell.draft{box-shadow:inset 0 0 0 2px #a7c7ff}
       .p1a-cell .nature{font-size:12px;font-weight:700}
       .p1a-cell .shift{font-size:12px;margin-top:4px}
-      .p1a-cell .sub{font-size:11px;color:#667085;margin-top:4px}
+      .p1a-cell .sub{font-size:11px;color:#667085;margin-top:4px;overflow-wrap:anywhere}
       .p1a-employee b{display:block}.p1a-employee span{font-size:12px;color:#667085}
       .p1a-tabs{display:flex;gap:8px}.p1a-tabs button{width:auto}
       .p1a-analysis-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -165,6 +168,9 @@
         table.scrollTop=Number(view.tableTop||0);
       }
       try{window.scrollTo(0,Number(view.windowY||0));}catch(ignore){}
+      try{
+        if(typeof window.__ABIS_P1A_UPDATE_HSCROLL__==='function')window.__ABIS_P1A_UPDATE_HSCROLL__();
+      }catch(ignore){}
     };
     if(typeof requestAnimationFrame==='function')requestAnimationFrame(run);
     else setTimeout(run,0);
@@ -294,7 +300,11 @@
           (emp.cells||[]).map(function(c){return '<td>'+cellHtml(emp,c)+'</td>';}).join('')+'</tr>';
       }).join('')+
       '</tbody></table></div>'+
-      '<div class="p1a-bottom-scroll" id="p1aBottomScroll" aria-label="班表水平捲動"><div class="p1a-bottom-scroll-inner" id="p1aBottomScrollInner"></div></div>';
+      '<div class="p1a-hscroll" id="p1aHScroll" aria-label="班表水平捲動">'+
+      '<button type="button" class="secondary" id="p1aHScrollLeft" aria-label="向左移動">‹</button>'+
+      '<input id="p1aHScrollRange" type="range" min="0" max="0" step="1" value="0" aria-label="班表水平位置">'+
+      '<button type="button" class="secondary" id="p1aHScrollRight" aria-label="向右移動">›</button>'+
+      '</div>';
   }
 
   function render(){
@@ -306,34 +316,38 @@
     if(wk)wk.onchange=function(){state.weekStart=monday(this.value);load();};
     const tableWrap=box.querySelector('.p1a-table-wrap');
     const tableEl=box.querySelector('.p1a-table');
-    const bottomScroll=el('p1aBottomScroll');
-    const bottomInner=el('p1aBottomScrollInner');
+    const hScroll=el('p1aHScroll');
+    const hRange=el('p1aHScrollRange');
+    const hLeft=el('p1aHScrollLeft');
+    const hRight=el('p1aHScrollRight');
 
-    if(tableWrap&&tableEl&&bottomScroll&&bottomInner){
-      const syncWidth=function(){
-        bottomInner.style.width=Math.max(tableEl.scrollWidth,tableWrap.clientWidth)+'px';
-        bottomScroll.scrollLeft=tableWrap.scrollLeft;
-      };
-      let syncing=false;
-      tableWrap.addEventListener('scroll',function(){
-        if(syncing)return;
-        syncing=true;
-        bottomScroll.scrollLeft=tableWrap.scrollLeft;
-        syncing=false;
-      },{passive:true});
-      bottomScroll.addEventListener('scroll',function(){
-        if(syncing)return;
-        syncing=true;
-        tableWrap.scrollLeft=bottomScroll.scrollLeft;
-        syncing=false;
-      },{passive:true});
-      syncWidth();
-      if(typeof ResizeObserver==='function'){
-        const ro=new ResizeObserver(syncWidth);
-        ro.observe(tableWrap);
-        ro.observe(tableEl);
-      }
+    function updateHScroll(){
+      if(!tableWrap||!tableEl||!hScroll||!hRange)return;
+      const max=Math.max(0,1220-Number(tableWrap.clientWidth||0));
+      hRange.max=String(max);
+      hRange.value=String(Math.min(max,Math.max(0,Number(tableWrap.scrollLeft||0))));
+      hScroll.classList.toggle('is-visible',max>4&&Number(window.innerWidth||0)>=768);
     }
+
+    if(tableWrap&&tableEl&&hScroll&&hRange){
+      tableWrap.addEventListener('scroll',function(){
+        const max=Number(hRange.max||0);
+        hRange.value=String(Math.min(max,Math.max(0,Number(tableWrap.scrollLeft||0))));
+      },{passive:true});
+      hRange.addEventListener('input',function(){
+        tableWrap.scrollLeft=Number(this.value||0);
+      });
+      if(hLeft)hLeft.onclick=function(){
+        tableWrap.scrollLeft=Math.max(0,Number(tableWrap.scrollLeft||0)-260);
+      };
+      if(hRight)hRight.onclick=function(){
+        tableWrap.scrollLeft=Math.min(Number(hRange.max||0),Number(tableWrap.scrollLeft||0)+260);
+      };
+      updateHScroll();
+      setTimeout(updateHScroll,0);
+    }
+
+    window.__ABIS_P1A_UPDATE_HSCROLL__=updateHScroll;
 
     const cellButtons=box.querySelectorAll('.p1a-cell[data-p1a-employee-id][data-p1a-date]');
     cellButtons.forEach(function(btn){
@@ -547,6 +561,9 @@
 
       if(inSchedule&&schedulingAllowed){
         if(typeof rc208ForceViewport_==='function')rc208ForceViewport_();
+        try{
+          if(typeof window.__ABIS_P1A_UPDATE_HSCROLL__==='function')window.__ABIS_P1A_UPDATE_HSCROLL__();
+        }catch(ignore){}
         setDiag('VIEWPORT_STABLE','','','WIDTH='+Number(window.innerWidth||0),'');
         return;
       }
