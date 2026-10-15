@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_1_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -157,7 +157,7 @@
     if(Number(cell.plannedOvertimeMinutes||0)>0)sub.push('預計OT '+otHours(cell.plannedOvertimeMinutes)+'h');
     if(wi)sub.push(wi);
     if(cell.isDraft)sub.push('草稿');
-    return '<button type="button" class="'+cls.join(' ')+'" onclick="ABIS_P1A.edit('+JSON.stringify(emp.employeeId)+','+JSON.stringify(cell.date)+')">'+
+    return '<button type="button" class="'+cls.join(' ')+'" data-p1a-employee-id="'+esc(emp.employeeId)+'" data-p1a-date="'+esc(cell.date)+'">'+
       '<div class="nature">'+esc(cell.missing?'未排班':workNatureLabel(cell.workNature))+'</div>'+
       '<div class="shift">'+esc(shiftLabel(cell))+'</div>'+
       (sub.length?'<div class="sub">'+esc(sub.join('｜'))+'</div>':'')+
@@ -185,6 +185,14 @@
     if(site)site.onchange=function(){state.site=this.value;load();};
     const wk=el('p1aWeekStart');
     if(wk)wk.onchange=function(){state.weekStart=monday(this.value);load();};
+    box.querySelectorAll('.p1a-cell[data-p1a-employee-id][data-p1a-date]').forEach(function(btn){
+      btn.onclick=function(){
+        edit(
+          this.getAttribute('data-p1a-employee-id')||'',
+          this.getAttribute('data-p1a-date')||''
+        );
+      };
+    });
   }
 
   function findCell(employeeId,date){
