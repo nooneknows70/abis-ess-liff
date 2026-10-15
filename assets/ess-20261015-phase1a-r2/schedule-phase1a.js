@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_1_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_2_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -72,6 +72,26 @@
     return el('rc208fScheduleRestPanel');
   }
 
+  const diag={lastEvent:'INIT',lastEmployeeId:'',lastDate:'',lastResult:'',lastError:''};
+
+  function setDiag(eventName,employeeId,date,result,error){
+    diag.lastEvent=txt(eventName);
+    diag.lastEmployeeId=txt(employeeId);
+    diag.lastDate=txt(date);
+    diag.lastResult=txt(result);
+    diag.lastError=txt(error);
+    const d=el('p1aShadowDiag');
+    if(d){
+      d.textContent=
+        'Phase1A '+VERSION+'｜'+
+        (diag.lastEvent||'-')+'｜'+
+        (diag.lastEmployeeId||'-')+'｜'+
+        (diag.lastDate||'-')+'｜'+
+        (diag.lastResult||'-')+
+        (diag.lastError?'｜'+diag.lastError:'');
+    }
+  }
+
   function showErr(e){
     if(typeof message==='function') message(e&&e.message?e.message:String(e),'error');
   }
@@ -119,7 +139,8 @@
     const siteSelect=auth.scope==='COMPANY'
       ? '<div class="field"><label>廠區</label><select id="p1aSite">'+sites.map(function(s){return '<option value="'+esc(s)+'" '+(s===state.site?'selected':'')+'>'+esc(s)+'</option>';}).join('')+'</select></div>'
       : '<div class="field"><label>廠區</label><div><b>'+esc(auth.site||state.site||'')+'</b></div></div>';
-    return '<div class="p1a-tabs">'+
+    return '<div id="p1aShadowDiag" class="p1a-note" style="margin:0 0 8px;padding:8px 10px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc">Phase1A '+esc(VERSION)+'｜READY</div>'+
+      '<div class="p1a-tabs">'+
       '<button type="button" onclick="ABIS_P1A.loadWeek()">週排班</button>'+
       '<button type="button" class="secondary" onclick="ABIS_P1A.openFixedRest()">固定休息日</button>'+
       '</div>'+
@@ -185,21 +206,25 @@
     if(site)site.onchange=function(){state.site=this.value;load();};
     const wk=el('p1aWeekStart');
     if(wk)wk.onchange=function(){state.weekStart=monday(this.value);load();};
-    box.querySelectorAll('.p1a-cell[data-p1a-employee-id][data-p1a-date]').forEach(function(btn){
-      btn.onclick=function(){
-        edit(
-          this.getAttribute('data-p1a-employee-id')||'',
-          this.getAttribute('data-p1a-date')||''
-        );
-      };
+    const cellButtons=box.querySelectorAll('.p1a-cell[data-p1a-employee-id][data-p1a-date]');
+    cellButtons.forEach(function(btn){
+      btn.disabled=false;
+      btn.removeAttribute('aria-busy');
+      btn.classList.remove('is-busy','abis-async-busy','abis-async-structured');
+      btn.style.pointerEvents='auto';
+      btn.style.position='relative';
+      btn.style.zIndex='4';
     });
+    setDiag('RENDER','','','CELLS='+cellButtons.length,'');
   }
 
   function findCell(employeeId,date){
+    const employeeKey=txt(employeeId);
+    const dateKey=txt(date);
     const rows=(state.data&&state.data.week&&state.data.week.employees)||[];
-    const emp=rows.find(function(x){return x.employeeId===employeeId;});
-    const cell=emp&&(emp.cells||[]).find(function(x){return x.date===date;});
-    return {emp:emp,cell:cell};
+    const emp=rows.find(function(x){return txt(x&&x.employeeId)===employeeKey;});
+    const cell=emp&&(emp.cells||[]).find(function(x){return txt(x&&x.date)===dateKey;});
+    return {emp:emp,cell:cell,employeeKey:employeeKey,dateKey:dateKey};
   }
 
   function parseWorkItems(text){
@@ -233,8 +258,17 @@
   }
 
   function edit(employeeId,date){
-    const x=findCell(employeeId,date); if(!x.emp||!x.cell)return;
+    setDiag('EDIT_ENTER',employeeId,date,'LOOKUP','');
+    const x=findCell(employeeId,date);
+    if(!x.emp||!x.cell){
+      const rows=(state.data&&state.data.week&&state.data.week.employees)||[];
+      const detail='EMP='+(x.emp?'Y':'N')+',CELL='+(x.cell?'Y':'N')+',ROWS='+rows.length;
+      setDiag('EDIT_LOOKUP_FAIL',employeeId,date,detail,'');
+      if(typeof message==='function') message('排班格資料比對失敗：'+detail,'warning');
+      return;
+    }
     const c=x.cell,emp=x.emp;
+    setDiag('EDIT_LOOKUP_OK',employeeId,date,'MODAL_BUILD','');
     const b=document.createElement('div');
     b.className='p1a-editor-backdrop'; b.id='p1aEditor';
     b.innerHTML='<div class="p1a-editor" role="dialog" aria-modal="true">'+
@@ -257,6 +291,7 @@
       '<div class="actions"><button type="button" class="secondary" id="p1aCancel">取消</button><button type="button" id="p1aSave">儲存草稿</button></div>'+
       '</div>';
     document.body.appendChild(b);
+    setDiag('EDIT_MODAL_ATTACHED',employeeId,date,document.getElementById('p1aEditor')?'OK':'MISSING','');
     const nature=el('p1aNature'),shift=el('p1aShift'),ot=el('p1aOt');
     function sync(){
       const rest=nature.value==='REST';
@@ -358,6 +393,30 @@
   function moveWeek(delta){ state.weekStart=addDays(state.weekStart||monday(''),Number(delta||0)*7); load(); }
   function thisWeek(){ state.weekStart=monday(''); load(); }
   function toggleMissing(v){ state.missingOnly=!!v; render(); }
+
+  if(!window.__ABIS_P1A_CELL_CAPTURE_BOUND__){
+    window.__ABIS_P1A_CELL_CAPTURE_BOUND__=true;
+    document.addEventListener('click',function(ev){
+      const raw=ev&&ev.target;
+      const btn=raw&&raw.closest?raw.closest('.p1a-cell[data-p1a-employee-id][data-p1a-date]'):null;
+      if(!btn)return;
+      const root=panel();
+      if(!root||!root.contains(btn))return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      if(typeof ev.stopImmediatePropagation==='function')ev.stopImmediatePropagation();
+      const employeeId=btn.getAttribute('data-p1a-employee-id')||'';
+      const date=btn.getAttribute('data-p1a-date')||'';
+      setDiag('CELL_CLICK_CAPTURE',employeeId,date,'DISPATCH_EDIT','');
+      try{
+        edit(employeeId,date);
+      }catch(e){
+        const msg=e&&e.message?e.message:String(e);
+        setDiag('EDIT_THROW',employeeId,date,'ERROR',msg);
+        if(typeof message==='function')message('排班編輯器錯誤：'+msg,'warning');
+      }
+    },true);
+  }
 
   window.ABIS_P1A={
     version:VERSION,
