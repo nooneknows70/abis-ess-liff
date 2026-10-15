@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_8_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_9_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -558,7 +558,12 @@
     if(!ok)return;
     try{
       const r=await p1aCall('phase1SchedulePublish',{sessionToken:sessionToken,weekStart:state.weekStart,site:state.site});
-      showOk('發布完成：'+Number(r.scheduleWrites||0)+' 筆；LINE '+Number(r.notificationSentCount||0)+' 成功 / '+Number(r.notificationFailedCount||0)+' 未送達');
+      const releaseId=txt(r&&r.releaseId);
+      const lineText=r&&r.notificationSuppressedBySandbox
+        ? 'Sandbox 測試：LINE 已安全抑制，沒有外送'
+        : 'LINE '+Number(r&&r.notificationSentCount||0)+' 成功 / '+Number(r&&r.notificationFailedCount||0)+' 未送達';
+      showOk('發布完成：'+Number(r&&r.scheduleWrites||0)+' 筆；'+lineText+(releaseId?'；Release '+releaseId:''));
+      setDiag('PUBLISH_OK','','',releaseId||'NO_RELEASE_ID','');
       await load({preserveView:true,reason:'PUBLISH'});
     }catch(e){showErr(e);}
   }
