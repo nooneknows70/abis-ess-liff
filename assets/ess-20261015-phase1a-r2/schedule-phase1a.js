@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_10_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_11_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -40,7 +40,8 @@
       .p1a-metric b{display:block;font-size:22px;margin-top:4px}
       .p1a-metric.alert{border-color:#f4b6b6;background:#fff7f7}
       #rc208fScheduleRestPanel{width:100%;max-width:100%;min-width:0;overflow:hidden}
-      .p1a-table-wrap{width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:visible;border:1px solid #dbe4ee;border-radius:12px;overscroll-behavior-x:contain}
+      .p1a-table-wrap{width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:visible;border:1px solid #dbe4ee;border-radius:12px;overscroll-behavior-x:contain;scrollbar-width:none;-ms-overflow-style:none}
+      .p1a-table-wrap::-webkit-scrollbar{width:0!important;height:0!important;display:none!important}
       .p1a-hscroll{display:none;position:fixed;left:16px;bottom:10px;z-index:2147482400;width:calc(100vw - 32px);max-width:calc(100vw - 32px);height:18px;overflow-x:scroll;overflow-y:hidden;box-sizing:border-box;background:transparent}
       .p1a-hscroll.is-visible{display:block}
       @media(min-width:768px) and (max-width:1215px){.p1a-hscroll{display:block}}
@@ -340,7 +341,7 @@
       frozenHead.style.maxWidth=availableWidth+'px';
       frozenTrack.style.transform='translateX('+(-Number(tableWrap.scrollLeft||0))+'px)';
       const inSchedule=typeof accountPanel_==='undefined'||String(accountPanel_||'')==='scheduleRest';
-      const visible=inSchedule&&viewportWidth>=768&&headRect.bottom<=0&&tableRect.bottom>46&&tableRect.top<viewportHeight;
+      const visible=inSchedule&&viewportWidth>=768&&tableRect.top<0&&tableRect.bottom>46&&tableRect.top<viewportHeight;
       frozenHead.classList.toggle('is-visible',visible);
     }
 
@@ -410,6 +411,7 @@
         if(syncing)return;
         syncing=true;
         tableWrap.scrollLeft=hScroll.scrollLeft;
+        if(frozenTrack)frozenTrack.style.transform='translateX('+(-Number(hScroll.scrollLeft||0))+'px)';
         syncing=false;
       },{passive:true});
 
