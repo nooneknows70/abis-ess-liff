@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_5_V151_20261015';
+  const VERSION='P5A2_5_PHASE1A_SIMPLE_SCHEDULE_UI_R2_6_V151_20261015';
   const legacyLoadRest = typeof window.rc208fLoadScheduleRest_ === 'function' ? window.rc208fLoadScheduleRest_ : null;
 
   const state={
@@ -41,11 +41,11 @@
       .p1a-metric.alert{border-color:#f4b6b6;background:#fff7f7}
       #rc208fScheduleRestPanel{width:100%;max-width:100%;min-width:0;overflow:hidden}
       .p1a-table-wrap{width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:visible;border:1px solid #dbe4ee;border-radius:12px;overscroll-behavior-x:contain}
-      .p1a-hscroll{display:none;position:sticky;bottom:8px;z-index:40;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;max-width:100%;padding:6px 8px;box-sizing:border-box;background:rgba(248,250,252,.97);border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 4px 16px rgba(15,23,42,.12)}
+      .p1a-hscroll{display:none;position:fixed;left:16px;bottom:12px;z-index:2147482400;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;width:calc(100vw - 32px);max-width:calc(100vw - 32px);padding:6px 8px;box-sizing:border-box;background:rgba(248,250,252,.97);border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 4px 16px rgba(15,23,42,.18)}
       .p1a-hscroll.is-visible{display:grid}
       .p1a-hscroll button{width:40px!important;min-width:40px!important;height:36px!important;min-height:36px!important;margin:0!important;padding:0!important;border-radius:9px!important}
-      .p1a-hscroll input[type="range"]{width:100%;min-width:0;margin:0;padding:0}
-      .p1a-toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483200;min-width:min(360px,calc(100vw - 32px));max-width:min(620px,calc(100vw - 32px));padding:12px 16px;border-radius:12px;background:#0f5132;color:#fff;font-weight:800;line-height:1.45;box-shadow:0 12px 32px rgba(15,23,42,.28);text-align:center}
+      .p1a-hscroll input[type="range"]{width:100%;min-width:0;height:28px;margin:0;padding:0}
+      .p1a-toast{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483200;min-width:min(360px,calc(100vw - 32px));max-width:min(620px,calc(100vw - 32px));padding:12px 16px;border-radius:12px;background:#0f5132;color:#fff;font-weight:800;line-height:1.45;box-shadow:0 12px 32px rgba(15,23,42,.28);text-align:center}
       .p1a-toast.error{background:#991b1b}
       .p1a-toast.warning{background:#92400e}
       @media(max-width:767px){.p1a-hscroll{display:none!important}}
@@ -323,10 +323,47 @@
 
     function updateHScroll(){
       if(!tableWrap||!tableEl||!hScroll||!hRange)return;
-      const max=Math.max(0,1220-Number(tableWrap.clientWidth||0));
+
+      const viewportWidth=
+        Number(document.documentElement&&document.documentElement.clientWidth||0) ||
+        Number(window.innerWidth||0);
+
+      const rect=tableWrap.getBoundingClientRect();
+      const left=Math.max(12,Number(rect.left||0));
+      const right=Math.min(
+        viewportWidth-12,
+        Number(rect.right||viewportWidth-12)
+      );
+      const controlWidth=Math.max(260,right-left);
+
+      hScroll.style.left=left+'px';
+      hScroll.style.width=controlWidth+'px';
+      hScroll.style.maxWidth=Math.max(260,viewportWidth-24)+'px';
+
+      const max=Math.max(
+        0,
+        Number(tableWrap.scrollWidth||1220)-
+        Number(tableWrap.clientWidth||0)
+      );
+
       hRange.max=String(max);
-      hRange.value=String(Math.min(max,Math.max(0,Number(tableWrap.scrollLeft||0))));
-      hScroll.classList.toggle('is-visible',max>4&&Number(window.innerWidth||0)>=768);
+      hRange.value=String(
+        Math.min(
+          max,
+          Math.max(0,Number(tableWrap.scrollLeft||0))
+        )
+      );
+
+      const inSchedule=
+        typeof accountPanel_==='undefined' ||
+        String(accountPanel_||'')==='scheduleRest';
+
+      hScroll.classList.toggle(
+        'is-visible',
+        max>4 &&
+        viewportWidth>=768 &&
+        inSchedule
+      );
     }
 
     if(tableWrap&&tableEl&&hScroll&&hRange){
@@ -348,6 +385,17 @@
     }
 
     window.__ABIS_P1A_UPDATE_HSCROLL__=updateHScroll;
+
+    if(!window.__ABIS_P1A_HSCROLL_WINDOW_BOUND__){
+      window.__ABIS_P1A_HSCROLL_WINDOW_BOUND__=true;
+      window.addEventListener('resize',function(){
+        try{
+          if(typeof window.__ABIS_P1A_UPDATE_HSCROLL__==='function'){
+            window.__ABIS_P1A_UPDATE_HSCROLL__();
+          }
+        }catch(ignore){}
+      },{passive:true});
+    }
 
     const cellButtons=box.querySelectorAll('.p1a-cell[data-p1a-employee-id][data-p1a-date]');
     cellButtons.forEach(function(btn){
