@@ -8,15 +8,15 @@
     "branch": "main",
     "path": "ABIS_ESS_RELEASE_MANIFEST.json"
   },
-  "releaseSet": "ABIS_ESS_R2180_PROD_20261009_V143",
+  "releaseSet": "ABIS_ESS_PHASE1A_RC1_33_PROD_20261018_V153",
   "releaseStatus": "PROD_CURRENT",
-  "prodCurrentReleaseSet": "ABIS_ESS_R2180_PROD_20261009_V143",
+  "prodCurrentReleaseSet": "ABIS_ESS_PHASE1A_RC1_33_PROD_20261018_V153",
   "initializedAt": "2026-10-07T18:56:00+08:00",
   "initializedFrom": {
     "branch": "main",
     "commit": "531819441f5d40c53ed9423a3bd0dadf9343ea6a"
   },
-  "verifiedAt": "2026-10-09",
+  "verifiedAt": "2026-10-18",
   "verification": {
     "bootstrapInventory": "PASS",
     "sourceAlignment": "PASS",
@@ -93,11 +93,13 @@
       "sourceLocation": "GIT_EXTERNAL_PRIVATE",
       "authorityRepository": "nooneknows70/abis-ess-backend",
       "authorityPath": "ABIS_ESS_BACKEND_RELEASE_MANIFEST.json",
-      "deployedSourceCommit": "e2ddf2312b6bc6ccd1066005ba331d1521173b67",
-      "sourceStatus": "CAPTURED_AND_ALIGNED",
+      "deployedSourceCommit": "64950414d931d84085b087040e28eb3f3f091c37",
+      "sourceStatus": "PROD_CURRENT_ALIGNED",
       "authorityStatus": "VERIFIED",
-      "deploymentStatus": "VERIFIED",
-      "runtimeVerification": "PASS"
+      "deploymentStatus": "VERIFIED_AT_V153",
+      "runtimeVerification": "PASS",
+      "backendManifestAuthorityCommit": "8f31add3e243c0a774737c46bbcdb3fa871431c7",
+      "appsScriptVersion": 153
     },
     "attendanceSchedule": {
       "componentType": "APPS_SCRIPT_ATTENDANCE_SCHEDULE",
@@ -253,16 +255,16 @@
     "algorithm": "SHA-256",
     "scope": "PROD_CURRENT_RELEASE_SET",
     "status": "PASS",
-    "backendSourceCommit": "e2ddf2312b6bc6ccd1066005ba331d1521173b67",
+    "backendSourceCommit": "64950414d931d84085b087040e28eb3f3f091c37",
     "liffSourceCommit": "b3427432864aeb3832e1088230c7e6de94818e5c",
-    "capturedAt": "2026-10-09"
+    "capturedAt": "2026-10-18"
   },
   "prodCurrent": {
-    "releaseSet": "ABIS_ESS_R2180_PROD_20261009_V143",
+    "releaseSet": "ABIS_ESS_PHASE1A_RC1_33_PROD_20261018_V153",
     "backendSource": {
       "repository": "nooneknows70/abis-ess-backend",
-      "sourceCommit": "e2ddf2312b6bc6ccd1066005ba331d1521173b67",
-      "backendManifestAuthorityCommit": "45e8927fa6d4d1bd9a059e95c4b9ed9525a1c9a0"
+      "sourceCommit": "64950414d931d84085b087040e28eb3f3f091c37",
+      "backendManifestAuthorityCommit": "8f31add3e243c0a774737c46bbcdb3fa871431c7"
     },
     "liffSource": {
       "repository": "nooneknows70/abis-ess-liff",
@@ -270,27 +272,35 @@
     },
     "productionDeployment": {
       "deploymentId": "AKfycbxWYmfVQB4DOlnz0rKPqN45IMwtIEdZ-t4GnhiS8PuxmnPX-Z46yiH-EU331X0kiweR",
-      "version": 143,
-      "description": "R2180D RC1.2.2 PROD git e2ddf231"
+      "version": 153,
+      "description": "Phase1A RC1.33 schedule import zh-TW UI 2026-10-18"
     },
     "alignment": {
-      "gitToHead": "PASS_50_50",
-      "gitToDeployment": "PASS_50_50"
+      "gitToHead": "PASS_74_74",
+      "gitToDeployment": "PASS_74_74"
     },
     "runtime": {
       "R2174": "PASS_LIVE",
       "R2180A": "PASS",
       "R2180B": "PASS_LIVE",
       "R2180C": "PASS",
-      "R2180D": "PASS_PRODUCTION"
+      "R2180D": "PASS_PRODUCTION",
+      "Phase1A": "PASS_PRODUCTION"
     },
     "postDeploySmoke": {
       "web": "PASS",
-      "liff": "PASS"
+      "liff": "PASS",
+      "phase1AZhTwUi": "PASS",
+      "googleSheetImport": "PASS_NOOP_MATCH_66"
     },
     "releaseEvidence": {
       "repository": "nooneknows70/abis-ess-backend",
-      "path": "release/PROD_CURRENT_V143_20261009.json"
+      "path": "release/PROD_CURRENT_V153_20261018.json"
+    },
+    "rollback": {
+      "appsScriptVersion": 152,
+      "backendSourceCommit": "422644073fafd65f76f0839b2fba6de37dd6acdb",
+      "status": "PRESERVED"
     }
   }
 }
