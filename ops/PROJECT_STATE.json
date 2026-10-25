@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-10-26T03:00:00+08:00",
+  "repository": "nooneknows70/abis-ess-liff",
+  "branch": "main",
+  "role": "ESS_LIFF_FRONTEND",
+  "centralRegistry": "nooneknows70/abis-release-control/ops/ABIS_MULTI_REPO_SSOT.json",
+  "releaseManifest": "ABIS_ESS_RELEASE_MANIFEST.json",
+  "releaseStatus": "PROD_CURRENT_FRONTEND_V153",
+  "releaseFlow": "ABIS_RELEASE_FLOW_V2",
+  "crossRepoRules": {
+    "centralMayOverrideLocalManifest": false,
+    "secretsAllowed": false,
+    "updateAfterMaterialStateChange": true
+  }
+}
