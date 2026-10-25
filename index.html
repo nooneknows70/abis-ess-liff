@@ -90,20 +90,80 @@
       actionsEl.classList.remove('hide');
     }
 
-    function routeToken() {
-      const value = new URLSearchParams(location.search).get('rt') || '';
-      return /^[A-Za-z0-9._~-]{1,256}$/.test(value) ? value : '';
+    // HF2 Draft: recover an attendance rt from either the restored LIFF URL
+    // or LINE's liff.state wrapper. This remains untrusted until the official
+    // Backend resolves the opaque token against the authenticated Session.
+    function readLiffRouteIntent_(search, href) {
+      const direct = new URLSearchParams(String(search || ''));
+      let nested = null;
+      if (direct.has('liff.state')) {
+        const state = String(direct.get('liff.state') || '');
+        // Only a same-origin LIFF-relative path/query is permitted. Never
+        // resolve an external URL, protocol-relative URL, or backslash path.
+        if (!/^(?:\/(?!\/)|\?)/.test(state) || state.indexOf('\\') >= 0) {
+          return { invalid: true, reason: 'UNSAFE_LIFF_STATE' };
+        }
+        try {
+          const base = new URL(String(href));
+          const stateUrl = new URL(state, base.origin + base.pathname);
+          if (stateUrl.origin !== base.origin) {
+            return { invalid: true, reason: 'UNSAFE_LIFF_STATE' };
+          }
+          nested = stateUrl.searchParams;
+        } catch (ignore) {
+          return { invalid: true, reason: 'INVALID_LIFF_STATE' };
+        }
+      }
+
+      const directTokens = direct.getAll('rt');
+      const nestedTokens = nested ? nested.getAll('rt') : [];
+      const hadRouteToken = directTokens.length > 0 || nestedTokens.length > 0;
+      if (directTokens.length > 1 || nestedTokens.length > 1 ||
+          (directTokens.length && nestedTokens.length &&
+           directTokens[0] !== nestedTokens[0])) {
+        return { invalid: true, reason: 'ROUTE_TOKEN_CONFLICT' };
+      }
+      const token = directTokens.length ? directTokens[0] :
+        (nestedTokens.length ? nestedTokens[0] : '');
+      if (hadRouteToken && !/^[A-Za-z0-9._~-]{1,256}$/.test(token)) {
+        return { invalid: true, reason: 'INVALID_ROUTE_TOKEN' };
+      }
+
+      const hasExplicitRoute = direct.has('route') ||
+        !!(nested && nested.has('route'));
+      const rawRoute = String(direct.has('route') ? direct.get('route') :
+        (nested ? nested.get('route') : '') || '').trim().toLowerCase();
+      const route = ALLOWED_BOOT_ROUTES.has(rawRoute) ? rawRoute : 'home';
+      return {
+        invalid: false, routeToken: token, hadRouteToken,
+        bootRoute: route, hasExplicitRoute,
+        forceFullAuth: direct.get('force') === '1' ||
+          !!(nested && nested.get('force') === '1')
+      };
     }
 
-    function bootRoute() {
-      const value = String(
-        new URLSearchParams(location.search).get('route') || ''
-      ).trim().toLowerCase();
-      return ALLOWED_BOOT_ROUTES.has(value) ? value : 'home';
-    }
+    // Capture the initial link BEFORE liff.init(), since the SDK or login
+    // redirect may rewrite the visible query parameters.
+    const initialLiffRouteIntent_ =
+      readLiffRouteIntent_(location.search, location.href);
 
-    function forceFullAuth() {
-      return new URLSearchParams(location.search).get('force') === '1';
+    function currentLiffRouteIntent_() {
+      const now = readLiffRouteIntent_(location.search, location.href);
+      const first = initialLiffRouteIntent_;
+      if (first.invalid) return first;
+      if (now.invalid) return now;
+      if (first.routeToken && now.routeToken &&
+          first.routeToken !== now.routeToken) {
+        return { invalid: true, reason: 'ROUTE_TOKEN_CHANGED' };
+      }
+      return {
+        invalid: false,
+        routeToken: now.routeToken || first.routeToken,
+        hadRouteToken: now.hadRouteToken || first.hadRouteToken,
+        bootRoute: now.hasExplicitRoute ? now.bootRoute : first.bootRoute,
+        hasExplicitRoute: now.hasExplicitRoute || first.hasExplicitRoute,
+        forceFullAuth: now.forceFullAuth || first.forceFullAuth
+      };
     }
 
     const REAUTH_FLAG = '__abisReauth';
@@ -135,11 +195,16 @@
     }
 
     function reauthRedirectUri() {
-      const params = new URLSearchParams(location.search);
-      const liffState = params.get('liff.state');
-      const target = liffState
-        ? new URL('.' + liffState, location.href)
-        : new URL(location.href);
+      const intent = currentLiffRouteIntent_();
+      if (intent.invalid) {
+        throw new Error('出勤連結參數無效，請重新從 LINE 通知開啟。');
+      }
+      // Do not navigate using an arbitrary liff.state path. Preserve only
+      // validated route fields on the same LIFF origin through re-login.
+      const target = new URL(location.pathname, location.origin);
+      if (intent.hasExplicitRoute) target.searchParams.set('route', intent.bootRoute);
+      if (intent.hadRouteToken) target.searchParams.set('rt', intent.routeToken);
+      if (intent.forceFullAuth) target.searchParams.set('force', '1');
       target.searchParams.set(REAUTH_FLAG, '1');
       return target.toString();
     }
@@ -190,13 +255,17 @@
       form.target = '_self';
       form.acceptCharset = 'UTF-8';
 
+      const intent = currentLiffRouteIntent_();
+      if (intent.invalid) {
+        throw new Error('出勤連結參數無效，請重新從 LINE 通知開啟。');
+      }
       const fields = {
         mode: 'liffauth',
         idToken: idToken,
         accessToken: accessToken || '',
-        routeToken: routeToken(),
-        bootRoute: bootRoute(),
-        forceFullAuth: forceFullAuth() ? '1' : '',
+        routeToken: intent.routeToken,
+        bootRoute: intent.bootRoute,
+        forceFullAuth: intent.forceFullAuth ? '1' : '',
         bridgeVersion: CONFIG.bridgeVersion,
         bridgeStartedAt: String(BRIDGE_EPOCH_T0),
         bridgeElapsedMs: String(Math.max(0, Math.round(performance.now() - BRIDGE_T0))),
@@ -229,6 +298,13 @@
           withLoginOnExternalBrowser: true
         });
         LIFF_INIT_MS = Math.max(0, Math.round(performance.now() - liffT0));
+
+        // If a secure rt was present but malformed/lost in LINE state
+        // processing, do not silently launch an ordinary HOME session.
+        if (currentLiffRouteIntent_().invalid) {
+          fail('出勤連結參數有誤，請重新從原始 LINE 通知開啟。');
+          return;
+        }
 
         if (!liff.isLoggedIn()) {
           setStatus('正在連線 LINE…', false);
