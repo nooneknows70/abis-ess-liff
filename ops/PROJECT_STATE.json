@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T11:27:03+08:00",
+  "updatedAt": "2026-10-26T11:37:05.343+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -52,7 +52,7 @@
       "productionOrStageWritesAuthorized": false
     },
     "rc135H1dB": {
-      "status": "Q1_Q8_RECORDED_OWNER_ATTESTED_UI_WITH_RUNTIME_HOLD",
+      "status": "Q10_LIFF_OWNER_CONSOLE_PASS__EFFECTIVE_STAGE_OAUTH_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -67,7 +67,8 @@
         "Q6": "A",
         "Q7": "A",
         "Q8": "A",
-        "Q9": "A_OPS_ONLY"
+        "Q9": "A_OPS_ONLY",
+        "Q10": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -79,7 +80,8 @@
         "q7LinkedOfficialAccount": "PASS_OWNER_ATTESTED_MATCH_NOT_INDEPENDENTLY_LIVE_VERIFIED",
         "q8SixCellRichMenuUi": "PASS_OWNER_ATTESTED_HISTORICAL_RM10E_REFERENCE_ONLY",
         "historicalRichMenuCutover": "2026-10-07 RM-10E PASS historical evidence",
-        "frozenLiFFSource": "main index.html has six navigation routes plus additional payroll route; live user's specific Rich Menu link not read"
+        "frozenLiFFSource": "main index.html has six navigation routes plus additional payroll route; live user's specific Rich Menu link not read",
+        "q10LiffConsole": "PASS_OWNER_ATTESTED_ENDPOINT_MATCH_OPENID_PRESENT"
       },
       "authority": {
         "frontendManifestVersion": 153,
@@ -103,7 +105,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "READ_ONLY: check static LIFF boot route/channel provider architecture and isolated runner safety; do not open live OAuth/LIFF login, get User ID, call LINE API, alter rich menu or deploy LIFF.",
+      "nextAction": "Q11 read-only existing RC135 dedicated synthetic Stage Overview > Project OAuth Scopes: NONE / SOME / UNKNOWN, no property values or changes",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -139,6 +141,31 @@
           "PRODUCTION_HOLD"
         ],
         "releaseBoundary": "LIFF manifest V153 unchanged; independent Backend manifest V163 / concurrent V164 runtime reconciliation HOLD are not treated as a LIFF version drift"
+      },
+      "q10ReadOnlyConsoleGate": {
+        "choice": "A",
+        "status": "PASS_OWNER_ATTESTED_CONSOLE_ONLY",
+        "date": "2026-10-26",
+        "existingLiffEndpoint": "MATCH_FROZEN_GITHUB_PAGES_BRIDGE",
+        "openidScope": "PRESENT_OWNER_ATTESTED",
+        "independentConsoleApiReadback": false,
+        "realLiffLogin": false,
+        "realLineIdRead": false,
+        "realTokenRead": false,
+        "realLineApiCalls": 0,
+        "sourceCodeModified": false,
+        "productionModified": false,
+        "nextManualGate": "Q11 read-only existing RC135 dedicated synthetic Stage Overview > Project OAuth Scopes: NONE / SOME / UNKNOWN, no property values or changes",
+        "syntheticStageScope": "NOT_REAL_UID_RUNNER",
+        "runtimeAndSecurityHolds": [
+          "EFFECTIVE_STAGE_OAUTH_PENDING",
+          "LOCAL_OS_RUNNER_ACL_PENDING",
+          "REAL_UID_MATCH_UNVERIFIED",
+          "TOKEN_TO_CHANNEL_HOLD",
+          "LIVE_MENU_URI_NOT_READ",
+          "LINE_SEND_HOLD",
+          "PRODUCTION_HOLD"
+        ]
       }
     }
   }
