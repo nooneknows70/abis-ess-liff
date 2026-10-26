@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T03:35:00+08:00",
+  "updatedAt": "2026-10-26T09:22:00+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -19,5 +19,22 @@
     "repository": "nooneknows70/abis-release-control",
     "path": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_POLICY_FROZEN.md",
     "appliesToAllEmployeeSystemConversations": true
+  },
+  "workstreams": {
+    "officeOvertimeApplication": {
+      "issue": "https://github.com/nooneknows70/abis-ess-backend/issues/62",
+      "policiesConfirmed": 30,
+      "phase": "PHASE1",
+      "stage": "S0",
+      "gateStatus": "HOLD_RUNTIME_AND_STAGE_ISOLATION_EVIDENCE_MISSING",
+      "localFrontendManifestVersion": 153,
+      "backendReleaseManifestVersion": 163,
+      "compatibility": "UNVERIFIED_NOT_AUTOMATIC_DRIFT",
+      "frontendSourceDelta": "PASS_ONLY_OPS_METADATA_FROM_V153_AUTHORITY_TO_MAIN",
+      "stageIsolation": "OFFICE_OT_STAGE_APPS_SCRIPT_UNVERIFIED",
+      "productionMutationAuthorized": false,
+      "evidenceDate": "2026-10-26",
+      "nextAction": "Use read-only source/Stage identity and frontend-backend contract verification; do not deploy LIFF or change Manifest"
+    }
   }
 }
