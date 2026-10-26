@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T11:54:56.203+08:00",
+  "updatedAt": "2026-10-26T12:00:58.596+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -63,7 +63,7 @@
       "newStageZeroState": "HOLD_UNVERIFIED"
     },
     "rc135H1dB": {
-      "status": "Q11_WRONG_PROJECT_RC135_OAUTH_UNVERIFIED",
+      "status": "Q11_PASS_OWNER_ZERO_SCOPES__Q12_PROPERTIES_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -80,7 +80,7 @@
         "Q8": "A",
         "Q9": "A_OPS_ONLY",
         "Q10": "A",
-        "Q11": "A_SUBMITTED_INVALID_FOR_TARGET"
+        "Q11": "A_ZERO_REQUESTED_SCOPES_OWNER_ATTESTED"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -93,7 +93,9 @@
         "q8SixCellRichMenuUi": "PASS_OWNER_ATTESTED_HISTORICAL_RM10E_REFERENCE_ONLY",
         "historicalRichMenuCutover": "2026-10-07 RM-10E PASS historical evidence",
         "frozenLiFFSource": "main index.html has six navigation routes plus additional payroll route; live user's specific Rich Menu link not read",
-        "q10LiffConsole": "PASS_OWNER_ATTESTED_ENDPOINT_MATCH_OPENID_PRESENT"
+        "q10LiffConsole": "PASS_OWNER_ATTESTED_ENDPOINT_MATCH_OPENID_PRESENT",
+        "q11DedicatedStageScopes": "PASS_OWNER_ATTESTED_ZERO_REQUESTED_SCOPES",
+        "q11FourScopeImage": "SEPARATE_ABIS_POLICY_A_STAGE_NOT_TARGET"
       },
       "authority": {
         "frontendManifestVersion": 153,
@@ -117,7 +119,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Open ABIS_RC135_DEDICATED_SYNTHETIC_STAGE Overview > Project OAuth Scopes; scope names/count only; hide Script ID, credentials and project-specific tokens.",
+      "nextAction": "Q12: inspect existing RC135 Stage Project Settings > Script Properties list count only (NONE / NONZERO / UNKNOWN); never show values",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -190,8 +192,8 @@
         ],
         "count": 4,
         "screenshotProjectNameVisible": false,
-        "projectAttribution": "HOLD_SAME_SCOPE_SET_ALREADY_RECORDED_FOR_OFFICE_OT_RC5",
-        "rc135ActualScopes": "UNVERIFIED",
+        "projectAttribution": "ABIS_POLICY_A_STAGE_OWNER_EXPLICIT_CAPTION",
+        "rc135ActualScopes": "OWNER_ATTESTED_ZERO_REQUESTED_SCOPES_IN_TARGET_UI",
         "tokenOrRealLineIdRead": false,
         "stageUse": "NO_REAL_IDENTITY_VERIFICATION_NOT_READY",
         "nextHumanGate": "Open ABIS_RC135_DEDICATED_SYNTHETIC_STAGE Overview > Project OAuth Scopes; scope names/count only; hide Script ID, credentials and project-specific tokens.",
@@ -209,7 +211,32 @@
         "declaredNameTier": "OWNER_CAPTION_NOT_IN_IMAGE",
         "q11Target": "ABIS_RC135_DEDICATED_SYNTHETIC_STAGE",
         "q12Needed": false,
-        "gate": "HOLD_WRONG_PROJECT"
+        "gate": "HOLD_WRONG_PROJECT",
+        "supersededAsQ11TargetEvidence": true
+      },
+      "q11OwnerAttestedCorrection": {
+        "choice": "A",
+        "targetProject": "ABIS_RC135_DEDICATED_SYNTHETIC_STAGE",
+        "requestedOAuthScopeCount": 0,
+        "status": "PASS_SOURCE_OWNER_EXPLICIT_TARGET_UI_ATTESTATION",
+        "photographedOtherProject": "ABIS_POLICY_A_STAGE",
+        "photoExcludedForTarget": true,
+        "independentRuntimeReadback": false,
+        "actualOAuthGrantedPrivileges": "NOT_VERIFIED",
+        "localOsAcl": "UNVERIFIED",
+        "scriptProperties": "COUNT_UNVERIFIED",
+        "realUidRead": false,
+        "tokenAccess": false,
+        "lineCalls": 0,
+        "nextManualGate": "Q12: inspect existing RC135 Stage Project Settings > Script Properties list count only (NONE / NONZERO / UNKNOWN); never show values",
+        "hardHolds": [
+          "INDEPENDENT_AUTH_RUNTIME_HOLD",
+          "SCRIPT_PROPERTIES_COUNT_PENDING",
+          "OWNER_ID_MATCH_HOLD",
+          "TOKEN_TO_CHANNEL_HOLD",
+          "LIVE_PUSH_HOLD",
+          "PRODUCTION_HOLD"
+        ]
       }
     }
   }
