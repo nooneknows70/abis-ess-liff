@@ -115,3 +115,12 @@ Cross-repo note:
 - Owner-created Office OT synthetic Stage identity verified by authenticated Google Drive metadata on 2026-10-26. Project name: `ABIS_ESS_OT_STAGE_SYNTHETIC_ONLY_20261026`; native Google Apps Script file, owner-only metadata.
 - Creation gate: PASS. Zero-state source/Deployments/Triggers/Properties/OAuth: UNVERIFIED; S0 remains HOLD pending new project read-only screenshots.
 - No LIFF code, Manifest, LINE, Stage source, Trigger, Deployment or Production changes. Existing RC5 is not approved for Office OT testing; Q1-Q30 policy unchanged.
+
+## RC1.35 H1D-B Q11 — dedicated synthetic Stage 0 requested OAuth scopes confirmed by owner (2026-10-26)
+
+- **Q11 A:** Source Owner explicitly confirms the `ABIS_RC135_DEDICATED_SYNTHETIC_STAGE` Apps Script Overview lists **0 requested Project OAuth Scopes**. This is a **PASS_OWNER_ATTESTED** target-project observation, NOT API-verified effective runtime OAuth authorization.
+- Uploaded picture depicting four scopes was explicitly for a different project, `ABIS_POLICY_A_STAGE`, **not** the RC1.35 Stage. Earlier Q11 invalidation / uncertain attribution in this LIFF SSOT is **superseded** by Source Owner's target-specific statement. Do not re-ask Q11 or screenshot attribution.
+- Existing original RC1.35 synthetic Stage project is only for isolated synthetic translation/notification preview, not a real identity runner. Prior owner-submitted two .gs source files, V8 manifest and 0 Trigger/0 Deployment UI evidence remain historical; they do not prove all runtime permissions/ACLs.
+- **Q12 next one read-only manual node:** in same RC135 Stage Apps Script, open Project Settings > Script Properties; report only **zero/nonzero/unknown entry count**. Never read/copy property values or credentials, run scripts, change OAuth, deploy or trigger.
+- `Q11_PASS_OWNER_ATTESTED_ZERO_REQUESTED_SCOPES / Q12_SCRIPT_PROPERTIES_PENDING / REAL_UID_HOLD / INDEPENDENT_OAUTH_ACL_HOLD / LINE_SEND_HOLD / PRODUCTION_HOLD`. Frontend LIFF Manifest V153 unchanged, independent Backend V165 release untouched.
+- Central Q11 correction handoff: https://github.com/nooneknows70/abis-release-control/commit/38702d8a6fdf221b7252a23e9e1d143a9c246840.
