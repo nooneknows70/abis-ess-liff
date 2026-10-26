@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T10:56:00+08:00",
+  "updatedAt": "2026-10-26T11:14:08.575+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -96,7 +96,43 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "READ_ONLY: check static LIFF boot route/channel provider architecture and isolated runner safety; do not open live OAuth/LIFF login, get User ID, call LINE API, alter rich menu or deploy LIFF."
+      "nextAction": "READ_ONLY: check static LIFF boot route/channel provider architecture and isolated runner safety; do not open live OAuth/LIFF login, get User ID, call LINE API, alter rich menu or deploy LIFF.",
+      "preQ10StaticAudit": {
+        "date": "2026-10-26",
+        "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
+        "sourceChecks": {
+          "liffIdMatchesBackendMainFallback": true,
+          "liffIdMatchesBackendRichMenuFallback": true,
+          "richMenuSixRoutesAllowed": true,
+          "bridgeBackendDeploymentIdMatchesBackendManifest": true
+        },
+        "localSyntheticVerifier": {
+          "testsPassed": 68,
+          "total": 68,
+          "sha256Passed": 12,
+          "sha256Total": 12,
+          "cliArgRejected": true,
+          "evidenceTier": "SYNTHETIC_ONLY"
+        },
+        "requiredScope": "openid",
+        "profileScopeForIdToken": "NOT_REQUIRED",
+        "liveLineConsoleEndpoint": "UNVERIFIED",
+        "liveLineConsoleScopes": "UNVERIFIED",
+        "oauthAcl": "UNVERIFIED",
+        "realUidRead": false,
+        "tokenRead": false,
+        "lineApiCalls": 0,
+        "nextHumanGate": "Q10 single read-only LIFF Console confirmation: Endpoint URL equals frozen GitHub Pages bridge; scopes include openid. No login, configuration changes or live data access.",
+        "hardHolds": [
+          "REAL_OWNER_UID_MATCH_UNVERIFIED",
+          "LIVE_LIFF_ENDPOINT_UNVERIFIED",
+          "OAUTH_ACL_HOLD",
+          "CHANNEL_TOKEN_BINDING_HOLD",
+          "LINE_SEND_HOLD",
+          "PRODUCTION_HOLD"
+        ],
+        "releaseBoundary": "LIFF manifest V153 unchanged; independent Backend manifest V163 / concurrent V164 runtime reconciliation HOLD are not treated as a LIFF version drift"
+      }
     }
   }
 }
