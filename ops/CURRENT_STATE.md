@@ -36,3 +36,17 @@ Cross-repo note:
 - Git comparison from V153 authority commit to LIFF `main` found only `ops/` additions, not frontend asset/source edits at this S0 check.
 - S0 = `HOLD_RUNTIME_AND_STAGE_ISOLATION_EVIDENCE_MISSING` (shared workstream state, not a LIFF release failure). Office OT Stage Apps Script, frontend test route, allowed target IDs and LINE outbound safety have not been proven.
 - No LIFF code, assets, Release Manifest, live LINE or deployment mutation authorized. Next: read-only compatibility and Stage isolation checks. Tracking: [Backend Issue #62](https://github.com/nooneknows70/abis-ess-backend/issues/62).
+
+## RC1.35 H1D-B — Q1–Q8 cross-window LINE/LIFF evidence (2026-10-26)
+
+- Owner Q1–Q8 all **A**; Q9 **A** authorizes **only** cross-repo `ops/` SSOT metadata updates, not LIFF code/assets or live Rich Menu.
+- Q1: one Source Owner personal LINE test candidate, fixed synthetic message; no group/multi-recipient. Q2: same Messaging API Channel ID on two official UIs, `PASS_OWNER_ATTESTED`, no ID stored. Q3: owner handset follows official account and private binding **status only** was read-only matched; true User ID not read.
+- Q4: future isolated one-record ID comparison approved **only after** runner/ACL/OAuth safety gate, not yet executed. Q5: local hermetic verifier approved; 68/68 synthetic tests **previous-conversation reported**, not re-run here.
+- Q6: existing LINE Login/LIFF accepted as candidate, static Backend `main` reviewed; invoking existing live login or OAuth callback may write Session/binding or send, so **forbidden** under read-only.
+- Q7: Login Linked Official Account matches ABIS internal employee official account by `PASS_OWNER_ATTESTED`; this does not independently prove live token/provider/channel association.
+- Q8: Source Owner phone shows frozen six-cell menu, `PASS_OWNER_ATTESTED`. 2026-10-07 FAST4 RC1.3 + RM-10E release handoff is historical PASS. Git `main` LIFF bridge retains the `account` route, and Backend menu contract defines six routes; however current active Rich Menu ID, per-action URI and `LINE_LIFF_APP_URL` Production value remain **UNVERIFIED**.
+- Independent release authority: LIFF Manifest remains frontend **V153**; Backend Manifest recorded **V163** at this audit, version difference is not itself drift. Existing unrelated Office OT S0 and REST33 workstreams must stay untouched.
+- H1D-B feature PR #76 was observed **DRAFT, NOT MERGED**. No new Rich Menu creation, RM10 Cutover, rollback or LIFF Deployment is authorized.
+- Holds: `REAL_UID_NOT_READ / IDENTITY_NOT_VERIFIED / RUNNER_ACL_OAUTH_HOLD / LIVE_MENU_URI_AND_LIFF_RUNTIME_UNVERIFIED / TOKEN_TO_CHANNEL_HOLD / LINE_SEND_HOLD / PRODUCTION_HOLD`.
+- Next: read-only LIFF/Provider/static URL and runner isolation checks. No real ID/Token, no live LINE Login/API/Push, no source/Manifest/Production mutation.
+- Central SSOT [Q1–Q8 record](https://github.com/nooneknows70/abis-release-control/commit/e40b738a312b78fa0119216e5092999f0257683e).
