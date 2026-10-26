@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T12:00:58.596+08:00",
+  "updatedAt": "2026-10-26T12:14:07.049+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -63,7 +63,7 @@
       "newStageZeroState": "HOLD_UNVERIFIED"
     },
     "rc135H1dB": {
-      "status": "Q11_PASS_OWNER_ZERO_SCOPES__Q12_PROPERTIES_PENDING",
+      "status": "Q12_ZERO_PROPERTIES_OWNER_ATTESTED__Q13_MAC_ENV_PREFLIGHT_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -80,7 +80,8 @@
         "Q8": "A",
         "Q9": "A_OPS_ONLY",
         "Q10": "A",
-        "Q11": "A_ZERO_REQUESTED_SCOPES_OWNER_ATTESTED"
+        "Q11": "A_ZERO_REQUESTED_SCOPES_OWNER_ATTESTED",
+        "Q12": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -95,7 +96,9 @@
         "frozenLiFFSource": "main index.html has six navigation routes plus additional payroll route; live user's specific Rich Menu link not read",
         "q10LiffConsole": "PASS_OWNER_ATTESTED_ENDPOINT_MATCH_OPENID_PRESENT",
         "q11DedicatedStageScopes": "PASS_OWNER_ATTESTED_ZERO_REQUESTED_SCOPES",
-        "q11FourScopeImage": "SEPARATE_ABIS_POLICY_A_STAGE_NOT_TARGET"
+        "q11FourScopeImage": "SEPARATE_ABIS_POLICY_A_STAGE_NOT_TARGET",
+        "q12ZeroScriptProperties": "PASS_OWNER_ATTESTED_IN_DEDICATED_RC135",
+        "q12DriveAclMetadata": "PASS_AUTHENTICATED_OWNER_ONLY_FILE_METADATA_NOT_RUNTIME"
       },
       "authority": {
         "frontendManifestVersion": 153,
@@ -119,7 +122,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q12: inspect existing RC135 Stage Project Settings > Script Properties list count only (NONE / NONZERO / UNKNOWN); never show values",
+      "nextAction": "Q13 Mac hermetic runner read-only environment preflight: uname -s, node --version, umask; no local file modification",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -235,6 +238,40 @@
           "OWNER_ID_MATCH_HOLD",
           "TOKEN_TO_CHANNEL_HOLD",
           "LIVE_PUSH_HOLD",
+          "PRODUCTION_HOLD"
+        ]
+      },
+      "q12OwnerProperties": {
+        "choice": "A",
+        "target": "ABIS_RC135_DEDICATED_SYNTHETIC_STAGE",
+        "scriptPropertiesCount": 0,
+        "evidenceTier": "PASS_OWNER_ATTESTED_ZERO_PROPERTIES",
+        "propertyValuesRead": false,
+        "driveMetadata": {
+          "fileMimeType": "application/vnd.google-apps.script",
+          "shared": false,
+          "permissionCount": 1,
+          "roles": [
+            "owner"
+          ],
+          "tier": "PASS_CONNECTED_DRIVE_FILE_METADATA_NOT_RUNTIME_ACL"
+        },
+        "previousRequestedOauthScopes": 0,
+        "previousTriggers": 0,
+        "previousDeployments": 0,
+        "stagePurpose": "SYNTHETIC_ONLY_NOT_REAL_UID_VERIFICATION",
+        "realUidRead": false,
+        "channelTokenRead": false,
+        "lineApiCalls": 0,
+        "productionChanges": 0,
+        "nextManualGate": "Q13 Mac hermetic runner read-only environment preflight: uname -s, node --version, umask; no local file modification",
+        "holds": [
+          "REAL_UID_MATCH_HOLD",
+          "MAC_OS_ISOLATED_RUNNER_ACL_PENDING",
+          "APPS_SCRIPT_RUNTIME_SOURCE_PARITY_UNVERIFIED",
+          "TOKEN_CHANNEL_HOLD",
+          "LIVE_MENU_URI_HOLD",
+          "LINE_SEND_HOLD",
           "PRODUCTION_HOLD"
         ]
       }
