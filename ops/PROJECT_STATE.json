@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T12:03:13.491Z",
+  "updatedAt": "2026-10-26T12:35:47.931Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q21_TMPDIR_ACL_ABSENT_PASS_OWNER_ATTESTED__Q22_TMPDIR_CANONICAL_ANCESTORS_READ_ONLY_PENDING",
+      "status": "H1DB3_Q23_CANONICAL_ANCESTOR_ACL_ABSENT_PASS_OWNER_ATTESTED__Q24_LEXICAL_SYMLINK_CHAIN_READ_ONLY_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -142,7 +142,9 @@
         "Q18": "A",
         "Q19": "A",
         "Q20": "A",
-        "Q21": "A"
+        "Q21": "A",
+        "Q22": "A",
+        "Q23": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -183,7 +185,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q22 READ_ONLY on same Mac: inspect canonicalized existing os.tmpdir() ancestor directory metadata using Node fs.realpathSync/lstatSync; report only Q22_ANCESTOR_CHECK=PASS/HOLD and Q22_ANCESTOR_SAFE=YES/NO/UNKNOWN. Require each canonical ancestor root-owned or current macOS user-owned and no group/other write except root-owned sticky directories. Do not print paths, Unix UID, names, file contents, ACL body or any LINE data; no mkdir/chmod/login/LINE API/Production writes. Other lexical symlink, ancestor ACL, process/network/credential gates remain HOLD.",
+      "nextAction": "Q24 READ_ONLY on same Mac: check os.tmpdir() lexical components for symbolic links, validate link owners (root/current user) and containing parent permission/sticky rules, report only Q24_LEXICAL_LINK_CHECK=PASS/HOLD and Q24_LEXICAL_LINK_SAFE=YES/NO/UNKNOWN; do not print paths/UID/ACL, read credentials, login, call LINE API, write files or modify Production. No real identity runner authorization.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -577,6 +579,41 @@
         "realLineUserIdRead": false,
         "tokenOrSecretRead": false,
         "oauthOrLoginPerformed": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
+      },
+      "q22OwnerMacCanonicalAncestors": {
+        "choice": "A",
+        "reportedAncestorCheck": "PASS",
+        "reportedAncestorSafe": "YES",
+        "result": "Q22_CANONICAL_ANCESTOR_OWNER_AND_WRITE_MODE_PASS_OWNER_ATTESTED",
+        "evidenceTier": "PASS_SOURCE_OWNER_ATTESTED_NO_INDEPENDENT_MAC_TERMINAL_READBACK",
+        "evidenceDate": "2026-10-26",
+        "inspectionScope": "fs.realpathSync(os.tmpdir()) canonical parent chain lstat directory ownership and POSIX group/other write, with root-owned sticky-directory exemption",
+        "independentOsProof": false,
+        "canonicalAncestorAclVerified": false,
+        "lexicalSymlinkPathVerified": false,
+        "actualLocalRunnerSecurityApproved": false,
+        "realLineUserIdRead": false,
+        "tokenOrSecretRead": false,
+        "loginOrOauthExecuted": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
+      },
+      "q23OwnerMacCanonicalAncestorAcl": {
+        "choice": "A",
+        "reportedAncestorAclCheck": "PASS",
+        "reportedAncestorAclAbsent": "YES",
+        "result": "CANONICAL_TMPDIR_ANCESTOR_ACL_ABSENT_OWNER_ATTESTED",
+        "evidenceTier": "PASS_SOURCE_OWNER_ATTESTED_NO_INDEPENDENT_TERMINAL_READBACK",
+        "recordedAt": "2026-10-26T12:35:47.931Z",
+        "canonicalAncestorOnly": true,
+        "independentMacReadback": false,
+        "lexicalSymlinkTrustVerified": false,
+        "localRunnerApproved": false,
+        "realLineUidRead": false,
+        "tokenRead": false,
+        "loginExecuted": false,
         "lineApiCalls": 0,
         "productionWrites": 0
       }
