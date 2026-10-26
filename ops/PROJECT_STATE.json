@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T04:52:31.332Z",
+  "updatedAt": "2026-10-26T05:02:59.477Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -77,7 +77,7 @@
       "stageRuntimeVerified": false
     },
     "rc135H1dB": {
-      "status": "Q14_OWNER_CHILD_UMASK_PASS__Q15_Q5_ARCHIVE_INVENTORY_PENDING",
+      "status": "Q15_SYNTHETIC_ZIP_FOUND_0644__OWNER_UNKNOWN",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -97,7 +97,8 @@
         "Q11": "A_ZERO_REQUESTED_SCOPES_OWNER_ATTESTED",
         "Q12": "A",
         "Q13": "OWNER_TERMINAL_RESULT",
-        "Q14": "PASS_OWNER_TERMINAL_CHILD_077"
+        "Q14": "PASS_OWNER_TERMINAL_CHILD_077",
+        "Q15": "PARTIAL_OWNER_TERMINAL_OUTPUT"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -138,7 +139,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q15 owner Mac read-only Q5 synthetic ZIP existence / symlink / owner / mode metadata, no extraction, execution, credential access or network",
+      "nextAction": "Q15b existing ZIP owner UID equality only, output YES/NO with no path or UID; no extraction or execution",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -339,6 +340,31 @@
           "REAL_OWNER_IDENTITY_UNVERIFIED",
           "TOKEN_TO_CHANNEL_HOLD",
           "REAL_LINE_SEND_HOLD",
+          "PRODUCTION_HOLD"
+        ]
+      },
+      "q15OwnerMacArchive": {
+        "evidenceDate": "2026-10-26",
+        "provenance": "SOURCE_OWNER_PARTIAL_TERMINAL_OUTPUT",
+        "filename": "ABIS_RC135_H1DB_Q5_Local_Verifier_20261026.zip",
+        "archiveFound": true,
+        "regularFile": true,
+        "notSymlink": true,
+        "permissionText": "-rw-r--r--",
+        "permissionOctal": "0644",
+        "ownerMatch": "NOT_PROVIDED",
+        "status": "PARTIAL_PASS_WAITING_FOR_ARCHIVE_OWNER",
+        "privateDataStorageAuthorized": false,
+        "q5Node24OwnerMacExecuted": false,
+        "contentsAndZipMagicVerified": false,
+        "nextManualGate": "Q15b existing ZIP owner UID equality only, output YES/NO with no path or UID; no extraction or execution",
+        "hold": [
+          "OWNER_MATCH_UNKNOWN",
+          "Q5_MAC_NODE24_RUN_NOT_DONE",
+          "PRIVATE_FILESYSTEM_RUNNER_HOLD",
+          "REAL_USER_ID_HOLD",
+          "TOKEN_CHANNEL_HOLD",
+          "LINE_SEND_HOLD",
           "PRODUCTION_HOLD"
         ]
       }
