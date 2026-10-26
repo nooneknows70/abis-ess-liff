@@ -58,3 +58,14 @@ Cross-repo note:
 - Offline local Office OT isolation contract tests 40/40 PASS, but live gate remains `S0_HOLD_RUNTIME_AND_STAGE_ISOLATION_EVIDENCE_MISSING` and cross-repo frontend compatibility remains unverified.
 - Backend V164 Release reconciliation is separate: owner observed deployment @164 while Backend Manifest still @163; do not alter LIFF independent V153 Release Manifest.
 - Next manual read-only evidence: RC5 editor file list, Manage Deployments, Triggers, OAuth and Script Property **key names/count (no values)**, fixture ID mapping. Tracking: Backend Issue #62.
+
+## RC1.35 H1D-B — static LIFF identity path pre-Q10 (2026-10-26)
+
+- Git LIFF `index.html` app ID equals both Backend `Main.js` fallback LIFF ID and `RM_10_UPGRADE.js` Rich Menu fallback; the six routes map to the Bridge whitelist and Bridge's Backend Deployment ID equals the Backend Manifest. `PASS_STATIC_GIT_ONLY`, not live Channel or current Rich Menu readback.
+- Backend existing Login callback writes Sessions/bindings and can trigger test Push. Under H1D-B READ_ONLY, **never open existing live LIFF as a test, invoke OAuth callback, or use any User ID or Token**.
+- Q5 local packaged synthetic-only verifier was actually rerun: 68/68 PASS, 12/12 ZIP member SHA256 PASS, CLI extra argument blocked. This is no proof of current employee/device identity or local machine ACL.
+- Official `liff.getIDToken()` requires LIFF `openid` scope. `profile` scope is for `liff.getProfile()` and `liff.getFriendship()` and is not a prerequisite for this particular ID-token flow.
+- **Q10 next one human check:** visually inspect existing ABIS employee service LIFF settings in LINE Developers Console, compare Endpoint URL with frozen GitHub Pages LIFF Bridge, and verify `openid` checked. Keep all IDs, Token and Secret private. Do not Edit/Save/Login/Run.
+- Holds remain `ACTUAL_LIFF_CONSOLE_CONFIG_HOLD / REAL_UID_MATCH_HOLD / OAUTH_ACL_HOLD / TOKEN_TO_CHANNEL_HOLD / SEND_HOLD / PRODUCTION_HOLD`.
+- Independent LIFF Manifest V153 not modified; Backend V163 Manifest/current V164 reconciliation HOLD remains separate. Only Q9-authorized `ops/` SSOT documentation updated.
+- Central audit handoff: [e6123457](https://github.com/nooneknows70/abis-release-control/commit/e61234572ebf1fd07a69800fb6109ea47f444a1d).
