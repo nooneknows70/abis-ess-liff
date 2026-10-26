@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T04:18:45.173Z",
+  "updatedAt": "2026-10-26T04:39:42.947Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -77,7 +77,7 @@
       "stageRuntimeVerified": false
     },
     "rc135H1dB": {
-      "status": "Q12_ZERO_PROPERTIES_OWNER_ATTESTED__Q13_MAC_ENV_PREFLIGHT_PENDING",
+      "status": "Q13_DARWIN_NODE_AVAILABLE_PRIVATE_UMASK_HOLD__Q14_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -95,7 +95,8 @@
         "Q9": "A_OPS_ONLY",
         "Q10": "A",
         "Q11": "A_ZERO_REQUESTED_SCOPES_OWNER_ATTESTED",
-        "Q12": "A"
+        "Q12": "A",
+        "Q13": "OWNER_TERMINAL_RESULT"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -136,7 +137,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q13 Mac hermetic runner read-only environment preflight: uname -s, node --version, umask; no local file modification",
+      "nextAction": "Q14 read-only subshell umask 077, Node process.umask readback 077 and parent shell retains 022",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -285,6 +286,33 @@
           "APPS_SCRIPT_RUNTIME_SOURCE_PARITY_UNVERIFIED",
           "TOKEN_CHANNEL_HOLD",
           "LIVE_MENU_URI_HOLD",
+          "LINE_SEND_HOLD",
+          "PRODUCTION_HOLD"
+        ]
+      },
+      "q13OwnerMacEnvironment": {
+        "date": "2026-10-26",
+        "evidence": "SOURCE_OWNER_TERMINAL_TEXT",
+        "os": "Darwin",
+        "node": "v24.21.0",
+        "umask": "022",
+        "nodeAvailable": true,
+        "realRunnerReady": false,
+        "reason": "DEFAULT_UMASK_022_PERMITS_GROUP_OTHER_READ_ON_TYPICAL_NEW_FILES",
+        "requiredIsolatedUmask": "077",
+        "privateDirMode": "0700",
+        "privateFileMode": "0600",
+        "syntheticQ5Node24Pass": "NOT_RUN_ON_OWNER_MAC",
+        "noRealLineIdRead": true,
+        "noTokenRead": true,
+        "noNetworkCall": true,
+        "noFilesWritten": true,
+        "nextManualGate": "Q14 read-only subshell umask 077, Node process.umask readback 077 and parent shell retains 022",
+        "hold": [
+          "LOCAL_MAC_PROCESS_UMASK_077_NOT_VERIFIED",
+          "LOCAL_DATA_ACL_HOLD",
+          "INDEPENDENT_IDENTITY_HOLD",
+          "TOKEN_CHANNEL_HOLD",
           "LINE_SEND_HOLD",
           "PRODUCTION_HOLD"
         ]
