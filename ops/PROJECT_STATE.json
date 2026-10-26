@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T09:41:18.555+08:00",
+  "updatedAt": "2026-10-26T10:56:00+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -34,7 +34,15 @@
       "stageIsolation": "OFFICE_OT_STAGE_APPS_SCRIPT_UNVERIFIED",
       "productionMutationAuthorized": false,
       "evidenceDate": "2026-10-26",
-      "nextAction": "Use read-only source/Stage identity and frontend-backend contract verification; do not deploy LIFF or change Manifest"
+      "nextAction": "Use read-only source/Stage identity and frontend-backend contract verification; do not deploy LIFF or change Manifest",
+      "rc5CandidateMetadata": "PASS_FILE_ID_OWNER_METADATA_ONLY",
+      "stageReuseDecision": "EXISTING_STAGE_READ_ONLY_INVESTIGATION_NO_NEW_PROJECT",
+      "offlineSyntheticContract": "PASS_40_40",
+      "actualStageIsolation": "HOLD_NOT_VERIFIED",
+      "nextHumanEvidence": "RC5_FILE_LIST_DEPLOYMENTS_TRIGGERS_OAUTH_PROPERTIES_KEYS_STAGE_FIXTURE_IDENTIFIERS",
+      "separateBackendV164Reconciliation": "HOLD_PENDING_READ_ONLY_PARITY",
+      "productionWritesAllowed": false,
+      "stageWritesAllowed": false
     },
     "rc135H1dB": {
       "status": "Q1_Q8_RECORDED_OWNER_ATTESTED_UI_WITH_RUNTIME_HOLD",
