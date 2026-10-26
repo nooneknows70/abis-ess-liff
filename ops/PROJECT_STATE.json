@@ -26,7 +26,7 @@
       "policiesConfirmed": 30,
       "phase": "PHASE1",
       "stage": "S0",
-      "gateStatus": "HOLD_PRIVATE_FUNCTION_ENTRYPOINT_CONFIRMED_UNSELECTABLE_BY_SOURCE_OWNER",
+      "gateStatus": "HOLD",
       "localFrontendManifestVersion": 153,
       "backendReleaseManifestVersion": 163,
       "compatibility": "UNVERIFIED_NOT_AUTOMATIC_DRIFT",
@@ -34,7 +34,7 @@
       "stageIsolation": "OFFICE_OT_STAGE_APPS_SCRIPT_UNVERIFIED",
       "productionMutationAuthorized": false,
       "evidenceDate": "2026-10-26",
-      "nextAction": "Await Q33 isolated Draft PR source branch authorization; no LIFF source changes, no Stage/Production writes.",
+      "nextAction": "One Source Owner decision Q34 only if proceeding Stage: allow one bounded new isolated Phase1 synthetic Stage source/fixture import, no Apps Script Run/Debug, real LINE, production, payroll, Raw Punch, OAuth/Trigger/Deployment; otherwise leave Draft PRs unmerged and HOLD. Any actual Stage write requires fresh exact target/version/scope preflight.",
       "rc5CandidateMetadata": "PASS_FILE_ID_OWNER_METADATA_ONLY",
       "stageReuseDecision": "EXISTING_STAGE_READ_ONLY_INVESTIGATION_NO_NEW_PROJECT",
       "offlineSyntheticContract": "PASS_40_40",
@@ -47,7 +47,7 @@
       "rc5UiEvidence": "PASS_6_SCRIPTS_0_DEPLOYS_0_TRIGGERS_5_PROPERTIES_4_BROAD_SCOPES_OWNER_UI",
       "rc5ReuseForOT": "NOT_APPROVED",
       "stageDedicatedProjectCreationAuthorized": true,
-      "nextManualNode": "AWAIT_SEPARATE_SOURCE_OWNER_AUTHORIZATION_IF_REOPENING_PRIVATE_ENTRYPOINT",
+      "nextManualNode": "Q34_SOURCE_OWNER_BOUNDED_PHASE1_SYNTHETIC_STAGE_SOURCE_AND_FIXTURE_AUTH",
       "offlineTest": "PASS_40_40",
       "productionOrStageWritesAuthorized": false,
       "stageCreationAuthorization": "SOURCE_OWNER_A_20261026",
@@ -127,6 +127,54 @@
         "realLineSend": 0,
         "gitSourceWrite": 0,
         "sourceOwnerNextGate": "Q33_A_OR_B_DEVELOPMENT_BRANCH_DRAFT_PR"
+      },
+      "q33PriorStageGate": "HOLD_PRIVATE_FUNCTION_ENTRYPOINT_CONFIRMED_UNSELECTABLE_BY_SOURCE_OWNER",
+      "currentGate": "OFFICE_OT_P1_Q33_DRAFT_PRS_SOURCE_AND_STATIC_PASS__Q34_STAGE_AUTH_HOLD",
+      "status": "Q33_BACKEND_PR93_LIFF_PR26_DRAFT_OPEN_UNMERGED",
+      "holdReason": "LIVE_ADAPTER_STAGE_SOURCE_AUTH_PROVIDER_READBACK_AND_RELEASE_NOT_GRANTED",
+      "q33Authorization": {
+        "choice": "A",
+        "sourceOwner": true,
+        "scope": "ONLY_ISOLATED_BRANCHES_AND_DRAFT_PRS",
+        "stageRun": false,
+        "stageWrite": false,
+        "productionWrite": false,
+        "realLineSend": false,
+        "manifestOAuthTriggerDeploymentChanges": false,
+        "mergeMain": false
+      },
+      "q33DraftPRs": {
+        "backend": {
+          "number": 93,
+          "url": "https://github.com/nooneknows70/abis-ess-backend/pull/93",
+          "head": "d317a150430765f700b0c05b71052a79ecd4a262",
+          "baseAtCreate": "78735c2caf171cbe944f0d13a6cbf48abab6e4e6",
+          "changedFiles": 8
+        },
+        "liff": {
+          "number": 26,
+          "url": "https://github.com/nooneknows70/abis-ess-liff/pull/26",
+          "head": "34684ee34da0d06ae4467309b4864ce0dd28da86",
+          "baseAtCreate": "99e03dc975c43de1ba0cf06dd8a471ca0b370404",
+          "changedFiles": 4
+        },
+        "featureOff": true,
+        "unmerged": true,
+        "sourceCandidateBlobsExact": true,
+        "backendMainOnlyHoldRoutes": true,
+        "backendAndLIFFProductionManifestsUnchanged": true,
+        "mainMovedOnlyByOpsDocs": true
+      },
+      "q33BatchEvidence": {
+        "originalZipSha256": "a386360f5f2966c61712945f885449384ad836a608a4ef9ae6984735d58bb3b0",
+        "originalOfflineTests": "PASS_111_111_NODE",
+        "crossModuleChecks": "PASS_12_12_V8",
+        "liffGuards": "PASS_5_5_V8",
+        "repoNodeCI": "NOT_EXECUTED",
+        "fullRealEndToEnd": "HOLD",
+        "stageRuntime": "HOLD",
+        "independentNoSideEffects": "UNVERIFIED",
+        "priorQ32HProviderReadback": "SSOT_SYNC_PARTIAL_HOLD"
       }
     },
     "rc135H1dB": {
