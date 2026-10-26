@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T06:06:57.019Z",
+  "updatedAt": "2026-10-26T06:17:53.526Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -85,7 +85,7 @@
       "stageBusinessDataWritesAuthorized": false
     },
     "rc135H1dB": {
-      "status": "Q15B_OWNER_YES_PASS__Q16_ZIP_SHA256_CRC_PENDING",
+      "status": "Q16_ZIP_INTEGRITY_PASS_OWNER_TERMINAL__Q17_MAC_NODE24_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -107,7 +107,8 @@
         "Q13": "OWNER_TERMINAL_RESULT",
         "Q14": "PASS_OWNER_TERMINAL_CHILD_077",
         "Q15": "PARTIAL_OWNER_TERMINAL_OUTPUT",
-        "Q15b": "PASS_OWNER_TERMINAL_MATCH"
+        "Q15b": "PASS_OWNER_TERMINAL_MATCH",
+        "Q16": "PASS_OWNER_MAC_SHA256_CRC"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -148,7 +149,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q16: Mac read-only check Q5 archive SHA256 == original baseline and unzip -tqq CRC PASS; print match and CRC status only. No extraction or execution.",
+      "nextAction": "Q17 on owner Mac, recheck pinned synthetic ZIP SHA256, extract to secure disposable child umask077 directory and run only 68 built-in Node tests plus fixed synthetic CLI; no npm, network, LINE ID or Token.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -394,6 +395,30 @@
           "MAC_ZIP_CRC_NOT_VERIFIED",
           "MAC_NODE24_SYNTHETIC_TESTS_NOT_RUN",
           "PRIVATE_REAL_UID_RUNNER_NOT_APPROVED",
+          "TOKEN_TO_CHANNEL_HOLD",
+          "LINE_SEND_HOLD",
+          "PRODUCTION_HOLD"
+        ]
+      },
+      "q16OwnerArchiveIntegrity": {
+        "date": "2026-10-26",
+        "source": "SOURCE_OWNER_MAC_TERMINAL",
+        "zipSha256Match": "YES",
+        "zipCrc": "PASS",
+        "referenceSha256": "b55852ef717272bc3f6cea0351e373c198c5eae391eba45f4a110830a3b90c75",
+        "result": "PASS_OWNER_MAC_ZIP_INTEGRITY_NOT_NODE24_EXECUTION",
+        "macNode24TestExecuted": false,
+        "realUidRead": false,
+        "tokenRead": false,
+        "lineCalls": 0,
+        "originalZipMembers": 19,
+        "noPathTraversal": true,
+        "noSymlinks": true,
+        "nextHumanGate": "Q17 on owner Mac, recheck pinned synthetic ZIP SHA256, extract to secure disposable child umask077 directory and run only 68 built-in Node tests plus fixed synthetic CLI; no npm, network, LINE ID or Token.",
+        "holds": [
+          "MAC_NODE24_LOCAL_TEST_PENDING",
+          "LOCAL_PRIVATE_REAL_ID_DATA_ACL_HOLD",
+          "OWNER_IDENTITY_MATCH_HOLD",
           "TOKEN_TO_CHANNEL_HOLD",
           "LINE_SEND_HOLD",
           "PRODUCTION_HOLD"
