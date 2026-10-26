@@ -47,7 +47,7 @@
       "rc5UiEvidence": "PASS_6_SCRIPTS_0_DEPLOYS_0_TRIGGERS_5_PROPERTIES_4_BROAD_SCOPES_OWNER_UI",
       "rc5ReuseForOT": "NOT_APPROVED",
       "stageDedicatedProjectCreationAuthorized": true,
-      "nextManualNode": "AWAIT_SEPARATE_SOURCE_OWNER_DECISION_IF_REOPENING_STAGE_ENTRYPOINT",
+      "nextManualNode": "AWAIT_SEPARATE_SOURCE_OWNER_AUTHORIZATION_IF_REOPENING_PRIVATE_ENTRYPOINT",
       "offlineTest": "PASS_40_40",
       "productionOrStageWritesAuthorized": false,
       "stageCreationAuthorization": "SOURCE_OWNER_A_20261026",
@@ -104,7 +104,14 @@
       "singleSyntheticInvocationExecuted": false,
       "entrypointDropdownReadback": "FUNCTION_SELECTABLE=NO",
       "stageScriptPropertiesWriteAuthorized": false,
-      "stageDeployOrTriggerWritesAuthorized": false
+      "stageDeployOrTriggerWritesAuthorized": false,
+      "functionSelectorScreenshotSha256": "55fdd767a467dc3aa3ab4d2b821fe3196fdfdaf293d3e294811b937a4ddc428e",
+      "functionSelectorScreenshotEvidence": "PASS_OWNER_SCREENSHOT_RUN_DROPDOWN_NO_FUNCTION_AND_EXAMPLE_TRAILING_UNDERSCORE",
+      "functionSelectorOwnerReport": "FUNCTION_SELECTABLE=NO",
+      "functionSelectorScreenshotReadback": "OWNER_IMAGE_UI_NOT_APPS_SCRIPT_API",
+      "proposedMinimalSourceDelta": "REMOVE_ONE_TRAILING_UNDERSCORE_FROM_EXAMPLE_NAME_ONLY_NOT_AUTHORIZED",
+      "proposedSourceDeltaAuthorized": false,
+      "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
       "status": "H1DB3_LIFF_PROVIDER_STATIC_PASS__Q18_BUSINESS_ID_PERSONAL_LINE_LINK_PENDING",
