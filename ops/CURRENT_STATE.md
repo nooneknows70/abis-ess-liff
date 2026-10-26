@@ -177,3 +177,12 @@ Cross-repo note:
 - Next **Q16**: one read-only check of the downloaded Mac Q5 synthetic archive, print only `ARCHIVE_SHA256_MATCH=YES/NO` and `ARCHIVE_ZIP_CRC=PASS/FAIL`; do not unzip/extract, execute any file, pass real LINE IDs, read Tokens or connect to Google/LINE/Production.
 - Unchanged HOLD: `REAL_UID_NOT_READ / OWNER_IDENTITY_MATCH_UNVERIFIED / LOCAL_PRIVATE_RUNNER_ACL_NOT_VERIFIED / TOKEN_TO_CHANNEL_HOLD / LIVE_LINE_SEND_HOLD / PRODUCTION_HOLD`. Prior 68/68 is not Mac Node v24 provenance. Q9 authorized `ops/` documentation only. Backend V165/LIFF V153 Release Manifests and other workstreams untouched.
 - Central Q15b: https://github.com/nooneknows70/abis-release-control/commit/0437f29870e4d36faef884884dc05ef26e3b8efa
+
+## Office OT S0 — pin-bound Code.gs Stage upload approved, awaiting owner UI (2026-10-26)
+
+- Source Owner approved **one specific source-only import** of locally verified `Code.gs` SHA256 `7aa2be058c94a16fc1cce70cc72bcaef66acaf035451e2cd1f8e364cd2dd6acd` into dedicated Office OT synthetic Stage Script ID `1R96DqSE7DxHsyj1lsXf-WaGgTuuTNA2FWR7jJKN_cZx0z9nusHbmO2ud`. `appsscript.json` must not change.
+- ZIP SHA256 `a110bb7961d434ebef11c17b57f53890abe5f4bcb1a3471ee64e513c0f34095e`, extracted candidate exact SHA matches; local Node `node --test` 16/16 PASS. No Stage code has actually been uploaded; available connector has no Apps Script `updateContent` capability. Do not substitute Google Drive raw file upload.
+- Approved human next action: replace only default Stage `程式碼.gs` content with exact pinned candidate and save; then provide read-only saved source list, code and manifest screenshot. New project creation already done, do not create another project or second .gs.
+- No Apps Script execution, Trigger, Deployment, Script Properties, new Sheet, OAuth grant, real identities, LINE send or Production change authorized. Hold `HOLD_REMOTE_SOURCE_IMPORT_NOT_OBSERVED_AND_RUNTIME_UNAUTHORIZED`.
+- LIFF separate V153 release authority, Backend V165 release authority and RC1.35/REST33 unrelated workstreams unaffected. Q1–Q30 unchanged.
+
