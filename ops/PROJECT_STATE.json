@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T11:37:05.343+08:00",
+  "updatedAt": "2026-10-26T11:49:58.685+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -59,7 +59,7 @@
       "stageExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "Q10_LIFF_OWNER_CONSOLE_PASS__EFFECTIVE_STAGE_OAUTH_PENDING",
+      "status": "Q11_B_FOUR_SCOPES_VISIBLE_PROJECT_ATTRIBUTION_HOLD",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -75,7 +75,8 @@
         "Q7": "A",
         "Q8": "A",
         "Q9": "A_OPS_ONLY",
-        "Q10": "A"
+        "Q10": "A",
+        "Q11": "B"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -112,7 +113,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q11 read-only existing RC135 dedicated synthetic Stage Overview > Project OAuth Scopes: NONE / SOME / UNKNOWN, no property values or changes",
+      "nextAction": "Q12 confirm whether screenshot is RC135 dedicated synthetic Stage, Office OT RC5, or unknown (project name only)",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -170,6 +171,31 @@
           "REAL_UID_MATCH_UNVERIFIED",
           "TOKEN_TO_CHANNEL_HOLD",
           "LIVE_MENU_URI_NOT_READ",
+          "LINE_SEND_HOLD",
+          "PRODUCTION_HOLD"
+        ]
+      },
+      "q11OauthScreenshot": {
+        "choice": "B",
+        "evidenceTier": "OWNER_SCREENSHOT_CROPPED_REQUESTED_OAUTH_SCOPES",
+        "visibleScopes": [
+          "script.scriptapp",
+          "script.external_request",
+          "drive",
+          "spreadsheets"
+        ],
+        "count": 4,
+        "screenshotProjectNameVisible": false,
+        "projectAttribution": "HOLD_SAME_SCOPE_SET_ALREADY_RECORDED_FOR_OFFICE_OT_RC5",
+        "rc135ActualScopes": "UNVERIFIED",
+        "tokenOrRealLineIdRead": false,
+        "stageUse": "NO_REAL_IDENTITY_VERIFICATION_NOT_READY",
+        "nextHumanGate": "Q12 confirm whether screenshot is RC135 dedicated synthetic Stage, Office OT RC5, or unknown (project name only)",
+        "remainingHolds": [
+          "PROJECT_IDENTITY_PENDING",
+          "OAUTH_ACL_HOLD",
+          "REAL_UID_HOLD",
+          "TOKEN_TO_CHANNEL_HOLD",
           "LINE_SEND_HOLD",
           "PRODUCTION_HOLD"
         ]
