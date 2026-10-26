@@ -154,3 +154,10 @@ Cross-repo note:
 - For any future real-identity data use, require isolated child-process `umask 077`, `0700` private workspace and `0600` private files. No system-wide setting changed. The prior 68/68 synthetic test pack has **not** been tested on this owner's Node v24 Mac.
 - Next **Q14** is safe read-only subprocess check: Node sees 077 inside the subshell, original parent umask remains 022. No file creation, network, OAuth, LINE API, User ID, Token, Apps Script/Stage operations or Production writes.
 - `REAL_UID_HOLD / LOCAL_RUNNER_OS_ACL_HOLD / TOKEN_CHANNEL_HOLD / SEND_HOLD / PRODUCTION_HOLD` unchanged. Backend V165/LIFF V153 release authorities independent; this is Q9-approved `ops/` only. Central handoff https://github.com/nooneknows70/abis-release-control/commit/42049c7959a3f30763b4e428b691b1c88c7c9ca6.
+
+## RC1.35 H1D-B — Q14 owner macOS child umask 077 PASS (2026-10-26)
+
+- Source Owner Terminal returned `PARENT_BEFORE=022`, `CHILD_NODE_UMASK=077`, `PARENT_AFTER=022`. This is `PASS_OWNER_TERMINAL_CHILD_NODE_077_PARENT_UNCHANGED`: isolated Node child inherited restrictive umask without modifying parent. It does **not** verify existing file ACL, environment isolation, external network restrictions or real identity suitability.
+- No filesystem changes, real User ID or Token, LINE API, login, Stage test run or Production changes. Earlier Q5 synthetic 68/68 was not performed on owner's Node v24.21.0 Mac.
+- Next **Q15 read-only** locate previously created Q5 hermetic synthetic ZIP in Downloads/Desktop, inspect file presence, symlink exclusion, current user owner match and mode; no extraction, execution or full path logging. If absent, `ARCHIVE_FOUND=NO`, next action is acquire correct synthetic ZIP, not use real data.
+- `REAL_UID_HOLD / MAC_FILESYSTEM_ACL_AND_PROCESS_ISOLATION_HOLD / TOKEN_CHANNEL_HOLD / LIVE_LINE_SEND_HOLD / PRODUCTION_HOLD` remains. Q9-authorized GitHub `ops/` documentation only. LIFF frontend authority V153 and Backend V165 remain independent. Central Q14 handoff: https://github.com/nooneknows70/abis-release-control/commit/688a3d4501a784bc3f4165d92c1ddc75d7239e59.
