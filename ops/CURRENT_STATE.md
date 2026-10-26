@@ -293,3 +293,9 @@ Cross-repo note:
 
 - Q24=A: local lexical temp-path link check PASS/YES as reported by Source Owner. Evidence tier PASS_OWNER_ATTESTED; no independent Mac readback. No real LINE User ID, token or login has been read or executed.
 - Q25=A was reported afterward; separate process run-as gate, owner-attested only. Production, messaging and independent identity verification remain HOLD. Backend V166 and LIFF V153 manifests untouched.
+
+## RC1.35 H1D-B Q25 — owner-attested Node non-root check (2026-10-26)
+
+- Q25=A: Source Owner reports four checks YES (Darwin, non-root Node, real/effective Unix UID match and GID match) with overall PASS. Evidence PASS_OWNER_ATTESTED; not an independently authenticated Mac terminal result. This is a local Unix process classification, not LINE identity verification.
+- Q24 was reconciled on all three SSOTs. Q26 is READ_ONLY local Node debug/preload status, without accessing ID/token or making a network call. No actual runner, LINE API, OAuth or Production authorization; Backend V166 and LIFF V153 manifests unchanged.
+- Gate: `H1DB3_Q25_LOCAL_NODE_NONROOT_PROCESS_IDENTITY_PASS_OWNER_ATTESTED__Q26_NODE_DEBUG_PRELOAD_READ_ONLY_PENDING`.
