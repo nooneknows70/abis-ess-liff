@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T09:37:00.000Z",
+  "updatedAt": "2026-10-26T09:59:08.970Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q18_OWNER_BUSINESS_ID_LINK_PASS__Q19_MACOS_FILEVAULT_READ_ONLY_PENDING",
+      "status": "H1DB3_Q19_FILEVAULT_ON_OWNER_ATTESTED__Q20_PRIVATE_TMPDIR_METADATA_READ_ONLY_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -139,7 +139,8 @@
         "Q15b": "PASS_OWNER_TERMINAL_MATCH",
         "Q16": "PASS_OWNER_MAC_SHA256_CRC",
         "Q17": "PASS_OWNER_MAC_NODE24_68_68_SYNTHETIC",
-        "Q18": "A"
+        "Q18": "A",
+        "Q19": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -180,7 +181,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q19 READ_ONLY: existing Mac run `fdesetup status` without sudo; report ON/OFF/UNKNOWN only. No real UID, Token, Login, LINE API or production operations.",
+      "nextAction": "Q20 READ_ONLY Mac: inspect os.tmpdir() final-directory metadata with local Node built-ins only; report IS_DIRECTORY, NOT_SYMLINK, OWNER_MATCH, MODE_0700 as YES/NO, without printing path/UID or creating files. No real User ID, token, OAuth, LINE API or Production. Directory ACL/ancestor chain/network isolation remain separate HOLD.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -521,6 +522,22 @@
         "lineApiCalled": false,
         "productionModified": false,
         "date": "2026-10-26"
+      },
+      "q19OwnerMacFileVault": {
+        "choice": "A",
+        "result": "FILEVAULT_ON_OWNER_ATTESTED",
+        "meaning": "Source Owner reports FileVault is enabled on the existing Mac for the future isolated local verifier.",
+        "evidenceTier": "SOURCE_OWNER_SELF_REPORTED_NO_TERMINAL_OUTPUT_OR_INDEPENDENT_LOCAL_READBACK",
+        "evidenceDate": "2026-10-26",
+        "terminalReadbackIndependentlyVerified": false,
+        "atRestEncryptionOwnerAttested": true,
+        "fileSystemModeOrAclVerified": false,
+        "privateRunnerApproved": false,
+        "realUidRead": false,
+        "tokenOrSecretRead": false,
+        "oauthOrLiveLoginPerformed": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
       }
     }
   }
