@@ -141,3 +141,10 @@ Cross-repo note:
 - Next single human read-only evidence packet: Code Editor file list plus `Code.gs` contents, and opened `appsscript.json`. Do not execute code, add scopes/services/properties/triggers/deployments, send LINE, or write Stage/Production.
 - Backend independently reached V165 PROD_CURRENT, but LIFF independent Release Manifest V153 must remain unchanged; Office OT S0 is not a release authorization. Source report `ABIS_ESS_OT_S0_NEW_STAGE_UI_EVIDENCE_20261026.md`, SHA256 `8be14f80d5c9fd14d657396a2cc3e209efd3245526949290c022b59e6793798f`; raw images not in GitHub.
 
+## Office OT S0 dedicated Stage Code.gs/manifest UI baseline PASS (2026-10-26)
+
+- Source Owner supplied Code Editor screenshot of dedicated Office OT Stage: only `程式碼.gs` and `appsscript.json` listed, Libraries/Services empty. Default `myFunction` empty (no observable side-effect); image SHA256 `10eda827b5cdeb32736582c277bf17c2f4f752b184031d8e6d5854daba2d338c`.
+- Owner-pasted manifest: V8, Asia/Taipei, empty `dependencies`, STACKDRIVER, no explicit `oauthScopes`. Visible source/manifest has no Production IDs, endpoints or LINE calls. Prior dedicated Stage UI showed zero Triggers/Deployments/Script Properties. **`PASS_OWNER_UI_STATIC_STAGE_BASELINE`**.
+- Source Owner evidence is screenshot + pasted JSON, NOT authenticated Apps Script getContent/runtime. Scope inference, future code, runtime, network and cross-system parity remain untested. No source import, Stage execution or business-data write authorized by creation-only permission.
+- Next Gate: local/offline synthetic Code.gs validation, then separate bounded source-upload-only authorization. Any actual Stage execution, Trigger, Deployment, LINE, Payroll and Production remain independent controls. LIFF Manifest remains V153, Backend independent manifest V165; Q1–Q30 frozen.
+
