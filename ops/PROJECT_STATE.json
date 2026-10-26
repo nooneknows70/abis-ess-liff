@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T13:21:49.912Z",
+  "updatedAt": "2026-10-26T13:26:15.886Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q24_LEXICAL_LINK_TRUST_PASS_OWNER_ATTESTED__Q25_LOCAL_PROCESS_IDENTITY_READ_ONLY_PENDING",
+      "status": "H1DB3_Q25_LOCAL_NODE_NONROOT_PROCESS_IDENTITY_PASS_OWNER_ATTESTED__Q26_NODE_DEBUG_PRELOAD_READ_ONLY_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -145,7 +145,8 @@
         "Q21": "A",
         "Q22": "A",
         "Q23": "A",
-        "Q24": "A"
+        "Q24": "A",
+        "Q25": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -186,7 +187,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q25 READ_ONLY existing Source Owner Mac Node process identity: use node built-ins to report Q25_PLATFORM_DARWIN, Q25_PROCESS_NON_ROOT, Q25_EFFECTIVE_UID_MATCH and Q25_EFFECTIVE_GID_MATCH as YES/NO only. Compare local Unix numeric IDs exclusively in memory; never print them, names, paths or environment. No sudo, child network, real LINE User ID/Token, login, LINE API, file or Production modifications. Q24 and Q25 are owner-attested only; no real-data runner authorization.",
+      "nextAction": "Q26 READ_ONLY on same Mac: test only the newly launched local Node process for inactive Inspector, absence of debugger/preload CLI flags and NODE_OPTIONS key not set; print YES/NO categories only. Do not print environment values, commands, paths or IDs. No network, login, LINE User ID, token, API or Production writes. This checks a transient Node process and does not prove future runner isolation.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -640,6 +641,27 @@
         "backendV": 166,
         "frontendV": 153,
         "scope": "GITHUB_MANIFEST_READ_ONLY"
+      },
+      "q25OwnerMacProcessIdentity": {
+        "choice": "A",
+        "reportedChecks": {
+          "Q25_PLATFORM_DARWIN": "YES",
+          "Q25_PROCESS_NON_ROOT": "YES",
+          "Q25_EFFECTIVE_UID_MATCH": "YES",
+          "Q25_EFFECTIVE_GID_MATCH": "YES",
+          "Q25_PROCESS_IDENTITY": "PASS"
+        },
+        "result": "NONROOT_NODE_REAL_EFFECTIVE_OS_IDS_MATCH_OWNER_ATTESTED",
+        "evidenceTier": "PASS_SOURCE_OWNER_ATTESTED_NO_INDEPENDENT_TERMINAL_READBACK",
+        "recordedAt": "2026-10-26T13:24:23.561Z",
+        "scope": "local macOS Unix process identity only; not LINE user identity or a future runner guarantee",
+        "independentMacReadback": false,
+        "futureRunnerIdentityVerified": false,
+        "realLineUserIdRead": false,
+        "tokenOrSecretRead": false,
+        "loginOrOauthPerformed": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
       }
     }
   }
