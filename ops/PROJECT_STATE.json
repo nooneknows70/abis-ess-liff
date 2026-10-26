@@ -903,6 +903,54 @@
           "batchAcceptance": "NOT_YET_EXECUTED_ON_OWNER_MAC"
         }
       }
+    },
+    "rc135Q32": {
+      "recordDate": "2026-10-27",
+      "gate": "RC135_Q32_FEATURE_BRANCH_HERMETIC_INTEGRATION_PASS__MAC_OWNER_BATCH_PENDING__REAL_LINE_PRODUCTION_HOLD",
+      "authorization": "Q32=A Source Owner: only PR76 feature branch source/hermetic fixtures; all local checks prepared first, then one consolidated CI suite; no live/production changes",
+      "branch": "feat/phase1a-line-delta-i18n-rc1-35-v159",
+      "pullRequest": 76,
+      "prStatus": "OPEN_DRAFT_UNMERGED",
+      "originalQ32Commit": "66482bbf3dba98a10c61d9360dd77bb5eedc2140",
+      "finalCandidateHead": "c9ad633ae9cd51078bc5c086ffb1ec6375a675d3",
+      "finalHermeticCiRun": 40358559711,
+      "finalHermeticCiConclusion": "SUCCESS",
+      "priorFailedIterationRuns": [
+        40357436554,
+        40357979944,
+        40358121137,
+        40358259976,
+        40358389765
+      ],
+      "changes": [
+        "Fail-closed malformed/non-array WorkItemsJSON before formal schedule mutation",
+        "Best-effort post-write effective-week/translation-property/binding notifications never orphan release record on those errors",
+        "Count multi-request partial LINE API acceptance separately; attempted requests vs responses distinguished; device receipt never inferred",
+        "Prevalidate all LINE parts before first HTTP attempt",
+        "LIFF partial-batch/notification-preparation warning",
+        "Preserve frozen H1C Stage source pins; current development helper is held by both original Stage installer gates, historical pinned source passes independent offline checks"
+      ],
+      "ciEvidenceUrl": "https://github.com/nooneknows70/abis-ess-backend/actions/runs/40358559711",
+      "candidateHandoffDoc": "docs/ABIS_PHASE1A_RC135_Q32_ONE_SHOT_HARDENING_20261027.md",
+      "h1cFrozenHistoricalBlob": "8321bc5cd1b42aa7c28e9fc0791a63abb6666dfb",
+      "historicalQ17": "68/68_OWNER_ATTESTED_NOT_FRESH_RERUN",
+      "macHostPreflight23": "PREPARED_NOT_EXECUTED_ON_SOURCE_OWNER_MAC",
+      "backendManifest": "V167_PROD_CURRENT_READ_ONLY",
+      "liffManifest": "V153_PROD_CURRENT_READ_ONLY",
+      "liveHolds": [
+        "REAL_LINE_USER_ID_NOT_READ",
+        "LINE_TOKEN_NOT_READ",
+        "CHANNEL_CREDENTIAL_BINDING_NOT_VERIFIED",
+        "RUNNER_OAUTH_AND_EXECUTION_NOT_AUTHORIZED",
+        "LINE_API_PUSH_NOT_AUTHORIZED",
+        "PRODUCTION_NOT_AUTHORIZED",
+        "PR_MERGE_NOT_AUTHORIZED"
+      ],
+      "actualExternalCalls": 0,
+      "appsScriptStageProductionChanges": 0,
+      "businessDataWrites": 0,
+      "nextAction": "One consolidated owner-Mac 23-check offline batch and review of fresh SHA/CI parity; separately approve any provider credential, real LINE or Production execution",
+      "sourceRepo": "abis-ess-liff"
     }
   }
 }
