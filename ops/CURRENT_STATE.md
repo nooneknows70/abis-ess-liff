@@ -200,3 +200,10 @@ Cross-repo note:
 - Next evidence: local `clasp pull` in a private disposable directory to hash remote one .gs/.js file and semantically compare manifest to baseline (or owner paste of full saved source+manifest). No `push`, no `run`, no deployment, no new OAuth, no Production, LINE or data writes.
 - Q1–Q30 frozen. Backend V165 and LIFF V153 release authorities are separate; RC1.35/REST33 unaffected.
 
+## RC1.35 H1D-B — Q17 owner Mac Node24 synthetic suite 68/68 CLOSED_PASS (2026-10-26)
+
+- Owner Q17 Mac Terminal reported `Q17_TESTS=68/68_PASS`; `Q17_FAKE_CLI=PASS_NOT_REAL_IDENTITY`; `Q17_NODE_VERSION=v24.21.0`; `Q17_CHILD_UMASK=077`. `PASS_OWNER_TERMINAL` synthetic-only. Q16 owner Mac ZIP SHA256 matched original `b55852ef717272bc3f6cea0351e373c198c5eae391eba45f4a110830a3b90c75` and CRC passed, Q15b archive-owner equality confirmed. This closes the previously pending Node24 compatibility tests; it is not independent audit of Mac filesystem cleanup/ACL or real-person identity.
+- **Q5 local synthetic verifier CLOSED_PASS**, distinct from RC1.35 dedicated Apps Script synthetic Stage, the LIFF frontend and Production. No real User ID, live Token, LINE API, Google data, OAuth login, Push, Stage or Production mutation under this workstream.
+- H1D-B future Q4 permission remains **conditional** on separately proven isolated real-data runner, runtime identity/Provider and OAuth/ACL; Draft PR #76 fake simulator cannot send. Next phase is **H1DB-3 READ_ONLY** architectural/security static review only; no new management decisions unless credentials/live OAuth/LINE Send/Production are actually needed.
+- Still `REAL_UID_NOT_READ / OWNER_IDENTITY_NOT_INDEPENDENTLY_VERIFIED / LOCAL_REAL_UID_RUNNER_HOLD / TOKEN_CHANNEL_HOLD / LIVE_SEND_HOLD / PRODUCTION_HOLD`. LIFF V153 and separate Backend V165 release authorities remain untouched; Q9 GitHub `ops/` SSOT-only update.
+- Central handoff https://github.com/nooneknows70/abis-release-control/commit/c873335ad4612bd31b2d316f733f2daa437d5a4c
