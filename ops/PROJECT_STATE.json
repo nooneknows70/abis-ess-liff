@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T12:35:47.931Z",
+  "updatedAt": "2026-10-26T13:21:49.912Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q23_CANONICAL_ANCESTOR_ACL_ABSENT_PASS_OWNER_ATTESTED__Q24_LEXICAL_SYMLINK_CHAIN_READ_ONLY_PENDING",
+      "status": "H1DB3_Q24_LEXICAL_LINK_TRUST_PASS_OWNER_ATTESTED__Q25_LOCAL_PROCESS_IDENTITY_READ_ONLY_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -144,7 +144,8 @@
         "Q20": "A",
         "Q21": "A",
         "Q22": "A",
-        "Q23": "A"
+        "Q23": "A",
+        "Q24": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -185,7 +186,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q24 READ_ONLY on same Mac: check os.tmpdir() lexical components for symbolic links, validate link owners (root/current user) and containing parent permission/sticky rules, report only Q24_LEXICAL_LINK_CHECK=PASS/HOLD and Q24_LEXICAL_LINK_SAFE=YES/NO/UNKNOWN; do not print paths/UID/ACL, read credentials, login, call LINE API, write files or modify Production. No real identity runner authorization.",
+      "nextAction": "Q25 READ_ONLY existing Source Owner Mac Node process identity: use node built-ins to report Q25_PLATFORM_DARWIN, Q25_PROCESS_NON_ROOT, Q25_EFFECTIVE_UID_MATCH and Q25_EFFECTIVE_GID_MATCH as YES/NO only. Compare local Unix numeric IDs exclusively in memory; never print them, names, paths or environment. No sudo, child network, real LINE User ID/Token, login, LINE API, file or Production modifications. Q24 and Q25 are owner-attested only; no real-data runner authorization.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -616,6 +617,29 @@
         "loginExecuted": false,
         "lineApiCalls": 0,
         "productionWrites": 0
+      },
+      "q24OwnerMacLexicalSymlink": {
+        "choice": "A",
+        "reportedLexicalLinkCheck": "PASS",
+        "reportedLexicalLinkSafe": "YES",
+        "decision": "Source Owner self-reports prior Q24 Node macOS os.tmpdir() lexical path symlink ownership and containing-parent mode/sticky preflight as PASS/YES.",
+        "evidenceTier": "PASS_SOURCE_OWNER_ATTESTED_NO_INDEPENDENT_MAC_TERMINAL_READBACK",
+        "recordedDate": "2026-10-26",
+        "inspectScope": "lexical os.tmpdir() components symlink entry ownership and containing-parent POSIX write/sticky; follows directory symlink targets for type only",
+        "independentlyVerified": false,
+        "canonicalRealpathAndLexicalPathTOCTOUProven": false,
+        "macProcessRunAsVerified": false,
+        "networkIsolationVerified": false,
+        "realLineUserIdRead": false,
+        "tokenOrSecretRead": false,
+        "oauthOrLoginExecuted": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
+      },
+      "latestReadOnlyManifestAuthorityAtQ24": {
+        "backendV": 166,
+        "frontendV": 153,
+        "scope": "GITHUB_MANIFEST_READ_ONLY"
       }
     }
   }
