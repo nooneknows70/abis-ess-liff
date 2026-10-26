@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T14:47:08.048Z",
+  "updatedAt": "2026-10-26T15:29:09.691Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q30_BINARY_LEXICAL_LINK_PASS_OWNER_ATTESTED__Q31_NODE_CODESIGN_READ_ONLY_PENDING",
+      "status": "H1DB3_Q31_CODESIGN_PASS_OWNER_ATTESTED__ONE_SHOT_READ_ONLY_BATCH_PREPARED_LIVE_HOLD",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -151,7 +151,8 @@
         "Q27": "A",
         "Q28": "A",
         "Q29": "A",
-        "Q30": "A"
+        "Q30": "A",
+        "Q31": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -192,7 +193,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q31 READ_ONLY same Mac Node executable macOS code-signature seal and non-ad-hoc provenance preflight via /usr/bin/codesign --verify --strict --verbose=0 and --display --verbose=4 against fs.realpathSync(process.execPath), local-only. Report Q31_CODESIGN_TOOL_OK, Q31_SIGNATURE_SEAL_VALID, Q31_SIGNER_NON_ADHOC YES/NO and Q31_STATUS PASS/HOLD/UNKNOWN; do not print paths, signer names, TeamIdentifier, executable contents, environment or secrets; no network, login, LINE API, send or Production. This is local code-signing metadata only, not full notarization/trust, dependency integrity or independent real-identity runner authorization.",
+      "nextAction": "Stop issuing numbered Q32+ local OS micro-tests. Prepare/review RC1.35 PR#76 static hermetic coverage, Q17 68/68 historical baseline and 3 Repo SSOT/release parity as one READ_ONLY acceptance plan. Mac single-run 23-check preflight bundle is ready but NOT executed on owner's Mac. Present one consolidated PASS/HOLD after final batch; no new source/CI/Stage/LINE/Production writes. Any source implementation or live LINE/User ID/Token/OAuth test requires separately scoped Source Owner authorization.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -798,6 +799,53 @@
         "backendRollbackV": 166,
         "source": "GITHUB_MANIFEST_READ_ONLY_NOT_RUNTIME_READBACK",
         "rc135Pr76": "OPEN_DRAFT_UNMERGED"
+      },
+      "q31OwnerMacNodeCodesign": {
+        "choice": "A",
+        "reportedChecks": {
+          "Q31_CODESIGN_TOOL_OK": "YES",
+          "Q31_SIGNATURE_SEAL_VALID": "YES",
+          "Q31_SIGNER_NON_ADHOC": "YES",
+          "Q31_STATUS": "PASS"
+        },
+        "result": "LOCAL_MAC_CODESIGN_SEAL_NONADHOC_OWNER_ATTESTED",
+        "evidenceTier": "PASS_SOURCE_OWNER_ATTESTED_NO_INDEPENDENT_MAC_TERMINAL_READBACK",
+        "observationDate": "2026-10-26",
+        "independentlyVerified": false,
+        "notarizationVerified": false,
+        "codeSigningTrustChainVerified": false,
+        "codeDependencyIntegrityVerified": false,
+        "realLineUserIdRead": false,
+        "tokenOrSecretRead": false,
+        "oauthLoginPerformed": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
+      },
+      "batchTestingStrategy": {
+        "mode": "ONE_SHOT_BATCH_INSTEAD_OF_SEQUENTIAL_MICRO_GATES",
+        "request": "Source Owner requests finish safe preparatory work first, then run one consolidated offline test instead of Q32/Q33/... one-by-one terminal checks",
+        "approvalType": "TECHNICAL_TEST_PROCESS_APPROVED_NO_SOURCE_RELEASE_OR_LIVE_WRITE_AUTH",
+        "ownerChoice": "BATCH",
+        "ownerDecisionDate": "2026-10-26",
+        "macLocalPack": "ABIS_RC135_H1DB_READONLY_BATCH_20261026.zip",
+        "macLocalScript": "ABIS_RC135_H1DB_LOCAL_READONLY_BATCH.cjs",
+        "macLocalScriptSha256": "a302e16511e7fa1c6b74495a3f389218908ff330980e6e22998869facb83ae25",
+        "macLocalStaticChecks": 23,
+        "macLocalPackStatus": "PREPARED_NODE_SYNTAX_CHECK_ONLY_NOT_RUN_ON_SOURCE_OWNER_MAC",
+        "testPhase": "PREPARED_WAITING_UNIFIED_OFFLINE_ACCEPTANCE",
+        "priorSyntheticStatus": "Q17_OWNER_ATTESTED_68_68_CLOSED_PASS_HISTORICAL_ONLY",
+        "pr76": "OPEN_DRAFT_UNMERGED",
+        "backendManifestAtRecord": "V167_PROD_CURRENT",
+        "liffManifestAtRecord": "V153_PROD_CURRENT",
+        "disableAdditionalSequentialOwnerMicroGateQuestions": true,
+        "singleTerminalRunAtFinalAcceptanceOnly": true,
+        "sourceImplementationApproved": false,
+        "liveLineSendApproved": false,
+        "stageWriteApproved": false,
+        "productionWriteApproved": false,
+        "independentMacVerification": false,
+        "realUserIdOrTokenRead": false,
+        "nextStepIndependentReview": "Complete offline static PR#76 / 3-Repo manifest parity and synthetic test plan without remote writes; run packaged Mac local preflight only as final batch; report one consolidated PASS/HOLD. Source write or real LINE proof needs separate explicit source-owner permission."
       }
     }
   }
