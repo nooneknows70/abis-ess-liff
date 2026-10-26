@@ -192,3 +192,11 @@ Cross-repo note:
 - Next **Q17** run only fixed Q5 synthetic Node v24 tests in a disposable private `umask 077` directory after rechecking archive SHA; require exactly 68/68 PASS and fake CLI `SIMULATED_PASS_NOT_REAL_IDENTITY_PROOF`; delete disposable workspace afterwards. No installation, live User ID, Token, LINE API, OAuth, messaging, Apps Script/Stage or Production data access.
 - Holds `NODE24_SYNTHETIC_PENDING / REAL_OWNER_IDENTITY_NOT_VERIFIED / PRIVATE_REAL_ID_RUNNER_ACL_HOLD / TOKEN_CHANNEL_HOLD / LINE_SEND_HOLD / PRODUCTION_HOLD`. Q9 GitHub `ops/` only; Backend V165, LIFF V153 and unrelated operations remain separate.
 - Central Q16 authority https://github.com/nooneknows70/abis-release-control/commit/3ce7fb8756a40a60f396f437a895a5ff5f448e9c
+
+## Office OT S0 — owner reports Stage Code.gs pasted, remote SHA readback pending (2026-10-26)
+
+- Source Owner confirmed the approved pinned Code.gs was **pasted** into dedicated Office OT Stage; Google Drive direct ID metadata shows project modified `2026-10-26T06:16:19.954Z`, originally `2026-10-26T03:53:02.548Z`. This is an owner operation attestation + modification evidence, NOT source SHA256 readback.
+- Local pin remains `7aa2be058c94a16fc1cce70cc72bcaef66acaf035451e2cd1f8e364cd2dd6acd`. The native Script Drive media fetch failed 403; no Apps Script getContent connector. `HOLD_REMOTE_SOURCE_SHA256_AND_MANIFEST_READBACK_RUNTIME_UNAUTHORIZED` until remote content and appsscript manifest are read back.
+- Next evidence: local `clasp pull` in a private disposable directory to hash remote one .gs/.js file and semantically compare manifest to baseline (or owner paste of full saved source+manifest). No `push`, no `run`, no deployment, no new OAuth, no Production, LINE or data writes.
+- Q1–Q30 frozen. Backend V165 and LIFF V153 release authorities are separate; RC1.35/REST33 unaffected.
+
