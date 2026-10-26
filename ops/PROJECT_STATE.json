@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T13:53:06.478Z",
+  "updatedAt": "2026-10-26T13:59:15.021Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q28_BINARY_PARENT_METADATA_PASS_OWNER_ATTESTED__Q29_BINARY_PARENT_ACL_READ_ONLY_PENDING",
+      "status": "H1DB3_Q29_BINARY_PARENT_ACL_ABSENT_PASS_OWNER_ATTESTED__Q30_BINARY_LEXICAL_SYMLINK_READ_ONLY_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -149,7 +149,8 @@
         "Q25": "A",
         "Q26": "A",
         "Q27": "A",
-        "Q28": "A"
+        "Q28": "A",
+        "Q29": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -190,7 +191,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q29 READ_ONLY same Source Owner Mac: inspect ACL metadata on canonical ancestor directories of fs.realpathSync(process.execPath) via macOS /bin/ls -lde, up to filesystem root; classify Q29_BINARY_PARENT_ACL_CHECK=PASS/HOLD and Q29_BINARY_PARENT_ACL_ABSENT=YES/NO/UNKNOWN. Do not print paths, names, Unix IDs, ACL entries, file contents or credentials. No file/network changes, LINE User ID/Token, OAuth/login, LINE API/send or Production. PASS remains owner-reported and does not establish code signing, race safety or full runner isolation.",
+      "nextAction": "Q30 READ_ONLY same Mac: examine lexical process.execPath path components, containing-parent ownership and mode, and any symlink entry ownership, using Node fs metadata. Return Q30_BINARY_LEXICAL_LINK_CHECK=PASS/HOLD and Q30_BINARY_LEXICAL_LINK_SAFE=YES/NO/UNKNOWN only. Permit root/current-user-owned links under protected parents; require final resolved entry regular file. Do not print paths, IDs, link targets, env, contents or sensitive data. No file modifications, login, LINE API, push or Production. PASS does not prove race freedom or code signing.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -746,6 +747,26 @@
         "backendRollbackV": 166,
         "evidence": "GITHUB_MANIFEST_ONLY_NOT_RUNTIME_READBACK",
         "rc135Pr76": "OPEN_DRAFT_UNMERGED"
+      },
+      "q29OwnerMacNodeBinaryParentsAcl": {
+        "choice": "A",
+        "reportedChecks": {
+          "Q29_BINARY_PARENT_ACL_CHECK": "PASS",
+          "Q29_BINARY_PARENT_ACL_ABSENT": "YES"
+        },
+        "result": "CANONICAL_NODE_BINARY_ANCESTOR_ACL_ABSENT_OWNER_ATTESTED",
+        "evidenceTier": "PASS_SOURCE_OWNER_ATTESTED_NO_INDEPENDENT_MAC_TERMINAL_READBACK",
+        "recordedAt": "2026-10-26T13:59:15.021Z",
+        "scope": "ACL presence on canonical Node executable parent-directory chain only",
+        "independentTerminalReadback": false,
+        "lexicalSymlinkPathVerified": false,
+        "codeSignatureVerified": false,
+        "futureRunnerApproved": false,
+        "realLineUserIdRead": false,
+        "tokenOrSecretRead": false,
+        "oauthOrLoginExecuted": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
       }
     }
   }
