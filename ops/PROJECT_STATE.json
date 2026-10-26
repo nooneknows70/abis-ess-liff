@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T13:45:12.576Z",
+  "updatedAt": "2026-10-26T13:53:06.478Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q27_NODE_BINARY_METADATA_PASS_OWNER_ATTESTED__Q28_BINARY_PARENT_DIRS_READ_ONLY_PENDING",
+      "status": "H1DB3_Q28_BINARY_PARENT_METADATA_PASS_OWNER_ATTESTED__Q29_BINARY_PARENT_ACL_READ_ONLY_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -148,7 +148,8 @@
         "Q24": "A",
         "Q25": "A",
         "Q26": "A",
-        "Q27": "A"
+        "Q27": "A",
+        "Q28": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -189,7 +190,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q28 READ_ONLY same Mac: inspect ancestor directories of fs.realpathSync(process.execPath), including executable parent to filesystem root, using local Node lstat metadata. Require directory, trusted owner (root or current Unix user), and no group/other write except root-owned sticky directory. Report Q28_BINARY_PARENT_CHECK=PASS/HOLD and Q28_BINARY_PARENT_SAFE=YES/NO/UNKNOWN only; never print paths, IDs, environment or file contents. No file/network/LINE/OAuth/Production changes. Passing does not prove ACL, lexical symlink chain, code signature, deps, or future runner isolation.",
+      "nextAction": "Q29 READ_ONLY same Source Owner Mac: inspect ACL metadata on canonical ancestor directories of fs.realpathSync(process.execPath) via macOS /bin/ls -lde, up to filesystem root; classify Q29_BINARY_PARENT_ACL_CHECK=PASS/HOLD and Q29_BINARY_PARENT_ACL_ABSENT=YES/NO/UNKNOWN. Do not print paths, names, Unix IDs, ACL entries, file contents or credentials. No file/network changes, LINE User ID/Token, OAuth/login, LINE API/send or Production. PASS remains owner-reported and does not establish code signing, race safety or full runner isolation.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -715,6 +716,35 @@
         "frontendStatus": "PROD_CURRENT",
         "backendRollbackVersion": 166,
         "scope": "GITHUB_MANIFEST_READ_ONLY_NOT_RUNTIME_DEPLOYMENT_READBACK",
+        "rc135Pr76": "OPEN_DRAFT_UNMERGED"
+      },
+      "q28OwnerMacNodeBinaryParents": {
+        "choice": "A",
+        "reportedChecks": {
+          "Q28_BINARY_PARENT_CHECK": "PASS",
+          "Q28_BINARY_PARENT_SAFE": "YES"
+        },
+        "result": "NODE_BINARY_CANONICAL_ANCESTOR_OWNER_AND_MODE_PASS_OWNER_ATTESTED",
+        "evidenceTier": "PASS_SOURCE_OWNER_ATTESTED_NO_INDEPENDENT_MAC_TERMINAL_READBACK",
+        "recordedAt": "2026-10-26T13:50:52.323Z",
+        "inspectionScope": "canonical Node executable parent-directory chain directory/ownership/POSIX write and root-sticky exception only",
+        "macTerminalOutputIndependentlyVerified": false,
+        "ancestorAclVerified": false,
+        "lexicalSymlinkRaceProven": false,
+        "futureRealDataRunnerApproved": false,
+        "realLineUserIdRead": false,
+        "tokenOrSecretRead": false,
+        "oauthOrLoginPerformed": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
+      },
+      "latestReleaseManifestReadbackAtQ28": {
+        "backendV": 167,
+        "frontendV": 153,
+        "backendStatus": "PROD_CURRENT",
+        "frontendStatus": "PROD_CURRENT",
+        "backendRollbackV": 166,
+        "evidence": "GITHUB_MANIFEST_ONLY_NOT_RUNTIME_READBACK",
         "rc135Pr76": "OPEN_DRAFT_UNMERGED"
       }
     }
