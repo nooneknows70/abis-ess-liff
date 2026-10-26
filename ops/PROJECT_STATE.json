@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T06:17:53.526Z",
+  "updatedAt": "2026-10-26T06:29:33.607Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -91,7 +91,7 @@
       "remoteManifestUnchanged": "UNVERIFIED"
     },
     "rc135H1dB": {
-      "status": "Q16_ZIP_INTEGRITY_PASS_OWNER_TERMINAL__Q17_MAC_NODE24_PENDING",
+      "status": "Q17_MAC_NODE24_SYNTHETIC_CLOSED_PASS__H1DB3_REAL_IDENTITY_PREFLIGHT_HOLD",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -114,7 +114,8 @@
         "Q14": "PASS_OWNER_TERMINAL_CHILD_077",
         "Q15": "PARTIAL_OWNER_TERMINAL_OUTPUT",
         "Q15b": "PASS_OWNER_TERMINAL_MATCH",
-        "Q16": "PASS_OWNER_MAC_SHA256_CRC"
+        "Q16": "PASS_OWNER_MAC_SHA256_CRC",
+        "Q17": "PASS_OWNER_MAC_NODE24_68_68_SYNTHETIC"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -155,7 +156,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q17 on owner Mac, recheck pinned synthetic ZIP SHA256, extract to secure disposable child umask077 directory and run only 68 built-in Node tests plus fixed synthetic CLI; no npm, network, LINE ID or Token.",
+      "nextAction": "H1DB-3 READ_ONLY static audit of isolated real-identity-verifier design, LIFF/LINE Login Provider relationship and non-mutating identity evidence, least privilege local runner and OS/network ACL. No actual LINE User ID, OAuth login/Token, LINE API, live Push or Production.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -426,6 +427,36 @@
           "LOCAL_PRIVATE_REAL_ID_DATA_ACL_HOLD",
           "OWNER_IDENTITY_MATCH_HOLD",
           "TOKEN_TO_CHANNEL_HOLD",
+          "LINE_SEND_HOLD",
+          "PRODUCTION_HOLD"
+        ]
+      },
+      "q17OwnerMacSyntheticValidation": {
+        "date": "2026-10-26",
+        "provenance": "SOURCE_OWNER_MAC_NODE24_TERMINAL",
+        "reported": {
+          "tests": "68/68_PASS",
+          "fakeCli": "PASS_NOT_REAL_IDENTITY",
+          "node": "v24.21.0",
+          "umask": "077"
+        },
+        "baselineQ5ZipSha256": "b55852ef717272bc3f6cea0351e373c198c5eae391eba45f4a110830a3b90c75",
+        "q16OwnerZipCrcSha256": "PASS",
+        "gate": "SYNTHETIC_VALIDATION_CLOSED_PASS",
+        "ownerMacResultsIndependentlyAudited": false,
+        "tempWorkspaceModeAndCleanupIndependentlyVerified": false,
+        "lineUidRead": false,
+        "tokenRead": false,
+        "lineApiCalls": 0,
+        "productionMutation": false,
+        "h1dbRealUidAccessAllowedNow": false,
+        "nextStage": "H1DB3_READ_ONLY_REAL_IDENTITY_ISOLATION_PREFLIGHT",
+        "nextAction": "H1DB-3 READ_ONLY static audit of isolated real-identity-verifier design, LIFF/LINE Login Provider relationship and non-mutating identity evidence, least privilege local runner and OS/network ACL. No actual LINE User ID, OAuth login/Token, LINE API, live Push or Production.",
+        "hardHolds": [
+          "REAL_IDENTITY_OWNER_MATCH_HOLD",
+          "LOCAL_REAL_ID_RUNNER_OAUTH_ACL_HOLD",
+          "PROVIDER_RUNTIME_IDENTITY_HOLD",
+          "CHANNEL_TOKEN_MAPPING_HOLD",
           "LINE_SEND_HOLD",
           "PRODUCTION_HOLD"
         ]
