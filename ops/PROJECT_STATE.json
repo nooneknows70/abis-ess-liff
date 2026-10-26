@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T09:22:00+08:00",
+  "updatedAt": "2026-10-26T09:41:18.555+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -35,6 +35,60 @@
       "productionMutationAuthorized": false,
       "evidenceDate": "2026-10-26",
       "nextAction": "Use read-only source/Stage identity and frontend-backend contract verification; do not deploy LIFF or change Manifest"
+    },
+    "rc135H1dB": {
+      "status": "Q1_Q8_RECORDED_OWNER_ATTESTED_UI_WITH_RUNTIME_HOLD",
+      "date": "2026-10-26",
+      "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
+      "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
+      "backendOwnerRepo": "nooneknows70/abis-ess-backend",
+      "featurePr": 76,
+      "ownerChoices": {
+        "Q1": "A",
+        "Q2": "A",
+        "Q3": "A",
+        "Q4": "A",
+        "Q5": "A",
+        "Q6": "A",
+        "Q7": "A",
+        "Q8": "A",
+        "Q9": "A_OPS_ONLY"
+      },
+      "evidence": {
+        "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
+        "q2MessagingChannelUi": "PASS_OWNER_ATTESTED_MATCH_NO_ID",
+        "q3PhoneFriendAndPrivateBindingStatus": "PASS_OWNER_ATTESTED_PLUS_PRIVATE_STATUS_ONLY_NO_UID",
+        "q4LimitedFutureUidUse": "AUTHORIZED_AFTER_ISOLATION_PREFLIGHT_ONLY_NOT_EXECUTED",
+        "q5LocalHermeticVerifier": "APPROVED; 68/68 SYNTHETIC REPORTED IN PREVIOUS CONVERSATION, NOT RERUN",
+        "q6LoginLiffIdentityCandidate": "PASS_GIT_MAIN_STATIC_SOURCE_NOT_RUNTIME",
+        "q7LinkedOfficialAccount": "PASS_OWNER_ATTESTED_MATCH_NOT_INDEPENDENTLY_LIVE_VERIFIED",
+        "q8SixCellRichMenuUi": "PASS_OWNER_ATTESTED_HISTORICAL_RM10E_REFERENCE_ONLY",
+        "historicalRichMenuCutover": "2026-10-07 RM-10E PASS historical evidence",
+        "frozenLiFFSource": "main index.html has six navigation routes plus additional payroll route; live user's specific Rich Menu link not read"
+      },
+      "authority": {
+        "frontendManifestVersion": 153,
+        "backendManifestVersionAtRecord": 163,
+        "compatibilityStatus": "NOT_AUTOMATIC_DRIFT"
+      },
+      "liveActualRichMenuId": "NOT_VERIFIED",
+      "liveActualMenuUri": "NOT_VERIFIED",
+      "realLineUidRead": false,
+      "realTokenRead": false,
+      "realLoginOrOauthApiCalled": false,
+      "linePushAuthorized": false,
+      "productionMutationAuthorized": false,
+      "thisRecordGithubScope": "ONLY_OPS_SSOT_FILES",
+      "holds": [
+        "REAL_UID_OWNER_PROOF_HOLD",
+        "RUNNER_ACL_OAUTH_HOLD",
+        "CURRENT_RICH_MENU_ID_AND_URI_HOLD",
+        "LIVE_LIFF_ENTRY_PROPERTY_HOLD",
+        "TOKEN_CHANNEL_BINDING_HOLD",
+        "LINE_SEND_HOLD",
+        "PRODUCTION_HOLD"
+      ],
+      "nextAction": "READ_ONLY: check static LIFF boot route/channel provider architecture and isolated runner safety; do not open live OAuth/LIFF login, get User ID, call LINE API, alter rich menu or deploy LIFF."
     }
   }
 }
