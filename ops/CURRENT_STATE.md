@@ -109,3 +109,9 @@ Cross-repo note:
 - RC1.35's separate `ABIS_RC135_DEDICATED_SYNTHETIC_STAGE` OAuth scopes remain **UNVERIFIED**. Earlier Q12 project attribution question is already answered by the caption; **do not ask Q12 again**.
 - Next single operator read-only check is the correct RC1.35 Stage **Overview → Project OAuth Scopes** with project title visible, while hiding Script ID and all credentials. No LINE User ID, Token, login, script execution, API, Stage writes, deployment or Production change.
 - Q1–Q10 and LIFF Manifest V153 unaffected; Q9 `ops/`-only SSOT scope.
+
+## Office OT S0 new Stage identity readback
+
+- Owner-created Office OT synthetic Stage identity verified by authenticated Google Drive metadata on 2026-10-26. Project name: `ABIS_ESS_OT_STAGE_SYNTHETIC_ONLY_20261026`; native Google Apps Script file, owner-only metadata.
+- Creation gate: PASS. Zero-state source/Deployments/Triggers/Properties/OAuth: UNVERIFIED; S0 remains HOLD pending new project read-only screenshots.
+- No LIFF code, Manifest, LINE, Stage source, Trigger, Deployment or Production changes. Existing RC5 is not approved for Office OT testing; Q1-Q30 policy unchanged.
