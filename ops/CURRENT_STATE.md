@@ -245,3 +245,10 @@ Cross-repo note:
 - Potential minimal solution, **NOT AUTHORIZED**: remove the final underscore from the example function name only, keep `abisOtS0SyntheticPreview_` private; would require separate Source Owner source-delta authorization, new offline tests/hash, Stage readback and separate function invocation authorization. The Owner has NOT requested or authorized the edit, therefore retain HOLD.
 - No Code.gs, appsscript.json, OAuth, Properties, Trigger, Deployment, Stage data, LINE, Payroll, Raw Punch or Production changes. Backend V165 and LIFF V153 release authority and frozen Q1-Q30 policy stay unchanged.
 
+
+## RC1.35 H1D-B Q18 — Business ID personal LINE linkage (2026-10-26)
+
+- Source Owner Q18=A: existing LINE Developers Console Business ID Profile links to the SAME personal handset LINE account designated in Q1. Evidence `PASS_SOURCE_OWNER_ATTESTED_UI_ONLY`; no independent platform User ID equality verification, real User ID read, credential read or LINE API.
+- Q17 Node24 68/68 synthetic CLOSED_PASS remains unchanged; existing live LIFF/OAuth paths blocked due to binding/session/audit/potential push side effects. Draft PR #76 fake-only module is not a real UID verifier.
+- Next Q19: read-only local Mac FileVault status `fdesetup status` without sudo, report ON/OFF/UNKNOWN. This is a single OS disk-encryption prerequisite only, not full runner or real UID clearance. Do not access identifiers, run login/OAuth, modify settings, send LINE or touch Production.
+- Gate `H1DB3_Q18_OWNER_BUSINESS_ID_LINK_PASS__Q19_MACOS_FILEVAULT_READ_ONLY_PENDING`; Q9 authorizes ops/ SSOT documentation only. Backend V165 and LIFF V153 manifest authorities remain unchanged. All UID/ACL/OAuth/token/channel/sending/Production HOLD maintained.
