@@ -230,3 +230,10 @@ Cross-repo note:
 - Owner condition **if exact existing function not directly selectable, immediately HOLD; do not modify code or add wrapper**. Therefore `HOLD_STAGE_PRIVATE_TRAILING_UNDERSCORE_ENTRYPOINT_NOT_SELECTABLE_EXPECTED_UI_CHECK_PENDING` until owner inspects dropdown (no screenshot/owner UI answer yet). Ask only for `FUNCTION_SELECTABLE=YES/NO` for exact function; if NO, do not click Run, Debug, rename or switch functions. Count 0/1, conditional permission unconsumed.
 - No LINE/LIFF, OAuth escalation, Script Properties, Trigger, Deployment, Stage business data, Payroll or Production changes. Backend V165 and frontend V153 separate release authorities; Q1–Q30 frozen and RC1.35 other workstream unaffected.
 
+## Office OT S0 — owner FUNCTION_SELECTABLE=NO, keep Stage runtime HOLD (2026-10-26)
+
+- Source Owner directly reports `FUNCTION_SELECTABLE=NO` for the authorized Stage `abisOtS0SyntheticExample_()`, whose trailing underscore makes it a private entrypoint hidden from the Apps Script editor Run selector. Prior Code.gs source/manifest owner clasp 3/3 parity PASS remains intact.
+- Fail closed per explicit owner requirement: `HOLD_PRIVATE_FUNCTION_ENTRYPOINT_CONFIRMED_UNSELECTABLE_BY_SOURCE_OWNER`. The **one-time synthetic run authorization remains unconsumed (0/1)**; no alternate execution function or path may be substituted, and no Run/Debug was performed by this workstream. Do not change `Code.gs`, `appsscript.json`, OAuth, Properties, Triggers, Deployments, LINE or Production.
+- No additional operator inspection is required for dropdown visibility. If Source Owner later requests S0 execution to resume, that would require a **separately authorized** minimal public synthetic entrypoint source change, a fresh source SHA256/retest/readback, and separate invocation authorization. No such modification is approved by this message.
+- This update modifies GitHub `ops/` evidence only. Backend V165 and LIFF V153 Release Manifests, RC1.35, REST33 and Office OT Q1–Q30 policy remain unchanged.
+
