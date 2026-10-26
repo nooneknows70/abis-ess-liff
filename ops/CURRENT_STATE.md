@@ -124,3 +124,12 @@ Cross-repo note:
 - **Q12 next one read-only manual node:** in same RC135 Stage Apps Script, open Project Settings > Script Properties; report only **zero/nonzero/unknown entry count**. Never read/copy property values or credentials, run scripts, change OAuth, deploy or trigger.
 - `Q11_PASS_OWNER_ATTESTED_ZERO_REQUESTED_SCOPES / Q12_SCRIPT_PROPERTIES_PENDING / REAL_UID_HOLD / INDEPENDENT_OAUTH_ACL_HOLD / LINE_SEND_HOLD / PRODUCTION_HOLD`. Frontend LIFF Manifest V153 unchanged, independent Backend V165 release untouched.
 - Central Q11 correction handoff: https://github.com/nooneknows70/abis-release-control/commit/38702d8a6fdf221b7252a23e9e1d143a9c246840.
+
+## RC1.35 H1D-B — Q12 owner confirms no Script Properties in dedicated synthetic Stage (2026-10-26)
+
+- Q12 **A** (source-owner attested, correct project): existing `ABIS_RC135_DEDICATED_SYNTHETIC_STAGE` Apps Script **Script Properties list has 0 entries**; no property values, secrets, Tokens or real User IDs accessed.
+- Independently authenticated **Google Drive file metadata** returns a native Apps Script file with `shared=false`, exactly one returned permission role `owner`. Scope: Drive sharing metadata only, NOT Apps Script runtime OAuth, source HEAD/immutable parity or local process ACL.
+- Prior Q11 owner-observed requested OAuth Scopes 0, historical owner screenshots of 0 Triggers and 0 active/archived Deployments, two owner-submitted synthetic scripts. This dedicated Stage is **synthetic-only**; it must not be treated as a real identity runner or live notification environment.
+- Q1–Q12 frozen; next **Q13** one Mac local runner availability check (`uname -s`, `node --version` if installed, `umask`). No file/network modification, no credentials, no LINE actions or Production.
+- Holds `REAL_UID_NOT_READ / MAC_RUNNER_OS_ACL_HOLD / REAL_IDENTITY_NOT_VERIFIED / TOKEN_TO_CHANNEL_HOLD / LIVE_RICH_MENU_URI_HOLD / SEND_HOLD / PRODUCTION_HOLD`. Frontend LIFF Manifest remains independent V153; Backend V165 not changed; existing Q9 GitHub `ops/` record scope only.
+- Central Q12 record: https://github.com/nooneknows70/abis-release-control/commit/f5c14b8b5a733516633a2b9e11d347e2d48b89a6
