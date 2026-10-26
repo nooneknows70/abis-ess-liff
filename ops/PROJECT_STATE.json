@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T15:29:09.691Z",
+  "updatedAt": "2026-10-26T15:55:20.331Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -831,7 +831,7 @@
         "macLocalScript": "ABIS_RC135_H1DB_LOCAL_READONLY_BATCH.cjs",
         "macLocalScriptSha256": "a302e16511e7fa1c6b74495a3f389218908ff330980e6e22998869facb83ae25",
         "macLocalStaticChecks": 23,
-        "macLocalPackStatus": "PREPARED_NODE_SYNTAX_CHECK_ONLY_NOT_RUN_ON_SOURCE_OWNER_MAC",
+        "macLocalPackStatus": "PREPARED_NOT_EXECUTED_ON_SOURCE_OWNER_MAC",
         "testPhase": "PREPARED_WAITING_UNIFIED_OFFLINE_ACCEPTANCE",
         "priorSyntheticStatus": "Q17_OWNER_ATTESTED_68_68_CLOSED_PASS_HISTORICAL_ONLY",
         "pr76": "OPEN_DRAFT_UNMERGED",
@@ -845,7 +845,47 @@
         "productionWriteApproved": false,
         "independentMacVerification": false,
         "realUserIdOrTokenRead": false,
-        "nextStepIndependentReview": "Complete offline static PR#76 / 3-Repo manifest parity and synthetic test plan without remote writes; run packaged Mac local preflight only as final batch; report one consolidated PASS/HOLD. Source write or real LINE proof needs separate explicit source-owner permission."
+        "nextStepIndependentReview": "Complete offline static PR#76 / 3-Repo manifest parity and synthetic test plan without remote writes; run packaged Mac local preflight only as final batch; report one consolidated PASS/HOLD. Source write or real LINE proof needs separate explicit source-owner permission.",
+        "conversationV2": {
+          "name": "ABIS_RC135_H1DB_ONE_SHOT_READONLY_V2_20261026.zip",
+          "sha256": "9125c238bac4bff54326e3a90b620afe64701c8e68acf4cbd23cf89096bef0a3",
+          "script": "ABIS_RC135_H1DB_ONE_SHOT_READONLY.cjs",
+          "scriptSha256": "fda5ae092b64f3af261fab20f5906d73c797811d6ef35c83b5f3e23b72d6fc6f",
+          "checks": 23,
+          "mode": "READ_ONLY_LOCAL_MAC_SECURITY_PRECONDITION_ONLY",
+          "executionOnSourceOwnerMac": "NOT_EXECUTED",
+          "nodeSyntaxCheck": "PASS_IN_ASSISTANT_CONTAINER",
+          "containerRun": "EXPECTED_HOLD_NON_MAC_NOT_VALID_MAC_PASS",
+          "zipIntegrity": "PASS",
+          "origin": "RECONSTRUCTED_V2_NEW_CHAT_ARTIFACT_NOT_IDENTICAL_TO_PRIOR_BUNDLE",
+          "existingGitHubReferencedBundleUntouched": true,
+          "actualMacRunnerAuthorization": false,
+          "productionWrites": 0
+        },
+        "pr76StaticHermeticEvidence": {
+          "backendPrNumber": 76,
+          "headSha": "906c9bd2e24583be97930eb7e7611cebfb12e7c9",
+          "state": "OPEN_DRAFT_UNMERGED",
+          "filesChanged": 40,
+          "ciRunId": 40225574085,
+          "ciName": "Phase1A RC1.35 offline safe checks",
+          "ciConclusion": "SUCCESS_GITHUB_HERMETIC_AT_CURRENT_PR_HEAD",
+          "ciJob": "hermetic_COMPLETED_SUCCESS",
+          "realLineAPICalls": 0,
+          "newCiTriggerAuthorized": false,
+          "q17Owner68of68": "HISTORICAL_OWNER_ATTESTED_NOT_FRESH_REEXECUTION",
+          "backendManifestV": 167,
+          "frontendManifestV": 153,
+          "releaseStatus": "PROD_CURRENT_FROM_GITHUB_MANIFEST_ONLY",
+          "remainingHolds": [
+            "INDEPENDENT_REAL_LINE_IDENTITY",
+            "TOKEN_TO_CHANNEL",
+            "RUNNER_OAUTH_ACL_NETWORK_CREDENTIALS",
+            "REAL_LINE_SEND",
+            "PRODUCTION"
+          ],
+          "batchAcceptance": "NOT_YET_EXECUTED_ON_OWNER_MAC"
+        }
       }
     }
   }
