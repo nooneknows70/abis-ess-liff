@@ -133,3 +133,11 @@ Cross-repo note:
 - Q1–Q12 frozen; next **Q13** one Mac local runner availability check (`uname -s`, `node --version` if installed, `umask`). No file/network modification, no credentials, no LINE actions or Production.
 - Holds `REAL_UID_NOT_READ / MAC_RUNNER_OS_ACL_HOLD / REAL_IDENTITY_NOT_VERIFIED / TOKEN_TO_CHANNEL_HOLD / LIVE_RICH_MENU_URI_HOLD / SEND_HOLD / PRODUCTION_HOLD`. Frontend LIFF Manifest remains independent V153; Backend V165 not changed; existing Q9 GitHub `ops/` record scope only.
 - Central Q12 record: https://github.com/nooneknows70/abis-release-control/commit/f5c14b8b5a733516633a2b9e11d347e2d48b89a6
+
+## Office OT S0 — owner screenshots of new Stage zero-state, source pending (2026-10-26)
+
+- Four screenshots show Office OT-dedicated Apps Script project: 0 triggers, 0 active/archived deployments, no visible Script Properties, 0 7-day executions, no OAuth scopes requested in dashboard. **PASS_OWNER_UI_PARTIAL** only. Google Drive authenticated project ID/name metadata was previously PASS.
+- Missing actual Code Editor file/source/Services/Libraries and `appsscript.json` content, so no Production data connections or future OAuth access cannot be verified. **S0 gate `HOLD_NEW_STAGE_SOURCE_MANIFEST_AND_DATA_TARGET_ISOLATION_UNVERIFIED`**.
+- Next single human read-only evidence packet: Code Editor file list plus `Code.gs` contents, and opened `appsscript.json`. Do not execute code, add scopes/services/properties/triggers/deployments, send LINE, or write Stage/Production.
+- Backend independently reached V165 PROD_CURRENT, but LIFF independent Release Manifest V153 must remain unchanged; Office OT S0 is not a release authorization. Source report `ABIS_ESS_OT_S0_NEW_STAGE_UI_EVIDENCE_20261026.md`, SHA256 `8be14f80d5c9fd14d657396a2cc3e209efd3245526949290c022b59e6793798f`; raw images not in GitHub.
+
