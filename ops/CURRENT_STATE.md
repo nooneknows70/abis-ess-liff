@@ -101,3 +101,11 @@ Cross-repo note:
 - Next single operator **Q12 project attribution**: `A = ABIS_RC135_DEDICATED_SYNTHETIC_STAGE`, `B = ABIS_ESS_POLICY_A_STAGE_RC5`, `C = UNKNOWN`. Never ask for Script ID, token, property values or screenshot containing employee data.
 - H1D-B real identity, scopes, local ACL, Channel credential and live Push remain **HOLD**. LIFF release authority V153 unchanged; Backend REST33/V164/V165 and Office OT remain independent.
 - Central SSOT recording: https://github.com/nooneknows70/abis-release-control/commit/2cdc5191fb98373006beb67d49454ae45f52fa96.
+
+## RC1.35 Q11 — user-caption project attribution correction (2026-10-26)
+
+- Source Owner's Q11 submission was **A**, but screenshot visibly contains four requested OAuth scopes, so A (zero scopes) does not pass. The screenshot is explicitly described in the owner's caption as **`ABIS_POLICY_A_STAGE`**, not the RC1.35 dedicated synthetic Stage. Image crop does not show a name/Script ID; this is `OWNER_DECLARED_PROJECT` evidence only.
+- Scope classification for captioned Policy A Stage is **B / FOUR_REQUESTED_SCOPES**: script.scriptapp, script.external_request, full Drive, full Sheets. Same scope names were previously recorded for `ABIS_ESS_POLICY_A_STAGE_RC5` under Office OT, without new independent Script ID proof. Do not alter Office OT's release/scope decisions.
+- RC1.35's separate `ABIS_RC135_DEDICATED_SYNTHETIC_STAGE` OAuth scopes remain **UNVERIFIED**. Earlier Q12 project attribution question is already answered by the caption; **do not ask Q12 again**.
+- Next single operator read-only check is the correct RC1.35 Stage **Overview → Project OAuth Scopes** with project title visible, while hiding Script ID and all credentials. No LINE User ID, Token, login, script execution, API, Stage writes, deployment or Production change.
+- Q1–Q10 and LIFF Manifest V153 unaffected; Q9 `ops/`-only SSOT scope.
