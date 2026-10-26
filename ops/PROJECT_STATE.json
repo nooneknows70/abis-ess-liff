@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T13:59:15.021Z",
+  "updatedAt": "2026-10-26T14:47:08.048Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q29_BINARY_PARENT_ACL_ABSENT_PASS_OWNER_ATTESTED__Q30_BINARY_LEXICAL_SYMLINK_READ_ONLY_PENDING",
+      "status": "H1DB3_Q30_BINARY_LEXICAL_LINK_PASS_OWNER_ATTESTED__Q31_NODE_CODESIGN_READ_ONLY_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -150,7 +150,8 @@
         "Q26": "A",
         "Q27": "A",
         "Q28": "A",
-        "Q29": "A"
+        "Q29": "A",
+        "Q30": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -191,7 +192,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q30 READ_ONLY same Mac: examine lexical process.execPath path components, containing-parent ownership and mode, and any symlink entry ownership, using Node fs metadata. Return Q30_BINARY_LEXICAL_LINK_CHECK=PASS/HOLD and Q30_BINARY_LEXICAL_LINK_SAFE=YES/NO/UNKNOWN only. Permit root/current-user-owned links under protected parents; require final resolved entry regular file. Do not print paths, IDs, link targets, env, contents or sensitive data. No file modifications, login, LINE API, push or Production. PASS does not prove race freedom or code signing.",
+      "nextAction": "Q31 READ_ONLY same Mac Node executable macOS code-signature seal and non-ad-hoc provenance preflight via /usr/bin/codesign --verify --strict --verbose=0 and --display --verbose=4 against fs.realpathSync(process.execPath), local-only. Report Q31_CODESIGN_TOOL_OK, Q31_SIGNATURE_SEAL_VALID, Q31_SIGNER_NON_ADHOC YES/NO and Q31_STATUS PASS/HOLD/UNKNOWN; do not print paths, signer names, TeamIdentifier, executable contents, environment or secrets; no network, login, LINE API, send or Production. This is local code-signing metadata only, not full notarization/trust, dependency integrity or independent real-identity runner authorization.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -767,6 +768,36 @@
         "oauthOrLoginExecuted": false,
         "lineApiCalls": 0,
         "productionWrites": 0
+      },
+      "q30OwnerMacNodeBinaryLexicalSymlink": {
+        "choice": "A",
+        "reportedChecks": {
+          "Q30_BINARY_LEXICAL_LINK_CHECK": "PASS",
+          "Q30_BINARY_LEXICAL_LINK_SAFE": "YES"
+        },
+        "result": "NODE_EXECUTABLE_LEXICAL_SYMLINK_PATH_TRUST_PASS_OWNER_ATTESTED",
+        "evidenceTier": "PASS_SOURCE_OWNER_ATTESTED_NO_INDEPENDENT_MAC_TERMINAL_READBACK",
+        "recordedAt": "2026-10-26T14:47:08.048Z",
+        "scope": "Node process.execPath lexical path components and parent permissions, symlink entry owner and resolved entry type",
+        "independentlyVerified": false,
+        "symlinkTOCTOUFreedomProven": false,
+        "codeSignatureVerified": false,
+        "signedPublisherProven": false,
+        "futureRunnerApproved": false,
+        "realLineUserIdRead": false,
+        "tokenOrSecretRead": false,
+        "loginOrOauthPerformed": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
+      },
+      "latestReleaseManifestReadbackAtQ30": {
+        "backendV": 167,
+        "frontendV": 153,
+        "backendStatus": "PROD_CURRENT",
+        "frontendStatus": "PROD_CURRENT",
+        "backendRollbackV": 166,
+        "source": "GITHUB_MANIFEST_READ_ONLY_NOT_RUNTIME_READBACK",
+        "rc135Pr76": "OPEN_DRAFT_UNMERGED"
       }
     }
   }
