@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T10:06:15.551Z",
+  "updatedAt": "2026-10-26T12:03:13.491Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -114,7 +114,7 @@
       "stageScriptExecutionAuthorized": false
     },
     "rc135H1dB": {
-      "status": "H1DB3_Q20_PRIVATE_TMPDIR_METADATA_PASS_OWNER_ATTESTED__Q21_TMPDIR_ACL_READ_ONLY_PENDING",
+      "status": "H1DB3_Q21_TMPDIR_ACL_ABSENT_PASS_OWNER_ATTESTED__Q22_TMPDIR_CANONICAL_ANCESTORS_READ_ONLY_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -141,7 +141,8 @@
         "Q17": "PASS_OWNER_MAC_NODE24_68_68_SYNTHETIC",
         "Q18": "A",
         "Q19": "A",
-        "Q20": "A"
+        "Q20": "A",
+        "Q21": "A"
       },
       "evidence": {
         "q1RecipientPolicy": "ONE_SOURCE_OWNER_ACCOUNT_SYNTHETIC_ONLY",
@@ -182,7 +183,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "Q21 READ_ONLY on the same existing Mac: inspect ONLY os.tmpdir() directory ACL metadata using Node spawnSync('/bin/ls',['-lde',os.tmpdir()]) with stdout suppressed from reporting; return Q21_ACL_INSPECTION=PASS/HOLD and Q21_ACL_ABSENT=YES/NO/UNKNOWN. No path, usernames, UID, ACL body, credentials, files, network, login, LINE API or edits. Other ancestor, xattrs, process, network and independent real identity checks remain HOLD.",
+      "nextAction": "Q22 READ_ONLY on same Mac: inspect canonicalized existing os.tmpdir() ancestor directory metadata using Node fs.realpathSync/lstatSync; report only Q22_ANCESTOR_CHECK=PASS/HOLD and Q22_ANCESTOR_SAFE=YES/NO/UNKNOWN. Require each canonical ancestor root-owned or current macOS user-owned and no group/other write except root-owned sticky directories. Do not print paths, Unix UID, names, file contents, ACL body or any LINE data; no mkdir/chmod/login/LINE API/Production writes. Other lexical symlink, ancestor ACL, process/network/credential gates remain HOLD.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -555,6 +556,24 @@
         "onlyFinalOsTmpdirEntryChecked": true,
         "ancestorPermissionsVerified": false,
         "extendedAclVerified": false,
+        "realLineUserIdRead": false,
+        "tokenOrSecretRead": false,
+        "oauthOrLoginPerformed": false,
+        "lineApiCalls": 0,
+        "productionWrites": 0
+      },
+      "q21OwnerMacTmpdirAcl": {
+        "choice": "A",
+        "reportedAclInspection": "PASS",
+        "reportedAclAbsent": "YES",
+        "result": "FINAL_TMPDIR_ACL_ABSENT_OWNER_ATTESTED",
+        "evidenceTier": "SOURCE_OWNER_RESPONSE_ONLY__NO_RAW_MAC_TERMINAL_READBACK",
+        "verificationDate": "2026-10-26",
+        "macTerminalOutputIndependentlyVerified": false,
+        "finalTempDirOnly": true,
+        "resolvedAncestorOwnerModeVerified": false,
+        "ancestorAclVerified": false,
+        "osUidUsedOnlyInLocalPriorMetadataComparator": true,
         "realLineUserIdRead": false,
         "tokenOrSecretRead": false,
         "oauthOrLoginPerformed": false,
