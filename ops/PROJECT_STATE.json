@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T06:29:33.607Z",
+  "updatedAt": "2026-10-26T07:02:48.525Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -95,7 +95,7 @@
       "remoteManifestReadback": "PASS_OWNER_TERMINAL_BASELINE_MATCH"
     },
     "rc135H1dB": {
-      "status": "Q17_MAC_NODE24_SYNTHETIC_CLOSED_PASS__H1DB3_REAL_IDENTITY_PREFLIGHT_HOLD",
+      "status": "H1DB3_LIFF_PROVIDER_STATIC_PASS__Q18_BUSINESS_ID_PERSONAL_LINE_LINK_PENDING",
       "date": "2026-10-26",
       "policyId": "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
       "centralRecordCommit": "e40b738a312b78fa0119216e5092999f0257683e",
@@ -160,7 +160,7 @@
         "LINE_SEND_HOLD",
         "PRODUCTION_HOLD"
       ],
-      "nextAction": "H1DB-3 READ_ONLY static audit of isolated real-identity-verifier design, LIFF/LINE Login Provider relationship and non-mutating identity evidence, least privilege local runner and OS/network ACL. No actual LINE User ID, OAuth login/Token, LINE API, live Push or Production.",
+      "nextAction": "Q18 read-only Business ID Profile linked LINE account check for Q1 sole Source Owner's personal LINE; A same linked / B different or unlinked / C unknown/re-login requested. No User ID, token, OAuth login or settings change.",
       "preQ10StaticAudit": {
         "date": "2026-10-26",
         "status": "PASS_STATIC_GIT_WITH_Q10_MANUAL_LIFF_CONSOLE_HOLD",
@@ -461,6 +461,32 @@
           "LOCAL_REAL_ID_RUNNER_OAUTH_ACL_HOLD",
           "PROVIDER_RUNTIME_IDENTITY_HOLD",
           "CHANNEL_TOKEN_MAPPING_HOLD",
+          "LINE_SEND_HOLD",
+          "PRODUCTION_HOLD"
+        ]
+      },
+      "h1db3ReadOnlySecurityAudit": {
+        "date": "2026-10-26",
+        "mode": "READ_ONLY_GIT_SOURCE_AND_LINE_OFFICIAL_DOCS",
+        "evidenceTier": "PASS_STATIC_MAIN_V153_SOURCE_PIN_OWNER_Q7_PROVIDER_LINK_ATTESTATION",
+        "liffIndexCurrentMainEqualsV153ReleaseSource": true,
+        "bridgePostsRawTokensToMutatingBackend": true,
+        "backendMainCurrentEqualsV165ReleaseSource": true,
+        "existingBackendLiffAuthReadOnly": false,
+        "existingBackendOauthCallbackReadOnly": false,
+        "q7SameProviderLinkedOfficialAccountRule": "PASS_OFFICIAL_RULE_AND_OWNER_ATTESTED_LINK_NOT_LIVE_RUNTIME_PROOF",
+        "developerConsoleOwnUserId": "LATER_CANDIDATE_ONLY_NOT_READ",
+        "businessIdLinkedToSoleOwnerLine": "UNKNOWN_Q18_PENDING",
+        "pr76MockWithRealId": "BLOCKED_MOCK_BODY_TO_IS_SERIALIZABLE",
+        "q17MacSynthetic": "CLOSED_PASS",
+        "nextGate": "Q18_BUSINESS_ID_PERSONAL_LINE_LINK_READ_ONLY",
+        "nextAction": "Q18 read-only Business ID Profile linked LINE account check for Q1 sole Source Owner's personal LINE; A same linked / B different or unlinked / C unknown/re-login requested. No User ID, token, OAuth login or settings change.",
+        "hardHolds": [
+          "REAL_IDENTITY_OWNER_MATCH_NOT_VERIFIED",
+          "REAL_USER_ID_NOT_READ",
+          "OS_RUNNER_LEAST_PRIVILEGE_NOT_PROVEN",
+          "LIVE_OAUTH_OR_PRODUCTION_LOGIN_NOT_AUTHORIZED",
+          "TOKEN_CHANNEL_HOLD",
           "LINE_SEND_HOLD",
           "PRODUCTION_HOLD"
         ]
