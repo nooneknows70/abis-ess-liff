@@ -237,3 +237,11 @@ Cross-repo note:
 - No additional operator inspection is required for dropdown visibility. If Source Owner later requests S0 execution to resume, that would require a **separately authorized** minimal public synthetic entrypoint source change, a fresh source SHA256/retest/readback, and separate invocation authorization. No such modification is approved by this message.
 - This update modifies GitHub `ops/` evidence only. Backend V165 and LIFF V153 Release Manifests, RC1.35, REST33 and Office OT Q1–Q30 policy remain unchanged.
 
+## Office OT S0 | screenshot confirms trailing-underscore private entrypoint HOLD (2026-10-26)
+
+- Source Owner submitted a Code Editor screenshot showing `沒有函式` in the Run dropdown and line 57 `function abisOtS0SyntheticExample_() {`. Image SHA256 `55fdd767a467dc3aa3ab4d2b821fe3196fdfdaf293d3e294811b937a4ddc428e`; no raw screenshot or code was committed to GitHub.
+- Official Google Apps Script behavior: functions ending in `_` are private and absent from the editor Run dropdown. https://googleappsscript.blogspot.com/2010/06/hiding-helper-functions.html and https://developers.google.com/apps-script/guides/html/communication .
+- The prior `FUNCTION_SELECTABLE=NO` HOLD is now also **supported by a supplied screenshot**; the source hash/manifest operator clasp 3/3 PASS stays valid. Existing authorized synthetic single invocation remains unconsumed (0/1), Stage Run/Debug 0.
+- Potential minimal solution, **NOT AUTHORIZED**: remove the final underscore from the example function name only, keep `abisOtS0SyntheticPreview_` private; would require separate Source Owner source-delta authorization, new offline tests/hash, Stage readback and separate function invocation authorization. The Owner has NOT requested or authorized the edit, therefore retain HOLD.
+- No Code.gs, appsscript.json, OAuth, Properties, Trigger, Deployment, Stage data, LINE, Payroll, Raw Punch or Production changes. Backend V165 and LIFF V153 release authority and frozen Q1-Q30 policy stay unchanged.
+
