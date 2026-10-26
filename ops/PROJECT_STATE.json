@@ -34,7 +34,7 @@
       "stageIsolation": "OFFICE_OT_STAGE_APPS_SCRIPT_UNVERIFIED",
       "productionMutationAuthorized": false,
       "evidenceDate": "2026-10-26",
-      "nextAction": "Collect only new Stage Code Editor file list/source and appsscript.json read-only screenshots; no execution or writes; overall S0 HOLD.",
+      "nextAction": "Await Q33 isolated Draft PR source branch authorization; no LIFF source changes, no Stage/Production writes.",
       "rc5CandidateMetadata": "PASS_FILE_ID_OWNER_METADATA_ONLY",
       "stageReuseDecision": "EXISTING_STAGE_READ_ONLY_INVESTIGATION_NO_NEW_PROJECT",
       "offlineSyntheticContract": "PASS_40_40",
@@ -111,7 +111,23 @@
       "functionSelectorScreenshotReadback": "OWNER_IMAGE_UI_NOT_APPS_SCRIPT_API",
       "proposedMinimalSourceDelta": "REMOVE_ONE_TRAILING_UNDERSCORE_FROM_EXAMPLE_NAME_ONLY_NOT_AUTHORIZED",
       "proposedSourceDeltaAuthorized": false,
-      "stageScriptExecutionAuthorized": false
+      "stageScriptExecutionAuthorized": false,
+      "lastKnownStageGate": "HOLD_PRIVATE_FUNCTION_ENTRYPOINT_CONFIRMED_UNSELECTABLE_BY_SOURCE_OWNER",
+      "q32HExecutionEvidence": "ONE_COMPLETED_EDITOR_INVOCATION_OWNER_SCREENSHOT_7_DAY_ONLY",
+      "q32GCodeEvidence": "PASS_OWNER_EDITOR_TEXT_SINGLE_UNDERSCORE_EXACT",
+      "dedicatedStageCurrentState": "HOLD_RUNTIME_RETURN_SIDE_EFFECT_API_SOURCE_NOT_VERIFIED",
+      "phase1OfflineBatchRC1": {
+        "zipName": "ABIS_Office_OT_Phase1_Offline_Batch_RC1_20261026.zip",
+        "sha256": "a386360f5f2966c61712945f885449384ad836a608a4ef9ae6984735d58bb3b0",
+        "testResult": "PASS_111_111_SYNTHETIC_OFFLINE_ONLY",
+        "feature": "OFF_NOT_CONNECTED_TO_RUNTIME",
+        "phase2": "CONTRACT_ONLY_WRITES_BLOCKED",
+        "productionWrite": 0,
+        "stageWrite": 0,
+        "realLineSend": 0,
+        "gitSourceWrite": 0,
+        "sourceOwnerNextGate": "Q33_A_OR_B_DEVELOPMENT_BRANCH_DRAFT_PR"
+      }
     },
     "rc135H1dB": {
       "status": "H1DB3_Q31_CODESIGN_PASS_OWNER_ATTESTED__ONE_SHOT_READ_ONLY_BATCH_PREPARED_LIVE_HOLD",
