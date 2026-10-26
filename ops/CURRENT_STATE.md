@@ -148,3 +148,9 @@ Cross-repo note:
 - Source Owner evidence is screenshot + pasted JSON, NOT authenticated Apps Script getContent/runtime. Scope inference, future code, runtime, network and cross-system parity remain untested. No source import, Stage execution or business-data write authorized by creation-only permission.
 - Next Gate: local/offline synthetic Code.gs validation, then separate bounded source-upload-only authorization. Any actual Stage execution, Trigger, Deployment, LINE, Payroll and Production remain independent controls. LIFF Manifest remains V153, Backend independent manifest V165; Q1–Q30 frozen.
 
+## RC1.35 H1D-B — Q13 owner macOS Node.js env, private umask gate (2026-10-26)
+
+- Owner Q13 Terminal read-only text: macOS `Darwin`, `Node v24.21.0`, default shell `umask 022`. Available environment `PASS_OWNER_ATTESTED`; **private-identity runner still HOLD**, because newly created files/directories under 022 can be 0644/0755 by default.
+- For any future real-identity data use, require isolated child-process `umask 077`, `0700` private workspace and `0600` private files. No system-wide setting changed. The prior 68/68 synthetic test pack has **not** been tested on this owner's Node v24 Mac.
+- Next **Q14** is safe read-only subprocess check: Node sees 077 inside the subshell, original parent umask remains 022. No file creation, network, OAuth, LINE API, User ID, Token, Apps Script/Stage operations or Production writes.
+- `REAL_UID_HOLD / LOCAL_RUNNER_OS_ACL_HOLD / TOKEN_CHANNEL_HOLD / SEND_HOLD / PRODUCTION_HOLD` unchanged. Backend V165/LIFF V153 release authorities independent; this is Q9-approved `ops/` only. Central handoff https://github.com/nooneknows70/abis-release-control/commit/42049c7959a3f30763b4e428b691b1c88c7c9ca6.
