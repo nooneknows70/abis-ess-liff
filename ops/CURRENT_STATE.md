@@ -93,3 +93,11 @@ Cross-repo note:
 - No LIFF source/assets, Release Manifest, LINE route/menu, auth Session, Stage Script code, Sheet, Trigger or Deployment writes permitted.
 - RC5 stays barred for Office OT remote execution; source authority V153 independent from Backend V163 Manifest / observed @164 reconciliation.
 
+## RC1.35 H1D-B Q11 B — cropped 4-scope screenshot, project not identified (2026-10-26)
+
+- Owner answered Q11 **B** and supplied a cropped Apps Script OAuth panel with **four requested scopes**: `script.scriptapp`, `script.external_request`, full `drive`, full `spreadsheets`. UI evidence only; does not establish granted scopes, project execution or runtime identity.
+- The image does not display the Apps Script project name/Script ID. Prior central SSOT already observed **the same exact four scopes** in unrelated `ABIS_ESS_POLICY_A_STAGE_RC5`. Therefore **do not assign screenshot to RC1.35** without Source Owner project-title confirmation; RC1.35 Stage effective scopes remain `UNVERIFIED`.
+- No real LINE User ID read, login, LINE API, Token or other Stage/Production mutation. Q1–Q10 frozen unchanged; Q10 LIFF Endpoint/`openid` remains `PASS_OWNER_ATTESTED`.
+- Next single operator **Q12 project attribution**: `A = ABIS_RC135_DEDICATED_SYNTHETIC_STAGE`, `B = ABIS_ESS_POLICY_A_STAGE_RC5`, `C = UNKNOWN`. Never ask for Script ID, token, property values or screenshot containing employee data.
+- H1D-B real identity, scopes, local ACL, Channel credential and live Push remain **HOLD**. LIFF release authority V153 unchanged; Backend REST33/V164/V165 and Office OT remain independent.
+- Central SSOT recording: https://github.com/nooneknows70/abis-release-control/commit/2cdc5191fb98373006beb67d49454ae45f52fa96.
