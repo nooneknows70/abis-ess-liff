@@ -26,7 +26,7 @@
       "policiesConfirmed": 30,
       "phase": "PHASE1",
       "stage": "S0",
-      "gateStatus": "HOLD_STAGE_PRIVATE_TRAILING_UNDERSCORE_ENTRYPOINT_NOT_SELECTABLE_EXPECTED_UI_CHECK_PENDING",
+      "gateStatus": "HOLD_PRIVATE_FUNCTION_ENTRYPOINT_CONFIRMED_UNSELECTABLE_BY_SOURCE_OWNER",
       "localFrontendManifestVersion": 153,
       "backendReleaseManifestVersion": 163,
       "compatibility": "UNVERIFIED_NOT_AUTOMATIC_DRIFT",
@@ -47,7 +47,7 @@
       "rc5UiEvidence": "PASS_6_SCRIPTS_0_DEPLOYS_0_TRIGGERS_5_PROPERTIES_4_BROAD_SCOPES_OWNER_UI",
       "rc5ReuseForOT": "NOT_APPROVED",
       "stageDedicatedProjectCreationAuthorized": true,
-      "nextManualNode": "OWNER_READ_ONLY_OFFICE_OT_STAGE_FUNCTION_SELECTOR_CHECK_NO_RUN_IF_ABSENT",
+      "nextManualNode": "AWAIT_SEPARATE_SOURCE_OWNER_DECISION_IF_REOPENING_STAGE_ENTRYPOINT",
       "offlineTest": "PASS_40_40",
       "productionOrStageWritesAuthorized": false,
       "stageCreationAuthorization": "SOURCE_OWNER_A_20261026",
@@ -100,7 +100,11 @@
       "singleSyntheticInvocationCountObserved": 0,
       "singleSyntheticInvocationConsumed": false,
       "singleSyntheticInvocationCanExecuteNow": false,
-      "stageEditorFunctionSelectable": "UNVERIFIED_PRIVATE_NAMING_CONVENTION_PREDICTS_HIDDEN"
+      "stageEditorFunctionSelectable": "NO_OWNER_UI_ATTESTED",
+      "singleSyntheticInvocationExecuted": false,
+      "entrypointDropdownReadback": "FUNCTION_SELECTABLE=NO",
+      "stageScriptPropertiesWriteAuthorized": false,
+      "stageDeployOrTriggerWritesAuthorized": false
     },
     "rc135H1dB": {
       "status": "H1DB3_LIFF_PROVIDER_STATIC_PASS__Q18_BUSINESS_ID_PERSONAL_LINE_LINK_PENDING",
