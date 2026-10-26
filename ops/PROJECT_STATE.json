@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T12:14:07.049+08:00",
+  "updatedAt": "2026-10-26T04:17:41.234Z",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -26,7 +26,7 @@
       "policiesConfirmed": 30,
       "phase": "PHASE1",
       "stage": "S0",
-      "gateStatus": "HOLD_NEW_STAGE_ZERO_STATE_AND_RUNTIME_READBACK_UNVERIFIED",
+      "gateStatus": "HOLD_NEW_STAGE_SOURCE_MANIFEST_AND_DATA_TARGET_ISOLATION_UNVERIFIED",
       "localFrontendManifestVersion": 153,
       "backendReleaseManifestVersion": 163,
       "compatibility": "UNVERIFIED_NOT_AUTOMATIC_DRIFT",
@@ -39,7 +39,7 @@
       "stageReuseDecision": "EXISTING_STAGE_READ_ONLY_INVESTIGATION_NO_NEW_PROJECT",
       "offlineSyntheticContract": "PASS_40_40",
       "actualStageIsolation": "HOLD_NOT_VERIFIED",
-      "nextHumanEvidence": "OWNER_NEW_STAGE_FILE_LIST_DEPLOYMENTS_TRIGGERS_PROJECT_SETTINGS_SCREENSHOTS",
+      "nextHumanEvidence": "CODE_EDITOR_SOURCE_LIST_CONTENT_AND_APPSCRIPT_JSON_SCREENSHOTS",
       "separateBackendV164Reconciliation": "HOLD_PENDING_READ_ONLY_PARITY",
       "productionWritesAllowed": false,
       "stageWritesAllowed": false,
@@ -60,7 +60,15 @@
       "stageProjectId": "1R96DqSE7DxHsyj1lsXf-WaGgTuuTNA2FWR7jJKN_cZx0z9nusHbmO2ud",
       "stageProjectUrl": "https://script.google.com/d/1R96DqSE7DxHsyj1lsXf-WaGgTuuTNA2FWR7jJKN_cZx0z9nusHbmO2ud/edit?usp=drivesdk",
       "stageProjectIdentity": "PASS_DIRECT_GOOGLE_DRIVE_ID_TITLE_MIME_OWNER_METADATA",
-      "newStageZeroState": "HOLD_UNVERIFIED"
+      "newStageZeroState": "HOLD_UNVERIFIED",
+      "newStageUiGate": "PASS_OWNER_UI_PARTIAL_SOURCE_HOLD",
+      "newStageTriggers": "UI_ZERO",
+      "newStageDeployments": "UI_ZERO_ACTIVE_ARCHIVED",
+      "newStageProperties": "UI_NO_VISIBLE_ENTRIES",
+      "newStageOauth": "DASHBOARD_NO_REQUESTED_SCOPES_NOT_MANIFEST_PROOF",
+      "newStageFileInventory": "UNVERIFIED",
+      "newStageManifest": "UNVERIFIED",
+      "newStageFormalDataIsolation": "UNVERIFIED"
     },
     "rc135H1dB": {
       "status": "Q12_ZERO_PROPERTIES_OWNER_ATTESTED__Q13_MAC_ENV_PREFLIGHT_PENDING",
