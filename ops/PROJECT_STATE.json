@@ -1974,9 +1974,9 @@
         "PRODUCTION"
       ],
       "nextHumanGate": "One batch of non-identifying operator classifications from existing signed-in consoles and separately authorized OS egress proof; never request ID/Token or new login. All actual personal UID/token, LINE push, Stage or Production require independent scopes.",
-      "gate": "RC135_Q34_CI43_PLUS_INTEGRATED25_PASS__PROVIDER_OAUTH_ROW_NETWORK_HOLD__Q35_LIVE_Q36_PROD_HOLD",
+      "gate": "RC135_Q34_PROVIDER_PAGE_OAUTH_ROW_OS_HOLD__Q35_STATIC_CI27_PASS__Q35_LIVE_Q36_PROD_HOLD",
       "sourceRepo": "abis-ess-liff",
-      "previousGate": "RC135_Q34_OFFLINE_CI43_PASS_DRIVE_ACL_OWNER_ONLY__PROVIDER_OAUTH_ROW_NETWORK_HOLD__REAL_LINE_STAGE_PROD_HOLD",
+      "previousGate": "RC135_Q34_CI43_PLUS_INTEGRATED25_PASS__PROVIDER_OAUTH_ROW_NETWORK_HOLD__Q35_LIVE_Q36_PROD_HOLD",
       "crossStageIntegratedBatch": {
         "date": "2026-10-27",
         "githubCandidateHead": "56992fb390ab74094ca61390cc281b71431143b3",
@@ -2017,7 +2017,65 @@
         "nextSensitiveActions": "HOLD_SEPARATE_SOURCE_OWNER_AUTHORIZATION",
         "evidenceFile": "ops/rc135/ABIS_RC135_Q34_Q36_INTEGRATION_CI25_20261027.md",
         "gate": "RC135_Q34_CI43_PLUS_INTEGRATED25_PASS__PROVIDER_OAUTH_ROW_NETWORK_HOLD__Q35_LIVE_Q36_PROD_HOLD"
-      }
+      },
+      "operatorCheckpointV2": {
+        "date": "2026-10-27",
+        "mode": "OWNER_ONLY_EXISTING_SIGNED_IN_CONSOLE_NO_LOGIN",
+        "status": "PENDING_OWNER_CLASSIFICATION",
+        "questions": [
+          "PROVIDER_SAME_DIFFERENT_UNKNOWN",
+          "PROVIDER_PAGE_PUBLISHED_AND_DISCLOSED_OR_NOT_OR_UNKNOWN"
+        ],
+        "identityTokenChannelIdRequests": 0,
+        "ownerAnswerIsNotIndependentProof": true,
+        "futureIdentityRuntimeOauth": "NOT_PROVISIONED_OR_NOT_VERIFIED",
+        "singlePersonRowScope": "NOT_VERIFIED",
+        "osEnforcedNetworkBoundary": "NOT_VERIFIED",
+        "dataUsePolicy": "NOT_CONFIRMED",
+        "actualUserIdRead": false,
+        "actualLineApiCalled": false,
+        "gate": "OPERATOR_RESPONSE_PENDING_NO_LIVE_AUTHORIZATION"
+      },
+      "latestFeatureHead": "4fbdc46a9a9c125f98d2ee51f184536329d554af"
+    },
+    "rc135Q35StaticBoundary": {
+      "date": "2026-10-27",
+      "evidenceTier": "GITHUB_STATIC_SOURCE_ONLY_NO_REAL_RUNTIME",
+      "branch": "feat/phase1a-line-delta-i18n-rc1-35-v159",
+      "prNumber": 76,
+      "prStatus": "OPEN_DRAFT_UNMERGED",
+      "featureHead": "4fbdc46a9a9c125f98d2ee51f184536329d554af",
+      "ciRun": 40483189767,
+      "ciResult": "SUCCESS",
+      "staticChecksPass": 27,
+      "staticChecksFail": 0,
+      "initialFailedRun": 40482939738,
+      "initialFailureReason": "TEST_FIXTURE_TOO_SHORT_CAUSED_EXPECTED_PARSE_VS_INPUT_LENGTH_HOLD",
+      "staticSourceFile": "src/P5A2_5_PHASE1A_LINE_RC1_35.js",
+      "staticToolFile": "tools/abis-rc135-h1db-q35-live-boundary-static.mjs",
+      "staticTestFile": "tests/test-rc135-h1db-q35-live-boundary-static.mjs",
+      "findings": {
+        "tokenReadInLegacyPushFunction": "SOURCE_TEXT_PRESENT_NOT_RUNTIME_PROOF",
+        "lineUrlFetchInLegacyPushFunction": "SOURCE_TEXT_PRESENT_NOT_RUNTIME_PROOF",
+        "callerSuppliedRecipient": "SOURCE_TEXT_PRESENT_NOT_RUNTIME_PROOF",
+        "multiBatchSource": "SOURCE_TEXT_PRESENT_NOT_RUNTIME_PROOF",
+        "ownerOnlyAllowlistWithinFunction": "NOT_EVIDENCED_IN_SCANNED_SOURCE",
+        "durableAttemptLedgerWithinFunction": "NOT_EVIDENCED_IN_SCANNED_SOURCE",
+        "xLineRetryKeyWithinFunction": "NOT_EVIDENCED_IN_SCANNED_SOURCE",
+        "existingH1DBOfflineMock": "PASS_SOURCE_ONLY_NO_REAL_SEND",
+        "declaredAppsScriptOAuthScopes": "NOT_DECLARED_EFFECTIVE_SCOPES_UNKNOWN"
+      },
+      "gate": "LIVE_Q35_SENDER_HOLD_SEPARATE_BOUNDED_ONE_RECIPIENT_SENDER_REQUIRED",
+      "q35LiveReady": false,
+      "independentlyAuthenticatedProvider": false,
+      "realLineUserIdRead": false,
+      "realTokenRead": false,
+      "realLineAPICalls": 0,
+      "stageWrites": 0,
+      "productionWrites": 0,
+      "doc": "ops/rc135/ABIS_RC135_Q34_OPERATOR_Q35_LIVE_BOUNDARY_20261027.md",
+      "nextHuman": "ONE_REPLY_PROVIDER_AND_PROVIDER_PAGE_ONLY_FROM_EXISTING_SESSION",
+      "sourceRepo": "abis-ess-liff"
     }
   }
 }
