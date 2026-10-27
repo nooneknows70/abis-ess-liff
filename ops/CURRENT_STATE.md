@@ -1,5 +1,16 @@
 # ABIS ESS LIFF — Current State
 
+## ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027 — @167 release parity PASS, verifier format mismatch, UI release HOLD
+
+- **Source Owner authorization:** A remains valid for a scoped button-label release under Release Flow V2; no repeat policy confirmation needed.
+- **Owner-Mac read-only result:** Git authority `501c88c26fb955db8bbdc4226d0010316966bfb3`; `Git -> HEAD SOURCE_ALIGNMENT_PASS 78/78`, `Git -> Production @167 DEPLOYMENT_ALIGNMENT_PASS 78/78` with 0 missing/extra/mismatch.
+- **`Manifest STALE` root cause:** helper compares literal `manifest.verification.deploymentAlignment="PASS_78_78"` to `gitVsDeployment.status="PASS"` and produces a false `STALE` despite matching version @167 and matching source hashes. Do not edit Production Manifest just to satisfy an old helper.
+- **`MANUAL_PENDING`** is a hard-coded output of `tools/abis-release-verify.mjs`, not a newly observed runtime error. Existing independent @167 runtime evidence is preserved; new leave-label post-release smoke has not occurred.
+- **Exact-blob local tests:** LIFF adapter/test Git blobs `3e8126d03864c4824e19efe0b280e0a8ae60ee20` and `50b4a67e5a35143448a89af61e11060ac74c1768` both match; real Node 22.16.0 `node --test` yields 12/12 PASS.
+- **Remaining blocker:** no GitHub CI status checks/workflow runs for Backend Draft PR #95 or LIFF Draft PR #28. Both OPEN/DRAFT/UNMERGED. No Production deployment, new immutable version, LINE, or leave/business-data write took place.
+- **Next:** get independently checkable CI PASS and paired Release Flow V2 preflight/rollout capability. Do not merge only one repo; keep Backend @167 / LIFF V153 and rollback @166 untouched while HOLD.
+
+
 ## ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027 — Source Owner A, Release preflight HOLD (2026-10-27)
 
 - **Approved intent:** Replace eligible factory manager MANAGER_ASSIGN button text `指派代理` with `核准申請`, preserving the existing `ASSIGN_PROXY` operation and all approval/authorization rules.
