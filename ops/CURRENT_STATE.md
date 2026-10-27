@@ -610,3 +610,10 @@ Cross-repo note:
 - Backend main Manifest independently at **V168 PROD_CURRENT**; LIFF **V153 PROD_CURRENT**. No source release, actual Google/LINE identity or token read, Stage, OAuth or Production mutations. Overall **Q34=PARTIAL_READ_ONLY_HOLD**, not full pass.
 - Next one combined operator classification-only evidence (existing signed-in official consoles, no new login): Provider SAME/DIFFERENT/UNKNOWN, effective OAuth minimal/extra/unknown, single-person file scope and OS no-egress verified/unknown. Missing authentication, consent or evidence = HOLD; never collect raw IDs/token. Q35 live send and Q36 release separately authorized later.
 - Gate: `RC135_Q34_OFFLINE_CI43_PASS_DRIVE_ACL_OWNER_ONLY__PROVIDER_OAUTH_ROW_NETWORK_HOLD__REAL_LINE_STAGE_PROD_HOLD`.
+
+
+## LLEX G1 source-only import source readback PASS, G2 runtime HOLD (2026-10-27)
+
+- Source Owner Mac G1 one-time import returns `SOURCE_PINS=3/3_PASS`, `OFFLINE_FIXTURE_PINS=8/8_PASS`, `NODE_TESTS=96/96_PASS_LOCAL_ONLY`, `IMPORT=PUSH_RETURNED_SUCCESS`, `POST_SOURCE_PARITY=3/3_PASS`, `POST_FILESET=4/4_PASS`, `POST_MANIFEST_PARITY=PASS`. **Gate `G1_SOURCE_READBACK_PASS__RUNTIME_AUTH_HOLD` at OWNER_MAC_RUNNER tier**, not independent Apps Script API source readback. Drive file modification metadata aligns; source content cannot be independently obtained via this connector.
+- `REMOTE_EXECUTION=NONE`; `DEPLOYMENT_TRIGGER_OAUTH_WRITES=NONE_INTENDED` does not certify current OAuth/Trigger/Deployment UI counts. **Next READ_ONLY checkpoint:** request fresh post-import UI counts for OAuth scopes, Properties, Triggers, active/archived Deployments, Services and Libraries. Any G2 import/execute requires explicit separate approval.
+- Node 96/96 now **MAC_LOCAL_PASS** (earlier V8 96/96 separate). Backend PR #94/LIFF PR #27 DRAFT/UNMERGED, Provider not bound, LIFF feature OFF. Old RC5 HOLD. Production V167/V153 unchanged. Full authorized G1 record in Backend Draft branch `docs/leave/ABIS_LLEX_V1_G1_SOURCE_IMPORT_OWNER_AUTH_RUNBOOK_20261027.md`.
