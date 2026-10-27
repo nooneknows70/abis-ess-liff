@@ -1053,7 +1053,7 @@
       "policyId": "ABIS_ESS_LONG_LEAVE_EXECUTIVE_APPROVAL_V1_20261027",
       "decisionCount": 17,
       "policyStatus": "FROZEN_SOURCE_OWNER_APPROVED",
-      "implementationStatus": "NOT_AUTHORIZED",
+      "implementationStatus": "ISOLATED_SOURCE_CANDIDATE_IN_DRAFT_NOT_PROVIDER_BOUND",
       "sourceMapping": "PARTIAL_UNVERIFIED",
       "testPlanCount": 36,
       "testExecutedCount": 0,
@@ -1067,7 +1067,44 @@
       "legacyPolicy": "NEW_CASES_AFTER_ACTIVATION_ONLY",
       "handoff": "ops/handoff/2026-10-27.md",
       "artifact": "ABIS_ESS_Long_Leave_Executive_Approval_V1_FROZEN_20261027.md",
-      "nextGate": "SOURCE_OWNER_ISOLATED_DEV_BRANCH_DRAFT_PR_AUTH_REQUIRED"
+      "nextGate": "SOURCE_OWNER_EXISTING_STAGE_READ_ONLY_ISOLATION_AND_SCHEMA_PREFLIGHT_AUTH",
+      "gate": "LONG_LEAVE_V1_POLICY_FROZEN_SOURCE_CANDIDATE_50_50_LOCAL_PASS__STAGE_PROVIDER_AUTH_HOLD",
+      "branch": "feature/leave-exec-v1-q1-q17-20261027",
+      "draftPrBackend": 94,
+      "draftPrLiff": 27,
+      "prState": "OPEN_DRAFT_UNMERGED",
+      "backendBase": "ba491b9beccbbcba9ea4e6989b55b4b6a55d0952",
+      "backendHead": "c64ab323cab4ac49d6cdbabeaa5e2e90dea22730",
+      "liffBase": "9b6d32c6317d3bb12cec5a7c690170bc33b88d93",
+      "liffHead": "b59513c28f74e596226eea8edc7b987a556cc2fc",
+      "crossRepoContractBlob": "f88f027cf613257adcf17f36a9e2944da21e203d",
+      "localSynthetic": {
+        "policy": {
+          "pass": 36,
+          "total": 36
+        },
+        "mapping": {
+          "pass": 6,
+          "total": 6
+        },
+        "ui": {
+          "pass": 8,
+          "total": 8
+        },
+        "combined": {
+          "pass": 50,
+          "total": 50
+        },
+        "tier": "LOCAL_NODE_NOT_PROVIDER_E2E",
+        "sourceBlobParity": "PASS_6_6"
+      },
+      "providerAdapterBound": false,
+      "uiMounted": false,
+      "featureEnabled": false,
+      "stageTestsAuthorized": false,
+      "productionAuthorized": false,
+      "sourceOwnerAuthorization": "DEV_BRANCH_AND_DRAFT_ONLY",
+      "lastChangedDate": "2026-10-27"
     }
   }
 }
