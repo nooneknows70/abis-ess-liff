@@ -1,5 +1,14 @@
 # ABIS ESS LIFF — Current State
 
+## V169 leave approval label — Production @169 observed / UI PASS / Final Verify HOLD (2026-10-27)
+
+- Source Owner readback: existing Backend production deployment points to immutable @169; version listed; immutable @169, Apps Script HEAD, Git main/src all 79/79 match with zero source delta.
+- Source Owner Q1=A: eligible factory manager leave-approval button now displays 「核准申請」 on actual ESS UI; no approval action was invoked. CI 35/35 PASS; intended command remains ASSIGN_PROXY.
+- Backend Manifest remains registered PROD_CURRENT @168 until FINAL VERIFY; avoid falsely promoting @169. LIFF manifest version V153 is an independent series and must not be bumped to @169.
+- **HOLD:** post-live error/trigger/other-deployment readback and consolidated release execution report unavailable. Run one bounded READ_ONLY final verification; do not deploy, run approval, modify leave data, trigger, LINE, payroll, attendance or rerun Oct23 exact50.
+- Backend evidence: `release/V169_LEAVE_APPROVAL_LABEL_GO_LIVE_OBSERVATION_FINAL_VERIFY_HOLD_20261027.json`.
+- Current gate: `V169_DEPLOYMENT_SOURCE79_AND_UI_PASS__FINAL_VERIFY_HOLD`. Documentation changes are DRAFT only, not authoritative main until reviewed.
+
 ## ABIS_ESS_V169_LEAVE_LABEL_RELEASE_RUNNER_CI_PASS_OPERATOR_GATE_20261027 — V169 runner merged; Production stays @168 until owner-Mac execution
 
 - **Source Owner A:** scoped manager-assignment leave UI button label only, `指派代理` → `核准申請` where existing business rules finalize via `ASSIGN_PROXY`. No ACL or leave-state-machine changes.
