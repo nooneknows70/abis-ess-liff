@@ -1112,14 +1112,14 @@
       "legacyPolicy": "NEW_CASES_AFTER_ACTIVATION_ONLY",
       "handoff": "ops/handoff/2026-10-27.md",
       "artifact": "ABIS_ESS_Long_Leave_Executive_Approval_V1_FROZEN_20261027.md",
-      "nextGate": "SOURCE_OWNER_G1_BOUNDED_PURE_SOURCE_IMPORT_AUTH_REQUIRED",
-      "gate": "LLEX_G0_PREIMPORT_STATIC_OWNER_UI_PASS__G1_SOURCE_IMPORT_AUTH_HOLD",
+      "nextGate": "OWNER_MAC_RUN_G1_PINNED_SOURCE_ONLY_IMPORT_AND_READBACK",
+      "gate": "LLEX_G1_SOURCE_ONLY_IMPORT_OWNER_AUTHORIZED__MAC_EXECUTION_PENDING",
       "branch": "feature/leave-exec-v1-q1-q17-20261027",
       "draftPrBackend": 94,
       "draftPrLiff": 27,
       "prState": "OPEN_DRAFT_UNMERGED",
       "backendBase": "ba491b9beccbbcba9ea4e6989b55b4b6a55d0952",
-      "backendHead": "18c9e2930afb081dc695b7ad1d28474bf04800a1",
+      "backendHead": "e09fb0787fe8efa205d98f711292972e6c69854f",
       "liffBase": "9b6d32c6317d3bb12cec5a7c690170bc33b88d93",
       "liffHead": "fbe14c5232fe6a523492493d409caa09c8f36d0a",
       "crossRepoContractBlob": "1e86b7f77195a818f76fd18aebbb4c658426213b",
@@ -1242,7 +1242,7 @@
       "groupPlannerPersistenceAuthorized": false,
       "stageReuse": "G0_STAGE_REUSE_HOLD",
       "stageNewResourceAuthorized": false,
-      "nextHumanQuestion": "A_AUTHORIZE_ONLY_3_PINNED_PURE_FILES_TO_PRIVATE_LLEX_STAGE_AFTER_FRESH_PARITY_AND_NODE_PREFLIGHT_OR_B_HOLD",
+      "nextHumanQuestion": "RUN_DOWNLOADED_SHA256_PINNED_G1_SCRIPT_ON_MAC_AND_RETURN_LLEX_G1_SUMMARY",
       "historicalLocal50CasePass": "SUPERSEDED_BY_96_V8_REPLAY_NOT_EXPANDED_PROVIDER_AUTH",
       "newStageResourceAuthorized": true,
       "newStageResourceCreated": true,
@@ -1264,15 +1264,15 @@
         "stageDeploymentInventory": "0_ACTIVE_0_ARCHIVED_OWNER_UI_ATTESTED",
         "stagePropertyKeyInventory": "0_OWNER_UI_ATTESTED_NO_VALUES_READ",
         "stageServicesLibraries": "0_SERVICES_0_LIBRARIES_OWNER_UI_ATTESTED",
-        "stageRuntimeDataIsolation": "NOT_PROVEN_NOT_EXECUTED",
-        "gate": "LLEX_G0_PREIMPORT_STATIC_OWNER_UI_PASS__G1_SOURCE_IMPORT_AUTH_HOLD",
-        "stageSourceImportAuthorized": false,
+        "stageRuntimeDataIsolation": "NOT_VERIFIED",
+        "gate": "LLEX_G1_SOURCE_ONLY_IMPORT_OWNER_AUTHORIZED__MAC_EXECUTION_PENDING",
+        "stageSourceImportAuthorized": true,
         "stageScriptExecutionAuthorized": false,
         "stageSheetWritesAuthorized": false,
         "stageTriggerDeploymentChangesAuthorized": false,
         "stageLineSendAuthorized": false,
         "productionWritesAuthorized": false,
-        "nextAction": "SOURCE_OWNER_G1_EXACT_3_PURE_SOURCE_FILES_IMPORT_AUTH_REQUIRED",
+        "nextAction": "SOURCE_OWNER_OPERATOR_MAC_SINGLE_G1_APPLY_RETURN_SUMMARY",
         "recordedDate": "2026-10-27",
         "stageSourceReadbackTier": "OWNER_MAC_LOCAL_CLASP_CLONE_NOT_INDEPENDENT_APPS_SCRIPT_API",
         "stageClone": "PASS_OWNER_REPORTED",
@@ -1302,23 +1302,32 @@
           "provesRuntimeNoPrivileges": false
         },
         "stageImportSourcePins": {
-          "policyEngine": {
-            "path": "src/ABIS_LONG_LEAVE_EXEC_V1.js",
-            "gitBlob": "d6d06c8742dce9f7a39022de0709626b350ceab3"
-          },
-          "legacyMapping": {
-            "path": "src/ABIS_LONG_LEAVE_EXEC_V1_MAPPING.js",
-            "gitBlob": "83ff14d17b2bcec704057121a87ddc1eb22e79bb"
-          },
-          "groupPlanner": {
-            "path": "src/ABIS_LONG_LEAVE_EXEC_V1_GROUP_PLAN.js",
-            "gitBlob": "36315d4daa62d9aa436f3b8a5a3a37e43af1bfee"
-          }
+          "src/ABIS_LONG_LEAVE_EXEC_V1.js": "d6d06c8742dce9f7a39022de0709626b350ceab3",
+          "src/ABIS_LONG_LEAVE_EXEC_V1_MAPPING.js": "83ff14d17b2bcec704057121a87ddc1eb22e79bb",
+          "src/ABIS_LONG_LEAVE_EXEC_V1_GROUP_PLAN.js": "36315d4daa62d9aa436f3b8a5a3a37e43af1bfee"
         },
-        "sourceOnlyImportReadiness": "READY_FOR_OWNER_AUTH_REVIEW_NOT_AUTHORIZED"
+        "sourceOnlyImportReadiness": "READY_FOR_OWNER_AUTH_REVIEW_NOT_AUTHORIZED",
+        "sourceOwnerG1Decision": "A",
+        "stageSourceImportExecuted": false,
+        "stageSourceImportReadback": "NOT_EXECUTED",
+        "macRunner": {
+          "file": "ABIS_LLEX_G1_STAGE_IMPORT_20261027.mjs",
+          "distribution": "CONVERSATION_ARTIFACT_NOT_GITHUB_FILE",
+          "sha256": "5622c2b6d6158297a87317a019320f11e37d0bff090b0651c455699f5ba01bde",
+          "nodeSyntax": "PASS_CONTAINER",
+          "negativeGuards": [
+            "NO_APPLY_HOLD",
+            "NO_LOCAL_BACKEND_GIT_HOLD"
+          ],
+          "macNodeTests": "NOT_EXECUTED",
+          "macStagePush": "NOT_EXECUTED",
+          "manifestReadback": "NOT_EXECUTED",
+          "runbook": "docs/leave/ABIS_LLEX_V1_G1_SOURCE_IMPORT_OWNER_AUTH_RUNBOOK_20261027.md"
+        }
       },
-      "sourceOwnerStageImportAuthorized": false,
-      "testExecutionTier": "INDEPENDENT_V8_SANDBOX_ONLY_NOT_NODE_OR_PROVIDER"
+      "sourceOwnerStageImportAuthorized": true,
+      "testExecutionTier": "INDEPENDENT_V8_SANDBOX_ONLY_NOT_NODE_OR_PROVIDER",
+      "stageSourceImportExecuted": false
     },
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
