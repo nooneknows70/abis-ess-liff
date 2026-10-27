@@ -1,0 +1,84 @@
+{
+  "schema": "ABIS_LLEX_CONTRACT_V1",
+  "policyId": "ABIS_ESS_LONG_LEAVE_EXECUTIVE_APPROVAL_V1_20261027",
+  "status": "SOURCE_CANDIDATE_FEATURE_OFF",
+  "threshold": {
+    "equivalentDays": 3,
+    "source": "existing continuous-leave group rules",
+    "legacyBeforeEffective": true
+  },
+  "actions": [
+    "SUPERVISOR_SUBMIT",
+    "SUPERVISOR_SUPPLEMENT",
+    "EXECUTIVE_APPROVE",
+    "EXECUTIVE_RETURN",
+    "EXECUTIVE_REJECT",
+    "EMPLOYEE_CANCEL",
+    "EMPLOYEE_AMEND"
+  ],
+  "states": [
+    "PENDING_SUPERVISOR",
+    "PENDING_EXECUTIVE",
+    "PENDING_SUPERVISOR_SUPPLEMENT",
+    "APPROVED",
+    "REJECTED",
+    "CANCELLED",
+    "CANCELLED_RECONCILIATION"
+  ],
+  "authority": {
+    "supervisor": "review_handover_forward_only",
+    "executive": "only_final_approver",
+    "delegate": "formal_scope_and_time_bounded",
+    "hr": "no_implicit_final_approval"
+  },
+  "requestFields": [
+    "requestId",
+    "employeeId",
+    "workflowPolicyVersion",
+    "createdAt",
+    "equivalentDays",
+    "currentSnapshot",
+    "originalSnapshot",
+    "revision",
+    "version",
+    "assigneeId"
+  ],
+  "supervisorAttestation": {
+    "handoverConfirmed": "required_true",
+    "handoverNote": "required_nonblank",
+    "reviewNote": "optional"
+  },
+  "executiveDecision": {
+    "approveComment": "optional",
+    "returnReason": "required",
+    "rejectReason": "required"
+  },
+  "security": {
+    "serverDerivedIdentity": true,
+    "serverEnforcedCurrentManager": true,
+    "scopeAndTimeDelegation": true,
+    "immutableAuditEvents": true,
+    "casVersion": true,
+    "idempotencyKey": true,
+    "employeeExcludesInternalNotes": true
+  },
+  "legacy": {
+    "newCasesOnlyAfterFormalActivation": true,
+    "missingHandover": "HISTORICAL_NOT_PROVIDED",
+    "closedCasesReadonly": true
+  },
+  "provider": {
+    "backendBound": false,
+    "frontendMounted": false,
+    "featureEnabled": false,
+    "googleStageTests": "NOT_AUTHORIZED",
+    "production": "NOT_AUTHORIZED"
+  },
+  "tests": {
+    "backendPolicy": 36,
+    "backendLegacyMapping": 6,
+    "frontendUi": 8,
+    "syntheticOnly": true,
+    "providerAcceptancePassed": false
+  }
+}
