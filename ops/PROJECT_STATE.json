@@ -1332,7 +1332,7 @@
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
       "decision": "SOURCE_OWNER_A_AUTHORIZED_SCOPED_RELEASE_AFTER_V2_GATES",
-      "status": "HOLD_V168_OCCUPIED_BY_TYHOON_NO_OLD_RUNNER_APPLY",
+      "status": "VERSION_COLLISION_HOLD_POST168_READONLY_PREFLIGHT_PR98_CI_PASS",
       "scope": "MANAGER_ASSIGN factory finalizing ASSIGN_PROXY button label: 指派代理 -> 核准申請",
       "actionsAndAuthorityUnchanged": true,
       "backendPr": 95,
@@ -1351,7 +1351,7 @@
         "VERIFY_TYHOON_PENDING_GATE_SAFE_TO_RELEASE",
         "FRESH_NEXT_IMMUTABLE_VERSION_AVAILABILITY_REQUIRED"
       ],
-      "nextAction": "Maintain Production @168 typhoon. Prepare isolated READ_ONLY label release preflight based on @168 and 79 source files, with no deployment/rollback mutation. Do not arm/apply the typhoon 50-row plan under leave-label authorization.",
+      "nextAction": "DO_NOT_RUN_V168_LABEL_--apply; DRAFT PR #98 CI 12/12 PASS. Only if reviewed/merged, run its no-write @168/79-file verifier. Defer any @169 release until typhoon workflow cleared and fresh source/runtime/deployment authority checked.",
       "productionWrites": 0,
       "formalLeaveWrites": 0,
       "lineSent": 0,
@@ -1545,6 +1545,23 @@
           "FRESH_NEXT_IMMUTABLE_VERSION_AVAILABILITY_REQUIRED"
         ],
         "nextAction": "Maintain Production @168 typhoon. Prepare isolated READ_ONLY label release preflight based on @168 and 79 source files, with no deployment/rollback mutation. Do not arm/apply the typhoon 50-row plan under leave-label authorization."
+      },
+      "nextReleaseReadOnlyPreflight": {
+        "uri": "https://github.com/nooneknows70/abis-ess-backend/pull/98",
+        "branch": "fix/leave-label-next-version-readonly-preflight-20261027",
+        "pr": 98,
+        "head": "9b17a2ad8f34612ccd1aa34651bfaccd6e5155e3",
+        "ciRun": 40456251468,
+        "ciResult": "PASS_12_12",
+        "helper": "tools/abis-leave-label-after-v168-readonly-preflight.mjs",
+        "mode": "READ_ONLY_ONLY_NO_APPLY",
+        "mainMerged": false,
+        "productionWrites": 0,
+        "baselineVersion": 168,
+        "baselineFiles": 79,
+        "potentialVersion": "169_NOT_RESERVED",
+        "unsafeOldRunner": "tools/abis-v168-leave-approval-label-production-release.mjs --apply",
+        "needed": "Owner Mac read-only provider preflight, typhoon 50-row process safe coordination, fresh immutable-version reservation and bounded Release Flow V2; hold until verified"
       }
     },
     "rc135Q33": {
