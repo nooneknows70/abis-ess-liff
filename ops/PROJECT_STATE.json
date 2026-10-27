@@ -1112,7 +1112,7 @@
       "legacyPolicy": "NEW_CASES_AFTER_ACTIVATION_ONLY",
       "handoff": "ops/handoff/2026-10-27.md",
       "artifact": "ABIS_ESS_Long_Leave_Executive_Approval_V1_FROZEN_20261027.md",
-      "nextGate": "SOURCE_OWNER_EXISTING_STAGE_READ_ONLY_ISOLATION_AND_SCHEMA_PREFLIGHT_AUTH",
+      "nextGate": "G0_STAGE_REUSE_HOLD__SEPARATE_OWNER_STAGE_PROVIDER_AUTH_REQUIRED",
       "gate": "LONG_LEAVE_V1_POLICY_FROZEN_SOURCE_CANDIDATE_50_50_LOCAL_PASS__STAGE_PROVIDER_AUTH_HOLD",
       "branch": "feature/leave-exec-v1-q1-q17-20261027",
       "draftPrBackend": 94,
@@ -1149,7 +1149,83 @@
       "stageTestsAuthorized": false,
       "productionAuthorized": false,
       "sourceOwnerAuthorization": "DEV_BRANCH_AND_DRAFT_ONLY",
-      "lastChangedDate": "2026-10-27"
+      "lastChangedDate": "2026-10-27",
+      "stagePreflight": {
+        "gate": "G0_STAGE_REUSE_HOLD",
+        "stageName": "ABIS_ESS_POLICY_A_STAGE_RC5",
+        "authorization": "SOURCE_OWNER_A_READ_ONLY_PREFLIGHT_ONLY",
+        "identityFromDrive": "PASS_DISTINCT_APPSSCRIPT_OWNER_ONLY_FILE_METADATA_NOT_RUNTIME_PROOF",
+        "sourceInventoryEvidenceTier": "SOURCE_OWNER_LOCAL_CLASP_ATTESTED_NOT_APPS_SCRIPT_REST_READBACK",
+        "claspPull": "PASS_OWNER_REPORTED",
+        "scriptIdMatched": true,
+        "sourceFileCount": 6,
+        "fileSetPass": true,
+        "manifestFound": true,
+        "explicitOauthScopes": "UNDECLARED_NOT_ZERO_SCOPES",
+        "sourceAggregateSha256": "1ad9e355612d36479dd2d705be43f7a2092d64eb0b3d59945036af086941794b",
+        "staticAudit": "COMPLETE_NOT_RUNTIME_PROOF",
+        "staticFlags": {
+          "file1": [
+            "HTTP",
+            "PROPERTIES",
+            "SCRIPT_API",
+            "TRIGGER",
+            "WRITE_LIKE",
+            "ID_LIKE"
+          ],
+          "file2": [
+            "SHEETS",
+            "DRIVE",
+            "PROPERTIES",
+            "SCRIPT_API",
+            "WRITE_LIKE",
+            "PROD_TEXT",
+            "ID_LIKE"
+          ],
+          "file3": [
+            "SHEETS",
+            "PROPERTIES",
+            "SCRIPT_API",
+            "ID_LIKE"
+          ],
+          "file4": [
+            "SHEETS",
+            "PROPERTIES",
+            "SCRIPT_API",
+            "PROD_TEXT",
+            "ID_LIKE"
+          ],
+          "file5": [
+            "SHEETS",
+            "PROPERTIES",
+            "SCRIPT_API",
+            "WRITE_LIKE",
+            "PROD_TEXT",
+            "ID_LIKE"
+          ],
+          "file6": [
+            "PROD_TEXT",
+            "ID_LIKE"
+          ]
+        },
+        "staticFlagsProveRuntimeWrites": false,
+        "previousOwnerUiRequestedOAuthCount": 4,
+        "previousOwnerUiPropertyCount": 5,
+        "previousOwnerUiTriggerCount": 0,
+        "previousOwnerUiDeploymentCount": 0,
+        "previousOwnerUiEvidenceTier": "HISTORICAL_NOT_FRESH",
+        "stageFixtureMainTabs": 5,
+        "stageFixtureAttendanceTabs": 2,
+        "stageFixtureTimeZone": "America/New_York",
+        "intendedTimeZone": "Asia/Taipei",
+        "protection": "NO_STAGE_REUSE_FOR_LONGLEAVE_NO_EXECUTION_NO_IMPORT",
+        "stageSourceWrites": 0,
+        "stageRuns": 0,
+        "productionWrites": 0,
+        "realIdentityOrTokenReads": 0,
+        "next": "CONTINUE_ISOLATED_BRANCH_OFFLINE_AND_SEPARATE_BOUND_STAGE_PROVIDER_AUTH_ONLY",
+        "recordedDate": "2026-10-27"
+      }
     },
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
