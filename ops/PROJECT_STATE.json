@@ -2178,29 +2178,32 @@
       "sourceRepo": "abis-ess-liff"
     },
     "leaveApprovalLabelV169": {
-      "status": "V169_LABEL_UI_RUNTIME_PASS__RELEASE_PROVENANCE_HOLD",
+      "status": "ABIS_ESS_V169_LEAVE_APPROVAL_LABEL_CLOSED_PASS_RECONCILED",
       "observedBackendVersion": 169,
-      "backendProductionManifestLastRegisteredVersion": 168,
+      "backendProductionManifestLastRegisteredVersion": 169,
       "frontendManifestVersion": 153,
       "gitImmutableHeadParity": "PASS_79_79",
-      "uiSmoke": "PASS_OPERATOR_ATTESTED",
-      "finalVerify": "HOLD_RELEASE_PROVENANCE_ONLY",
-      "releaseEvidence": "abis-ess-backend/release/V169_LEAVE_APPROVAL_LABEL_GO_LIVE_OBSERVATION_FINAL_VERIFY_HOLD_20261027.json",
-      "nextAction": "OWNER_PROVIDE_RELEASE_PROVENANCE_OR_EQUIVALENT; THEN FINAL_VERIFY",
+      "uiSmoke": "PASS_SOURCE_OWNER",
+      "finalVerify": "PASS_SCOPED_RETROSPECTIVE_RECONCILIATION",
+      "releaseEvidence": "abis-ess-backend/release/PROD_CURRENT_V169_LEAVE_APPROVAL_LABEL_RECONCILED_FINAL_VERIFY_20261027.json",
+      "nextAction": "CLOSED_NO_PRODUCTION_ACTION",
       "noProductionWritesAllowed": true,
-      "labelRuntimeSmoke": "PASS_SOURCE_OWNER_SCREENSHOT_POST169",
+      "labelRuntimeSmoke": "PASS_POST169_WEB_APP_SCREENSHOTS",
       "r2174Latency": "SEPARATE_NON_BLOCKING",
       "otherDeployments": "TWO_UNNAMED_VISIBLE_PRE_POST_UNVERIFIED",
-      "originalV169RunnerLog": "MISSING",
-      "prodCurrentPromoted": false
+      "originalV169RunnerLog": "NOT_AVAILABLE_POSTFACTO_RECONCILIATION",
+      "prodCurrentPromoted": true,
+      "r2174Performance": "OPEN_NON_BLOCKING_SEPARATE",
+      "unrelatedDeployments": "PASS_4_STABLE_IDS_OTHER_3_POINTERS_UNCHANGED_SINCE_20261025"
     }
   },
   "leaveLabelBackendIntegration": {
-    "backendCurrentVersion": 168,
+    "backendCurrentVersion": 169,
     "candidateVersion": 169,
     "frontendManifestVersion": 153,
-    "status": "BACKEND_RELEASE_HOLD_PENDING",
+    "status": "CLOSED_PASS_RECONCILED_BACKEND_169_LABEL_ACTIVE",
     "frontendAssetPublished": true,
-    "frontendAssetReadback": "PASS"
+    "frontendAssetReadback": "PASS",
+    "finalUiAcceptance": "PASS_SOURCE_OWNER"
   }
 }
