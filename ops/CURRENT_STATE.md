@@ -1,5 +1,17 @@
 # ABIS ESS LIFF — Current State
 
+## ABIS V169 scoped Final Verify — label PASS, release provenance HOLD (2026-10-27)
+
+- Source Owner verified existing Production Deployment points to immutable **@169**, `Git main/src == immutable @169 == HEAD` at **79/79** SHA-256; eligible factory manager's actual ESS button is **「核准申請」**. CI 35/35 PASS; `ASSIGN_PROXY` and eligibility remain unchanged, no formal leave approval was invoked.
+- Source Owner 2026-10-27 screenshots show multiple **@169 `api`/`doGet` executions completed** (approximately 22:21–22:22), and the Q2 no-new-label-error attestation. This supports **label-scoped runtime smoke PASS**, not a blanket no-errors claim for all Apps Script handlers.
+- Source Owner screenshots show **7 visible existing triggers** and active Production @169 with **two additional unnamed deployments**; full before/after identity comparison for unrelated deployments is not available. Historic R2174 count `canonical=1`, `legacy=0` is consistent with the screenshot.
+- **R2174 is separately OPEN_NON_BLOCKING** per `ops/handoff/ABIS_R2174_PERFORMANCE_HANDOFF_20261027.md`. Screenshot shows R2174 22:08 run timed out (~1801 s) and earlier 21:53 long run (~1376 s) before @169 creation (~21:59), so latency cannot be attributed to the label release. Do **not** treat R2174 performance as a blocker for V169 label functionality.
+- **Release Flow V2 remaining gate:** no trustworthy original V169 `--apply` consolidated successful log / pre-post other-deployment parity; past `--preflight` later failed with `PRODUCTION_ANCHOR_DRIFT_HOLD` because pointer was already @169. Do not rerun `--apply`, reconstruct success falsely, or mark `PROD_CURRENT` until release provenance is resolved.
+- **Current status:** `V169_LABEL_UI_RUNTIME_PASS__RELEASE_PROVENANCE_HOLD`; Backend Manifest last registered @168, observed @169. Frontend LIFF separate version V153 unchanged. Draft PRs: Backend #102, central #3, LIFF #30; do not merge while required gates are HOLD.
+- **Safety:** read-only verification only; no Production, Leave, Attendance, Payroll, LINE, Trigger, or Deployment mutation; no rerun of 10/23 typhoon exact-50.
+- **Evidence:** Backend `release/V169_LEAVE_APPROVAL_LABEL_GO_LIVE_OBSERVATION_FINAL_VERIFY_HOLD_20261027.json`.
+
+
 ## V169 leave approval label — Production @169 observed / UI PASS / Final Verify HOLD (2026-10-27)
 
 - Source Owner readback: existing Backend production deployment points to immutable @169; version listed; immutable @169, Apps Script HEAD, Git main/src all 79/79 match with zero source delta.
