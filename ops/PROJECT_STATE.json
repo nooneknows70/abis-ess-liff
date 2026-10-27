@@ -1463,7 +1463,7 @@
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
       "decision": "SOURCE_OWNER_A_AUTHORIZED_SCOPED_RELEASE_AFTER_V2_GATES",
-      "status": "POST_V168_READONLY_PREFLIGHT_MAIN_MERGED_PRODUCTION_HOLD",
+      "status": "GITHUB_MANIFEST_SYNC_V168_PROD_CURRENT_V169_CANDIDATE_NOT_RELEASED",
       "scope": "MANAGER_ASSIGN factory finalizing ASSIGN_PROXY button label: 指派代理 -> 核准申請",
       "actionsAndAuthorityUnchanged": true,
       "backendPr": 95,
@@ -1472,17 +1472,14 @@
       "localTests": "PASS_12_12_NODE22_REAL_EXECUTION",
       "CI": "GITHUB_ACTIONS_PASS_46_46_BACKEND_29_LIFF_17",
       "runtimeReadback": "PASS_78_78_USER_OPERATOR_OUTPUT_FOR_EXISTING_V167_ONLY",
-      "backendProduction": "V168_TYPHOON_SOURCE_ONLY_NOT_LEAVE_LABEL",
+      "backendProduction": "V168_TYHOON_EXACT50_CLOSED_PASS_NOT_LEAVE_LABEL",
       "liffManifest": "V153_UNCHANGED",
       "releaseBlockers": [
-        "DO_NOT_RUN_OLD_V168_RUNNER",
-        "DO_NOT_ROLL_BACK_V168_TYHOON_RELEASE",
-        "FRESH_PROVIDER_IMMUTABLE_168_SOURCE_PARITY_REQUIRED",
-        "BOUNDED_DELTA_CURRENT_MAIN_VS_IMMUTABLE_168_REQUIRED",
-        "VERIFY_TYHOON_PENDING_GATE_SAFE_TO_RELEASE",
-        "FRESH_NEXT_IMMUTABLE_VERSION_AVAILABILITY_REQUIRED"
+        "APPS_SCRIPT_POST168_READ_ONLY_PREFLIGHT_NOT_OBSERVED",
+        "IMMUTABLE_NEXT_VERSION_NOT_VERIFIED_OR_RESERVED",
+        "NEW_LABEL_RUNTIME_FINAL_VERIFY_PENDING"
       ],
-      "nextAction": "Pull current Backend main on authenticated owner Mac and run ONLY node tools/abis-leave-label-after-v168-readonly-preflight.mjs (no --apply). Do not release after source preflight until typhoon exact-50 transaction safely separated/cleared and new immutable release gate authorized by existing A.",
+      "nextAction": "Production @168 typhoon exact-50 CLOSED PASS. Backend/LIFF source staged, candidate @169 provisional ONLY. Run post168 read-only preflight; DO NOT RUN old V168 label --apply; no new deployment until clean V2 gates.",
       "productionWrites": 0,
       "formalLeaveWrites": 0,
       "lineSent": 0,
@@ -1691,6 +1688,52 @@
         "requiresOperator": "node tools/abis-leave-label-after-v168-readonly-preflight.mjs",
         "oldRunnerForbidden": "tools/abis-v168-leave-approval-label-production-release.mjs --apply",
         "status": "WAIT_OWNER_MAC_READ_ONLY_79_FILE_BASELINE_CHECK_AND_TYHOON_GATE"
+      },
+      "versionAuthoritySync": {
+        "id": "ABIS_LEAVE_LABEL_VERSION_AUTHORITY_SYNC_20261027",
+        "syncedAt": "2026-10-27T18:42:00+08:00",
+        "prodCurrent": {
+          "backendVersion": 168,
+          "backendReleaseSet": "ABIS_ESS_V168_OCT23_TYPHOON_BACKFILL_SOURCE_20261027",
+          "productionDescription": "ABIS V168 Oct23 typhoon bounded backfill source-only Release Flow V2 2026-10-27",
+          "sourceAuthorityCommit": "72417dd1e13d1d932d7c80da9122ad30e6e8a359",
+          "sourceAuthorityTree": "cd2c50882e28e25390aaf30000689a01ed0eb25d",
+          "sourceFiles": 79,
+          "sourceParity": "PASS_79_79",
+          "rollbackVersion": 167,
+          "evidencePath": "release/PROD_CURRENT_V168_OCT23_TYPHOON_BACKFILL_SOURCE_20261027.json",
+          "frontendVersion": 153
+        },
+        "typhoon": {
+          "status": "CLOSED_PASS_V168_OCT23_TYPHOON_EXACT50",
+          "readbackAt": "2026-10-27T18:22:00+08:00",
+          "total": 50,
+          "exceptionRowsForOct23": 0,
+          "preservedLegitimateExceptions": 3,
+          "evidencePath": "release/V168_OCT23_TYPHOON_EXACT50_POST_APPLY_READBACK_20261027.json",
+          "noAdditionalApplyAuthorizedByLeaveLabel": true
+        },
+        "leaveLabel": {
+          "gitStage": "BACKEND_PR95_LIFF_PR28_PR98_MERGED",
+          "candidateVersion": 169,
+          "candidateProvisional": true,
+          "candidateAllocated": false,
+          "candidateDeployed": false,
+          "backendMainBlobs": {
+            "Main.js": "9beec9502fe2a5f63924b862502958755c861a1e",
+            "Index.html": "e897ebbeb2dc2f559260dc567263ba6d455451fc"
+          },
+          "publishedLiffAdapter": "PASS_HTTP_GIT_BLOB_3e8126d03864c4824e19efe0b280e0a8ae60ee20",
+          "newReleaseManifestRegistered": "CANDIDATE_PENDING_NOT_PROD_CURRENT",
+          "newReleaseManifestPath": "ABIS_ESS_BACKEND_RELEASE_MANIFEST.json#pendingReleaseCandidate",
+          "sourceOwnerDecision": "A_SCOPED_LABEL",
+          "scope": "UI_ONLY_KEEP_ASSIGN_PROXY_AND_EXISTING_AUTHORIZATION",
+          "releaseState": "HOLD_PROVIDER_READ_ONLY_PREFLIGHT_AND_NEXT_VERSION_CONFIRMATION",
+          "preflight": "tools/abis-leave-label-after-v168-readonly-preflight.mjs",
+          "oldRunnerForbidden": "tools/abis-v168-leave-approval-label-production-release.mjs --apply",
+          "prodMutationCount": 0
+        },
+        "actualProductionReadback": "GIT_MANIFEST_AND_PRIOR_OPERATOR_EVIDENCE; NO_NEW_APPS_SCRIPT_PROVIDER_READBACK_IN_THIS_SYNC"
       }
     },
     "rc135Q33": {
@@ -2077,5 +2120,13 @@
       "nextHuman": "ONE_REPLY_PROVIDER_AND_PROVIDER_PAGE_ONLY_FROM_EXISTING_SESSION",
       "sourceRepo": "abis-ess-liff"
     }
+  },
+  "leaveLabelBackendIntegration": {
+    "backendCurrentVersion": 168,
+    "candidateVersion": 169,
+    "frontendManifestVersion": 153,
+    "status": "BACKEND_RELEASE_HOLD_PENDING",
+    "frontendAssetPublished": true,
+    "frontendAssetReadback": "PASS"
   }
 }
