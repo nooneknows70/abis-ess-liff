@@ -1,0 +1,33 @@
+name: ABIS ESS leave approval label (synthetic only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/leave-approval-label-ci.yml'
+      - 'assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js'
+      - 'tests/leave-approval-label-rc1.test.cjs'
+  push:
+    branches:
+      - 'fix/leave-assign-button-label-20261027'
+    paths:
+      - '.github/workflows/leave-approval-label-ci.yml'
+      - 'assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js'
+      - 'tests/leave-approval-label-rc1.test.cjs'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic:
+    name: Label-only contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout candidate without persisting credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Parse only the new label adapter
+        run: node --check assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js
+      - name: Run synthetic label/no-authority-change tests
+        run: node --test tests/leave-approval-label-rc1.test.cjs
