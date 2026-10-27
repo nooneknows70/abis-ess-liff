@@ -1,5 +1,16 @@
 # ABIS ESS LIFF — Current State
 
+## ABIS_LEAVE_LABEL_V168_VERSION_COLLISION_20261027 — V168 belongs to Oct23 typhoon; old label runner DO NOT APPLY
+
+- **Fresh Source Owner Mac evidence:** existing Production Deployment ID points to immutable **@168**, description `ABIS V168 Oct23 typhoon bounded backfill source-only Release Flow V2 2026-10-27`; `clasp versions` confirms @168 is occupied.
+- **Backend manifest/PROD_CURRENT evidence:** @168 typhoon release has source authority `72417dd1e13d1d932d7c80da9122ad30e6e8a359`, source tree `cd2c50882e28e25390aaf30000689a01ed0eb25d`, **79/79** source parity and rollback @167. New typhoon file is `P5A2_5_ATTENDANCE_20261023_TYPHOON_BACKFILL_RC1.js`. This is not the leave-label source release.
+- **Critical safety hold:** `tools/abis-v168-leave-approval-label-production-release.mjs --apply` is **FORBIDDEN**. The old runner pins @167 prior, 78 files, new immutable @168 and rollback @167. Do not reuse, override flags, renumber without a new source/rollback gate, or roll back typhoon @168.
+- **Typhoon dependency:** published runtime preview `release/V168_OCT23_TYPHOON_EXACT50_RUNTIME_PREVIEW_20261027.json` PASS, 50 planned updates, 0 writes and 0 blockers. `SOURCE_OWNER_AUTH_REQUIRED_TO_ARM_PLAN`, business-data Apply separately gated. Leave-label A authorization does NOT authorize this typhoon plan.
+- **Leave-label work already staged:** Backend PR #95 and LIFF PR #28 merged to main; LIFF GitHub Pages exact-source readback PASS, synthetic CI 46/46 PASS. Backend main now contains 2 label-only source modifications not present at typhoon immutable @168; Production label-change deployment and final UI smoke have **not** occurred.
+- **Next technical direction:** prepare an isolated **read-only** release preflight candidate against actual immutable @168 / 79 sources. Version after @168 (e.g., @169) must be discovered as available and separately guarded; no allocation/push/deploy now. A valid Production release must preserve typhoon source and avoid interfering with 50-key pending plan.
+- **SSOT:** central and Backend production authority now synced to @168, 79 files, and rollback @167; LIFF Manifest remains V153. No Production writes by this leave-label window.
+
+
 ## ABIS_LEAVE_APPROVAL_LABEL_RC1_V168_STAGED_MAIN_20261027 — paired Git main PASS / Production @167 unchanged
 
 - **Decision:** existing Source Owner A release authorization. Scope remains only factory manager `MANAGER_ASSIGN` display label `指派代理` → `核准申請` with original `ASSIGN_PROXY`, manager ID snapshot ACL, proxy eligibility and long-leave route unchanged.
