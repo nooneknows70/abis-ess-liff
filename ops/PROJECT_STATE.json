@@ -2178,16 +2178,21 @@
       "sourceRepo": "abis-ess-liff"
     },
     "leaveApprovalLabelV169": {
-      "status": "V169_DEPLOYMENT_SOURCE79_AND_UI_PASS__FINAL_VERIFY_HOLD",
+      "status": "V169_LABEL_UI_RUNTIME_PASS__RELEASE_PROVENANCE_HOLD",
       "observedBackendVersion": 169,
       "backendProductionManifestLastRegisteredVersion": 168,
       "frontendManifestVersion": 153,
       "gitImmutableHeadParity": "PASS_79_79",
       "uiSmoke": "PASS_OPERATOR_ATTESTED",
-      "finalVerify": "HOLD",
+      "finalVerify": "HOLD_RELEASE_PROVENANCE_ONLY",
       "releaseEvidence": "abis-ess-backend/release/V169_LEAVE_APPROVAL_LABEL_GO_LIVE_OBSERVATION_FINAL_VERIFY_HOLD_20261027.json",
-      "nextAction": "POSTLIVE_READ_ONLY_FINAL_VERIFY_BEFORE_PROD_CURRENT_PROMOTION",
-      "noProductionWritesAllowed": true
+      "nextAction": "OWNER_PROVIDE_RELEASE_PROVENANCE_OR_EQUIVALENT; THEN FINAL_VERIFY",
+      "noProductionWritesAllowed": true,
+      "labelRuntimeSmoke": "PASS_SOURCE_OWNER_SCREENSHOT_POST169",
+      "r2174Latency": "SEPARATE_NON_BLOCKING",
+      "otherDeployments": "TWO_UNNAMED_VISIBLE_PRE_POST_UNVERIFIED",
+      "originalV169RunnerLog": "MISSING",
+      "prodCurrentPromoted": false
     }
   },
   "leaveLabelBackendIntegration": {
