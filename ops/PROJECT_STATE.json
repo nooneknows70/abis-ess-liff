@@ -1098,8 +1098,8 @@
       "policyId": "ABIS_ESS_LONG_LEAVE_EXECUTIVE_APPROVAL_V1_20261027",
       "decisionCount": 17,
       "policyStatus": "FROZEN_SOURCE_OWNER_APPROVED",
-      "implementationStatus": "ISOLATED_SOURCE_CANDIDATE_IN_DRAFT_NOT_PROVIDER_BOUND",
-      "sourceMapping": "PARTIAL_UNVERIFIED",
+      "implementationStatus": "ISOLATED_SOURCE_HARDENED_PROVIDER_UNBOUND_FEATURE_OFF",
+      "sourceMapping": "EXISTING_HANDLERS_PARTIAL_PROVIDER_SCHEMA_UNVERIFIED",
       "testPlanCount": 36,
       "testExecutedCount": 0,
       "stageOrProductionWritesAuthorized": false,
@@ -1112,17 +1112,17 @@
       "legacyPolicy": "NEW_CASES_AFTER_ACTIVATION_ONLY",
       "handoff": "ops/handoff/2026-10-27.md",
       "artifact": "ABIS_ESS_Long_Leave_Executive_Approval_V1_FROZEN_20261027.md",
-      "nextGate": "G0_STAGE_REUSE_HOLD__SEPARATE_OWNER_STAGE_PROVIDER_AUTH_REQUIRED",
+      "nextGate": "SOURCE_OWNER_DEDICATED_SYNTHETIC_STAGE_RESOURCE_CREATE_ONLY_AUTH_REQUIRED",
       "gate": "LONG_LEAVE_V1_POLICY_FROZEN_SOURCE_CANDIDATE_50_50_LOCAL_PASS__STAGE_PROVIDER_AUTH_HOLD",
       "branch": "feature/leave-exec-v1-q1-q17-20261027",
       "draftPrBackend": 94,
       "draftPrLiff": 27,
       "prState": "OPEN_DRAFT_UNMERGED",
       "backendBase": "ba491b9beccbbcba9ea4e6989b55b4b6a55d0952",
-      "backendHead": "c64ab323cab4ac49d6cdbabeaa5e2e90dea22730",
+      "backendHead": "8e154b0fe8cd342e435fba138801ee7d93d0e8b1",
       "liffBase": "9b6d32c6317d3bb12cec5a7c690170bc33b88d93",
-      "liffHead": "b59513c28f74e596226eea8edc7b987a556cc2fc",
-      "crossRepoContractBlob": "f88f027cf613257adcf17f36a9e2944da21e203d",
+      "liffHead": "fbe14c5232fe6a523492493d409caa09c8f36d0a",
+      "crossRepoContractBlob": "1e86b7f77195a818f76fd18aebbb4c658426213b",
       "localSynthetic": {
         "policy": {
           "pass": 36,
@@ -1132,23 +1132,31 @@
           "pass": 6,
           "total": 6
         },
+        "boundary": {
+          "pass": 20,
+          "total": 20
+        },
+        "groupPlan": {
+          "pass": 18,
+          "total": 18
+        },
         "ui": {
-          "pass": 8,
-          "total": 8
+          "pass": 16,
+          "total": 16
         },
         "combined": {
-          "pass": 50,
-          "total": 50
+          "pass": 96,
+          "total": 96
         },
-        "tier": "LOCAL_NODE_NOT_PROVIDER_E2E",
-        "sourceBlobParity": "PASS_6_6"
+        "tier": "INDEPENDENT_V8_CODEMODE_REPLAY_NOT_NODE_CI_OR_APPS_SCRIPT",
+        "sourceBlobParity": "PASS_9_9"
       },
       "providerAdapterBound": false,
       "uiMounted": false,
       "featureEnabled": false,
       "stageTestsAuthorized": false,
       "productionAuthorized": false,
-      "sourceOwnerAuthorization": "DEV_BRANCH_AND_DRAFT_ONLY",
+      "sourceOwnerAuthorization": "EXISTING_DEV_BRANCH_SOURCE_AND_DRAFT_ONLY",
       "lastChangedDate": "2026-10-27",
       "stagePreflight": {
         "gate": "G0_STAGE_REUSE_HOLD",
@@ -1225,7 +1233,17 @@
         "realIdentityOrTokenReads": 0,
         "next": "CONTINUE_ISOLATED_BRANCH_OFFLINE_AND_SEPARATE_BOUND_STAGE_PROVIDER_AUTH_ONLY",
         "recordedDate": "2026-10-27"
-      }
+      },
+      "nodeOfflineOneShot": {
+        "path": "tests/run-longleave-all.cjs",
+        "status": "PREPARED_NOT_EXECUTED_NODE",
+        "expected": 96
+      },
+      "groupPlannerPersistenceAuthorized": false,
+      "stageReuse": "G0_STAGE_REUSE_HOLD",
+      "stageNewResourceAuthorized": false,
+      "nextHumanQuestion": "AUTHORIZE_PRIVATE_LONG_LEAVE_SYNTHETIC_STAGE_RESOURCE_CREATE_ONLY_AND_READ_ONLY_IDENTITY_G0",
+      "historicalLocal50CasePass": "SUPERSEDED_BY_96_V8_REPLAY_NOT_EXPANDED_PROVIDER_AUTH"
     },
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
