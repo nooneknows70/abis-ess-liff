@@ -1,5 +1,16 @@
 # ABIS ESS LIFF — Current State
 
+## ABIS_LEAVE_LABEL_POST168_READONLY_PR98_CI_PASS_20261027 — typhoon @168 protected; preflight PR #98 CI 12/12 PASS
+
+- Source Owner's previous A covers scoped leave-label change only; separate Oct23 typhoon 50-row Apply requires a different business-data authorization.
+- Production Apps Script deployment @168 belongs to Oct23 typhoon (79 source files, source authority `72417dd1e13d1d932d7c80da9122ad30e6e8a359`, rollback @167). Original leave-label V168 release runner `tools/abis-v168-leave-approval-label-production-release.mjs --apply` is FORBIDDEN because its exact @167→@168 and 78-file assumptions are false.
+- Leave-label Backend PR #95 / LIFF PR #28 already MERGED to Git main; Pages exact SHA check PASS. Production button change NOT deployed.
+- New Backend Draft PR [#98](https://github.com/nooneknows70/abis-ess-backend/pull/98) holds only READ_ONLY `tools/abis-leave-label-after-v168-readonly-preflight.mjs`, synthetic tests and no-credential CI. PR head `9b17a2ad8f34612ccd1aa34651bfaccd6e5155e3`, Actions run [40456251468](https://github.com/nooneknows70/abis-ess-backend/actions/runs/40456251468) job success, **12/12 PASS**.
+- The new tool defaults READ_ONLY, rejects `--apply`, verifies fresh clean source main, production @168 description, exactly 79 files and the two allowlisted Main.js/Index.html modifications vs exact typhoon immutable @168, authentic Git/source tree, public Pages asset hash, deployment/versions availability and HEAD parity; only proposes @169 as tentative, never allocates.
+- **HOLD:** Draft PR #98 has not been merged; provider preflight has not executed on authenticated owner Mac; typhoon exact-50 future Plan ARM/APPLY is separately gated. Do not release label code until no operational collision/drift, and a fresh next immutable version and rollback have been confirmed.
+- No Production source/version/deployment/Trigger, actual Leave, Attendance, Payroll or LINE writes by this window.
+
+
 ## ABIS_LEAVE_LABEL_V168_VERSION_COLLISION_20261027 — V168 belongs to Oct23 typhoon; old label runner DO NOT APPLY
 
 - **Fresh Source Owner Mac evidence:** existing Production Deployment ID points to immutable **@168**, description `ABIS V168 Oct23 typhoon bounded backfill source-only Release Flow V2 2026-10-27`; `clasp versions` confirms @168 is occupied.
