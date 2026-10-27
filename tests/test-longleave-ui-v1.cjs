@@ -1,0 +1,21 @@
+'use strict';
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const ui=require('../features/longleave-exec-v1/approval-panel.js');
+test('U01 fail closed by default',()=>assert.equal(ui.ACTIVE,false));
+test('U02 malicious request reason escaped',()=>{const x='<img src=x onerror=alert(1)>';const h=ui.executiveHtml({originalReason:x,history:[]},'ZH');assert.ok(!h.includes(x)&&h.includes('&lt;img'))});
+test('U03 each supported locale has supervisor note',()=>{for(const lang of ['ZH','VI','TH'])assert.match(ui.supervisorHtml({},lang),/data-llex="handoverNote"/)});
+test('U04 employee status hides internal detail',()=>{const h=ui.employeeHtml({status:'PENDING_SUPERVISOR_SUPPLEMENT',internalNote:'SECRET',rejectionReason:'SECRET'},'ZH');assert.ok(!h.includes('SECRET'))});
+test('U05 rejected employee sees reason only',()=>{const h=ui.employeeHtml({status:'REJECTED',rejectionReason:'Not authorized',internalNote:'SECRET'},'ZH');assert.ok(h.includes('Not authorized')&&!h.includes('SECRET'))});
+test('U06 status fallback safe for unsupported locale',()=>assert.match(ui.employeeHtml({status:'PENDING_EXECUTIVE'},'INVALID'),/審批中/));
+test('U07 no network / LINE providers used',()=>{const fs=require('node:fs');const t=fs.readFileSync(require.resolve('../features/longleave-exec-v1/approval-panel.js'),'utf8');assert.doesNotMatch(t,/\bfetch\s*\(|XMLHttpRequest|\.pushMessage\s*\(|liff\.sendMessages/)});
+test('U08 mounting without release activation is rejected',()=>assert.throws(()=>ui.mount({innerHTML:''},'employee',{},'ZH',null),/LLEX_FEATURE_HOLD/));
+
+test('U09 supervisor supplement uses dedicated action',()=>assert.match(ui.supervisorHtml({status:'PENDING_SUPERVISOR_SUPPLEMENT'},'ZH'),/data-llex-action="SUPERVISOR_SUPPLEMENT"/));
+test('U10 initial supervisor action remains submission',()=>assert.match(ui.supervisorHtml({status:'PENDING_SUPERVISOR'},'ZH'),/data-llex-action="SUPERVISOR_SUBMIT"/));
+test('U11 approved original with pending amendment shown separately',()=>assert.match(ui.employeeHtml({status:'PENDING_EXECUTIVE',effectiveApprovalExists:true},'zh-TW'),/原核准有效/));
+test('U12 amended rejection appears without internal review history',()=>{const h=ui.employeeHtml({status:'APPROVED',amendmentOutcome:'REJECTED',amendmentRejectionReason:'新日期不准',internalNote:'SECRET'},'ZH');assert.ok(h.includes('新日期不准')&&!h.includes('SECRET'));});
+test('U13 zh-TW locale supported',()=>assert.equal(ui.words('zh-TW').review,'主管交接審查'));
+test('U14 vi-VN locale supported',()=>assert.match(ui.words('vi-VN').review,/Xem xét/));
+test('U15 th-TH locale supported',()=>assert.match(ui.words('th-TH').review,/ตรวจสอบ/));
+test('U16 nonarray synthetic history does not crash or render secrets',()=>assert.ok(!ui.historyHtml({private:'LEAK'},'ZH').includes('LEAK')));
