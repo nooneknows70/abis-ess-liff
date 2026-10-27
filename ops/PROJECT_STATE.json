@@ -1729,6 +1729,81 @@
       "nextAction": "Prepare all remaining offline/static Q34-Q36 fixtures as one development batch; one GitHub hermetic test at frozen candidate head. Before ANY private UID/Token, LINE API, Stage writes or Production seek distinct narrowly scoped Source Owner authorization.",
       "gate": "RC135_BATCH_Q34_Q36_PLAN_FROZEN__Q33_PASS__REAL_IDENTITY_LINE_STAGE_PRODUCTION_HOLD",
       "sourceRepo": "abis-ess-liff"
+    },
+    "rc135Q34": {
+      "date": "2026-10-27",
+      "ownerDecision": "A_BATCH_READ_ONLY_PROVIDER_OAUTH_ACL_WITH_ONE_OFFLINE_DEVELOPMENT_AND_CI_RUN",
+      "authorizedScope": "NON_IDENTIFYING_CLASSIFICATION_ONLY_GITHUB_FEATURE_BRANCH_OFFLINE",
+      "branch": "feat/phase1a-line-delta-i18n-rc1-35-v159",
+      "pullRequest": 76,
+      "prStatus": "OPEN_DRAFT_UNMERGED",
+      "candidateHead": "c66ce2b9aec6bda7656eddcdf380f8e86127f832",
+      "q34ContractPath": "tools/abis-rc135-h1db-q34-readonly-gate.mjs",
+      "q34ContractBlob": "2c623593e9b900ffedbed339654516990d502368",
+      "q34TestsPath": "tests/test-rc135-h1db-q34-readonly-gate.mjs",
+      "q34TestsBlob": "c39249976fc0e937368cb8c0e153b97bb0ab343f",
+      "ciRunId": 40463323371,
+      "ciStatus": "COMPLETED_SUCCESS",
+      "q34SyntheticContractChecks": "43_OF_43_PASS",
+      "q34Result": "PARTIAL_READ_ONLY_HOLD",
+      "realGoogleDriveMetadata": {
+        "source": "AUTHENTICATED_GOOGLE_DRIVE_FILES_GET_METADATA_NO_CONTENTS",
+        "dedicatedSyntheticStage": {
+          "fileType": "GOOGLE_APPS_SCRIPT",
+          "permissionCount": 1,
+          "roles": [
+            "owner"
+          ],
+          "shared": false,
+          "result": "PASS_OWNER_ONLY_FILE_LEVEL"
+        },
+        "existingEssMasterSource": {
+          "fileType": "GOOGLE_SPREADSHEET",
+          "permissionCount": 1,
+          "roles": [
+            "owner"
+          ],
+          "shared": false,
+          "result": "PASS_OWNER_ONLY_FILE_LEVEL"
+        },
+        "sourceRowColumnAcl": "NOT_VERIFIED",
+        "effectiveOauthScopes": "NOT_VERIFIED",
+        "effectiveRuntimePrincipal": "NOT_VERIFIED"
+      },
+      "githubStaticEvidence": {
+        "appsScriptManifestExplicitOAuthScopes": "NOT_DECLARED",
+        "effectiveScopesCannotBeInferred": true,
+        "priorLineProviderList": "PASS_PRIOR_OWNER_ATTESTED_NOT_AUTHENTICATED_LIVE",
+        "priorLiffOpenIdScope": "PASS_PRIOR_OWNER_UI_ATTESTED_ONLY",
+        "actualLineLoginMessagingApiProviderMatch": "NOT_VERIFIED_CURRENT_AUTHENTICATED_CONSOLE",
+        "crossServiceLineDataPolicy": "NOT_VERIFIED"
+      },
+      "macHostPreflight": "Q33_13_OF_13_PASS_OWNER_ATTESTED_DISTINCT",
+      "osNetworkIsolation": "NOT_VERIFIED",
+      "singleEmployeeIdentityAccess": "NOT_AUTHORIZED_THIS_TURN",
+      "realUidRead": false,
+      "realTokenOrSecretRead": false,
+      "lineLoginOrApiPerformed": false,
+      "remoteStageChanges": 0,
+      "productionChanges": 0,
+      "businessDataMutations": 0,
+      "backendManifest": "V168_PROD_CURRENT_GITHUB_MAIN_READ_ONLY",
+      "liffManifest": "V153_PROD_CURRENT_GITHUB_MAIN_READ_ONLY",
+      "hardHolds": [
+        "ACTUAL_PROVIDER_REVALIDATION",
+        "ACTUAL_EFFECTIVE_OAUTH_AND_RUNTIME_PRINCIPAL",
+        "ROW_LEVEL_ONE_PERSON_SOURCE_SCOPE",
+        "OS_NETWORK_EGRESS_ISOLATION",
+        "CROSS_SERVICE_DATA_POLICY",
+        "REAL_UID",
+        "TOKEN_TO_CHANNEL",
+        "LINE_PUSH",
+        "STAGE_WRITES",
+        "PRODUCTION"
+      ],
+      "nextHumanGate": "One batch of non-identifying operator classifications from existing signed-in consoles and separately authorized OS egress proof; never request ID/Token or new login. All actual personal UID/token, LINE push, Stage or Production require independent scopes.",
+      "gate": "RC135_Q34_OFFLINE_CI43_PASS_DRIVE_ACL_OWNER_ONLY__PROVIDER_OAUTH_ROW_NETWORK_HOLD__REAL_LINE_STAGE_PROD_HOLD",
+      "sourceRepo": "abis-ess-liff"
     }
   }
 }
