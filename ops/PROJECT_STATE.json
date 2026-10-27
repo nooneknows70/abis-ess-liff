@@ -1499,7 +1499,7 @@
       "hermeticTestChecks": 31,
       "syntheticSelfTestCases": 15,
       "newMacChecks": 13,
-      "newMacStatus": "OLD_RUN_HOLD_NEW_FIX_OWNER_MAC_PENDING",
+      "newMacStatus": "PASS_13_OF_13_OWNER_ATTESTED_CORRECTED_RUN",
       "previousMac": "Q32_V2_23_23_OWNER_ATTESTED_SEPARATE",
       "realLINECalls": 0,
       "realTokensRead": 0,
@@ -1508,10 +1508,10 @@
       "productionWrites": 0,
       "osNetworkIsolation": "NOT_VERIFIED",
       "oauthAclScope": "NOT_VERIFIED",
-      "backendManifest": "V167_PROD_CURRENT_MAIN",
+      "backendManifest": "V168_PROD_CURRENT_MAIN_READ_ONLY",
       "liffManifest": "V153_PROD_CURRENT_MAIN",
-      "gate": "RC135_Q33_MAC_CF_FIX_CI31_PASS__OWNER_MAC_REVALIDATION_PENDING__REAL_UID_TOKEN_LINE_STAGE_PRODUCTION_HOLD",
-      "nextAction": "Verify exact new feature commit/runner Git blob on Mac; run corrected synthetic-only --prepare-local once; return classified results only",
+      "gate": "RC135_Q33_MAC13_OWNER_ATTESTED_CI31_PASS__NETWORK_OAUTH_UID_TOKEN_LINE_STAGE_PRODUCTION_HOLD",
+      "nextAction": "Conduct isolated synthetic READ_ONLY OS network-denial and prospective OAuth/ACL and recipient-provider source-scope design preflight without reading actual UID or Token; separate Source Owner consent needed for real-data execution.",
       "sourceRepo": "abis-ess-liff",
       "macRunObservation": {
         "evidenceTier": "SOURCE_OWNER_TERMINAL_CLASSIFICATION",
@@ -1556,6 +1556,30 @@
         "actualRealUIDTokenLINE": "HOLD",
         "stageProduction": "HOLD",
         "ownerNextAction": "Verify exact new feature commit/runner Git blob on Mac; run corrected synthetic-only --prepare-local once; return classified results only"
+      },
+      "postFixOwnerMacRun": {
+        "observedDate": "2026-10-27",
+        "evidenceTier": "SOURCE_OWNER_TERMINAL_OUTPUT_NOT_INDEPENDENTLY_OBSERVED_ON_MAC",
+        "sourceCommit": "139c9da25233050b88649991019e83258b0112fe",
+        "sourceGitBlob": "c09f651555e4b7293c73e6be7868e4319b5bcd3e",
+        "gitRemote": "PASS",
+        "gitCommit": "PASS",
+        "runnerBlob": "PASS",
+        "runnerSource": "PASS",
+        "runnerVersion": "ABIS_RC135_H1DB_LOCAL_RUNNER=V1_SYNTHETIC_ONLY",
+        "localRunnerPreflight": "PASS",
+        "checkCount": 13,
+        "failedCheckIds": [],
+        "runnerGate": "LOCAL_SYNTHETIC_RUNNER_PREPARED_AND_CLEANED",
+        "runnerExitCode": 0,
+        "networkIsolation": "NOT_VERIFIED",
+        "oauthAclScope": "NOT_VERIFIED",
+        "realUidTokenLineApi": "HOLD",
+        "stageProduction": "HOLD",
+        "distinctPreviousRun": "INITIAL_DARWIN_CHILD_ENV_HOLD_PRESERVED",
+        "distinctEarlierQ32Mac": "23_OF_23_PASS_OWNER_ATTESTED_SEPARATE",
+        "githubCI": "40454490529_SUCCESS_31_OF_31_HERMETIC_NOT_MAC",
+        "limitations": "Only 13 host checks and sanitized synthetic child; not a proof of OS network isolation, OAuth ACL, credential or independent recipient identity"
       }
     }
   }
