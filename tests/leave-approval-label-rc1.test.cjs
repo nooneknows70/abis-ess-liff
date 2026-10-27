@@ -120,3 +120,95 @@ test('no container means no crash and preserves base renderer', () => {
   assert.equal(context.renderLeaveInbox_([{ leaveId: 'LV-012', role: 'MANAGER_ASSIGN', assignProxyFinalizesLeave: true }]), 17);
   assert.equal(calls, 1);
 });
+
+
+// RC1 real bundle-render integration fixtures: synthetic data only.
+const baseBundle = fs.readFileSync(
+  path.resolve(__dirname, '../assets/ess-20261007-rc13-hf8/abis-ess.bundle.js'),
+  'utf8'
+);
+const baseRenderStart = baseBundle.indexOf('function renderLeaveInbox_(list)');
+const baseRenderEnd = baseBundle.indexOf('function managerProxyChanged(leaveId)', baseRenderStart);
+assert.ok(baseRenderStart > 0 && baseRenderEnd > baseRenderStart, 'Original renderLeaveInbox_ still exists');
+
+const actualBaseRendererSource = baseBundle.slice(baseRenderStart, baseRenderEnd);
+
+function renderWithRealBase(items, language = 'ZH') {
+  const box = {
+    innerHTML: '',
+    buttons: [],
+    querySelectorAll(selector) {
+      assert.equal(selector, 'button[onclick*="ASSIGN_PROXY"]');
+      const pattern = /<button\b[^>]*onclick="([^"]+)"[^>]*>([^<]*)<\/button>/g;
+      const matches = Array.from(this.innerHTML.matchAll(pattern))
+        .filter(m => m[1].includes('ASSIGN_PROXY'));
+      this.buttons = matches.map(m => {
+        const action = m[1];
+        return {
+          textContent: m[2],
+          getAttribute(name) { return name === 'onclick' ? action : null; }
+        };
+      });
+      return this.buttons;
+    }
+  };
+  const dict = {
+    ZH: { assignProxy: '指派代理', managerApprove: '核准申請', changeProxy: '變更代理', reject: '退回修改' },
+    VI: { assignProxy: 'Chỉ định người thay', managerApprove: 'Duyệt đơn', changeProxy: 'Đổi người thay', reject: 'Trả lại' }
+  };
+  const context = {
+    rc2NewestFirst_: xs => xs,
+    escapeHtml: value => String(value == null ? '' : value),
+    roleLabel: value => value,
+    leaveTypeLabel: value => value.leaveType || '特休',
+    renderProxyArrangement: () => '',
+    sourceLabel: value => value,
+    currentLang: language,
+    tr(key) { return (dict[language] || dict.ZH)[key] || key; },
+    $(id) { return id === 'inboxList' ? box : null; },
+    document: { getElementById(id) { return id === 'inboxList' ? box : null; } }
+  };
+  vm.runInNewContext(actualBaseRendererSource + '\n' + source, context, { timeout: 1200 });
+  const result = context.renderLeaveInbox_(items);
+  return { html: box.innerHTML, buttons: box.buttons, result };
+}
+
+function realItem(id, role = 'MANAGER_ASSIGN', finalizes = true) {
+  return {
+    leaveId: id, role, assignProxyFinalizesLeave: finalizes,
+    employeeName: 'Synthetic worker', leaveType: '特休',
+    startDate: '2026-10-27', hours: 8, proxyCandidates: []
+  };
+}
+
+test('real LIFF renderer: eligible manager button becomes 核准申請 and keeps ASSIGN_PROXY', () => {
+  const out = renderWithRealBase([realItem('LV_SYNTH_REAL')]);
+  assert.match(out.html, /approveAction\('LV_SYNTH_REAL','ASSIGN_PROXY',this\)/);
+  assert.equal(out.buttons.length, 1);
+  assert.equal(out.buttons[0].textContent, '核准申請');
+  assert.equal(out.buttons[0].getAttribute('onclick'), "approveAction('LV_SYNTH_REAL','ASSIGN_PROXY',this)");
+});
+
+test('real LIFF renderer: non-final approval remains 指派代理', () => {
+  const out = renderWithRealBase([realItem('LV_SYNTH_LONG', 'MANAGER_ASSIGN', false)]);
+  assert.equal(out.buttons.length, 1);
+  assert.equal(out.buttons[0].textContent, '指派代理');
+});
+
+test('real LIFF renderer: only the eligible synthetic LeaveID gets new label', () => {
+  const out = renderWithRealBase([realItem('LV_SYNTH_YES'), realItem('LV_SYNTH_NO', 'MANAGER_ASSIGN', false)]);
+  assert.equal(out.buttons.length, 2);
+  assert.deepEqual(out.buttons.map(x => x.textContent), ['核准申請', '指派代理']);
+});
+
+test('real LIFF renderer: MANAGER change-proxy button is not relabelled', () => {
+  const out = renderWithRealBase([realItem('LV_SYNTH_MANAGER', 'MANAGER')]);
+  assert.equal(out.buttons.length, 1);
+  assert.equal(out.buttons[0].textContent, '變更代理');
+});
+
+test('real LIFF renderer: Vietnamese manager button retains localized approval label', () => {
+  const out = renderWithRealBase([realItem('LV_SYNTH_VI')], 'VI');
+  assert.equal(out.buttons.length, 1);
+  assert.equal(out.buttons[0].textContent, 'Duyệt đơn');
+});
