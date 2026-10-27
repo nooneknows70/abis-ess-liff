@@ -501,3 +501,9 @@ Cross-repo note:
 - Feature remains OFF; Backend `longLeaveExecV1Action` HARD HOLD, LIFF UI unmounted. Pure group-plan `readyForProviderMutation=false`. Provider adapters, durable audit event storage, real Stage isolation and formal data schema are NOT ready.
 - Existing RC5 Stage remains `G0_STAGE_REUSE_HOLD` due unproven runtime isolation, mixed-purpose source indicators, historical broad OAuth and `America/New_York` fixtures. Do not import/run/write there. Full matrix: Backend feature-branch `docs/leave/ABIS_LLEX_V1_PROVIDER_STAGE_G0_MATRIX_20261027.md`. Do not imply RC5 actually wrote Production.
 - **Next one Source Owner gate:** create/identify a *private synthetic-only long-leave Stage testing resource* (not a new ESS production system); permission only for initial resource setup/metadata READ_ONLY if granted. Stage source import, function execution, real data, LINE, OAuth elevation, Trigger/Deployment and Production require separate approval. Backend V167 and LIFF V153 official release authorities preserved.
+
+## LLEX V1 dedicated synthetic Stage — identity confirmed, runtime HOLD (2026-10-27)
+
+- Source Owner A authorized private blank TEST resource create and READ_ONLY metadata check. Authenticated Drive metadata confirms `ABIS_ESS_LLEX_V1_SYNTHETIC_STAGE_20261027` (`application/vnd.google-apps.script`), `shared=false`, visible owner-only permission and ID distinct from Production Backend V167. No second project needed.
+- **G0 PARTIAL:** `LLEX_STAGE_G0_IDENTITY_METADATA_PASS__SOURCE_MANIFEST_RUNTIME_HOLD`. Apps Script source/Manifest/Scopes/Triggers/Deployments/Properties/Services/runtime isolation have NOT been independently verified. No source import or execution authorized. RC5 remains `G0_STAGE_REUSE_HOLD`.
+- Backend Draft PR #94 / LIFF Draft PR #27 unchanged; 96/96 V8 synthetic tests and provider-feature OFF. Next: one read-only new-Stage source and UI inventory. Full evidence in `ops/handoff/2026-10-27.md`.
