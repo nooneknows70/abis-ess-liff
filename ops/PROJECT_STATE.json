@@ -1048,6 +1048,26 @@
       "businessDataWrites": 0,
       "nextAction": "One consolidated owner-Mac 23-check offline batch and review of fresh SHA/CI parity; separately approve any provider credential, real LINE or Production execution",
       "sourceRepo": "abis-ess-liff"
+    },
+    "longLeaveExecutiveApproval": {
+      "policyId": "ABIS_ESS_LONG_LEAVE_EXECUTIVE_APPROVAL_V1_20261027",
+      "decisionCount": 17,
+      "policyStatus": "FROZEN_SOURCE_OWNER_APPROVED",
+      "implementationStatus": "NOT_AUTHORIZED",
+      "sourceMapping": "PARTIAL_UNVERIFIED",
+      "testPlanCount": 36,
+      "testExecutedCount": 0,
+      "stageOrProductionWritesAuthorized": false,
+      "threshold": "EXISTING_3_EQUIVALENT_WORKDAYS",
+      "executiveFinalApprovalOnly": true,
+      "supervisorReviewHandoverForwardOnly": true,
+      "returnRoutesToSupervisor": true,
+      "rejectedRequestTerminal": true,
+      "delegationRequiresFormalScopeAndValidity": true,
+      "legacyPolicy": "NEW_CASES_AFTER_ACTIVATION_ONLY",
+      "handoff": "ops/handoff/2026-10-27.md",
+      "artifact": "ABIS_ESS_Long_Leave_Executive_Approval_V1_FROZEN_20261027.md",
+      "nextGate": "SOURCE_OWNER_ISOLATED_DEV_BRANCH_DRAFT_PR_AUTH_REQUIRED"
     }
   }
 }
