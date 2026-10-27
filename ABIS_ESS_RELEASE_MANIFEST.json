@@ -302,5 +302,36 @@
       "backendSourceCommit": "422644073fafd65f76f0839b2fba6de37dd6acdb",
       "status": "PRESERVED"
     }
+  },
+  "crossRepoPendingIntegration": {
+    "id": "ABIS_LEAVE_APPROVAL_LABEL_RC1_STATIC_ASSET_NOT_ACTIVE_IN_BACKEND_V168",
+    "recordedAt": "2026-10-27",
+    "frontendManifestStatus": "PROD_CURRENT_V153_UNCHANGED",
+    "staticAsset": {
+      "path": "assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js",
+      "blob": "3e8126d03864c4824e19efe0b280e0a8ae60ee20",
+      "pullRequest": 28,
+      "mainMerged": true,
+      "pagesHttpReadback": "PASS_GITHUB_ACTIONS_40454443510"
+    },
+    "backend": {
+      "releasedVersion": 168,
+      "releaseSet": "ABIS_ESS_V168_OCT23_TYPHOON_BACKFILL_SOURCE_20261027",
+      "currentImmutableSourceFileCount": 79,
+      "approvalLabelActive": false,
+      "nextVersionCandidate": 169,
+      "nextVersionProvisional": true,
+      "nextVersionReserved": false,
+      "nextVersionCreated": false,
+      "sourcePullRequest": 95,
+      "sourceMerged": true,
+      "readOnlyPreflightPullRequest": 98,
+      "operatorPreflightStatus": "PENDING"
+    },
+    "scope": "ELIGIBLE_MANAGER_ASSIGN_BUTTON_LABEL_ONLY",
+    "actionUnchanged": "ASSIGN_PROXY",
+    "productionDeployPerformed": false,
+    "finalUiAcceptance": "PENDING",
+    "forbid": "MUST_NOT_BUMP_LIFF_RELEASE_VERSION_OR_MARK_LABEL_PROD_CURRENT_BEFORE_BACKEND_NEW_VERSION_FINAL_VERIFY"
   }
 }
