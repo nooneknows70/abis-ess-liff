@@ -507,3 +507,10 @@ Cross-repo note:
 - Source Owner A authorized private blank TEST resource create and READ_ONLY metadata check. Authenticated Drive metadata confirms `ABIS_ESS_LLEX_V1_SYNTHETIC_STAGE_20261027` (`application/vnd.google-apps.script`), `shared=false`, visible owner-only permission and ID distinct from Production Backend V167. No second project needed.
 - **G0 PARTIAL:** `LLEX_STAGE_G0_IDENTITY_METADATA_PASS__SOURCE_MANIFEST_RUNTIME_HOLD`. Apps Script source/Manifest/Scopes/Triggers/Deployments/Properties/Services/runtime isolation have NOT been independently verified. No source import or execution authorized. RC5 remains `G0_STAGE_REUSE_HOLD`.
 - Backend Draft PR #94 / LIFF Draft PR #27 unchanged; 96/96 V8 synthetic tests and provider-feature OFF. Next: one read-only new-Stage source and UI inventory. Full evidence in `ops/handoff/2026-10-27.md`.
+
+
+## LLEX dedicated Stage G0 source static evidence — 2026-10-27
+
+- Source Owner local `clasp clone`: ID MATCH, one default source `程式碼.js`, provider API keyword refs NONE_DETECTED, Manifest FOUND, Asia/Taipei TZ, dependencies EMPTY, explicit oauthScopes UNDECLARED. **OWNER_ATTESTED_SOURCE_STATIC_PASS**, not independent Apps Script source/runtime readback. No source hash captured.
+- Drive metadata: distinct dedicated Apps Script project, `shared=false`, visible owner-only permission. **Gate: `LLEX_STAGE_G0_IDENTITY_AND_OWNER_SOURCE_STATIC_PASS__RUNTIME_SETTINGS_HOLD`**; OAuth effective/requested scopes, Trigger, Deployment, Script Properties, Services, Libraries and runtime target inventory are not yet verified.
+- RC5 remains reuse HOLD. No Stage code import or function run, no OAuth/Trigger/Deployment, LINE, Production/Payroll/Attendance/leave mutation. Draft PR #94/#27 remain unmerged; 96/96 synthetic V8 tier only. Read-only UI inventory is the next one human checkpoint; no new management decision at this stage.
