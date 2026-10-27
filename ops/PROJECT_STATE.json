@@ -1248,23 +1248,23 @@
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
       "decision": "SOURCE_OWNER_A_AUTHORIZED_SCOPED_RELEASE_AFTER_V2_GATES",
-      "status": "RELEASE_PREFLIGHT_HOLD_CI_MISSING",
+      "status": "CI_PASS_29_29_CROSS_REPO_STATIC_PASS_12_12_RELEASE_OPERATOR_HOLD",
       "scope": "MANAGER_ASSIGN factory finalizing ASSIGN_PROXY button label: 指派代理 -> 核准申請",
       "actionsAndAuthorityUnchanged": true,
       "backendPr": 95,
       "liffPr": 28,
       "prs": "OPEN_DRAFT_UNMERGED",
       "localTests": "PASS_12_12_NODE22_REAL_EXECUTION",
-      "CI": "NO_REPORTED_CHECKS_OR_WORKFLOWS",
+      "CI": "GITHUB_ACTIONS_BACKEND_17_17_LIFF_12_12_PASS",
       "runtimeReadback": "PASS_78_78_USER_OPERATOR_OUTPUT_FOR_EXISTING_V167_ONLY",
       "backendProduction": "V167",
       "liffManifest": "V153",
       "releaseBlockers": [
-        "GITHUB_CI_PASS_MISSING",
-        "NEW_LABEL_NOT_DEPLOYED",
-        "NEW_LABEL_LIVE_ACCEPTANCE_NOT_YET_RUN"
+        "NO_DIRECT_APPSSCRIPT_DEPLOYMENT_TOOL_OR_CLOUD_PROVIDER_READBACK_IN_THIS_CHAT",
+        "PAIRED_GITHUB_PAGES_ASSET_PUBLISH_AND_BACKEND_IMMUTABLE_DEPLOYMENT_NOT_PERFORMED",
+        "NEW_UI_LIVE_SMOKE_FINAL_VERIFY_PENDING"
       ],
-      "nextAction": "Fresh authenticated owner-Mac read-only release verify, obtain CI PASS, then paired Release Flow V2; on missing gate HOLD",
+      "nextAction": "Release Flow V2 on authorized owner-Mac release runner as one bounded paired release: verify fresh Git commit/pair and CI, publish LIFF asset/readback, merge backend, push controlled source, create immutable version using existing Production deployment ID, verify version/source/rollback and label UI; fail closed on any mismatch; do not merge single PR in isolation.",
       "productionWrites": 0,
       "formalLeaveWrites": 0,
       "lineSent": 0,
@@ -1285,6 +1285,69 @@
         "releaseState": "HOLD_CI_MISSING_PRODUCTION_UNCHANGED",
         "nextAction": "Keep both PRs draft/unmerged until actual CI PASS and combined Release Flow V2 release prerequisites; existing V167 runtime evidence preserved; do not rerun same helper expecting STALE/MANUAL_PENDING changes.",
         "noProductionWrite": true
+      },
+      "latestCIGate": {
+        "date": "2026-10-27",
+        "sourceOwnerApproval": "A_EXISTING_AUTHORIZATION",
+        "backend": {
+          "repo": "nooneknows70/abis-ess-backend",
+          "pr": 95,
+          "head": "475d104ccb7fc47506cf02fc813b16822e647d9d",
+          "runId": 40451675750,
+          "ci": "PASS_17_17",
+          "jobConclusion": "success",
+          "tests": [
+            "node --check src/Main.js",
+            "node --test tests/leave-approval-label-rc1.test.cjs"
+          ]
+        },
+        "frontend": {
+          "repo": "nooneknows70/abis-ess-liff",
+          "pr": 28,
+          "head": "f753ab602931ea4a3ee609df67e652df6942b655",
+          "runId": 40451660402,
+          "ci": "PASS_12_12",
+          "jobConclusion": "success",
+          "tests": [
+            "node --check assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js",
+            "node --test tests/leave-approval-label-rc1.test.cjs"
+          ]
+        },
+        "consolidated": "CI_PASS_29_29",
+        "staticCrossRepo": "PASS_12_12",
+        "mainSourceDrift": "NONE_IN_TOUCHED_BASE_SOURCE",
+        "mainDivergence": "OPS_COMMITS_ONLY_CONFIRMED_VIA_CONTENT_SHA_FOR_TOUCHED_SOURCE",
+        "changedCandidateFiles": {
+          "backend": [
+            "src/Main.js",
+            "src/Index.html",
+            "tests/leave-approval-label-rc1.test.cjs",
+            ".github/workflows/leave-approval-label-ci.yml"
+          ],
+          "liff": [
+            "assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js",
+            "tests/leave-approval-label-rc1.test.cjs",
+            ".github/workflows/leave-approval-label-ci.yml"
+          ]
+        },
+        "productionState": "UNCHANGED_BACKEND_V167_LIFF_V153",
+        "forbiddenWritesPerformed": {
+          "prodSource": 0,
+          "version": 0,
+          "deployment": 0,
+          "trigger": 0,
+          "leave": 0,
+          "attendance": 0,
+          "payroll": 0,
+          "line": 0
+        },
+        "productionReleaseGate": "HOLD_PROVIDER_OPERATOR_PAIRD_RELEASE_AND_NEW_VERSION_FINAL_VERIFY",
+        "blockers": [
+          "NO_DIRECT_APPSSCRIPT_DEPLOYMENT_TOOL_OR_CLOUD_PROVIDER_READBACK_IN_THIS_CHAT",
+          "PAIRED_GITHUB_PAGES_ASSET_PUBLISH_AND_BACKEND_IMMUTABLE_DEPLOYMENT_NOT_PERFORMED",
+          "NEW_UI_LIVE_SMOKE_FINAL_VERIFY_PENDING"
+        ],
+        "nextAction": "Release Flow V2 on authorized owner-Mac release runner as one bounded paired release: verify fresh Git commit/pair and CI, publish LIFF asset/readback, merge backend, push controlled source, create immutable version using existing Production deployment ID, verify version/source/rollback and label UI; fail closed on any mismatch; do not merge single PR in isolation."
       }
     },
     "rc135Q33": {
