@@ -333,5 +333,15 @@
     "productionDeployPerformed": false,
     "finalUiAcceptance": "PENDING",
     "forbid": "MUST_NOT_BUMP_LIFF_RELEASE_VERSION_OR_MARK_LABEL_PROD_CURRENT_BEFORE_BACKEND_NEW_VERSION_FINAL_VERIFY"
+  },
+  "v169CrossRepoObservation": {
+    "status": "V169_DEPLOYMENT_SOURCE79_AND_UI_PASS__FINAL_VERIFY_HOLD",
+    "backendVersionObserved": 169,
+    "backendImmutableVsGit": "PASS_79_79",
+    "goLiveLabel": "PASS_SOURCE_OWNER_ATTESTED",
+    "frontendReleaseVersionUnchanged": 153,
+    "finalVerify": "HOLD",
+    "backendManifestProdCurrentLastRegistered": 168,
+    "prodCurrentPromoted": false
   }
 }
