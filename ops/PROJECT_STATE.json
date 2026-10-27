@@ -1230,7 +1230,7 @@
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
       "decision": "SOURCE_OWNER_A_AUTHORIZED_SCOPED_RELEASE_AFTER_V2_GATES",
-      "status": "RELEASE_PREFLIGHT_HOLD_NOT_DEPLOYED",
+      "status": "RELEASE_PREFLIGHT_HOLD_CI_MISSING",
       "scope": "MANAGER_ASSIGN factory finalizing ASSIGN_PROXY button label: 指派代理 -> 核准申請",
       "actionsAndAuthorityUnchanged": true,
       "backendPr": 95,
@@ -1238,17 +1238,36 @@
       "prs": "OPEN_DRAFT_UNMERGED",
       "localTests": "PASS_12_12_NODE22_REAL_EXECUTION",
       "CI": "NO_REPORTED_CHECKS_OR_WORKFLOWS",
-      "runtimeReadback": "UNAVAILABLE",
+      "runtimeReadback": "PASS_78_78_USER_OPERATOR_OUTPUT_FOR_EXISTING_V167_ONLY",
       "backendProduction": "V167",
       "liffManifest": "V153",
       "releaseBlockers": [
-        "CI_PASS_MISSING",
-        "PRODUCTION_HEAD_IMMUTABLE_DEPLOYMENT_READBACK_MISSING"
+        "GITHUB_CI_PASS_MISSING",
+        "NEW_LABEL_NOT_DEPLOYED",
+        "NEW_LABEL_LIVE_ACCEPTANCE_NOT_YET_RUN"
       ],
       "nextAction": "Fresh authenticated owner-Mac read-only release verify, obtain CI PASS, then paired Release Flow V2; on missing gate HOLD",
       "productionWrites": 0,
       "formalLeaveWrites": 0,
-      "lineSent": 0
+      "lineSent": 0,
+      "lastVerification": {
+        "evidenceDate": "2026-10-27",
+        "operatorReport": "ABIS_ESS_RELEASE_SYNC_2026-10-27_043726019Z.json",
+        "operatorGitAuthority": "501c88c26fb955db8bbdc4226d0010316966bfb3",
+        "operatorObservedProductionVersion": 167,
+        "operatorGitToHead": "SOURCE_ALIGNMENT_PASS_78_OF_78",
+        "operatorGitToDeployment": "DEPLOYMENT_ALIGNMENT_PASS_78_OF_78",
+        "manifestReported": "STALE",
+        "manifestDiagnostic": "VERIFIER_V1_FORMAT_COMPARISON_MISMATCH: manifest.verification.deploymentAlignment=PASS_78_78, helper gitVsDeployment.status=PASS; version 167 equals 167. NOT_PROOF_OF_MANIFEST_OR_DEPLOYMENT_DRIFT",
+        "runtimeReported": "MANUAL_PENDING_HELPER_CONSTANT_NOT_A_LIVE_READBACK",
+        "overallReported": "READY_FOR_RUNTIME_VERIFY_SOURCE_ALIGNMENT_ONLY",
+        "exactGitBlobTests": "PASS_12_12_NODE_V22_16_0_GIT_BLOB_EQUAL",
+        "ciState": "NO_COMMIT_STATUS_OR_PR_WORKFLOW_RUN_RECORDED_FOR_BACKEND_95_AND_LIFF_28",
+        "confirmedPRState": "BOTH_OPEN_DRAFT_UNMERGED",
+        "releaseState": "HOLD_CI_MISSING_PRODUCTION_UNCHANGED",
+        "nextAction": "Keep both PRs draft/unmerged until actual CI PASS and combined Release Flow V2 release prerequisites; existing V167 runtime evidence preserved; do not rerun same helper expecting STALE/MANUAL_PENDING changes.",
+        "noProductionWrite": true
+      }
     }
   }
 }
