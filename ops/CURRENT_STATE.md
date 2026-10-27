@@ -1,5 +1,17 @@
 # ABIS ESS LIFF — Current State
 
+## ABIS_LEAVE_APPROVAL_LABEL_RC1_CI_GATE_20261027 — CI PASS 29/29, cross-repo static PASS 12/12, Production release HOLD
+
+- **Source Owner decision:** Existing A approval for scoped label-only change `指派代理` → `核准申請` where factory `MANAGER_ASSIGN` can finalize. Backend ASSIGN_PROXY, manager snapshot ACL, proxy eligibility, special long-leave route and all business data unchanged.
+- **Backend Draft PR #95:** source and synthetic tests + restricted CI; head `475d104ccb7fc47506cf02fc813b16822e647d9d`; actual GitHub Actions run `40451675750`, job `success`, Node syntax PASS, **17/17 tests PASS**.
+- **LIFF Draft PR #28:** label adapter/test + restricted CI; head `f753ab602931ea4a3ee609df67e652df6942b655`; actual GitHub Actions run `40451660402`, job `success`, Node syntax PASS, **12/12 tests PASS**.
+- **Independent cross-repo static contract:** 12/12 PASS: `assignProxyFinalizesLeave` interface consistent, original ASSIGN_PROXY ACL and button handler unchanged, original V153 bundle unmodified, adapter load after bundle, CI has contents: read and no Production secrets.
+- **Git/source drift:** both PRs diverged by unrelated main commits since branch base; current main source files `Main.js`, `Index.html`, original LIFF bundle and Release Manifests match expected authority blobs. PR diffs limited to candidate UI code and CI/tests; no other business logic edits.
+- **Release HOLD:** Both PRs stay DRAFT/UNMERGED. No live GitHub Pages asset readback, authenticated Apps Script Production source push/version/deploy capability or paired Release Flow V2 FINAL VERIFY available in chat. Do not independently merge/deploy either PR. No Git main source, Production, Trigger, Leave, Attendance, Payroll, or LINE writes.
+- **Production authority unchanged:** Backend Apps Script V167, rollback V166, frontend Manifest V153. Owner-Mac prior read-only result 78/78 HEAD + deployment source match, with helper `STALE` formatting false positive; not new label release evidence.
+- **Next action:** One bounded owner-Mac paired release once deployment runner and fresh provider parity are available: recheck both head hashes + CI PASS, safely publish and read back LIFF asset, merge backend source, push only Git authority to Apps Script, immutable version / existing deployment pointer verify, smoke check UI/role and rollback preservation, then FINAL VERIFY. HOLD on any mismatch. A approval need not be repeated.
+
+
 ## ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027 — @167 release parity PASS, verifier format mismatch, UI release HOLD
 
 - **Source Owner authorization:** A remains valid for a scoped button-label release under Release Flow V2; no repeat policy confirmation needed.
