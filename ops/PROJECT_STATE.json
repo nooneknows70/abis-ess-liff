@@ -1792,7 +1792,48 @@
       "officialLineReference": "https://developers.line.biz/en/docs/messaging-api/getting-user-ids/",
       "nextAction": "Prepare all remaining offline/static Q34-Q36 fixtures as one development batch; one GitHub hermetic test at frozen candidate head. Before ANY private UID/Token, LINE API, Stage writes or Production seek distinct narrowly scoped Source Owner authorization.",
       "gate": "RC135_BATCH_Q34_Q36_PLAN_FROZEN__Q33_PASS__REAL_IDENTITY_LINE_STAGE_PRODUCTION_HOLD",
-      "sourceRepo": "abis-ess-liff"
+      "sourceRepo": "abis-ess-liff",
+      "latestOfflineBatch": {
+        "date": "2026-10-27",
+        "githubCandidateHead": "56992fb390ab74094ca61390cc281b71431143b3",
+        "draftPr76": "OPEN_DRAFT_UNMERGED",
+        "runId": 40474353291,
+        "runConclusion": "SUCCESS",
+        "checksPass": 25,
+        "checksFailed": 0,
+        "previousFailedRunId": 40474126377,
+        "previousFailedReason": "TEST_REGEX_FALSE_POSITIVE_ON_NOT_GRANTED_FIELD_NAME",
+        "standaloneQ34Run": 40463323371,
+        "standaloneQ34Tests": 43,
+        "mode": "SYNTHETIC_HERMETIC_ONLY",
+        "q34Result": "PARTIAL_READ_ONLY_HOLD",
+        "q35Result": "MOCK_ONLY_LIVE_HOLD",
+        "q36Result": "NOT_RELEASED_PROD_HOLD",
+        "languages": [
+          "ZH",
+          "VI",
+          "TH"
+        ],
+        "mockedApiModes": [
+          "ACCEPTED_DEVICE_UNVERIFIED",
+          "REJECTED_NO_RETRY",
+          "TIMEOUT_NO_RETRY"
+        ],
+        "realUserIdsRead": 0,
+        "realTokensRead": 0,
+        "realLINECalls": 0,
+        "stageWrites": 0,
+        "productionWrites": 0,
+        "osNetworkIsolation": "NOT_VERIFIED",
+        "actualOauthAcl": "NOT_VERIFIED",
+        "currentLineProvider": "NOT_INDEPENDENTLY_VERIFIED",
+        "singlePersonSourceScope": "NOT_VERIFIED",
+        "lineCrossServicePolicy": "NOT_VERIFIED",
+        "manualNext": "ONE_BATCH_OPERATOR_CLASSIFICATION_ONLY_NO_LOGIN_OR_IDENTIFIERS",
+        "nextSensitiveActions": "HOLD_SEPARATE_SOURCE_OWNER_AUTHORIZATION",
+        "evidenceFile": "ops/rc135/ABIS_RC135_Q34_Q36_INTEGRATION_CI25_20261027.md",
+        "gate": "RC135_Q34_CI43_PLUS_INTEGRATED25_PASS__PROVIDER_OAUTH_ROW_NETWORK_HOLD__Q35_LIVE_Q36_PROD_HOLD"
+      }
     },
     "rc135Q34": {
       "date": "2026-10-27",
@@ -1801,7 +1842,7 @@
       "branch": "feat/phase1a-line-delta-i18n-rc1-35-v159",
       "pullRequest": 76,
       "prStatus": "OPEN_DRAFT_UNMERGED",
-      "candidateHead": "c66ce2b9aec6bda7656eddcdf380f8e86127f832",
+      "candidateHead": "56992fb390ab74094ca61390cc281b71431143b3",
       "q34ContractPath": "tools/abis-rc135-h1db-q34-readonly-gate.mjs",
       "q34ContractBlob": "2c623593e9b900ffedbed339654516990d502368",
       "q34TestsPath": "tests/test-rc135-h1db-q34-readonly-gate.mjs",
@@ -1866,8 +1907,50 @@
         "PRODUCTION"
       ],
       "nextHumanGate": "One batch of non-identifying operator classifications from existing signed-in consoles and separately authorized OS egress proof; never request ID/Token or new login. All actual personal UID/token, LINE push, Stage or Production require independent scopes.",
-      "gate": "RC135_Q34_OFFLINE_CI43_PASS_DRIVE_ACL_OWNER_ONLY__PROVIDER_OAUTH_ROW_NETWORK_HOLD__REAL_LINE_STAGE_PROD_HOLD",
-      "sourceRepo": "abis-ess-liff"
+      "gate": "RC135_Q34_CI43_PLUS_INTEGRATED25_PASS__PROVIDER_OAUTH_ROW_NETWORK_HOLD__Q35_LIVE_Q36_PROD_HOLD",
+      "sourceRepo": "abis-ess-liff",
+      "previousGate": "RC135_Q34_OFFLINE_CI43_PASS_DRIVE_ACL_OWNER_ONLY__PROVIDER_OAUTH_ROW_NETWORK_HOLD__REAL_LINE_STAGE_PROD_HOLD",
+      "crossStageIntegratedBatch": {
+        "date": "2026-10-27",
+        "githubCandidateHead": "56992fb390ab74094ca61390cc281b71431143b3",
+        "draftPr76": "OPEN_DRAFT_UNMERGED",
+        "runId": 40474353291,
+        "runConclusion": "SUCCESS",
+        "checksPass": 25,
+        "checksFailed": 0,
+        "previousFailedRunId": 40474126377,
+        "previousFailedReason": "TEST_REGEX_FALSE_POSITIVE_ON_NOT_GRANTED_FIELD_NAME",
+        "standaloneQ34Run": 40463323371,
+        "standaloneQ34Tests": 43,
+        "mode": "SYNTHETIC_HERMETIC_ONLY",
+        "q34Result": "PARTIAL_READ_ONLY_HOLD",
+        "q35Result": "MOCK_ONLY_LIVE_HOLD",
+        "q36Result": "NOT_RELEASED_PROD_HOLD",
+        "languages": [
+          "ZH",
+          "VI",
+          "TH"
+        ],
+        "mockedApiModes": [
+          "ACCEPTED_DEVICE_UNVERIFIED",
+          "REJECTED_NO_RETRY",
+          "TIMEOUT_NO_RETRY"
+        ],
+        "realUserIdsRead": 0,
+        "realTokensRead": 0,
+        "realLINECalls": 0,
+        "stageWrites": 0,
+        "productionWrites": 0,
+        "osNetworkIsolation": "NOT_VERIFIED",
+        "actualOauthAcl": "NOT_VERIFIED",
+        "currentLineProvider": "NOT_INDEPENDENTLY_VERIFIED",
+        "singlePersonSourceScope": "NOT_VERIFIED",
+        "lineCrossServicePolicy": "NOT_VERIFIED",
+        "manualNext": "ONE_BATCH_OPERATOR_CLASSIFICATION_ONLY_NO_LOGIN_OR_IDENTIFIERS",
+        "nextSensitiveActions": "HOLD_SEPARATE_SOURCE_OWNER_AUTHORIZATION",
+        "evidenceFile": "ops/rc135/ABIS_RC135_Q34_Q36_INTEGRATION_CI25_20261027.md",
+        "gate": "RC135_Q34_CI43_PLUS_INTEGRATED25_PASS__PROVIDER_OAUTH_ROW_NETWORK_HOLD__Q35_LIVE_Q36_PROD_HOLD"
+      }
     }
   }
 }
