@@ -433,3 +433,14 @@ Cross-repo note:
 - Offline one-shot synthetic 50/50 PASS (policy 36, mapping 6, UI 8). Six GitHub file blobs match local executed files; no actual CI/Apps Script/Google Sheets/LINE E2E. Exact evidence and existing-source conflict analysis: \`ops/handoff/2026-10-27.md\`.
 - Gate: \`LONG_LEAVE_V1_POLICY_FROZEN_SOURCE_CANDIDATE_50_50_LOCAL_PASS__STAGE_PROVIDER_AUTH_HOLD\`. Need separately authorized read-only **existing** Stage identity/manifest/schema and isolation preflight; do not automatically import, run, merge or deploy.
 - Existing Production and other workstreams remain unchanged: Backend V167 R2174 LIVE, LIFF V153. No Payroll/Attendance/Leave transaction, provider, Manifest, OAuth, Trigger, deployment or LINE mutation.
+
+## ABIS ESS RC1.35 H1D-B — Owner Mac 23/23 single-run result (2026-10-27)
+
+- Source Owner supplied local output: `ABIS_RC135_H1DB_LOCAL_BATCH=V2_READ_ONLY`, `CHECK_COUNT=23`, `PASS_COUNT=23`, `HOLD_COUNT=0`, `UNKNOWN_COUNT=0`, `FAILED_CHECK_IDS=NONE`, `LOCAL_BATCH_STATUS=PASS` (all 23 check IDs PASS).
+- Owner independently reported ZIP SHA256 `9125c238bac4bff54326e3a90b620afe64701c8e68acf4cbd23cf89096bef0a3`, ZIP CRC PASS and embedded script SHA256 `fda5ae092b64f3af261fab20f5906d73c797811d6ef35c83b5f3e23b72d6fc6f`. Stored as **OWNER_ATTESTED_LOCAL_OUTPUT**, not independently observed or verified on Mac by GitHub.
+- Script identity: `abis_rc135_one_shot_v2/ABIS_RC135_H1DB_ONE_SHOT_READONLY.cjs` in V2 conversation-local ZIP, *not* the earlier distinct GitHub-referenced H1DB archive.
+- Fresh GitHub read-only verification (separate from Mac script): PR #76 remains OPEN/DRAFT/UNMERGED, feature head `c9ad633ae9cd51078bc5c086ffb1ec6375a675d3`, hermetic workflow [40358559711](https://github.com/nooneknows70/abis-ess-backend/actions/runs/40358559711) completed SUCCESS on exact head. Backend main Release Manifest V167 PROD_CURRENT and LIFF main V153 PROD_CURRENT; cross-Repo Q32 original records matched before Mac update.
+- Mac run explicitly reports `HISTORICAL_Q17_68_68=NOT_RERUN` and `GITHUB_PR76_HERMETIC=NOT_RERUN_BY_THIS_SCRIPT`. Q17 68/68 remains only historical Owner evidence; do not claim fresh reexecution.
+- 23 local host preflight checks DO NOT prove publisher trust, notarization, dependencies, network isolation, credential provenance, runtime actor identity, LINE delivery or real-device receipt. No real ID/Token accessed or LINE API called by this chat; owner Mac classification states `REAL_ID_TOKEN_LINE_API_PRODUCTION=HOLD`.
+- **Scope remains:** PR unmerged, no Release Manifest/Apps Script/Stage/LINE/Production/business data mutations. This local batch closes only the Q32 Mac preflight. Next separate Source Owner Gate must cover scope-limited credential/channel/recipient and isolated runner READ_ONLY evidence before considering any real LINE synthetic test; no automatic send.
+- **Gate:** `RC135_Q32_CI_PASS_MAC23_OWNER_ATTESTED__REAL_LINE_STAGE_PRODUCTION_HOLD`.
