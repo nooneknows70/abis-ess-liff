@@ -635,3 +635,11 @@ Cross-repo note:
 - Q35 **REAL LINE API and handset receipt NOT_EXECUTED/HOLD**; Q36 **Production release NOT_AUTHORIZED/HOLD**. Zero real ID/Token read or LINE API call or Stage/Production writes in this batch. GitHub manifests at readback Backend V168 and LIFF V153, not Apps Script runtime proof.
 - Full immutable evidence summary: `ops/rc135/ABIS_RC135_Q34_Q36_INTEGRATION_CI25_20261027.md`. Next one consolidated operator classification-only report from existing signed-in consoles, no login, no IDs/Token or screenshots. Missing evidence -> HOLD; separate Source Owner approval later for actual personal data/LINE send and Production.
 - Gate: `RC135_Q34_CI43_PLUS_INTEGRATED25_PASS__PROVIDER_OAUTH_ROW_NETWORK_HOLD__Q35_LIVE_Q36_PROD_HOLD`.
+
+
+## LLEX G1 post-import zeros PASS and G2 synthetic candidate authorization HOLD (2026-10-27)
+
+- Source Owner explicitly returned `G1_POST_UI_1-5=0`: post-import UI requested OAuth scopes=0, Script Properties=0, Triggers=0, Deployments active/archived=0/0, Services/Libraries=0/0. **OWNER_UI_ATTESTED** not Apps Script API or effective OAuth consent proof. Combined with G1 Mac one-time Node 96/96, source 3/3, Stage total 4/4, Manifest parity -> `G1_POSTIMPORT_OWNER_UI_ZERO_PASS__G2_SYNTHETIC_IMPORT_EXEC_AUTH_HOLD`. G1 source-only closed, G2 execution unauthorized.
+- Backend Draft branch G2 test candidate `src/ABIS_LLEX_G2_SYNTHETIC_ONLY.js` Blob `c2e0a6f627d1a785ccf95116a2e364a751f94c42` (22/22 V8 smoke PASS) and `tests/test-longleave-g2-synthetic-v1.cjs` Blob `9507ba4e9daa871687b8331a44c90324f23433b4` (5/5 V8 Node-test shim PASS, **not real Node CI**). No Stage G2 import/run; no API/provider binding. 
+- Next single Source Owner gate: A = bound import **only this synthetic runner** into the exact existing Stage, recheck 5/5 source/Manifest/UI safety, then run `abisLlexG2SyntheticOnlyV1` once manually in Apps Script editor with zero added scope consent; or B = G2 HOLD. Hard stop on any drift/consent/function selection problem. Full G2 runbook on Backend Draft branch `docs/leave/ABIS_LLEX_G1_POST_UI_ZERO_G2_SYNTHETIC_GATE_20261027.md`.
+- Both Draft PRs unmerged; RC5 HOLD; Production Manifest Backend V168 / LIFF V153 unchanged by LLEX.
