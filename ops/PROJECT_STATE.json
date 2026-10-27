@@ -1323,7 +1323,7 @@
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
       "decision": "SOURCE_OWNER_A_AUTHORIZED_SCOPED_RELEASE_AFTER_V2_GATES",
-      "status": "GIT_MAIN_PAIRED_MERGED_PAGES_HTTP_PASS_WAIT_OWNER_MAC_V168_SOURCE_RELEASE",
+      "status": "HOLD_V168_OCCUPIED_BY_TYHOON_NO_OLD_RUNNER_APPLY",
       "scope": "MANAGER_ASSIGN factory finalizing ASSIGN_PROXY button label: 指派代理 -> 核准申請",
       "actionsAndAuthorityUnchanged": true,
       "backendPr": 95,
@@ -1332,13 +1332,17 @@
       "localTests": "PASS_12_12_NODE22_REAL_EXECUTION",
       "CI": "GITHUB_ACTIONS_PASS_46_46_BACKEND_29_LIFF_17",
       "runtimeReadback": "PASS_78_78_USER_OPERATOR_OUTPUT_FOR_EXISTING_V167_ONLY",
-      "backendProduction": "V167_UNCHANGED",
+      "backendProduction": "V168_TYPHOON_SOURCE_ONLY_NOT_LEAVE_LABEL",
       "liffManifest": "V153_UNCHANGED",
       "releaseBlockers": [
-        "OWNER_MAC_APPS_SCRIPT_V168_BOUNDED_RELEASE_PENDING",
-        "POST_DEPLOY_UI_SMOKE_AND_FINAL_VERIFY_PENDING"
+        "DO_NOT_RUN_OLD_V168_RUNNER",
+        "DO_NOT_ROLL_BACK_V168_TYHOON_RELEASE",
+        "FRESH_PROVIDER_IMMUTABLE_168_SOURCE_PARITY_REQUIRED",
+        "BOUNDED_DELTA_CURRENT_MAIN_VS_IMMUTABLE_168_REQUIRED",
+        "VERIFY_TYHOON_PENDING_GATE_SAFE_TO_RELEASE",
+        "FRESH_NEXT_IMMUTABLE_VERSION_AVAILABILITY_REQUIRED"
       ],
-      "nextAction": "On authenticated Source Owner Mac: fetch/pull clean Backend main then run 'node tools/abis-v168-leave-approval-label-production-release.mjs --apply'; runner must fail closed unless deployed @167, pristine 78-file Main, exactly 2-file source delta, public LIFF blob PASS, immutable V168 free, rollback V167 verified. After PASS perform GO-LIVE UI smoke and FINAL VERIFY before updating PROD_CURRENT.",
+      "nextAction": "Maintain Production @168 typhoon. Prepare isolated READ_ONLY label release preflight based on @168 and 79 source files, with no deployment/rollback mutation. Do not arm/apply the typhoon 50-row plan under leave-label authorization.",
       "productionWrites": 0,
       "formalLeaveWrites": 0,
       "lineSent": 0,
@@ -1481,6 +1485,57 @@
         "lineSent": 0,
         "nextAction": "On authenticated Source Owner Mac: fetch/pull clean Backend main then run 'node tools/abis-v168-leave-approval-label-production-release.mjs --apply'; runner must fail closed unless deployed @167, pristine 78-file Main, exactly 2-file source delta, public LIFF blob PASS, immutable V168 free, rollback V167 verified. After PASS perform GO-LIVE UI smoke and FINAL VERIFY before updating PROD_CURRENT.",
         "noMoreHumanPolicyApprovalRequired": true
+      },
+      "versionCollisionV168": {
+        "id": "ABIS_LEAVE_LABEL_V168_VERSION_COLLISION_20261027",
+        "observedAt": "2026-10-27",
+        "severity": "HOLD_NO_APPLY",
+        "sourceOwnerExistingAuthorization": "A_LABEL_DISPLAY_ONLY_V2",
+        "observedProduction": {
+          "version": 168,
+          "description": "ABIS V168 Oct23 typhoon bounded backfill source-only Release Flow V2 2026-10-27",
+          "sourceAuthorityCommit": "72417dd1e13d1d932d7c80da9122ad30e6e8a359",
+          "sourceTree": "cd2c50882e28e25390aaf30000689a01ed0eb25d",
+          "files": 79,
+          "parity": "PASS_79_79",
+          "rollback": 167,
+          "evidence": "release/PROD_CURRENT_V168_OCT23_TYPHOON_BACKFILL_SOURCE_20261027.json"
+        },
+        "leaveLabel": {
+          "backendPr": 95,
+          "liffPr": 28,
+          "bothMerged": true,
+          "liffPublicReadback": "PASS_GIT_BLOB_3e8126d03864c4824e19efe0b280e0a8ae60ee20",
+          "backendMainMainJsBlob": "9beec9502fe2a5f63924b862502958755c861a1e",
+          "backendMainIndexBlob": "e897ebbeb2dc2f559260dc567263ba6d455451fc",
+          "productionDeployed": false,
+          "plannedNextVersion": "V169_CANDIDATE_ONLY_NOT_RESERVED"
+        },
+        "conflictingRunner": {
+          "path": "tools/abis-v168-leave-approval-label-production-release.mjs",
+          "priorVersion": 167,
+          "expectedVersion": 168,
+          "sourceCount": 78,
+          "usage": "FORBIDDEN_--apply",
+          "reason": "Occupied immutable @168 belongs to Oct23 typhoon and 79-file source; runner pins 78-file @167-to-@168."
+        },
+        "typhoon": {
+          "sourceRelease": "PROD_CURRENT_SOURCE_ONLY",
+          "runtimePreview": "PASS_EXACT50_RUNTIME_PREVIEW",
+          "plannedUpdateCount": 50,
+          "planHash": "3921516bf1349b6105880f2f54fe12968228324e8a7f05dc9e79e95a67914563",
+          "gateArmAuthorized": false,
+          "dataApplyAuthorized": false
+        },
+        "gates": [
+          "DO_NOT_RUN_OLD_V168_RUNNER",
+          "DO_NOT_ROLL_BACK_V168_TYHOON_RELEASE",
+          "FRESH_PROVIDER_IMMUTABLE_168_SOURCE_PARITY_REQUIRED",
+          "BOUNDED_DELTA_CURRENT_MAIN_VS_IMMUTABLE_168_REQUIRED",
+          "VERIFY_TYHOON_PENDING_GATE_SAFE_TO_RELEASE",
+          "FRESH_NEXT_IMMUTABLE_VERSION_AVAILABILITY_REQUIRED"
+        ],
+        "nextAction": "Maintain Production @168 typhoon. Prepare isolated READ_ONLY label release preflight based on @168 and 79 source files, with no deployment/rollback mutation. Do not arm/apply the typhoon 50-row plan under leave-label authorization."
       }
     },
     "rc135Q33": {
