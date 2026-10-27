@@ -72,13 +72,25 @@
     "frontendMounted": false,
     "featureEnabled": false,
     "googleStageTests": "NOT_AUTHORIZED",
-    "production": "NOT_AUTHORIZED"
+    "production": "NOT_AUTHORIZED",
+    "atomicGroupPlanner": "PURE_SOURCE_ONLY_NEVER_PROVIDER_COMMIT",
+    "existingRc5Stage": "G0_STAGE_REUSE_HOLD",
+    "stageProviderExecution": "NOT_AUTHORIZED",
+    "fullAppE2E": "NOT_VERIFIED"
   },
   "tests": {
     "backendPolicy": 36,
     "backendLegacyMapping": 6,
-    "frontendUi": 8,
+    "backendBoundary": 20,
+    "backendGroupPlan": 18,
+    "frontendUi": 16,
+    "total": 96,
     "syntheticOnly": true,
+    "independentV8Replay": "96/96_PASS_2026-10-27",
+    "nodeOneShotRunner": "backend:tests/run-longleave-all.cjs",
+    "nodeOneShotRunnerStatus": "PREPARED_NOT_EXECUTED",
+    "githubCIRun": "NOT_PERFORMED",
     "providerAcceptancePassed": false
-  }
+  },
+  "nextGate": "SOURCE_OWNER_ISOLATED_PROVIDER_STAGE_AUTH_REQUIRED_RC5_HOLD"
 }
