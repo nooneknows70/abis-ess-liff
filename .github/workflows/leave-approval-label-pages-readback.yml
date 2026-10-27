@@ -1,6 +1,9 @@
 name: ABIS leave label GitHub Pages exact-blob readback
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/leave-approval-label-pages-readback.yml
   push:
     branches:
       - verify/leave-label-pages-readback-20261027
