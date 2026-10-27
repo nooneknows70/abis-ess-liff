@@ -535,3 +535,11 @@ Cross-repo note:
 - **CI:** GitHub Actions [40454490529](https://github.com/nooneknows70/abis-ess-backend/actions/runs/40454490529) completed SUCCESS at the exact new head: 31/31 hermetic regression checks PASS including Mac CF allow/reject cases. Linux CI does NOT constitute owner Mac revalidation. Q32 earlier Mac 23/23 remains separate historical owner evidence.
 - **Next step:** Source Owner pins new head and Git blob locally, then executes corrected `--prepare-local` synthetic-only once; return only classification lines. No retry of old failed runner. Do not read real LINE User ID, tokens, OAuth, LINE API, Stage or Production. `NETWORK_ISOLATION=NOT_VERIFIED`, `OAUTH_ACL_SCOPE=NOT_VERIFIED`, `REAL_UID_TOKEN_LINE_API=HOLD`, `STAGE_PRODUCTION=HOLD` remain.
 - **Gate:** `RC135_Q33_MAC_CF_FIX_CI31_PASS__OWNER_MAC_REVALIDATION_PENDING__REAL_UID_TOKEN_LINE_STAGE_PRODUCTION_HOLD`.
+
+
+## LLEX G0 owner UI zero-settings PASS; G1 pure source import authorization HOLD (2026-10-27)
+
+- Dedicated private LLEX Stage: Source Owner 1–5=0 UI check means OAuth requested scopes 0; Script Properties 0; Triggers 0; active/archived Deployments 0/0; Services/Libraries 0/0. `OWNER_UI_ATTESTED`, **not** Apps Script REST or effective runtime permission proof.
+- Together with previously verified Drive project ID/owner metadata, Mac `clasp` one-default-source static check, `Asia/Taipei` Manifest and no provider refs, **`LLEX_G0_PREIMPORT_STATIC_OWNER_UI_PASS__G1_SOURCE_IMPORT_AUTH_HOLD`**. No Stage import or execution authorized by these results.
+- Three pure Backend candidate files pinned in Backend Draft branch `docs/leave/ABIS_LLEX_V1_G0_UI_ZERO_AND_G1_IMPORT_AUTH_GATE_20261027.md`. Stage import of these three files, even without function run, requires a separate explicit Source Owner G1 authorization. After any future import, redo identity/source/Manifest/OAuth/Triggers/Deployments/Properties preflight; do not infer zero scopes from current empty project.
+- Backend PR #94 and LIFF PR #27 remain DRAFT/UNMERGED; feature OFF, adapter unbound, Node one-shot runner NOT_EXECUTED; V8 96/96 synthetic result only. RC5 HOLD; Production V167/V153 unchanged.
