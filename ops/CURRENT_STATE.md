@@ -1,5 +1,14 @@
 # ABIS ESS LIFF — Current State
 
+## ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027 — Source Owner A, Release preflight HOLD (2026-10-27)
+
+- **Approved intent:** Replace eligible factory manager MANAGER_ASSIGN button text `指派代理` with `核准申請`, preserving the existing `ASSIGN_PROXY` operation and all approval/authorization rules.
+- **Draft candidates:** Backend PR #95 (branch `fix/leave-assign-button-label-20261027`), LIFF PR #28 (same branch), both open/draft/unmerged; paired release required.
+- **Local verification:** exact Git blob parity for LIFF adapter/test, Node.js 22.16.0 test run PASS 12/12. No GitHub status checks or PR workflow runs found for either head; authenticated Apps Script HEAD/immutable Deployment live readback unavailable.
+- **Gate:** `RELEASE_PREFLIGHT_HOLD`; release prerequisites not verified. No main merge, Apps Script deployment/version/source, LINE, or formal Leave/Attendance/Payroll writes. Backend remains Production V167 (rollback V166), LIFF Manifest V153.
+- **Next:** Existing owner Mac with authenticated clasp runs fresh read-only `node tools/abis-release-verify.mjs`; obtain CI PASS, then use paired Release Flow V2 only if all gates pass. Fail closed on mismatch.
+
+
 Updated: 2026-10-26 Asia/Taipei
 
 Frozen cross-window policy: `ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026`  
