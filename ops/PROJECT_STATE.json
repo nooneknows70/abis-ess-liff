@@ -1292,23 +1292,22 @@
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
       "decision": "SOURCE_OWNER_A_AUTHORIZED_SCOPED_RELEASE_AFTER_V2_GATES",
-      "status": "CI_PASS_29_29_CROSS_REPO_STATIC_PASS_12_12_RELEASE_OPERATOR_HOLD",
+      "status": "GIT_MAIN_PAIRED_MERGED_PAGES_HTTP_PASS_WAIT_OWNER_MAC_V168_SOURCE_RELEASE",
       "scope": "MANAGER_ASSIGN factory finalizing ASSIGN_PROXY button label: 指派代理 -> 核准申請",
       "actionsAndAuthorityUnchanged": true,
       "backendPr": 95,
       "liffPr": 28,
-      "prs": "OPEN_DRAFT_UNMERGED",
+      "prs": "BOTH_MERGED_MAIN",
       "localTests": "PASS_12_12_NODE22_REAL_EXECUTION",
-      "CI": "GITHUB_ACTIONS_BACKEND_17_17_LIFF_12_12_PASS",
+      "CI": "GITHUB_ACTIONS_PASS_46_46_BACKEND_29_LIFF_17",
       "runtimeReadback": "PASS_78_78_USER_OPERATOR_OUTPUT_FOR_EXISTING_V167_ONLY",
-      "backendProduction": "V167",
-      "liffManifest": "V153",
+      "backendProduction": "V167_UNCHANGED",
+      "liffManifest": "V153_UNCHANGED",
       "releaseBlockers": [
-        "NO_DIRECT_APPSSCRIPT_DEPLOYMENT_TOOL_OR_CLOUD_PROVIDER_READBACK_IN_THIS_CHAT",
-        "PAIRED_GITHUB_PAGES_ASSET_PUBLISH_AND_BACKEND_IMMUTABLE_DEPLOYMENT_NOT_PERFORMED",
-        "NEW_UI_LIVE_SMOKE_FINAL_VERIFY_PENDING"
+        "OWNER_MAC_APPS_SCRIPT_V168_BOUNDED_RELEASE_PENDING",
+        "POST_DEPLOY_UI_SMOKE_AND_FINAL_VERIFY_PENDING"
       ],
-      "nextAction": "Release Flow V2 on authorized owner-Mac release runner as one bounded paired release: verify fresh Git commit/pair and CI, publish LIFF asset/readback, merge backend, push controlled source, create immutable version using existing Production deployment ID, verify version/source/rollback and label UI; fail closed on any mismatch; do not merge single PR in isolation.",
+      "nextAction": "On authenticated Source Owner Mac: fetch/pull clean Backend main then run 'node tools/abis-v168-leave-approval-label-production-release.mjs --apply'; runner must fail closed unless deployed @167, pristine 78-file Main, exactly 2-file source delta, public LIFF blob PASS, immutable V168 free, rollback V167 verified. After PASS perform GO-LIVE UI smoke and FINAL VERIFY before updating PROD_CURRENT.",
       "productionWrites": 0,
       "formalLeaveWrites": 0,
       "lineSent": 0,
@@ -1392,6 +1391,65 @@
           "NEW_UI_LIVE_SMOKE_FINAL_VERIFY_PENDING"
         ],
         "nextAction": "Release Flow V2 on authorized owner-Mac release runner as one bounded paired release: verify fresh Git commit/pair and CI, publish LIFF asset/readback, merge backend, push controlled source, create immutable version using existing Production deployment ID, verify version/source/rollback and label UI; fail closed on any mismatch; do not merge single PR in isolation."
+      },
+      "latestPairedSourceStage": {
+        "stage": "STAGED_PAIRED_SOURCE_ON_GIT_MAIN",
+        "gate": "GIT_MAIN_PAIRED_MERGED_PAGES_HTTP_PASS_WAIT_OWNER_MAC_V168_SOURCE_RELEASE",
+        "date": "2026-10-27",
+        "authorizedBy": "SOURCE_OWNER_A_EXISTING",
+        "componentPair": {
+          "frontend": {
+            "repo": "nooneknows70/abis-ess-liff",
+            "pr": 28,
+            "merged": true,
+            "mainCommit": "ac14794aa33912b657f075eec5259bc564a83e6f",
+            "sourceBlob": "3e8126d03864c4824e19efe0b280e0a8ae60ee20",
+            "legacyBundleBlob": "24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b",
+            "manifestVersion": 153,
+            "ci": "PASS_17_17",
+            "ciRunId": 40453636717,
+            "livePagesReadback": {
+              "status": "PASS",
+              "runId": 40454443510,
+              "gitBlob": "3e8126d03864c4824e19efe0b280e0a8ae60ee20",
+              "validationPr": 29,
+              "validationPrClosedUnmerged": true
+            }
+          },
+          "backend": {
+            "repo": "nooneknows70/abis-ess-backend",
+            "pr": 95,
+            "merged": true,
+            "mainCommit": "9ce2d879bf8335c8bfb60c192400185ce247bf01",
+            "mainJsBlob": "9beec9502fe2a5f63924b862502958755c861a1e",
+            "indexHtmlBlob": "e897ebbeb2dc2f559260dc567263ba6d455451fc",
+            "runnerBlob": "45a6f0f77d0a827e52c8baa93d41c8aecb24bfba",
+            "runnerPath": "tools/abis-v168-leave-approval-label-production-release.mjs",
+            "ci": "PASS_29_29",
+            "ciRunId": 40454008339
+          }
+        },
+        "syntheticCI": "PASS_46_46",
+        "unchangedRuntime": {
+          "appsScriptProductionVersion": 167,
+          "appsScriptPriorRollbackVersion": 166,
+          "frontendManifestVersion": 153,
+          "r2174Mode": "LIVE"
+        },
+        "plannedNextVersion": 168,
+        "plannedRollbackVersion": 167,
+        "plannedModifiedSourceFiles": [
+          "src/Main.js",
+          "src/Index.html"
+        ],
+        "backendSourceMainNowDiffersFromProduction167": "EXPECTED_PENDING_BOUNDED_RELEASE",
+        "productionSourcePushPerformed": false,
+        "immutable168Created": false,
+        "productionDeploymentPointerUpdated": false,
+        "formalLeaveWriteCount": 0,
+        "lineSent": 0,
+        "nextAction": "On authenticated Source Owner Mac: fetch/pull clean Backend main then run 'node tools/abis-v168-leave-approval-label-production-release.mjs --apply'; runner must fail closed unless deployed @167, pristine 78-file Main, exactly 2-file source delta, public LIFF blob PASS, immutable V168 free, rollback V167 verified. After PASS perform GO-LIVE UI smoke and FINAL VERIFY before updating PROD_CURRENT.",
+        "noMoreHumanPolicyApprovalRequired": true
       }
     },
     "rc135Q33": {
