@@ -1,5 +1,16 @@
 # ABIS ESS LIFF — Current State
 
+## ABIS_ESS_V169_LEAVE_LABEL_RELEASE_RUNNER_CI_PASS_OPERATOR_GATE_20261027 — V169 runner merged; Production stays @168 until owner-Mac execution
+
+- **Source Owner A:** scoped manager-assignment leave UI button label only, `指派代理` → `核准申請` where existing business rules finalize via `ASSIGN_PROXY`. No ACL or leave-state-machine changes.
+- **Release source authority:** Backend PR [#100](https://github.com/nooneknows70/abis-ess-backend/pull/100) merged to `main` as `00d40965befc8f55df6d1db7824845fc3a3a9992`. The added bounded operator tool is `tools/abis-v169-leave-approval-label-production-release.mjs` blob `fc98ddf343566d86b8bdad1cb217a48918da9fd7`. PR contains only a release runner, test, and no-credential CI. Apps Script `src/Main.js` and `src/Index.html` blobs remain `9beec9502fe2a5f63924b862502958755c861a1e` and `e897ebbeb2dc2f559260dc567263ba6d455451fc`.
+- **CI:** GitHub Actions [run 40493258886](https://github.com/nooneknows70/abis-ess-backend/actions/runs/40493258886) SUCCESS: V169 safety checks 18/18 and factory approval contract 17/17, **35/35 PASS**. LIFF previous synthetic run 17/17 PASS and real Pages blob readback PASS.
+- **Current Production:** @168 Oct23 typhoon 79-file immutable source, source authority `72417dd1e13d1d932d7c80da9122ad30e6e8a359`, rollback @167, exact50 runtime CLOSED PASS. LIFF manifest retains V153.
+- **@169 candidate:** production release **NOT YET EXECUTED**, immutable @169 **NOT VERIFIED FREE**, NOT CREATED, not deployed. Backend Release Manifest has candidate-only V169 tool evidence; main stays source authority and Manifest PROD_CURRENT stays @168.
+- **Live operator one-command release:** in authenticated Source Owner Mac, from clean fresh Backend `main`, run `node tools/abis-v169-leave-approval-label-production-release.mjs --apply`. It composes fresh origin/main check, exact source pins, 79 file @168 immutable-vs-Git source, exactly Main.js + Index.html delta, typhoon exact50 final readback, public LIFF asset SHA, @169 availability, Apps Script HEAD prior/candidate, immutable @169 creation and readback, existing Deployment pointer update, other deployments unchanged, final source readback, and concurrent-pointer-safe rollback to @168 on postdeploy failure.
+- **Safety:** do not use old `abis-v168-leave-approval-label-production-release.mjs --apply`. No new deployment ID/Trigger/LINE/Leave/Attendance/Payroll data writes. `PASS_SOURCE_RELEASE_FINAL_VERIFY_PENDING` means source-release stage only, not `PROD_CURRENT`: requires GO-LIVE/UI smoke and FINAL VERIFY. On HOLD, stop, no manual bypass.
+
+
 ## ABIS_LEAVE_LABEL_MANIFEST_VERSION_RECONCILIATION_20261027 — GitHub / Manifest reconciled, Production @168 unchanged
 
 - **Manifest authority:** Backend `ABIS_ESS_BACKEND_RELEASE_MANIFEST.json` remains `PROD_CURRENT` @168, typhoon source-only release `ABIS_ESS_V168_OCT23_TYPHOON_BACKFILL_SOURCE_20261027`, 79/79 prior release SHA parity, immutable rollback @167. It now has a *non-production* `pendingReleaseCandidate` entry for leave button wording only, with tentative **@169 not allocated, not immutable, not deployed**, and explicit `DO_NOT_RUN` on the obsolete @167→@168 label runner.
