@@ -1463,7 +1463,7 @@
     "leaveApprovalButtonLabel": {
       "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
       "decision": "SOURCE_OWNER_A_AUTHORIZED_SCOPED_RELEASE_AFTER_V2_GATES",
-      "status": "GITHUB_MANIFEST_SYNC_V168_PROD_CURRENT_V169_CANDIDATE_NOT_RELEASED",
+      "status": "V169_RELEASE_RUNNER_MAIN_MERGED_CI_PASS_35_OF_35_OPERATOR_CLASP_PENDING",
       "scope": "MANAGER_ASSIGN factory finalizing ASSIGN_PROXY button label: 指派代理 -> 核准申請",
       "actionsAndAuthorityUnchanged": true,
       "backendPr": 95,
@@ -1475,11 +1475,11 @@
       "backendProduction": "V168_TYHOON_EXACT50_CLOSED_PASS_NOT_LEAVE_LABEL",
       "liffManifest": "V153_UNCHANGED",
       "releaseBlockers": [
-        "APPS_SCRIPT_POST168_READ_ONLY_PREFLIGHT_NOT_OBSERVED",
-        "IMMUTABLE_NEXT_VERSION_NOT_VERIFIED_OR_RESERVED",
-        "NEW_LABEL_RUNTIME_FINAL_VERIFY_PENDING"
+        "PRODUCTION_DEPLOYMENT_@168_NO_169",
+        "FRESH_OWNER_CLASP_READBACK_AND_V169_VERSION_AVAILABLE_NOT_VERIFIED",
+        "POST_DEPLOY_LIVE_UI_FINAL_VERIFY_NOT_RUN"
       ],
-      "nextAction": "Production @168 typhoon exact-50 CLOSED PASS. Backend/LIFF source staged, candidate @169 provisional ONLY. Run post168 read-only preflight; DO NOT RUN old V168 label --apply; no new deployment until clean V2 gates.",
+      "nextAction": "On authenticated clean Backend main, run node tools/abis-v169-leave-approval-label-production-release.mjs --apply. On source release PASS follow UI read-only acceptance and FINAL VERIFY; do not mark PROD_CURRENT before actual provider readback. On HOLD stop.",
       "productionWrites": 0,
       "formalLeaveWrites": 0,
       "lineSent": 0,
@@ -1734,6 +1734,63 @@
           "prodMutationCount": 0
         },
         "actualProductionReadback": "GIT_MANIFEST_AND_PRIOR_OPERATOR_EVIDENCE; NO_NEW_APPS_SCRIPT_PROVIDER_READBACK_IN_THIS_SYNC"
+      },
+      "v169ReleaseCandidate": {
+        "evidenceAt": "2026-10-27",
+        "decision": "A_SOURCE_OWNER_SCOPED_LEAVE_LABEL_RELEASE",
+        "authority": "ABIS_RELEASE_FLOW_V2",
+        "backend": {
+          "pr": 100,
+          "prMerged": true,
+          "mergeCommit": "00d40965befc8f55df6d1db7824845fc3a3a9992",
+          "runner": "tools/abis-v169-leave-approval-label-production-release.mjs",
+          "runnerBlob": "fc98ddf343566d86b8bdad1cb217a48918da9fd7",
+          "ciRun": 40493258886,
+          "ciStatus": "PASS_18_V169_SAFETY_PLUS_17_FACTORY_CONTRACT",
+          "ciTotal": "PASS_35_35"
+        },
+        "frontend": {
+          "pr": 28,
+          "merged": true,
+          "publicPagesReadback": "PASS_BLOB_3e8126d03864c4824e19efe0b280e0a8ae60ee20",
+          "liFFManifestVersion": 153
+        },
+        "currentProduction": {
+          "version": 168,
+          "description": "ABIS V168 Oct23 typhoon bounded backfill source-only Release Flow V2 2026-10-27",
+          "sourceCount": 79,
+          "sourceAuthorityCommit": "72417dd1e13d1d932d7c80da9122ad30e6e8a359",
+          "runtime": "OCT23_EXACT50_CLOSED_PASS",
+          "rollbackVersion": 167
+        },
+        "nextCandidate": {
+          "version": 169,
+          "reserved": false,
+          "created": false,
+          "deployed": false,
+          "sourceScope": [
+            "Main.js",
+            "Index.html"
+          ],
+          "newCodeOnlyButtonLabel": true,
+          "rollbackVersionAfterRelease": 168
+        },
+        "operatorGate": "NODE_V169_RUNNER_APPLY_MUST_PASS_FRESH_GIT_MAIN_79_IMMUTABLE_168_169_VERSION_AVAILABILITY_PAGES_HASH_AND_RUNTIME_CLOSEOUT",
+        "sourceRelease": "NOT_DEPLOYED",
+        "runtimeVerify": "PENDING",
+        "versionManifestSync": "UPDATED_CANDIDATE_ONLY",
+        "disallowed": "ABIS_V168_LABEL_RUNNER_--apply",
+        "nextAction": "On authenticated clean Backend main, run node tools/abis-v169-leave-approval-label-production-release.mjs --apply. On source release PASS follow UI read-only acceptance and FINAL VERIFY; do not mark PROD_CURRENT before actual provider readback. On HOLD stop.",
+        "safety": {
+          "appsScriptSourceWrites": 0,
+          "versionWrites": 0,
+          "deploymentWrites": 0,
+          "triggerWrites": 0,
+          "leaveWrites": 0,
+          "attendanceWrites": 0,
+          "payrollWrites": 0,
+          "lineSent": 0
+        }
       }
     },
     "rc135Q33": {
