@@ -1660,6 +1660,75 @@
         "githubCI": "40454490529_SUCCESS_31_OF_31_HERMETIC_NOT_MAC",
         "limitations": "Only 13 host checks and sanitized synthetic child; not a proof of OS network isolation, OAuth ACL, credential or independent recipient identity"
       }
+    },
+    "rc135BatchCloseout20261027": {
+      "recordDate": "2026-10-27",
+      "decision": "FINISH_REMAINING_SAFE_PREPARATION_IN_ONE_BATCH_THEN_TEST_TOGETHER_NO_MORE_MICRO_GATES",
+      "scope": "RC135_H1DB_AND_PHASE1A_LINE_NOTIFICATION",
+      "upstreamComplete": {
+        "q32Mac23": "PASS_OWNER_ATTESTED",
+        "q33Mac13": "PASS_OWNER_ATTESTED",
+        "q33HermeticCI": "40454490529_SUCCESS_31_31",
+        "pr76Head": "139c9da25233050b88649991019e83258b0112fe",
+        "pr76State": "OPEN_DRAFT_UNMERGED"
+      },
+      "remainingMajorGates": [
+        {
+          "id": "Q34",
+          "title": "IDENTITY_SCOPE_NETWORK_OAUTH_ACL_READ_ONLY_BATCH",
+          "consolidatedTasks": [
+            "verify actual macOS network-denial evidence before any real-data runner",
+            "read-only review effective Google/LINE OAuth scope and ACL without exporting credentials",
+            "validate exact one-person source filter and no logging of identifiers",
+            "prove LINE Login and Messaging API belong to SAME provider; preserve provider ID privately",
+            "check cross-channel data use policy and owner consent; do not equate linked OA with identity match",
+            "run one batch of negative/synthetic fixtures and give one consolidated PASS/HOLD"
+          ],
+          "closeCriterion": "Q34 real scope/ACL/provider safety evidence separately reviewed and verified; no actual UID/Token access unless bounded approval and previous checks pass",
+          "defaultSecurityStatus": "HOLD_NOT_VERIFIED"
+        },
+        {
+          "id": "Q35",
+          "title": "BOUNDED_SYNTHETIC_STAGE_PLUS_SINGLE_OWNER_LINE_PUSH",
+          "consolidatedTasks": [
+            "one isolated synthetic scheduling-publish update / three-language notification rehearsal with immutable source gates",
+            "same Channel credential-to-Channel binding with strictly scoped independent source-owner approval",
+            "one personal recipient identity and whitelist proof via approved private sources, no raw ID logged",
+            "one exact synthetic text-message push, no automatic retry, manual Source Owner device receipt",
+            "distinguish HTTP acceptance from actual device receipt and preserve abort/rollback evidence"
+          ],
+          "closeCriterion": "Stage isolated acceptance PASS and one explicitly authorized real owner-only LINE push API+handset receipt PASS",
+          "defaultSecurityStatus": "HOLD_LIVE_APPROVAL_REQUIRED"
+        },
+        {
+          "id": "Q36",
+          "title": "RELEASE_FLOW_V2_PROD_PROMOTION_AND_ACCEPTANCE",
+          "consolidatedTasks": [
+            "fresh three-Repo source/manifest/deployment pointer parity",
+            "explicit Source Owner approval for exact manifest, branch, source delta and Production release",
+            "merge/release only after earlier gates and inspect signed evidence/immutable version",
+            "production source readback, deployment and trigger guard, limited publish-change notification acceptance",
+            "rollback proof, no duplicate LINE notifications, post-release 3/3 SSOT handoff"
+          ],
+          "closeCriterion": "Released exact approved version and post-deploy readback/behavior PASS; rollback ready; three-Repo SSOT 3/3",
+          "defaultSecurityStatus": "HOLD_PRODUCTION_APPROVAL_REQUIRED"
+        }
+      ],
+      "acceptanceModel": "ONE_OFFLINE_BATCH_PER_BUILD_PLUS_SEPARATE_GATES_FOR_REAL_IDENTITY_AND_PROD",
+      "expectedRemainingStageCount": 3,
+      "h1dBOnlyTrialRemainingStageCount": 2,
+      "actualRealUidReadApprovedByThisPlan": false,
+      "actualLineTokenReadApprovedByThisPlan": false,
+      "remoteStageWritesApprovedByThisPlan": false,
+      "realLINEPushApprovedByThisPlan": false,
+      "productionReleaseApprovedByThisPlan": false,
+      "currentBackendManifest": "V168_PROD_CURRENT_GITHUB_READ_ONLY_AT_20261027",
+      "currentLiffManifest": "V153_PROD_CURRENT_GITHUB_READ_ONLY_AT_20261027",
+      "independentLineProviderRule": "LOGIN_AND_MESSAGING_API_SAME_PROVIDER_REQUIRED_FOR_SHARED_USER_ID",
+      "officialLineReference": "https://developers.line.biz/en/docs/messaging-api/getting-user-ids/",
+      "nextAction": "Prepare all remaining offline/static Q34-Q36 fixtures as one development batch; one GitHub hermetic test at frozen candidate head. Before ANY private UID/Token, LINE API, Stage writes or Production seek distinct narrowly scoped Source Owner authorization.",
+      "gate": "RC135_BATCH_Q34_Q36_PLAN_FROZEN__Q33_PASS__REAL_IDENTITY_LINE_STAGE_PRODUCTION_HOLD",
+      "sourceRepo": "abis-ess-liff"
     }
   }
 }
