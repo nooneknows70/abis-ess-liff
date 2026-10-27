@@ -1268,6 +1268,37 @@
         "nextAction": "Keep both PRs draft/unmerged until actual CI PASS and combined Release Flow V2 release prerequisites; existing V167 runtime evidence preserved; do not rerun same helper expecting STALE/MANUAL_PENDING changes.",
         "noProductionWrite": true
       }
+    },
+    "rc135Q33": {
+      "date": "2026-10-27",
+      "ownerDecision": "A_LOCAL_CONTROLLED_RUNNER_AND_MIN_PRIVILEGE_PREFLIGHT",
+      "authority": "SYNTHETIC_ONLY_NO_REAL_UID_TOKEN_OAUTH_LINE_API_STAGE_PRODUCTION",
+      "branch": "feat/phase1a-line-delta-i18n-rc1-35-v159",
+      "prNumber": 76,
+      "prStatus": "OPEN_DRAFT_UNMERGED",
+      "candidateHead": "00c427f825e6f7e887a71ea1ab0a0ec0b8be20c7",
+      "runnerPath": "tools/abis-rc135-h1db-local-runner-preflight.cjs",
+      "runnerBlob": "5004d83d6ba672d1c2feb391cc1af326e98e48ca",
+      "testPath": "tests/test-rc135-h1db-local-runner-preflight.mjs",
+      "ciRunId": 40451262485,
+      "ci": "SUCCESS",
+      "hermeticTestChecks": 24,
+      "syntheticSelfTestCases": 15,
+      "newMacChecks": 13,
+      "newMacStatus": "NOT_YET_EXECUTED",
+      "previousMac": "Q32_V2_23_23_OWNER_ATTESTED_SEPARATE",
+      "realLINECalls": 0,
+      "realTokensRead": 0,
+      "realUidRead": 0,
+      "stageWrites": 0,
+      "productionWrites": 0,
+      "osNetworkIsolation": "NOT_VERIFIED",
+      "oauthAclScope": "NOT_VERIFIED",
+      "backendManifest": "V167_PROD_CURRENT_MAIN",
+      "liffManifest": "V153_PROD_CURRENT_MAIN",
+      "gate": "RC135_Q33_HERMETIC_24_PASS__OWNER_MAC_LOCAL_RUNNER_PENDING__REAL_UID_TOKEN_LINE_STAGE_PROD_HOLD",
+      "nextAction": "Verify exact feature commit and Git blob on trusted Mac, then run synthetic-only --prepare-local once; no real identity access",
+      "sourceRepo": "abis-ess-liff"
     }
   }
 }
