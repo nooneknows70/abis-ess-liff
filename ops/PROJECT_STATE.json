@@ -1150,6 +1150,29 @@
       "productionAuthorized": false,
       "sourceOwnerAuthorization": "DEV_BRANCH_AND_DRAFT_ONLY",
       "lastChangedDate": "2026-10-27"
+    },
+    "leaveApprovalButtonLabel": {
+      "policyId": "ABIS_LEAVE_APPROVAL_LABEL_RC1_20261027",
+      "decision": "SOURCE_OWNER_A_AUTHORIZED_SCOPED_RELEASE_AFTER_V2_GATES",
+      "status": "RELEASE_PREFLIGHT_HOLD_NOT_DEPLOYED",
+      "scope": "MANAGER_ASSIGN factory finalizing ASSIGN_PROXY button label: 指派代理 -> 核准申請",
+      "actionsAndAuthorityUnchanged": true,
+      "backendPr": 95,
+      "liffPr": 28,
+      "prs": "OPEN_DRAFT_UNMERGED",
+      "localTests": "PASS_12_12_NODE22_REAL_EXECUTION",
+      "CI": "NO_REPORTED_CHECKS_OR_WORKFLOWS",
+      "runtimeReadback": "UNAVAILABLE",
+      "backendProduction": "V167",
+      "liffManifest": "V153",
+      "releaseBlockers": [
+        "CI_PASS_MISSING",
+        "PRODUCTION_HEAD_IMMUTABLE_DEPLOYMENT_READBACK_MISSING"
+      ],
+      "nextAction": "Fresh authenticated owner-Mac read-only release verify, obtain CI PASS, then paired Release Flow V2; on missing gate HOLD",
+      "productionWrites": 0,
+      "formalLeaveWrites": 0,
+      "lineSent": 0
     }
   }
 }
