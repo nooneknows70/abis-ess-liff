@@ -304,7 +304,7 @@
     }
   },
   "crossRepoPendingIntegration": {
-    "id": "ABIS_LEAVE_APPROVAL_LABEL_RC1_STATIC_ASSET_NOT_ACTIVE_IN_BACKEND_V168",
+    "id": "ABIS_LEAVE_APPROVAL_LABEL_RC1_BACKEND_169_ACTIVE_VERIFIED",
     "recordedAt": "2026-10-27",
     "frontendManifestStatus": "PROD_CURRENT_V153_UNCHANGED",
     "staticAsset": {
@@ -315,23 +315,38 @@
       "pagesHttpReadback": "PASS_GITHUB_ACTIONS_40454443510"
     },
     "backend": {
-      "releasedVersion": 168,
-      "releaseSet": "ABIS_ESS_V168_OCT23_TYPHOON_BACKFILL_SOURCE_20261027",
+      "releasedVersion": 169,
+      "releaseSet": "ABIS_ESS_V169_LEAVE_APPROVAL_LABEL_RC1_20261027",
       "currentImmutableSourceFileCount": 79,
-      "approvalLabelActive": false,
+      "approvalLabelActive": true,
       "nextVersionCandidate": 169,
-      "nextVersionProvisional": true,
-      "nextVersionReserved": false,
-      "nextVersionCreated": false,
+      "nextVersionProvisional": false,
+      "nextVersionReserved": true,
+      "nextVersionCreated": true,
       "sourcePullRequest": 95,
       "sourceMerged": true,
       "readOnlyPreflightPullRequest": 98,
-      "operatorPreflightStatus": "PENDING"
+      "operatorPreflightStatus": "SUPERSEDED_BY_POST_RELEASE_FINAL_VERIFY"
     },
     "scope": "ELIGIBLE_MANAGER_ASSIGN_BUTTON_LABEL_ONLY",
     "actionUnchanged": "ASSIGN_PROXY",
-    "productionDeployPerformed": false,
-    "finalUiAcceptance": "PENDING",
-    "forbid": "MUST_NOT_BUMP_LIFF_RELEASE_VERSION_OR_MARK_LABEL_PROD_CURRENT_BEFORE_BACKEND_NEW_VERSION_FINAL_VERIFY"
+    "productionDeployPerformed": true,
+    "finalUiAcceptance": "PASS_SOURCE_OWNER",
+    "forbid": "DO_NOT_BUMP_LIFF_RELEASE_VERSION_TO_BACKEND_169; FRONTEND_V153_INDEPENDENT"
+  },
+  "v169CrossRepoObservation": {
+    "status": "ABIS_ESS_V169_LEAVE_APPROVAL_LABEL_CLOSED_PASS_RECONCILED",
+    "backendVersionObserved": 169,
+    "backendImmutableVsGit": "PASS_79_79",
+    "goLiveLabel": "PASS_SOURCE_OWNER_ATTESTED",
+    "frontendReleaseVersionUnchanged": 153,
+    "finalVerify": "PASS_RECONCILED_SCOPED",
+    "backendManifestProdCurrentLastRegistered": 169,
+    "prodCurrentPromoted": true,
+    "runtimeScreenshot": "PASS_SOURCE_OWNER_POST169_API_DOGET",
+    "r2174Performance": "OPEN_NON_BLOCKING_SEPARATE",
+    "otherDeployments": "PASS_STABLE_20261025_TO_20261027",
+    "originalRunnerLog": "NOT_AVAILABLE_POSTFACTO_RECONCILED",
+    "releaseEvidence": "abis-ess-backend/release/PROD_CURRENT_V169_LEAVE_APPROVAL_LABEL_RECONCILED_FINAL_VERIFY_20261027.json"
   }
 }

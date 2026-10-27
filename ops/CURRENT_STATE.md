@@ -1,5 +1,37 @@
 # ABIS ESS LIFF — Current State
 
+## ABIS_ESS_V169_LEAVE_APPROVAL_LABEL_CLOSED_PASS_RECONCILED — FINAL VERIFY reconciled, 2026-10-27
+
+- Source Owner @169 original Production Deployment ID, immutable @169, HEAD, and Git source **79/79 PASS**, manager button **核准申請** UI PASS, published frontend asset and post-release web app api/doGet completed.
+- Historical 2026-10-25 **4-deployment** full list compared to current 2026-10-27 full list: same four Deployment IDs, non-target pointers @HEAD/@49/@45 stable, only expected ESS Production pointer advanced to @169.
+- Original @169 `--apply` stdout is **not available**; release closed via independent retrospective reconciliation, **not by fabricating the runner report**. Historical snapshot is not immediate pre-V169.
+- R2174 intermittent latency is independently `OPEN_NON_BLOCKING`; do not rerun Oct23 exact50 or modify triggers. LIFF formal version remains independent **V153**.
+- V169 scope strictly text label only for eligible factory manager finalizing ASSIGN_PROXY; no actual leave approval invoked. Rollback immutable @168 preserved.
+- Backend consolidated evidence: `nooneknows70/abis-ess-backend/release/PROD_CURRENT_V169_LEAVE_APPROVAL_LABEL_RECONCILED_FINAL_VERIFY_20261027.json`.
+- After merged SSOT readback: **CLOSED_PASS_RECONCILED**; no additional Production action.
+
+
+## ABIS V169 scoped Final Verify — label PASS, release provenance HOLD (2026-10-27)
+
+- Source Owner verified existing Production Deployment points to immutable **@169**, `Git main/src == immutable @169 == HEAD` at **79/79** SHA-256; eligible factory manager's actual ESS button is **「核准申請」**. CI 35/35 PASS; `ASSIGN_PROXY` and eligibility remain unchanged, no formal leave approval was invoked.
+- Source Owner 2026-10-27 screenshots show multiple **@169 `api`/`doGet` executions completed** (approximately 22:21–22:22), and the Q2 no-new-label-error attestation. This supports **label-scoped runtime smoke PASS**, not a blanket no-errors claim for all Apps Script handlers.
+- Source Owner screenshots show **7 visible existing triggers** and active Production @169 with **two additional unnamed deployments**; full before/after identity comparison for unrelated deployments is not available. Historic R2174 count `canonical=1`, `legacy=0` is consistent with the screenshot.
+- **R2174 is separately OPEN_NON_BLOCKING** per `ops/handoff/ABIS_R2174_PERFORMANCE_HANDOFF_20261027.md`. Screenshot shows R2174 22:08 run timed out (~1801 s) and earlier 21:53 long run (~1376 s) before @169 creation (~21:59), so latency cannot be attributed to the label release. Do **not** treat R2174 performance as a blocker for V169 label functionality.
+- **Release Flow V2 remaining gate:** no trustworthy original V169 `--apply` consolidated successful log / pre-post other-deployment parity; past `--preflight` later failed with `PRODUCTION_ANCHOR_DRIFT_HOLD` because pointer was already @169. Do not rerun `--apply`, reconstruct success falsely, or mark `PROD_CURRENT` until release provenance is resolved.
+- **Current status:** `V169_LABEL_UI_RUNTIME_PASS__RELEASE_PROVENANCE_HOLD`; Backend Manifest last registered @168, observed @169. Frontend LIFF separate version V153 unchanged. Draft PRs: Backend #102, central #3, LIFF #30; do not merge while required gates are HOLD.
+- **Safety:** read-only verification only; no Production, Leave, Attendance, Payroll, LINE, Trigger, or Deployment mutation; no rerun of 10/23 typhoon exact-50.
+- **Evidence:** Backend `release/V169_LEAVE_APPROVAL_LABEL_GO_LIVE_OBSERVATION_FINAL_VERIFY_HOLD_20261027.json`.
+
+
+## V169 leave approval label — Production @169 observed / UI PASS / Final Verify HOLD (2026-10-27)
+
+- Source Owner readback: existing Backend production deployment points to immutable @169; version listed; immutable @169, Apps Script HEAD, Git main/src all 79/79 match with zero source delta.
+- Source Owner Q1=A: eligible factory manager leave-approval button now displays 「核准申請」 on actual ESS UI; no approval action was invoked. CI 35/35 PASS; intended command remains ASSIGN_PROXY.
+- Backend Manifest remains registered PROD_CURRENT @168 until FINAL VERIFY; avoid falsely promoting @169. LIFF manifest version V153 is an independent series and must not be bumped to @169.
+- **HOLD:** post-live error/trigger/other-deployment readback and consolidated release execution report unavailable. Run one bounded READ_ONLY final verification; do not deploy, run approval, modify leave data, trigger, LINE, payroll, attendance or rerun Oct23 exact50.
+- Backend evidence: `release/V169_LEAVE_APPROVAL_LABEL_GO_LIVE_OBSERVATION_FINAL_VERIFY_HOLD_20261027.json`.
+- Current gate: `V169_DEPLOYMENT_SOURCE79_AND_UI_PASS__FINAL_VERIFY_HOLD`. Documentation changes are DRAFT only, not authoritative main until reviewed.
+
 ## ABIS_ESS_V169_LEAVE_LABEL_RELEASE_RUNNER_CI_PASS_OPERATOR_GATE_20261027 — V169 runner merged; Production stays @168 until owner-Mac execution
 
 - **Source Owner A:** scoped manager-assignment leave UI button label only, `指派代理` → `核准申請` where existing business rules finalize via `ASSIGN_PROXY`. No ACL or leave-state-machine changes.
