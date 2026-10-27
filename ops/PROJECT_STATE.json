@@ -1374,6 +1374,23 @@
         "pass": 96,
         "total": 96,
         "evidenceTier": "OWNER_MAC_LOCAL_REAL_NODE_NOT_APPS_SCRIPT"
+      },
+      "latestObservedReleaseAuthority": {
+        "backend": {
+          "source": "GITHUB_RELEASE_MANIFEST",
+          "releaseSet": "ABIS_ESS_V168_OCT23_TYPHOON_BACKFILL_SOURCE_20261027",
+          "manifestBlob": "f0dde4e45266b07985d2b3d62ddd3ff1450bcc64",
+          "releaseStatus": "PROD_CURRENT"
+        },
+        "liff": {
+          "source": "GITHUB_RELEASE_MANIFEST",
+          "releaseSet": "ABIS_ESS_PHASE1A_RC1_33_PROD_20261018_V153",
+          "manifestBlob": "8ad10009662e2a4e0fd8fc422aceac632cdc080d",
+          "releaseStatus": "PROD_CURRENT"
+        },
+        "observationDate": "2026-10-27",
+        "independentAppsScriptProdRuntimeVerified": false,
+        "llexWorkstreamChangedProduction": false
       }
     },
     "leaveApprovalButtonLabel": {
