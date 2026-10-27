@@ -480,3 +480,12 @@ Cross-repo note:
 - OS network isolation and actual read-only OAuth/ACL/data scope remain NOT_VERIFIED. Real User ID, Token-to-Channel identity, independent owner proof, LINE API push, Stage and Production remain HOLD.
 - Backend manifest V167, LIFF V153 PROD_CURRENT verified read-only. H1C frozen Stage SHA not changed. Next: one exact-pinned Mac synthetic runner preflight without sudo, then one results classification.
 - Gate: `RC135_Q33_HERMETIC_24_PASS__OWNER_MAC_LOCAL_RUNNER_PENDING__REAL_UID_TOKEN_LINE_STAGE_PROD_HOLD`.
+
+
+## ESS Long Leave Q1–Q17 — offline source hardening complete, provider HOLD (2026-10-27)
+
+- Policy frozen Q1–Q17. Backend [Draft PR #94](https://github.com/nooneknows70/abis-ess-backend/pull/94) at `8e154b0fe8cd342e435fba138801ee7d93d0e8b1`, LIFF [Draft PR #27](https://github.com/nooneknows70/abis-ess-liff/pull/27) at `fbe14c5232fe6a523492493d409caa09c8f36d0a`; OPEN/DRAFT/UNMERGED. Existing ESS projects; no new Production project.
+- Latest independent **V8 isolated replay 96/96 PASS**: policy 36, mapping 6, security/revision 20, group planner 18, UI 16. **Not a real Node test run, CI, Google Stage or Production E2E.** One-shot local Node runner prepared, not executed. Cross-repo contract blob identical `1e86b7f77195a818f76fd18aebbb4c658426213b`.
+- Feature remains OFF; Backend `longLeaveExecV1Action` HARD HOLD, LIFF UI unmounted. Pure group-plan `readyForProviderMutation=false`. Provider adapters, durable audit event storage, real Stage isolation and formal data schema are NOT ready.
+- Existing RC5 Stage remains `G0_STAGE_REUSE_HOLD` due unproven runtime isolation, mixed-purpose source indicators, historical broad OAuth and `America/New_York` fixtures. Do not import/run/write there. Full matrix: Backend feature-branch `docs/leave/ABIS_LLEX_V1_PROVIDER_STAGE_G0_MATRIX_20261027.md`. Do not imply RC5 actually wrote Production.
+- **Next one Source Owner gate:** create/identify a *private synthetic-only long-leave Stage testing resource* (not a new ESS production system); permission only for initial resource setup/metadata READ_ONLY if granted. Stage source import, function execution, real data, LINE, OAuth elevation, Trigger/Deployment and Production require separate approval. Backend V167 and LIFF V153 official release authorities preserved.
