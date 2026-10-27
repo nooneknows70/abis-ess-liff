@@ -135,12 +135,14 @@ const actualBaseRendererSource = baseBundle.slice(baseRenderStart, baseRenderEnd
 
 function renderWithRealBase(items, language = 'ZH') {
   const box = {
-    innerHTML: '',
+    _html: '',
     buttons: [],
-    querySelectorAll(selector) {
-      assert.equal(selector, 'button[onclick*="ASSIGN_PROXY"]');
+    set innerHTML(html) {
+      this._html = String(html);
+      // A browser constructs all button nodes when .innerHTML is assigned,
+      // even if the label adapter later chooses not to query the container.
       const pattern = /<button\b[^>]*onclick="([^"]+)"[^>]*>([^<]*)<\/button>/g;
-      const matches = Array.from(this.innerHTML.matchAll(pattern))
+      const matches = Array.from(this._html.matchAll(pattern))
         .filter(m => m[1].includes('ASSIGN_PROXY'));
       this.buttons = matches.map(m => {
         const action = m[1];
@@ -149,6 +151,10 @@ function renderWithRealBase(items, language = 'ZH') {
           getAttribute(name) { return name === 'onclick' ? action : null; }
         };
       });
+    },
+    get innerHTML() { return this._html; },
+    querySelectorAll(selector) {
+      assert.equal(selector, 'button[onclick*="ASSIGN_PROXY"]');
       return this.buttons;
     }
   };
