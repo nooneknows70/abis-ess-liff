@@ -1,0 +1,39 @@
+name: ABIS leave label GitHub Pages exact-blob readback
+
+on:
+  push:
+    branches:
+      - verify/leave-label-pages-readback-20261027
+    paths:
+      - .github/workflows/leave-approval-label-pages-readback.yml
+
+permissions:
+  contents: read
+
+jobs:
+  pages-readback:
+    name: Published LIFF label adapter exact-content check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify public asset without any provider credentials
+        env:
+          ASSET_URL: https://nooneknows70.github.io/abis-ess-liff/assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js
+          EXPECTED_BLOB: 3e8126d03864c4824e19efe0b280e0a8ae60ee20
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp)"
+          trap 'rm -f "$tmp"' EXIT
+          curl --fail --silent --show-error --location --max-time 30 \
+            --header 'Cache-Control: no-cache' \
+            --header 'Pragma: no-cache' \
+            "$ASSET_URL" --output "$tmp"
+          actual="$(git hash-object "$tmp")"
+          if [ "$actual" != "$EXPECTED_BLOB" ]; then
+            echo 'GITHUB_PAGES_LABEL_ASSET=HOLD_BLOB_MISMATCH'
+            echo "OBSERVED_GIT_BLOB=$actual"
+            exit 2
+          fi
+          echo 'GITHUB_PAGES_LABEL_ASSET=PASS'
+          echo "OBSERVED_GIT_BLOB=$actual"
