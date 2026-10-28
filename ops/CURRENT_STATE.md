@@ -1,5 +1,13 @@
 # ABIS ESS LIFF — Current State
 
+## LLEX V1 G3 static Provider design — 2026-10-28 (Draft only)
+
+- Source Owner Q1=A authorized **GitHub/document READ_ONLY analysis and Draft documentation only**. No Apps Script/Google Sheet provider, OAuth, real employee/Leave rows, LIFF activation, LINE or Production operations.
+- Backend source static schema/mapping review and LIFF role contract design completed. G3 **designed** 27 Backend + 18 LIFF synthetic cases; **executed 0**. Important gaps: status enum translation, unverified Sheet header/types, timezone normalization, stable group identity, role/receipt ACL, cross-Sheet atomicity.
+- **Gate:** `G3_SOURCE_STATIC_DESIGN_COMPLETE__G4_PROVIDER_SCHEMA_METADATA_AUTH_HOLD`. G2 synthetic 22/22 operator-tier `CLOSED PASS` remains separate from real Provider E2E. Feature OFF, Provider unbound, LIFF unmounted, RC5 reuse HOLD. Backend Production @169 and LIFF V153 unchanged.
+- G3 documentation stored in Backend/LIFF branches `docs/llex-g3-provider-readonly-design-20261028` stacked on their G2 documentation Draft branches; **central branch creation was security-blocked**, `SSOT_SYNC_PARTIAL_HOLD`, do not bypass.
+
+
 ## LLEX G2 synthetic Stage — CLOSED PASS owner evidence (2026-10-28)
 
 - Dedicated LLEX Stage only: Source Owner authorized A, 5/5 actual Mac Node tests PASS, non-force push exactly one new G2 source (6 total files), pre-existing five file byte parity PASS, post-push clasp readback 6/6 PASS, unchanged Manifest SHA256 `9e1047745e9bcc952270c71927eab09e3c685ea1969035dc7b564d4e985928c9`.
