@@ -1,5 +1,13 @@
 # ABIS ESS LIFF — Current State
 
+## LLEX G2 synthetic Stage — CLOSED PASS owner evidence (2026-10-28)
+
+- Dedicated LLEX Stage only: Source Owner authorized A, 5/5 actual Mac Node tests PASS, non-force push exactly one new G2 source (6 total files), pre-existing five file byte parity PASS, post-push clasp readback 6/6 PASS, unchanged Manifest SHA256 `9e1047745e9bcc952270c71927eab09e3c685ea1969035dc7b564d4e985928c9`.
+- One Apps Script Editor synthetic-only execution: `passedChecks=22/22`, `failedCheckIds=[]`, harness-reported `externalReads=0`, `externalWrites=0`, `providerBound=false`. Post-G2 Owner UI Q1=A reports zero OAuth requested scopes, properties, triggers, active/archived deployments, services and libraries. Evidence **Owner-reported, not independent provider API proof**.
+- **Gate: `G2_SYNTHETIC_CLOSED_PASS__G3_PROVIDER_HOLD`**. Q1–Q17 frozen; Backend Draft #94 and LIFF Draft #27 still unmerged; feature OFF, LIFF unmounted, real provider and business data outside authorization. No Production changes or new deployment/trigger. RC5 reuse HOLD.
+- Next: separate G3 read-only provider schema/adapter design authorization only; no real employee data, Google Sheet mutations, OAuth elevation, LINE, Payroll or Production activation. Evidence `ops/handoff/2026-10-28.md` in this documentation-only branch.
+
+
 ## ABIS_ESS_V169_LEAVE_APPROVAL_LABEL_CLOSED_PASS_RECONCILED — FINAL VERIFY reconciled, 2026-10-27
 
 - Source Owner @169 original Production Deployment ID, immutable @169, HEAD, and Git source **79/79 PASS**, manager button **核准申請** UI PASS, published frontend asset and post-release web app api/doGet completed.
