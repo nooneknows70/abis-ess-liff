@@ -114,9 +114,44 @@ function p5a1FullLiffUrl_(){const route=encodeURIComponent(p5rmBootRoute_());ret
 function p5a1RedirectToFullLiff_(){p5a1ClearLineFast_();const url=p5a1FullLiffUrl_();try{window.location.replace(url)}catch(e){window.location.href=url}}
 function p5a1ShowLineReauthGate_(){if(document.getElementById('p5a1LineReauthGate'))return;const title=currentLang==='VI'?'Phiên LINE đã hết hạn':currentLang==='TH'?'เซสชัน LINE หมดอายุ':'LINE 登入已逾時';const body=currentLang==='VI'?'Nhấn nút bên dưới để xác minh lại danh tính LINE. Nội dung đơn chưa gửi sẽ được khôi phục sau khi xác minh.':currentLang==='TH'?'กดปุ่มด้านล่างเพื่อยืนยันตัวตน LINE ใหม่ หลังยืนยันแล้ว ระบบจะกู้คืนข้อมูลใบลาที่ยังไม่ได้ส่ง':'請重新驗證 LINE 身分。驗證完成後，尚未送出的請假內容會自動復原。';const button=currentLang==='VI'?'Xác minh lại LINE':currentLang==='TH'?'ยืนยัน LINE ใหม่':'重新驗證 LINE 身分';const gate=document.createElement('div');gate.id='p5a1LineReauthGate';gate.className='line-reauth-gate';gate.innerHTML=`<div class="line-reauth-card"><h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p><a class="line-auth-link" href="${escapeHtml(p5a1FullLiffUrl_())}" target="_top">${escapeHtml(button)}</a></div>`;document.body.appendChild(gate)}
 function p5a1StartLineReauth_(e){if(p5a1LineReauthStarted||!p5a1IsLineSessionExpiryError_(e))return false;p5a1LineReauthStarted=true;p5a1SaveLineTimeoutDraft_();try{localStorage.removeItem('abis_session')}catch(ignore){}p5a1ClearLineFast_();sessionToken='';if(p5a1IsLineFastBoot_()){p5a1RedirectToFullLiff_();return true}p5a1ShowLineReauthGate_();return true}
+// G7 Q21 formal transaction UI seam. Runtime disabled until server projection,
+// persisted receipt, and Release Flow V2 pass. Client flags are NEVER authority.
+const ABIS_G7_LIFF_FORMAL_FENCE_=(function(){
+  'use strict';
+  const mode='DRAFT_DISABLED';
+  const leavesRead=['home','myLeaves','inbox','leaveDashboard','hrLeaveManagement',
+    'hrLeaveDetail','taskSummary','taskInbox','managementReports','managementReportDetail',
+    'managementReportsV2','managementReportDetailV2','notifications','approvalActionStatus'];
+  function screenResponse(action,data){
+    if(mode!=='ACTIVE'||leavesRead.indexOf(String(action||''))<0)return data;
+    if(!data||typeof data!=='object'||data.g7ServerProjection!=='AUTHORITATIVE_COMMIT_AWARE')
+      throw new Error('G7_UI_HOLD_SERVER_PROJECTION_MISSING');
+    if(data.g7Visibility!=='FULL_BEFORE'&&data.g7Visibility!=='FULL_COMMITTED')
+      throw new Error('G7_UI_HOLD_GROUP_VISIBILITY_UNCERTAIN');
+    return data;
+  }
+  function guardApproval(action){
+    if(mode==='ACTIVE'&&String(action||'')==='TOP_APPROVE')
+      throw new Error('G7_UI_HOLD_FORMAL_ATOMIC_WRITER_NOT_VERIFIED');
+  }
+  function createTestHarness(nextMode){
+    if(nextMode!=='ACTIVE'&&nextMode!=='DRAFT_DISABLED')throw Error('G7_UI_MODE_INVALID');
+    return {screenResponse:function(action,data){
+      if(nextMode!=='ACTIVE'||leavesRead.indexOf(String(action||''))<0)return data;
+      if(!data||data.g7ServerProjection!=='AUTHORITATIVE_COMMIT_AWARE'||
+        !['FULL_BEFORE','FULL_COMMITTED'].includes(data.g7Visibility))
+        throw Error('G7_UI_HOLD_INCOMPLETE_SERVER_PROJECTION');
+      return data;
+    }, guardApproval:function(action){
+      if(nextMode==='ACTIVE'&&action==='TOP_APPROVE')throw Error('G7_UI_HOLD_FORMAL_ATOMIC_WRITER_NOT_VERIFIED');
+    }};
+  }
+  return {mode:mode,screenResponse:screenResponse,guardApproval:guardApproval,createTestHarness:createTestHarness};
+})();
+
 function call(action,payload){
   const busyTicket=(typeof abisAsyncBeginRpcForRecentClick_==='function')?abisAsyncBeginRpcForRecentClick_(action):null;
-  const p=new Promise((resolve,reject)=>google.script.run.withSuccessHandler(r=>{if(r&&r.ok){resolve(r.data);return}const e=apiError_(r&&r.error?r.error:'系統未回傳成功狀態','BUSINESS');p5a1StartLineReauth_(e);reject(e)}).withFailureHandler(e=>reject(apiError_(e,'TRANSPORT'))).api(action,payload||{}));
+  const p=new Promise((resolve,reject)=>google.script.run.withSuccessHandler(r=>{if(r&&r.ok){try{resolve(ABIS_G7_LIFF_FORMAL_FENCE_.screenResponse(action,r.data))}catch(g7Err){reject(g7Err)}return}const e=apiError_(r&&r.error?r.error:'系統未回傳成功狀態','BUSINESS');p5a1StartLineReauth_(e);reject(e)}).withFailureHandler(e=>reject(apiError_(e,'TRANSPORT'))).api(action,payload||{}));
   if(!busyTicket)return p;
   return p.finally(()=>{try{abisAsyncReleaseBusy_(busyTicket)}catch(ignore){}});
 }
@@ -1089,6 +1124,7 @@ function openAttendanceAppeal_(encodedCorrectionId,encodedAttendanceKey,triggerB
 async function submitAttendanceAppealUi_(correctionRequestId,attendanceKey,reason,triggerBtn){const op=beginOperation_(a2rct('processing'),nt('doNotRepeat'),triggerBtn);const requestId='A2-APPEAL-'+Date.now()+'-'+p4a13Uuid_();let ok=false;try{await call('submitAttendanceAppeal',{sessionToken,correctionRequestId,reason,requestId});ok=true}catch(e){if(e&&e.kind==='TRANSPORT'){try{const st=await call('attendanceAppealStatus',{sessionToken,requestId});if(st&&st.found)ok=true}catch(ignore){}}if(!ok){finishOperationFailure_(op,e);message(e&&e.message?e.message:String(e));return}}try{const data=await call('myAttendance',{sessionToken,month:p5a2AttendanceMonthValue_()});attendanceCache=data;attendanceViewMode='detail';renderMyAttendance_(data);finishOperationSuccess_(op,a2rct('appealSubmitted'),'');message(a2rct('appealSubmitted'),'success')}catch(e){finishOperationSuccess_(op,a2rct('appealSubmitted'),nt('refreshAfterSuccessFail'))}}
 
 async function approveAction(leaveId,action,triggerBtn){
+  ABIS_G7_LIFF_FORMAL_FENCE_.guardApproval(action);
   if(mutationBusy){message(nt('busy'),'warning');return}
   if(action==='ASSIGN_PROXY'&&!managerProxyChanged(leaveId))return;
   const c=$(`comment_${leaveId}`),p=$(`proxy_${leaveId}`),comment=c?c.value:'',proxyEmployeeId=p?p.value:'';
