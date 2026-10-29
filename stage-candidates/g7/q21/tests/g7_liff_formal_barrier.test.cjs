@@ -3,8 +3,9 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const path='assets/ess-20261007-rc13-hf8/abis-ess.bundle.js';
+const path='assets/ess-20261029-g7-q21-candidate/abis-ess.bundle.js';
 const bundle=fs.readFileSync(path,'utf8');
+const historical=fs.readFileSync('assets/ess-20261007-rc13-hf8/abis-ess.bundle.js','utf8');
 const head=bundle.indexOf("// G7 Q21 formal transaction UI seam.");
 const tail=bundle.indexOf("function call(action,payload){",head);
 assert.ok(head>0&&tail>head,'G7 UI gate must precede actual RPC call');
@@ -12,6 +13,7 @@ const ctx={};
 vm.createContext(ctx);
 vm.runInContext(bundle.slice(head,tail)+"\nthis.__fence = ABIS_G7_LIFF_FORMAL_FENCE_;",ctx);
 const fence=ctx.__fence;
+test('historic LIFF bundle remains unchanged',()=>assert.ok(!historical.includes('ABIS_G7_LIFF_FORMAL_FENCE_')));
 test('V153 LIFF runtime stays disabled until new formal release',()=>assert.equal(fence.mode,'DRAFT_DISABLED'));
 test('disabled LIFF projection leaves existing login and leaves API untouched',()=>{
  const r=[{leaveId:'L1',status:'已核准'}];
