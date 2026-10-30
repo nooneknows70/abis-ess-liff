@@ -130,8 +130,11 @@ const ABIS_G7_LIFF_FORMAL_FENCE_=(function(){
       throw new Error('G7_UI_HOLD_GROUP_VISIBILITY_UNCERTAIN');
     return data;
   }
+  const groupMutations=['ASSIGN_PROXY','PROXY_ACCEPT','MANAGER_APPROVE','TOP_APPROVE','REJECT'];
   function guardApproval(action){
-    if(mode==='ACTIVE'&&String(action||'')==='TOP_APPROVE')
+    // Strict Stage policy: fail closed on all leave mutations until the server
+    // can prove a durable group receipt. Client role flags are never authority.
+    if(mode==='ACTIVE'&&groupMutations.includes(String(action||'')))
       throw new Error('G7_UI_HOLD_FORMAL_ATOMIC_WRITER_NOT_VERIFIED');
   }
   function createTestHarness(nextMode){
@@ -143,7 +146,7 @@ const ABIS_G7_LIFF_FORMAL_FENCE_=(function(){
         throw Error('G7_UI_HOLD_INCOMPLETE_SERVER_PROJECTION');
       return data;
     }, guardApproval:function(action){
-      if(nextMode==='ACTIVE'&&action==='TOP_APPROVE')throw Error('G7_UI_HOLD_FORMAL_ATOMIC_WRITER_NOT_VERIFIED');
+      if(nextMode==='ACTIVE'&&groupMutations.includes(String(action||'')))throw Error('G7_UI_HOLD_FORMAL_ATOMIC_WRITER_NOT_VERIFIED');
     }};
   }
   return {mode:mode,screenResponse:screenResponse,guardApproval:guardApproval,createTestHarness:createTestHarness};
