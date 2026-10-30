@@ -1,9 +1,10 @@
-name: G7 Q21 LIFF Formal Client Gate (offline)
+name: G7 Q21-Q26 Full LIFF Formal Client Gate (offline only)
 on:
   pull_request:
     paths:
       - 'assets/ess-20261029-g7-q21-candidate/abis-ess.bundle.js'
       - 'stage-candidates/g7/q21/**'
+      - 'stage-candidates/g7/q26/**'
       - '.github/workflows/g7-q21-liff-gate.yml'
   workflow_dispatch:
 permissions:
@@ -20,4 +21,4 @@ jobs:
       - name: Actual LIFF bundle V8 syntax and Q21 behavioral contract
         run: |
           node --check assets/ess-20261029-g7-q21-candidate/abis-ess.bundle.js
-          node --test stage-candidates/g7/q21/tests/*.test.cjs
+          node --test stage-candidates/g7/q21/tests/*.test.cjs stage-candidates/g7/q26/tests/*.test.cjs
