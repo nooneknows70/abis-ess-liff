@@ -39,7 +39,9 @@ test('ACTIVE only accepts server-delivered stable full BEFORE or COMMITTED respo
 test('ACTIVE never permits client to bypass unverified TOP_APPROVE writer',()=>{
  const g=fence.createTestHarness('ACTIVE');
  assert.throws(()=>g.guardApproval('TOP_APPROVE'),/G7_UI_HOLD_FORMAL_ATOMIC_WRITER_NOT_VERIFIED/);
- assert.doesNotThrow(()=>g.guardApproval('MANAGER_APPROVE'));
+ for(const a of ['ASSIGN_PROXY','PROXY_ACCEPT','MANAGER_APPROVE','REJECT'])
+  assert.throws(()=>g.guardApproval(a),/G7_UI_HOLD_FORMAL_ATOMIC_WRITER_NOT_VERIFIED/);
+ assert.doesNotThrow(()=>g.guardApproval('CLOSE_MODAL'));
 });
 test('RPC response is screened before resolve, and action guard before mutation',()=>{
  assert.ok(bundle.includes('resolve(ABIS_G7_LIFF_FORMAL_FENCE_.screenResponse(action,r.data))'));
