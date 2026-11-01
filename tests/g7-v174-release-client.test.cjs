@@ -17,7 +17,12 @@ function createMock(opts={}){
   if(action==='longLeaveExecV1Read')return {
    g7ServerProjection:'AUTHORITATIVE_COMMIT_AWARE',
    g7Visibility:'FULL_BEFORE',serverScopeApplied:true,
-   readTier:'FORMAL_PROVIDER_VERIFIED',case:value};
+   readTier:'FORMAL_PROVIDER_VERIFIED',case:value,
+   groups:opts.omitGroups?[]:[Object.assign({
+    groupId:value.groupId,requestId:'G7-SYNTH-REQUEST-PRIOR-001',
+    sourceEpoch:value.sourceEpoch,memberCount:2,phase:'PREPARED',
+    visibility:'FULL_BEFORE',singleLeavePolicyVerified:false
+   },opts.groupReceipt||{})]};
   if(action==='longLeaveExecV1Action'){
    if(opts.unknownAck)throw Error('ACK_LOST');
    return {transactionReceipt:{phase:'COMMITTED',requestId:data.idempotencyKey,
@@ -100,4 +105,25 @@ test('candidate bundle contains UI and bridge; official index unchanged',()=>{
 test('no real LINE API calls or token storage introduced',()=>{
  const s=fs.readFileSync('features/longleave-exec-v1/g7-v174-release-client.js','utf8');
  assert.doesNotMatch(s,/UrlFetchApp|SpreadsheetApp|localStorage|fetch\s*\(/);
+});
+
+test('Q35 formal single LeaveID requires Backend verified three-workday receipt',async()=>{
+ const m=createMock({groupReceipt:{memberCount:1}});
+ await assert.rejects(m.a.read(m.value.leaveId),/SINGLE_LEAVE_POLICY_NOT_VERIFIED/);
+ const good=createMock({groupReceipt:{memberCount:1,singleLeavePolicyVerified:true}});
+ const result=await good.a.read(good.value.leaveId);
+ assert.equal(result.groups[0].singleLeavePolicyVerified,true);
+});
+test('Q35 stale group source epoch, forged group or missing receipt prevents action',async()=>{
+ for(const opts of [
+  {groupReceipt:{sourceEpoch:'OLD-EPOCH'}},
+  {groupReceipt:{groupId:'WRONG-GROUP'}},
+  {groupReceipt:{memberCount:0}},
+  {groupReceipt:{visibility:'HIDDEN'}},
+  {omitGroups:true}
+ ]){
+  const m=createMock(opts);
+  await assert.rejects(m.a.read(m.value.leaveId),/G7_V174_LIFF_HOLD_/);
+  assert.equal(m.calls.filter(x=>x.action==='longLeaveExecV1Action').length,0);
+ }
 });

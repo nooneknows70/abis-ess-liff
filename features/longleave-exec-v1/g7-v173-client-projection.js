@@ -33,7 +33,9 @@ var ABIS_G7_V173_CLIENT_=(function(){
   data.groups.forEach(g=>{
    need(g&&typeof g.groupId==='string'&&g.groupId&&
      !ids.has(g.groupId)&&typeof g.requestId==='string'&&g.requestId&&
-     Number.isInteger(g.memberCount)&&g.memberCount>=2,'GROUP_RECEIPT');
+     Number.isInteger(g.memberCount)&&g.memberCount>=1,'GROUP_RECEIPT');
+   if(g.memberCount===1)need(g.singleLeavePolicyVerified===true,
+     'SINGLE_LEAVE_POLICY_NOT_VERIFIED');
    ids.add(g.groupId);
    need((g.phase==='PREPARED'&&g.visibility==='FULL_BEFORE')||
      (g.phase==='COMMITTED'&&g.visibility==='FULL_COMMITTED'),'GROUP_STATE');

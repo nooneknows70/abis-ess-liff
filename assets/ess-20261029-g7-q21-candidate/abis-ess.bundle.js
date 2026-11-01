@@ -9899,6 +9899,19 @@ root.ABIS_LONG_LEAVE_EXEC_V1_UI=api;
      need(r.case&&r.case.leaveId===id&&
        ['SUPERVISOR','EXECUTIVE','EMPLOYEE'].indexOf(r.case.actorRole)>=0,
        'SERVER_CASE_ROLE_REQUIRED');
+     need(Array.isArray(r.groups)&&r.groups.length>0,
+       'SERVER_GROUP_RECEIPT_REQUIRED');
+     var matching=r.groups.filter(function(g){return g&&g.groupId===r.case.groupId;});
+     need(matching.length===1,'CASE_GROUP_SCOPE_NOT_UNIQUE');
+     var group=matching[0];
+     need(Number.isInteger(group.memberCount)&&group.memberCount>=1&&
+       !!trim(group.requestId)&&
+       group.sourceEpoch===r.case.sourceEpoch&&
+       ((group.phase==='PREPARED'&&group.visibility==='FULL_BEFORE')||
+        (group.phase==='COMMITTED'&&group.visibility==='FULL_COMMITTED')),
+       'AUTHORITATIVE_GROUP_RECEIPT_INVALID');
+     if(group.memberCount===1)
+       need(group.singleLeavePolicyVerified===true,'SINGLE_LEAVE_POLICY_NOT_VERIFIED');
      lastCase=r.case;
      return r;
    }

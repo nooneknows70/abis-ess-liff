@@ -68,3 +68,12 @@ test('new candidate does not fake browser login, send LINE or read token',()=>{
   assert.ok(!source.includes(s),s);
  }
 });
+
+test('Q35 one-member group accepted only with verified three-workday server receipt',()=>{
+ const a=mk();a.groups[0].memberCount=1;
+ assert.throws(()=>f.screen('myLeaves',a,opts),/SINGLE_LEAVE_POLICY_NOT_VERIFIED/);
+ a.groups[0].singleLeavePolicyVerified=false;
+ assert.throws(()=>f.screen('myLeaves',a,opts),/SINGLE_LEAVE_POLICY_NOT_VERIFIED/);
+ a.groups[0].singleLeavePolicyVerified=true;
+ assert.equal(f.screen('myLeaves',a,opts).groups[0].memberCount,1);
+});
