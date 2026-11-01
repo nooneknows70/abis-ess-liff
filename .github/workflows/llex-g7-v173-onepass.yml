@@ -20,4 +20,4 @@ jobs:
           set -eu
           node --check features/longleave-exec-v1/approval-panel.js
           node --check assets/ess-20261029-g7-q21-candidate/abis-ess.bundle.js
-          node --test tests/test-longleave-ui-v1.cjs stage-candidates/g7/q21/tests/*.test.cjs stage-candidates/g7/q26/tests/*.test.cjs tests/g7-llex-v173-onepass-liff.integration.test.cjs
+          node --test tests/test-longleave-ui-v1.cjs stage-candidates/g7/q21/tests/*.test.cjs stage-candidates/g7/q26/tests/*.test.cjs tests/g7-llex-v173-onepass-liff.integration.test.cjs tests/g7-v173-read-consumers.test.cjs

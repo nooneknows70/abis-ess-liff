@@ -120,8 +120,11 @@ const ABIS_G7_LIFF_FORMAL_FENCE_=(function(){
   'use strict';
   const mode='DRAFT_DISABLED';
   const leavesRead=['home','myLeaves','inbox','leaveDashboard','hrLeaveManagement',
-    'hrLeaveDetail','taskSummary','taskInbox','managementReports','managementReportDetail',
-    'managementReportsV2','managementReportDetailV2','notifications','approvalActionStatus'];
+    'hrLeaveDetail','teamManagement','managementReports','managementReportDetail',
+    'managementReportsV2','managementReportDetailV2','managementReportExport',
+    'managementReportSnapshots','taskSummary','taskInbox','notifications',
+    'approvalActionStatus','departmentLeaveConflicts','proxyAvailability',
+    'proxyAssignments','longLeaveExecV1Status'];
   function screenResponse(action,data){
     if(mode!=='ACTIVE'||leavesRead.indexOf(String(action||''))<0)return data;
     if(!data||typeof data!=='object'||data.g7ServerProjection!=='AUTHORITATIVE_COMMIT_AWARE')
