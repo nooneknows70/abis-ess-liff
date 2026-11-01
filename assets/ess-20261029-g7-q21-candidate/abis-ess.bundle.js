@@ -9798,3 +9798,206 @@ try {
   window.ABIS_LEAVE_SUBMIT_HOTFIX =
     Object.freeze(abisLeaveSubmitHotfixStatus_());
 } catch (ignore) {}
+
+/* G7_V174_LIFF_RELEASE_CANDIDATE_INLINE_START: NOT MOUNTED BY OFFICIAL V153 */
+/* ABIS ESS long-leave executive approval V1 UI candidate.
+ * Isolated: not imported by deployed index.html, no LINE or network calls.
+ * Integrator must supply authenticated transport after separate Stage authorization.
+ */
+(function(root){
+'use strict';
+var ACTIVE=false; // HARD HOLD until separately authorized release/provider Gate.
+var WORDS={
+ ZH:{review:'主管交接審查',confirm:'我已安排請假期間的工作交接',note:'交接安排說明（必填）',send:'完成審查並送最高主管',employeeReason:'員工請假原因',reviewHistory:'審批及補件歷程',proxy:'代理安排',approved:'核准',return:'退回主管補件',rejected:'駁回',reason:'審批意見／原因',pending:'審批中',supplement:'主管補件中',done:'已核准',failed:'已駁回',cancelled:'已取消',amendPending:'原核准有效，變更審批中',amendRejected:'變更遭駁回，原核准仍有效',supplementSend:'補件後重新送最高主管',missing:'歷史資料未提供',loading:'處理中',error:'操作失敗',requestId:'RequestID'},
+ VI:{review:'Xem xét bàn giao',confirm:'Tôi đã sắp xếp bàn giao công việc',note:'Ghi chú bàn giao (bắt buộc)',send:'Gửi lãnh đạo phê duyệt',employeeReason:'Lý do nghỉ phép',reviewHistory:'Lịch sử xét duyệt',proxy:'Người thay thế',approved:'Phê duyệt',return:'Trả lại quản lý bổ sung',rejected:'Từ chối',reason:'Ý kiến / lý do',pending:'Đang xét duyệt',supplement:'Quản lý bổ sung',done:'Đã phê duyệt',failed:'Đã từ chối',cancelled:'Đã hủy',amendPending:'Phê duyệt cũ vẫn hiệu lực, thay đổi đang chờ',amendRejected:'Thay đổi bị từ chối, phê duyệt cũ vẫn hiệu lực',supplementSend:'Gửi lại sau khi bổ sung',missing:'Không có dữ liệu lịch sử',loading:'Đang xử lý',error:'Thao tác thất bại',requestId:'RequestID'},
+ TH:{review:'ตรวจสอบการส่งมอบงาน',confirm:'ฉันได้จัดเตรียมการส่งมอบงานแล้ว',note:'รายละเอียดการส่งมอบงาน (จำเป็น)',send:'ส่งให้ผู้บริหารอนุมัติ',employeeReason:'เหตุผลการลา',reviewHistory:'ประวัติการพิจารณา',proxy:'ผู้ปฏิบัติงานแทน',approved:'อนุมัติ',return:'ส่งกลับให้หัวหน้างานเพิ่มเติม',rejected:'ปฏิเสธ',reason:'ความคิดเห็น / เหตุผล',pending:'รอการอนุมัติ',supplement:'หัวหน้างานเพิ่มเติมข้อมูล',done:'อนุมัติแล้ว',failed:'ปฏิเสธแล้ว',cancelled:'ยกเลิกแล้ว',amendPending:'อนุมัติเดิมยังมีผล รอตรวจสอบการแก้ไข',amendRejected:'การแก้ไขถูกปฏิเสธ อนุมัติเดิมยังมีผล',supplementSend:'ส่งใหม่หลังเพิ่มเติมข้อมูล',missing:'ไม่มีข้อมูลย้อนหลัง',loading:'กำลังดำเนินการ',error:'ดำเนินการไม่สำเร็จ',requestId:'RequestID'}
+};
+function esc(s){return String(s===null||s===undefined?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function w(lang){var key=String(lang||'').toLowerCase();if(key==='zh-tw'||key==='zh')return WORDS.ZH;if(key==='vi-vn'||key==='vi')return WORDS.VI;if(key==='th-th'||key==='th')return WORDS.TH;return WORDS[lang]||WORDS.ZH;}
+function line(label,value){return '<div class="llex-v1-line"><strong>'+esc(label)+'</strong> '+esc(value||'')+'</div>';}
+function historyHtml(records,lang){var t=w(lang);return '<section class="llex-v1-history" aria-label="'+esc(t.reviewHistory)+'"><h3>'+esc(t.reviewHistory)+'</h3>'+
+ (Array.isArray(records)?records:[]).map(function(e){return '<article class="llex-v1-event">'+line('Event',e.type)+line('At',e.at)+line('Actor',e.actorId)+line('Status',e.to)+'</article>';}).join('')+'</section>';}
+function supervisorHtml(data,lang){var t=w(lang),d=data||{};return '<section class="llex-v1-panel" role="group"><h3>'+esc(t.review)+'</h3>'+line(t.employeeReason,d.originalReason)+line(t.proxy,d.proxyStatus||t.missing)+
+ '<label><input type="checkbox" data-llex="handover" /> '+esc(t.confirm)+'</label><label>'+esc(t.note)+'<textarea data-llex="handoverNote" required></textarea></label>'+historyHtml(d.history,lang)+
+ '<button type="button" data-llex-action="'+(d.status==='PENDING_SUPERVISOR_SUPPLEMENT'?'SUPERVISOR_SUPPLEMENT':'SUPERVISOR_SUBMIT')+'">'+esc(d.status==='PENDING_SUPERVISOR_SUPPLEMENT'?t.supplementSend:t.send)+'</button><p role="status" data-llex="status"></p></section>';}
+function executiveHtml(data,lang){var t=w(lang),d=data||{};return '<section class="llex-v1-panel" role="group"><h3>'+esc(t.reviewHistory)+'</h3>'+line(t.employeeReason,d.originalReason)+
+ line(t.review,d.supervisorReviewStatus||t.missing)+line(t.note,d.handoverNote||t.missing)+line(t.proxy,d.proxyStatus||t.missing)+historyHtml(d.history,lang)+
+ '<label>'+esc(t.reason)+'<textarea data-llex="executiveReason"></textarea></label><div class="llex-v1-actions"><button type="button" data-llex-action="EXECUTIVE_RETURN">'+esc(t.return)+'</button><button type="button" data-llex-action="EXECUTIVE_REJECT">'+esc(t.rejected)+'</button><button type="button" data-llex-action="EXECUTIVE_APPROVE">'+esc(t.approved)+'</button></div><p role="status" data-llex="status"></p></section>';}
+function employeeHtml(data,lang){var t=w(lang),d=data||{},labels={PENDING_SUPERVISOR:t.pending,PENDING_EXECUTIVE:t.pending,PENDING_SUPERVISOR_SUPPLEMENT:t.supplement,APPROVED:t.done,REJECTED:t.failed,CANCELLED:t.cancelled,CANCELLED_RECONCILIATION:t.cancelled};
+ var effective=!!d.effectiveApprovalExists,reviewing=["PENDING_SUPERVISOR","PENDING_EXECUTIVE","PENDING_SUPERVISOR_SUPPLEMENT"].indexOf(d.status)>=0;
+ return '<section class="llex-v1-employee" role="status">'+line('Status',effective&&reviewing?t.amendPending:(labels[d.status]||t.pending))+(d.status==='REJECTED'?line(t.reason,d.rejectionReason):'')+(d.amendmentOutcome==='REJECTED'?line(t.amendRejected,d.amendmentRejectionReason):'')+'</section>';}
+function mount(el,kind,data,lang,transport){if(!el||typeof el.innerHTML!=='string')throw new Error('LLEX_MOUNT_REQUIRED');if(!ACTIVE)throw new Error('LLEX_FEATURE_HOLD');
+ if(['employee','supervisor','executive'].indexOf(kind)<0)throw new Error('LLEX_ROLE_NOT_SUPPORTED');
+ if(kind==='employee'){el.innerHTML=employeeHtml(data,lang);return;}
+ if(typeof transport!=='function')throw new Error('LLEX_TRANSPORT_REQUIRED');el.innerHTML=(kind==='supervisor'?supervisorHtml:executiveHtml)(data,lang);
+ var buttons=Array.from(el.querySelectorAll('[data-llex-action]'));buttons.forEach(function(btn){btn.addEventListener('click',async function(){
+ var action=btn.getAttribute('data-llex-action'),note=el.querySelector('[data-llex="handoverNote"]'),check=el.querySelector('[data-llex="handover"]'),reason=el.querySelector('[data-llex="executiveReason"]');
+ if(kind==='supervisor'&&(!check||!check.checked||!note||!note.value.trim()))return;
+ if((action==='EXECUTIVE_RETURN'||action==='EXECUTIVE_REJECT')&&(!reason||!reason.value.trim()))return;
+ var payload=kind==='supervisor'?{handoverConfirmed:true,handoverNote:note.value}:{reason:reason?reason.value:''};
+ var status=el.querySelector('[data-llex="status"]');buttons.forEach(function(b){b.disabled=true});if(status)status.textContent=w(lang).loading;
+ try{await transport(action,payload);if(status)status.textContent='OK';}catch(error){if(status)status.textContent=w(lang).error+' '+String(error&&error.requestId||'');}finally{buttons.forEach(function(b){b.disabled=false});}
+ });});}
+var api={ACTIVE:ACTIVE,escape:esc,words:w,historyHtml:historyHtml,supervisorHtml:supervisorHtml,executiveHtml:executiveHtml,employeeHtml:employeeHtml,mount:mount};
+if(typeof module!=='undefined'&&module.exports)module.exports=api;
+root.ABIS_LONG_LEAVE_EXEC_V1_UI=api;
+})(typeof window!=='undefined'?window:(typeof globalThis!=='undefined'?globalThis:{}));
+
+/* ABIS ESS G7 v174 source-only client transport bridge (not in official LIFF V153). */
+(function(root){
+ 'use strict';
+ var RELEASE_MODE='DRAFT_DISABLED';
+ var ACTIONS=['SUPERVISOR_SUBMIT','SUPERVISOR_SUPPLEMENT',
+   'EXECUTIVE_APPROVE','EXECUTIVE_RETURN','EXECUTIVE_REJECT',
+   'EMPLOYEE_AMEND','EMPLOYEE_CANCEL'];
+ var roleFor={SUPERVISOR_SUBMIT:'SUPERVISOR',SUPERVISOR_SUPPLEMENT:'SUPERVISOR',
+   EXECUTIVE_APPROVE:'EXECUTIVE',EXECUTIVE_RETURN:'EXECUTIVE',
+   EXECUTIVE_REJECT:'EXECUTIVE',EMPLOYEE_AMEND:'EMPLOYEE',EMPLOYEE_CANCEL:'EMPLOYEE'};
+ function hold(code){throw Error('G7_V174_LIFF_HOLD_'+code);}
+ function need(v,code){if(!v)hold(code);}
+ function trim(s){return String(s==null?'':s).trim();}
+ function createAdapter(opts){
+   need(opts&&typeof opts.rpc==='function'&&typeof opts.getSession==='function',
+     'AUTHENTICATED_RPC_AND_SESSION_REQUIRED');
+   if(RELEASE_MODE!=='AUTHORIZED_RELEASE'){
+     need(opts.syntheticOnly===true&&opts.rpc.__g7MockOnly===true,
+       'OFFICIAL_BUNDLE_NOT_RELEASED');
+   }
+   var clock=opts.idFactory;
+   need(typeof clock==='function','IDEMPOTENCY_FACTORY_REQUIRED');
+   var ui=opts.ui;
+   need(ui&&typeof ui.employeeHtml==='function'&&
+     typeof ui.executiveHtml==='function'&&typeof ui.supervisorHtml==='function',
+     'UI_RENDERER_REQUIRED');
+   var active=false,uncertain=false,lastCase=null,gate=null,lastRequestId='';
+   function rpc(action,payload){
+     return opts.rpc(action,Object.assign({sessionToken:opts.getSession()},payload||{}));
+   }
+   async function status(){
+     var r=await rpc('longLeaveExecV1Status',{});
+     need(r&&r.policy&&r.release,'UNTRUSTED_FEATURE_STATUS');
+     gate=r;
+     return {featureEnabled:r.featureEnabled===true,
+       providerBound:r.providerBound===true,
+       releaseMode:r.release.mode||'DRAFT_DISABLED',policy:r.policy};
+   }
+   function assertActive(){
+     need(gate&&gate.featureEnabled===true&&gate.providerBound===true&&
+       gate.release&&gate.release.mode==='AUTHORIZED_RELEASE','BACKEND_FEATURE_NOT_ACTIVE');
+   }
+   async function read(leaveId){
+     need(!active,'DOUBLE_SUBMIT_LOCKED');
+     var st=await status();
+     need(st.featureEnabled&&st.providerBound,'BACKEND_FEATURE_NOT_ACTIVE');
+     assertActive();
+     var id=trim(leaveId);need(id,'LEAVE_ID_REQUIRED');
+     var r=await rpc('longLeaveExecV1Read',{leaveId:id});
+     need(r&&r.g7ServerProjection==='AUTHORITATIVE_COMMIT_AWARE'&&
+       r.serverScopeApplied===true&&
+       ['FULL_BEFORE','FULL_COMMITTED'].indexOf(r.g7Visibility)>=0&&
+       r.readTier==='FORMAL_PROVIDER_VERIFIED','UNVERIFIED_GROUP_READER');
+     need(r.case&&r.case.leaveId===id&&
+       ['SUPERVISOR','EXECUTIVE','EMPLOYEE'].indexOf(r.case.actorRole)>=0,
+       'SERVER_CASE_ROLE_REQUIRED');
+     lastCase=r.case;
+     return r;
+   }
+   function validateAction(action,data){
+     need(ACTIONS.indexOf(action)>=0,'ACTION_NOT_SUPPORTED');
+     need(lastCase&&lastCase.actorRole===roleFor[action],
+       'SERVER_ACTOR_ROLE_MISMATCH');
+     if(action==='SUPERVISOR_SUBMIT'||action==='SUPERVISOR_SUPPLEMENT')
+       need(data&&data.handoverConfirmed===true&&!!trim(data.handoverNote),
+         'SUPERVISOR_HANDOVER_REQUIRED');
+     if(action==='EXECUTIVE_RETURN'||action==='EXECUTIVE_REJECT')
+       need(data&&!!trim(data.reason),'EXECUTIVE_REASON_REQUIRED');
+     if(action==='EXECUTIVE_APPROVE')
+       need(lastCase.authorityEligible===true&&lastCase.handoverVerified===true,
+         'EXECUTIVE_AUTHORITY_NOT_CERTIFIED');
+     need(Number.isInteger(lastCase.version)&&lastCase.version>=1,
+       'CASE_EXPECTED_VERSION_REQUIRED');
+     need(!!trim(lastCase.groupId)&&!!trim(lastCase.sourceEpoch),
+       'GROUP_SOURCE_EPOCH_REQUIRED');
+   }
+   async function submit(action,data){
+     need(!active,'DOUBLE_SUBMIT_LOCKED');need(!uncertain,'UNKNOWN_ACK_NO_RETRY');
+     validateAction(action,data||{});
+     active=true;
+     var key=trim(clock());need(key&&key.length>=12,'IDEMPOTENCY_KEY');
+     lastRequestId=key;
+     try{
+       assertActive();
+       var result=await rpc('longLeaveExecV1Action',{
+         leaveId:lastCase.leaveId,action:action,
+         expectedVersion:lastCase.version,groupId:lastCase.groupId,
+         sourceEpoch:lastCase.sourceEpoch,idempotencyKey:key,
+         payload:data||{}
+       });
+       need(result&&result.transactionReceipt&&
+         result.transactionReceipt.phase==='COMMITTED'&&
+         result.transactionReceipt.outboxReleased===false&&
+         result.transactionReceipt.requestId===key,
+         'INCOMPLETE_COMMIT_RECEIPT');
+       return result;
+     }catch(e){
+       uncertain=true; // Never auto-retry unknown API acknowledgements.
+       throw e;
+     }finally{active=false;}
+   }
+   function render(el,r,lang){
+     need(el&&typeof el.innerHTML==='string','MOUNT_TARGET_REQUIRED');
+     var c=r.case,role=c.actorRole;
+     if(role==='EMPLOYEE')el.innerHTML=ui.employeeHtml(c,lang);
+     else if(role==='SUPERVISOR')el.innerHTML=ui.supervisorHtml(c,lang);
+     else el.innerHTML=ui.executiveHtml(c,lang);
+     if(role==='EMPLOYEE')return;
+     var buttons=Array.from(el.querySelectorAll('[data-llex-action]'));
+     buttons.forEach(function(b){
+       b.addEventListener('click',async function(){
+         var action=b.getAttribute('data-llex-action');
+         var note=el.querySelector('[data-llex="handoverNote"]'),
+           box=el.querySelector('[data-llex="handover"]'),
+           reason=el.querySelector('[data-llex="executiveReason"]'),
+           state=el.querySelector('[data-llex="status"]');
+         var payload=role==='SUPERVISOR'?
+           {handoverConfirmed:!!(box&&box.checked),handoverNote:note?note.value:''}:
+           {reason:reason?reason.value:''};
+         // Prevent repeated client-side clicks until real server receipt.
+         if(active||uncertain)return;
+         buttons.forEach(x=>x.disabled=true);
+         if(state)state.textContent='處理中…';
+         try{await submit(action,payload);
+           if(state)state.textContent='已取得交易憑證';
+         }catch(e){
+           if(state)state.textContent='處理結果待查核，請勿重複送出：'+lastRequestId;
+         }finally{
+           if(!uncertain)buttons.forEach(x=>x.disabled=false);
+         }
+       });
+     });
+   }
+   async function mount(el,leaveId,lang){
+     if(RELEASE_MODE!=='AUTHORIZED_RELEASE'&&opts.syntheticOnly!==true)
+       hold('OFFICIAL_LIFF_V153_NOT_MOUNTED');
+     var r=await read(leaveId);
+     render(el,r,lang);
+     return {mounted:true,caseId:trim(leaveId),role:r.case.actorRole};
+   }
+   return {status:status,read:read,submit:submit,mount:mount,
+     inspect:function(){return {mode:RELEASE_MODE,active:active,
+       uncertain:uncertain,lastRequestId:lastRequestId};}};
+ }
+ var api={mode:RELEASE_MODE,createAdapter:createAdapter,actions:ACTIONS.slice()};
+ if(typeof module!=='undefined'&&module.exports)module.exports=api;
+ root.ABIS_G7_V174_RELEASE_CLIENT_=api;
+})(typeof window!=='undefined'?window:(typeof globalThis!=='undefined'?globalThis:{}));
+
+function abisG7V174MountCandidate_(el,leaveId,lang,getSession,idFactory){
+  if(typeof ABIS_G7_V174_RELEASE_CLIENT_==='undefined')
+    throw new Error('G7_V174_LIFF_MODULE_NOT_PRESENT');
+  var adapter=ABIS_G7_V174_RELEASE_CLIENT_.createAdapter({
+    rpc:call,getSession:getSession,idFactory:idFactory,
+    ui:ABIS_LONG_LEAVE_EXEC_V1_UI
+  });
+  return adapter.mount(el,leaveId,lang);
+}
