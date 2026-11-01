@@ -1,0 +1,23 @@
+name: LLEX G7 V173 isolated LIFF one-pass offline gate
+on:
+  push:
+    branches:
+      - feature/llex-g7-v173-onepass-integrated-20261101
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  one-pass-liff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: One consolidated local/offline policy UI and G7 guard test
+        run: |
+          set -eu
+          node --check features/longleave-exec-v1/approval-panel.js
+          node --check assets/ess-20261029-g7-q21-candidate/abis-ess.bundle.js
+          node --test tests/test-longleave-ui-v1.cjs stage-candidates/g7/q21/tests/*.test.cjs stage-candidates/g7/q26/tests/*.test.cjs tests/g7-llex-v173-onepass-liff.integration.test.cjs
