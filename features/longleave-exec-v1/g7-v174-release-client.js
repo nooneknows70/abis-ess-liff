@@ -47,7 +47,8 @@
      assertActive();
      var id=trim(leaveId);need(id,'LEAVE_ID_REQUIRED');
      var r=await rpc('longLeaveExecV1Read',{leaveId:id});
-     need(r&&r.g7ServerProjection==='AUTHORITATIVE_COMMIT_AWARE'&&
+     need(r&&r.backendRouteBound===true&&
+       r.g7ServerProjection==='AUTHORITATIVE_COMMIT_AWARE'&&
        r.serverScopeApplied===true&&
        ['FULL_BEFORE','FULL_COMMITTED'].indexOf(r.g7Visibility)>=0&&
        r.readTier==='FORMAL_PROVIDER_VERIFIED','UNVERIFIED_GROUP_READER');
