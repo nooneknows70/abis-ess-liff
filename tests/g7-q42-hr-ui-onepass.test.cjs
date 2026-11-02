@@ -4,6 +4,7 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const ui=require('../features/longleave-exec-v1/approval-panel.js');
 const view=require('../features/longleave-exec-v1/g7-q42-deferred-view.js');
+const client=require('../features/longleave-exec-v1/g7-v174-release-client.js');
 const L='G7-Q42-SYNTH-LEAVE-001',G='G7-Q42-SYNTH-GRP-001';
 const R='G7-Q42-SYNTH-REQUEST-001',E='G7-Q42-SYNTH-EPOCH-001';
 const H='a'.repeat(64);
@@ -103,4 +104,49 @@ test('Q42 HR worklist never embeds unescaped staff data',()=>{
  const html=view.hrWorklistHtml(q,'zh');
  assert.doesNotMatch(html,/<script>/);
  assert.match(html,/&lt;script&gt;/);
+});
+
+function hrClient(reply){
+ const calls=[];
+ const rpc=async function(action,data){
+  calls.push({action,data});
+  if(action==='longLeaveExecV1Status')return {
+    policy:'V1',featureEnabled:true,providerBound:true,
+    release:{mode:'AUTHORIZED_RELEASE'}};
+  if(action==='longLeaveExecV1HrPendingRead')return reply;
+  throw Error('Q47_MOCK_UNEXPECTED_ACTION');
+ };
+ rpc.__g7MockOnly=true;
+ return {calls,adapter:client.createAdapter({
+   syntheticOnly:true,rpc,ui,q42:view,
+   getSession:()=> 'SYNTHETIC_SESSION_NOT_A_REAL_TOKEN',
+   idFactory:()=> 'G7-Q47-ONEPASS-SYNTH-REQUEST-001'
+ })};
+}
+test('Q47 HR client boundary rejects unbound, forged-role and unverified item responses before rendering',async()=>{
+ for(const mutate of [
+  q=>{q.backendRouteBound=false;},
+  q=>{delete q.backendRouteBound;},
+  q=>{q.identity.role='EMPLOYEE';},
+  q=>{q.items[0].backendRouteBound=false;},
+  q=>{q.items[0].transactionReceipt.eventHash='NOT_A_HASH';}
+ ]){
+  const r=worklist();mutate(r);
+  const h=hrClient(r);
+  await assert.rejects(()=>h.adapter.readHrWorklist(),/G7_V174_LIFF_HOLD_/);
+  assert.deepEqual(h.calls.map(x=>x.action),
+    ['longLeaveExecV1Status','longLeaveExecV1HrPendingRead']);
+  assert.equal(h.calls.some(x=>x.action==='longLeaveExecV1Action'),false);
+ }
+});
+test('Q47 HR client and renderer use the same authoritative read-only proof',async()=>{
+ const h=hrClient(worklist()),el={innerHTML:''};
+ const result=await h.adapter.mountHrWorklist(el,'zh');
+ assert.deepEqual(result,{mounted:true,role:'HR',count:1,readonly:true});
+ assert.match(el.innerHTML,/HR 長假外部待對帳清單/);
+ assert.match(el.innerHTML,/SYNTH-EMP/);
+ assert.doesNotMatch(el.innerHTML,/data-llex-action/);
+ assert.deepEqual(h.calls.map(x=>x.action),
+  ['longLeaveExecV1Status','longLeaveExecV1HrPendingRead']);
+ assert.equal(h.adapter.inspect().mode,'DRAFT_DISABLED');
 });
