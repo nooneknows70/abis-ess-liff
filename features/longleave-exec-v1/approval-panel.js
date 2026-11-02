@@ -19,7 +19,7 @@ function historyHtml(records,lang){var t=w(lang);return '<section class="llex-v1
  * Browser flags cannot authorize leave, HR access, or external reconciliation. */
 function q42Verified(envelope){
  var r=envelope||{},c=r.case||{},receipt=r.transactionReceipt||{},ext=r.externalSync||{};
- if(r.g7ServerProjection!=='AUTHORITATIVE_COMMIT_AWARE'||r.serverScopeApplied!==true||
+ if(r.backendRouteBound!==true||r.g7ServerProjection!=='AUTHORITATIVE_COMMIT_AWARE'||r.serverScopeApplied!==true||
     r.readTier!=='FORMAL_PROVIDER_VERIFIED'||r.g7Visibility!=='FULL_COMMITTED'||
     !c.leaveId||!c.groupId||!c.sourceEpoch||
     ['APPROVED','已核准'].indexOf(c.status)<0)return false;
