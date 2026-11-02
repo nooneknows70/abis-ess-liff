@@ -168,7 +168,8 @@
      need(st.featureEnabled&&st.providerBound,'BACKEND_FEATURE_NOT_ACTIVE');
      assertActive();
      var r=await rpc('longLeaveExecV1HrPendingRead',{});
-     need(r&&r.g7ServerProjection==='AUTHORITATIVE_COMMIT_AWARE'&&
+     need(r&&r.backendRouteBound===true&&
+       r.g7ServerProjection==='AUTHORITATIVE_COMMIT_AWARE'&&
        r.serverScopeApplied===true&&r.readTier==='FORMAL_PROVIDER_VERIFIED'&&
        r.identity&&r.identity.serverVerified===true&&
        r.identity.role==='HR'&&r.identity.hrReconciliationAllowed===true&&
