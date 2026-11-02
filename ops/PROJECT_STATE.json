@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-11-02T19:24:40+08:00",
+  "updatedAt": "2026-11-02T20:33:58+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -2214,11 +2214,14 @@
       "formalR4Compat": "NOT_VERIFIED_NO_FRONTEND_WIRE",
       "formalR4GoLive": "HOLD",
       "q34FormalMasterCorrection": "0_3_HOLD",
-      "beforeDigestExternalAudit": "UNVERIFIED",
-      "sourceReLock": "PENDING",
+      "beforeDigestExternalAudit": "HOLD_NOT_REPRODUCED",
+      "sourceReLock": "Q64_PASS_OWNER_EDITOR_SCREENSHOT_ENABLED_FALSE_SAVED",
       "q63NoReplay": true,
       "independentG7State": "NO_CHANGE_PR35_DRAFT_HOLD",
-      "nextAction": "RETAIN_LIFF_V153_AND_NO_DEPLOY_UNTIL_BACKEND_FORMAL_R4_PROVIDER_AND_SEPARATE_FRONTEND_COMPAT_GATE_PASS"
+      "nextAction": "RETAIN_LIFF_V153_AND_NO_DEPLOY_UNTIL_BACKEND_FORMAL_R4_PROVIDER_AND_SEPARATE_FRONTEND_COMPAT_GATE_PASS",
+      "stageSafetyCloseout": "Q48_Q63_SYNTHETIC_STAGE_CLOSED_OWNER_RELOCK__PRODUCTION_HOLD",
+      "zeroTriggerDeployment": "Q62_OWNER_UI_ZERO_Q64_OWNER_ATTESTED_ZERO_NO_POST_TRANSACTION_DIRECT_API",
+      "afterRelockSheetReadback": "PASS_COMMITTED_SPENT_COMMITTED_RUNCOUNT1_NON_TARGET_HR_CANARY_UNCHANGED"
     }
   },
   "leaveLabelBackendIntegration": {

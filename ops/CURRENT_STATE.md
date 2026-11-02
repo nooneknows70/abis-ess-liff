@@ -1,5 +1,11 @@
 # ABIS ESS LIFF — Current State
 
+## 2026-11-02 20:33｜R4 Q64=A：Stage Writer 回鎖 PASS；LIFF V153 不變
+
+- Q48／Q63 單次純合成 CAS 已於 Q63 COMMITTED 且 SPENT；Source Owner Q64=A 提供 Q48 專用 Script `enabled:false`／儲存圖示，Mike Drive metadata 顯示交易後修改，**OWNER_UI_STAGE_RELOCK_PASS**。再由 Google Sheets 唯讀確認 Journal `COMMITTED`／Control `SPENT_COMMITTED`／RunCount=1，目標及 B99992／HR／Canary 不變，沒有再次執行 Writer。
+- Trigger/Deployment 的 Q62 人工畫面為 0/0，Q64 A 再次人工確認仍 0/0，但 Q64 圖片未展示清單，**不能宣稱最新獨立 API 零清單證據**。原始碼完整雲端 SHA 與 `BeforeDigest` 外部重建仍為稽核未完成。
+- **LIFF 正式功能、Manifest V153、Git main 及 G7 PR #35 完全不變**。Q48 Stage 收尾不等於 Backend 正式 R4／LIFF 相容發布 PASS；A11507 Q34 0/3 與 R4 Production HOLD 繼續保持。中央／Backend／LIFF 三個 SSOT Draft 同步但均未合併 main。
+
 ## 2026-11-02｜Attendance R4 Q63 獨立合成 Stage COMMITTED；LIFF V153 不變（兼容狀態 HOLD）
 
 - Backend/Q48 真實 Google **純合成** Stage `Q48-TX-20261102-B99991-001` 單次 CAS，Source Owner 手動執行一次，Google 原生讀回 Journal `COMMITTED`、Control `SPENT_COMMITTED`／RunCount=1，目標第2/4列和非目標／HR 驗證 15/15 PASS，`AfterDigest` 外部重算 PASS；`BeforeDigest` 外部重建未核實且 Stage Script 回鎖 `enabled:false` 尚待 Owner 證據。此交易**不得重跑**。原始稽核：[Backend PR #126 Q63](https://github.com/nooneknows70/abis-ess-backend/pull/126#issuecomment-6576030096)。
