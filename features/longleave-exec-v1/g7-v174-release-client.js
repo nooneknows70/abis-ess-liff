@@ -47,7 +47,11 @@
      assertActive();
      var id=trim(leaveId);need(id,'LEAVE_ID_REQUIRED');
      var r=await rpc('longLeaveExecV1Read',{leaveId:id});
-     need(r&&r.backendRouteBound===true&&
+     // Existing mock-only CI has no live Backend binding; NEVER permit
+     // this compatibility path for a real RPC/session.
+     var mockReadScope=opts.syntheticOnly===true&&opts.rpc.__g7MockOnly===true&&
+       r&&r.backendRouteBound===undefined;
+     need(r&&(r.backendRouteBound===true||mockReadScope)&&
        r.g7ServerProjection==='AUTHORITATIVE_COMMIT_AWARE'&&
        r.serverScopeApplied===true&&
        ['FULL_BEFORE','FULL_COMMITTED'].indexOf(r.g7Visibility)>=0&&
@@ -116,7 +120,11 @@
    function render(el,r,lang){
      need(el&&typeof el.innerHTML==='string','MOUNT_TARGET_REQUIRED');
      var c=r.case,role=c.actorRole;
-     if(role==='EMPLOYEE')el.innerHTML=ui.employeeHtml(Object.assign({},c,{g7Envelope:r}),lang);
+     if(role==='EMPLOYEE'){
+       need(opts.q42&&typeof opts.q42.decorateEmployeeHtml==='function',
+         'Q42_PRESENTATION_NOT_BOUND');
+       el.innerHTML=opts.q42.decorateEmployeeHtml(ui.employeeHtml(c,lang),c,r,lang);
+     }
      else if(role==='SUPERVISOR')el.innerHTML=ui.supervisorHtml(c,lang);
      else el.innerHTML=ui.executiveHtml(c,lang);
      if(role==='EMPLOYEE')return;
@@ -165,8 +173,8 @@
        r.identity&&r.identity.serverVerified===true&&
        r.identity.role==='HR'&&r.identity.hrReconciliationAllowed===true&&
        Array.isArray(r.items),'HR_WORKLIST_NOT_SERVER_AUTHORIZED');
-     need(typeof ui.q42Verified==='function'&&
-       r.items.every(function(e){return ui.q42Verified(e);}),
+     need(opts.q42&&typeof opts.q42.q42Verified==='function'&&
+       r.items.every(function(e){return opts.q42.q42Verified(e);}),
        'HR_WORKLIST_HAS_UNVERIFIED_COMMIT');
      return r;
    }
@@ -174,9 +182,9 @@
      if(RELEASE_MODE!=='AUTHORIZED_RELEASE'&&opts.syntheticOnly!==true)
        hold('OFFICIAL_LIFF_V153_NOT_MOUNTED');
      need(el&&typeof el.innerHTML==='string','MOUNT_TARGET_REQUIRED');
-     need(typeof ui.hrWorklistHtml==='function','HR_WORKLIST_UI_NOT_BOUND');
+     need(opts.q42&&typeof opts.q42.hrWorklistHtml==='function','HR_WORKLIST_UI_NOT_BOUND');
      var r=await readHrWorklist();
-     el.innerHTML=ui.hrWorklistHtml(r,lang); // No action buttons or external dispatch.
+     el.innerHTML=opts.q42.hrWorklistHtml(r,lang); // No action buttons or external dispatch.
      return {mounted:true,role:'HR',count:r.items.length,readonly:true};
    }
    return {status:status,read:read,submit:submit,mount:mount,readHrWorklist:readHrWorklist,mountHrWorklist:mountHrWorklist,

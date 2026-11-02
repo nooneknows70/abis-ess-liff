@@ -3,6 +3,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const ui=require('../features/longleave-exec-v1/approval-panel.js');
+const view=require('../features/longleave-exec-v1/g7-q42-deferred-view.js');
 const L='G7-Q42-SYNTH-LEAVE-001',G='G7-Q42-SYNTH-GRP-001';
 const R='G7-Q42-SYNTH-REQUEST-001',E='G7-Q42-SYNTH-EPOCH-001';
 const H='a'.repeat(64);
@@ -33,25 +34,26 @@ function worklist(){
 test('Q42 employee notice only after all verified COMMITTED/internal-deferred gates',()=>{
  const r=item();
  assert.equal(ui.ACTIVE,false);
- assert.equal(ui.q42Verified(r),true);
- assert.match(ui.deferredNoticeHtml(r,'zh'),/HR 待對帳/);
- assert.match(ui.deferredNoticeHtml(r,'vi'),/HR cần đối soát/);
- assert.match(ui.deferredNoticeHtml(r,'th'),/รอ HR ตรวจสอบ/);
- const html=ui.employeeHtml({...r.case,g7Envelope:r},'zh');
+ assert.equal(view.q42Verified(r),true);
+ assert.match(view.deferredNoticeHtml(r,'zh'),/HR 待對帳/);
+ assert.match(view.deferredNoticeHtml(r,'vi'),/HR cần đối soát/);
+ assert.match(view.deferredNoticeHtml(r,'th'),/รอ HR ตรวจสอบ/);
+ const html=view.decorateEmployeeHtml(ui.employeeHtml(r.case,'zh'),r.case,r,'zh');
  assert.match(html,/長假已核准/);
  assert.match(html,/出勤／薪資／LINE 尚未同步/);
  assert.doesNotMatch(html,/核准交易仍待查核/);
 });
 test('Q42 legacy approved leave retains its original UI display',()=>{
- const legacy=ui.employeeHtml({leaveId:'OLD-CASE',status:'APPROVED'},'zh');
+ const c={leaveId:'OLD-CASE',status:'APPROVED'};
+ const legacy=view.decorateEmployeeHtml(ui.employeeHtml(c,'zh'),c,null,'zh');
  assert.match(legacy,/已核准/);
  assert.doesNotMatch(legacy,/核准交易仍待查核/);
  assert.doesNotMatch(legacy,/HR 待對帳/);
 });
 test('Q42 unverified G7 approval never renders as completed approval',()=>{
  const r=item();r.backendRouteBound=false;
- assert.equal(ui.q42Verified(r),false);
- const html=ui.employeeHtml({...r.case,g7Envelope:r},'zh');
+ assert.equal(view.q42Verified(r),false);
+ const html=view.decorateEmployeeHtml(ui.employeeHtml(r.case,'zh'),r.case,r,'zh');
  assert.match(html,/核准交易仍待查核/);
  assert.doesNotMatch(html,/長假已核准（內部生效）/);
 });
@@ -70,12 +72,12 @@ test('Q42 missing epoch, COMMITTED receipt, hash, or external suppression fails 
  ];
  for(const change of mutations){
   const r=item();change(r);
-  assert.equal(ui.q42Verified(r),false);
-  assert.equal(ui.deferredNoticeHtml(r,'zh'),'');
+  assert.equal(view.q42Verified(r),false);
+  assert.equal(view.deferredNoticeHtml(r,'zh'),'');
  }
 });
 test('Q42 HR worklist requires authenticated server role and per-item evidence',()=>{
- const r=worklist(),html=ui.hrWorklistHtml(r,'zh');
+ const r=worklist(),html=view.hrWorklistHtml(r,'zh');
  assert.match(html,/HR 長假外部待對帳清單/);
  assert.match(html,/SYNTH-EMP/);
  assert.match(html,/2026-11-04/);
@@ -93,12 +95,12 @@ test('Q42 HR worklist requires authenticated server role and per-item evidence',
   q=>q.items.push(item())
  ]){
   const q=worklist();change(q);
-  assert.throws(()=>ui.hrWorklistHtml(q,'zh'),/G7_Q42_HR_/);
+  assert.throws(()=>view.hrWorklistHtml(q,'zh'),/G7_Q42_HR_/);
  }
 });
 test('Q42 HR worklist never embeds unescaped staff data',()=>{
  const q=worklist();q.items[0].case.employeeId='<script>alert(1)</script>';
- const html=ui.hrWorklistHtml(q,'zh');
+ const html=view.hrWorklistHtml(q,'zh');
  assert.doesNotMatch(html,/<script>/);
  assert.match(html,/&lt;script&gt;/);
 });
