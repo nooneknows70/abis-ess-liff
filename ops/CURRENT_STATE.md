@@ -1,5 +1,12 @@
 # ABIS ESS LIFF — Current State
 
+## 2026-11-02｜Attendance R4 Q63 獨立合成 Stage COMMITTED；LIFF V153 不變（兼容狀態 HOLD）
+
+- Backend/Q48 真實 Google **純合成** Stage `Q48-TX-20261102-B99991-001` 單次 CAS，Source Owner 手動執行一次，Google 原生讀回 Journal `COMMITTED`、Control `SPENT_COMMITTED`／RunCount=1，目標第2/4列和非目標／HR 驗證 15/15 PASS，`AfterDigest` 外部重算 PASS；`BeforeDigest` 外部重建未核實且 Stage Script 回鎖 `enabled:false` 尚待 Owner 證據。此交易**不得重跑**。原始稽核：[Backend PR #126 Q63](https://github.com/nooneknows70/abis-ess-backend/pull/126#issuecomment-6576030096)。
+- 本 **LIFF** Repo 沒有任何 Q63 source、API contract、Manifest、UI 或部署變更。正式 Release Manifest 仍 `V153`，本 Repo Git `main` `40c72af4...`。Backend 最新運行 Owner 讀回 `@173` 為獨立 Phase1A UI Scope、最後稽核 PROD_CURRENT `@170`；正式 R4 尚無安全 Provider 與 LIFF 實際接線，**跨 Repo 相容性 `NOT_VERIFIED`，不能以 Q63 Stage PASS 升級 LIFF 或 R4 Production**。
+- Backend R4 [PR #126](https://github.com/nooneknows70/abis-ess-backend/pull/126) 仍 Draft 未合併，B11301 [PR #158](https://github.com/nooneknows70/abis-ess-backend/pull/158) 需優先。G7 LIFF [PR #35](https://github.com/nooneknows70/abis-ess-liff/pull/35) 仍 Draft/未發布，互不影響；Payroll、LINE、正式請假與出勤零更動。
+- 只同步候選文件／SSOT，**不更改 LIFF Manifest、不合併 main、不進行任何實際正式發布**。後續依 Backend R4 正式 bounded provider 設計與獨立 Release Flow V2 相容性 Gate 判定。
+
 ## ABIS_ESS_V169_LEAVE_APPROVAL_LABEL_CLOSED_PASS_RECONCILED — FINAL VERIFY reconciled, 2026-10-27
 
 - Source Owner @169 original Production Deployment ID, immutable @169, HEAD, and Git source **79/79 PASS**, manager button **核准申請** UI PASS, published frontend asset and post-release web app api/doGet completed.

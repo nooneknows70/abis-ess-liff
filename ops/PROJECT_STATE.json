@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T15:55:20.331Z",
+  "updatedAt": "2026-11-02T19:24:40+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -2195,6 +2195,30 @@
       "prodCurrentPromoted": true,
       "r2174Performance": "OPEN_NON_BLOCKING_SEPARATE",
       "unrelatedDeployments": "PASS_4_STABLE_IDS_OTHER_3_POINTERS_UNCHANGED_SINCE_20261025"
+    },
+    "attendanceR4Q63CrossRepoReadOnlyHandoff": {
+      "recordedDate": "2026-11-02",
+      "referenceBackend": "nooneknows70/abis-ess-backend",
+      "referenceBackendSsotDraft": "https://github.com/nooneknows70/abis-ess-backend/pull/161",
+      "centralSsotDraft": "https://github.com/nooneknows70/abis-release-control/pull/23",
+      "evidence": "https://github.com/nooneknows70/abis-ess-backend/pull/126#issuecomment-6576030096",
+      "stageEvent": "Q63_REAL_GOOGLE_SYNTHETIC_ONLY_COMMITTED_POSTREADBACK_15_15_PASS",
+      "frontendChange": "NONE",
+      "frontendSourceFilesChanged": 0,
+      "frontendReleaseManifestChanged": false,
+      "frontendGoLive": false,
+      "liffManifestAuthority": "V153_PROD_CURRENT_FRONTEND",
+      "liffMainAtCheck": "40c72af42fe7dba80bcd5eb4fd38c63769520640",
+      "backendActualOwnerObserved": "@173_PHASE1A_UI_ONLY",
+      "backendLastAuditedProdCurrent": "@170",
+      "formalR4Compat": "NOT_VERIFIED_NO_FRONTEND_WIRE",
+      "formalR4GoLive": "HOLD",
+      "q34FormalMasterCorrection": "0_3_HOLD",
+      "beforeDigestExternalAudit": "UNVERIFIED",
+      "sourceReLock": "PENDING",
+      "q63NoReplay": true,
+      "independentG7State": "NO_CHANGE_PR35_DRAFT_HOLD",
+      "nextAction": "RETAIN_LIFF_V153_AND_NO_DEPLOY_UNTIL_BACKEND_FORMAL_R4_PROVIDER_AND_SEPARATE_FRONTEND_COMPAT_GATE_PASS"
     }
   },
   "leaveLabelBackendIntegration": {
