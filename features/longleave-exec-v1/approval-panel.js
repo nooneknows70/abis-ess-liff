@@ -6,9 +6,9 @@
 'use strict';
 var ACTIVE=false; // HARD HOLD until separately authorized release/provider Gate.
 var WORDS={
- ZH:{review:'主管交接審查',confirm:'我已安排請假期間的工作交接',note:'交接安排說明（必填）',send:'完成審查並送最高主管',employeeReason:'員工請假原因',reviewHistory:'審批及補件歷程',proxy:'代理安排',approved:'核准',return:'退回主管補件',rejected:'駁回',reason:'審批意見／原因',pending:'審批中',supplement:'主管補件中',done:'已核准',failed:'已駁回',cancelled:'已取消',amendPending:'原核准有效，變更審批中',amendRejected:'變更遭駁回，原核准仍有效',supplementSend:'補件後重新送最高主管',missing:'歷史資料未提供',loading:'處理中',error:'操作失敗',requestId:'RequestID',q42Internal:'長假已核准（內部生效）',q42Pending:'出勤／薪資／LINE 尚未同步，HR 待對帳',q42Unknown:'核准交易仍待查核，不能視為已完成',q42List:'HR 長假外部待對帳清單',q42Empty:'沒有符合條件的待對帳案件',q42Leave:'假單 ID',q42Group:'群組 ID'},
- VI:{review:'Xem xét bàn giao',confirm:'Tôi đã sắp xếp bàn giao công việc',note:'Ghi chú bàn giao (bắt buộc)',send:'Gửi lãnh đạo phê duyệt',employeeReason:'Lý do nghỉ phép',reviewHistory:'Lịch sử xét duyệt',proxy:'Người thay thế',approved:'Phê duyệt',return:'Trả lại quản lý bổ sung',rejected:'Từ chối',reason:'Ý kiến / lý do',pending:'Đang xét duyệt',supplement:'Quản lý bổ sung',done:'Đã phê duyệt',failed:'Đã từ chối',cancelled:'Đã hủy',amendPending:'Phê duyệt cũ vẫn hiệu lực, thay đổi đang chờ',amendRejected:'Thay đổi bị từ chối, phê duyệt cũ vẫn hiệu lực',supplementSend:'Gửi lại sau khi bổ sung',missing:'Không có dữ liệu lịch sử',loading:'Đang xử lý',error:'Thao tác thất bại',requestId:'RequestID',q42Internal:'Nghỉ dài ngày đã được phê duyệt nội bộ',q42Pending:'Chấm công, lương và LINE chưa đồng bộ; HR cần đối soát',q42Unknown:'Giao dịch phê duyệt chưa được xác minh',q42List:'HR - danh sách chờ đối soát',q42Empty:'Không có hồ sơ cần đối soát',q42Leave:'Mã đơn nghỉ',q42Group:'Mã nhóm'},
- TH:{review:'ตรวจสอบการส่งมอบงาน',confirm:'ฉันได้จัดเตรียมการส่งมอบงานแล้ว',note:'รายละเอียดการส่งมอบงาน (จำเป็น)',send:'ส่งให้ผู้บริหารอนุมัติ',employeeReason:'เหตุผลการลา',reviewHistory:'ประวัติการพิจารณา',proxy:'ผู้ปฏิบัติงานแทน',approved:'อนุมัติ',return:'ส่งกลับให้หัวหน้างานเพิ่มเติม',rejected:'ปฏิเสธ',reason:'ความคิดเห็น / เหตุผล',pending:'รอการอนุมัติ',supplement:'หัวหน้างานเพิ่มเติมข้อมูล',done:'อนุมัติแล้ว',failed:'ปฏิเสธแล้ว',cancelled:'ยกเลิกแล้ว',amendPending:'อนุมัติเดิมยังมีผล รอตรวจสอบการแก้ไข',amendRejected:'การแก้ไขถูกปฏิเสธ อนุมัติเดิมยังมีผล',supplementSend:'ส่งใหม่หลังเพิ่มเติมข้อมูล',missing:'ไม่มีข้อมูลย้อนหลัง',loading:'กำลังดำเนินการ',error:'ดำเนินการไม่สำเร็จ',requestId:'RequestID',q42Internal:'อนุมัติการลาระยะยาวภายในแล้ว',q42Pending:'ข้อมูลเวลา เงินเดือน และ LINE ยังไม่ซิงก์ รอ HR ตรวจสอบ',q42Unknown:'ธุรกรรมอนุมัติยังไม่ผ่านการตรวจสอบ',q42List:'รายการรอ HR ตรวจสอบ',q42Empty:'ไม่มีรายการรอตรวจสอบ',q42Leave:'รหัสใบลา',q42Group:'รหัสกลุ่ม'}
+ ZH:{review:'主管交接審查',confirm:'我已安排請假期間的工作交接',note:'交接安排說明（必填）',send:'完成審查並送最高主管',employeeReason:'員工請假原因',reviewHistory:'審批及補件歷程',proxy:'代理安排',approved:'核准',return:'退回主管補件',rejected:'駁回',reason:'審批意見／原因',pending:'審批中',supplement:'主管補件中',done:'已核准',failed:'已駁回',cancelled:'已取消',amendPending:'原核准有效，變更審批中',amendRejected:'變更遭駁回，原核准仍有效',supplementSend:'補件後重新送最高主管',missing:'歷史資料未提供',loading:'處理中',error:'操作失敗',requestId:'RequestID',q42Internal:'長假已核准（內部生效）',q42Pending:'出勤／薪資／LINE 尚未同步，HR 待對帳',q42Unknown:'核准交易仍待查核，不能視為已完成',q42List:'HR 長假外部待對帳清單',q42Empty:'沒有符合條件的待對帳案件',q42Leave:'假單 ID',q42Group:'群組 ID',q42Employee:'員工 ID',q42Period:'請假期間',q42Hours:'核准時數',q42Receipt:'交易憑證'},
+ VI:{review:'Xem xét bàn giao',confirm:'Tôi đã sắp xếp bàn giao công việc',note:'Ghi chú bàn giao (bắt buộc)',send:'Gửi lãnh đạo phê duyệt',employeeReason:'Lý do nghỉ phép',reviewHistory:'Lịch sử xét duyệt',proxy:'Người thay thế',approved:'Phê duyệt',return:'Trả lại quản lý bổ sung',rejected:'Từ chối',reason:'Ý kiến / lý do',pending:'Đang xét duyệt',supplement:'Quản lý bổ sung',done:'Đã phê duyệt',failed:'Đã từ chối',cancelled:'Đã hủy',amendPending:'Phê duyệt cũ vẫn hiệu lực, thay đổi đang chờ',amendRejected:'Thay đổi bị từ chối, phê duyệt cũ vẫn hiệu lực',supplementSend:'Gửi lại sau khi bổ sung',missing:'Không có dữ liệu lịch sử',loading:'Đang xử lý',error:'Thao tác thất bại',requestId:'RequestID',q42Internal:'Nghỉ dài ngày đã được phê duyệt nội bộ',q42Pending:'Chấm công, lương và LINE chưa đồng bộ; HR cần đối soát',q42Unknown:'Giao dịch phê duyệt chưa được xác minh',q42List:'HR - danh sách chờ đối soát',q42Empty:'Không có hồ sơ cần đối soát',q42Leave:'Mã đơn nghỉ',q42Group:'Mã nhóm',q42Employee:'Mã nhân viên',q42Period:'Thời gian nghỉ',q42Hours:'Số giờ được duyệt',q42Receipt:'Mã giao dịch'},
+ TH:{review:'ตรวจสอบการส่งมอบงาน',confirm:'ฉันได้จัดเตรียมการส่งมอบงานแล้ว',note:'รายละเอียดการส่งมอบงาน (จำเป็น)',send:'ส่งให้ผู้บริหารอนุมัติ',employeeReason:'เหตุผลการลา',reviewHistory:'ประวัติการพิจารณา',proxy:'ผู้ปฏิบัติงานแทน',approved:'อนุมัติ',return:'ส่งกลับให้หัวหน้างานเพิ่มเติม',rejected:'ปฏิเสธ',reason:'ความคิดเห็น / เหตุผล',pending:'รอการอนุมัติ',supplement:'หัวหน้างานเพิ่มเติมข้อมูล',done:'อนุมัติแล้ว',failed:'ปฏิเสธแล้ว',cancelled:'ยกเลิกแล้ว',amendPending:'อนุมัติเดิมยังมีผล รอตรวจสอบการแก้ไข',amendRejected:'การแก้ไขถูกปฏิเสธ อนุมัติเดิมยังมีผล',supplementSend:'ส่งใหม่หลังเพิ่มเติมข้อมูล',missing:'ไม่มีข้อมูลย้อนหลัง',loading:'กำลังดำเนินการ',error:'ดำเนินการไม่สำเร็จ',requestId:'RequestID',q42Internal:'อนุมัติการลาระยะยาวภายในแล้ว',q42Pending:'ข้อมูลเวลา เงินเดือน และ LINE ยังไม่ซิงก์ รอ HR ตรวจสอบ',q42Unknown:'ธุรกรรมอนุมัติยังไม่ผ่านการตรวจสอบ',q42List:'รายการรอ HR ตรวจสอบ',q42Empty:'ไม่มีรายการรอตรวจสอบ',q42Leave:'รหัสใบลา',q42Group:'รหัสกลุ่ม',q42Employee:'รหัสพนักงาน',q42Period:'ช่วงวันลา',q42Hours:'ชั่วโมงที่อนุมัติ',q42Receipt:'หลักฐานธุรกรรม'}
 };
 function esc(s){return String(s===null||s===undefined?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function w(lang){var key=String(lang||'').toLowerCase();if(key==='zh-tw'||key==='zh')return WORDS.ZH;if(key==='vi-vn'||key==='vi')return WORDS.VI;if(key==='th-th'||key==='th')return WORDS.TH;return WORDS[lang]||WORDS.ZH;}
@@ -30,7 +30,8 @@ function q42Verified(envelope){
  var group=matches[0];
  if(group.phase!=='COMMITTED'||group.visibility!=='FULL_COMMITTED'||
     !group.requestId||receipt.phase!=='COMMITTED'||
-    receipt.requestId!==group.requestId||receipt.outboxReleased!==false)return false;
+    receipt.requestId!==group.requestId||receipt.outboxReleased!==false||
+    !/^[a-f0-9]{64}$/.test(String(receipt.eventHash||'')))return false;
  if(ext.status!=='SUPPRESSED_PENDING_EXTERNAL_RECONCILIATION'||
     ext.hrReconciliationRequired!==true||!ext.domains)return false;
  return ['ATTENDANCE','PAYROLL','LINE'].every(function(k){
@@ -47,7 +48,8 @@ function deferredNoticeHtml(envelope,lang){
  * projection. This renderer is not an HR authorization mechanism or sync action. */
 function hrWorklistHtml(envelope,lang){
  var r=envelope||{},identity=r.identity||{},t=w(lang);
- if(r.g7ServerProjection!=='AUTHORITATIVE_COMMIT_AWARE'||
+ if(r.backendRouteBound!==true||
+    r.g7ServerProjection!=='AUTHORITATIVE_COMMIT_AWARE'||
     r.serverScopeApplied!==true||r.readTier!=='FORMAL_PROVIDER_VERIFIED'||
     identity.serverVerified!==true||identity.role!=='HR'||
     identity.hrReconciliationAllowed!==true||!Array.isArray(r.items))
@@ -58,7 +60,14 @@ function hrWorklistHtml(envelope,lang){
    var c=item.case,key=String(c.leaveId);
    if(seen[key])throw Error('G7_Q42_HR_DUPLICATE_LEAVE');
    seen[key]=true;
-   return '<li>'+line(t.q42Leave,key)+line(t.q42Group,c.groupId)+
+   if(!c.employeeId||!c.leaveStartDate||!c.leaveEndDate||
+      !Number.isFinite(c.systemHours)||c.systemHours<=0)
+     throw Error('G7_Q42_HR_CASE_DETAILS_UNVERIFIED');
+   return '<li>'+line(t.q42Leave,key)+line(t.q42Employee,c.employeeId)+
+     line(t.q42Period,String(c.leaveStartDate)+' ~ '+String(c.leaveEndDate))+
+     line(t.q42Hours,String(c.systemHours))+
+     line(t.q42Group,c.groupId)+
+     line(t.q42Receipt,item.transactionReceipt.requestId)+
      '<strong>'+esc(t.q42Pending)+'</strong></li>';
  });
  return '<section class="llex-v1-q42-hr-readonly" data-llex-q42="hr-readonly"><h3>'+
@@ -75,7 +84,10 @@ function employeeHtml(data,lang){var t=w(lang),d=data||{},labels={PENDING_SUPERV
  var effective=!!d.effectiveApprovalExists,reviewing=["PENDING_SUPERVISOR","PENDING_EXECUTIVE","PENDING_SUPERVISOR_SUPPLEMENT"].indexOf(d.status)>=0;
  var envelope=d.g7Envelope||null,verified=q42Verified(envelope);
  var status=effective&&reviewing?t.amendPending:(labels[d.status]||t.pending);
- if((d.status==='APPROVED'||d.status==='已核准')&&!verified)status=t.q42Unknown;
+ // Existing, non-G7 approved cases must retain their historical UI status.
+ if((d.status==='APPROVED'||d.status==='已核准')&&
+    envelope&&envelope.case&&envelope.case.leaveId===d.leaveId&&!verified)
+   status=t.q42Unknown;
  return '<section class="llex-v1-employee" role="status">'+line('Status',status)+(d.status==='REJECTED'?line(t.reason,d.rejectionReason):'')+
    (d.amendmentOutcome==='REJECTED'?line(t.amendRejected,d.amendmentRejectionReason):'')+
    (verified?deferredNoticeHtml(envelope,lang):'')+'</section>';}
