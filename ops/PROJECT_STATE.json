@@ -2205,5 +2205,45 @@
     "frontendAssetPublished": true,
     "frontendAssetReadback": "PASS",
     "finalUiAcceptance": "PASS_SOURCE_OWNER"
+  },
+  "threePartyGovernance": {
+    "schemaVersion": "1.0",
+    "policyId": "ABIS_3PARTY_GOVERNANCE_V1_20261103",
+    "version": "V1",
+    "managementDecision": "FROZEN_BY_SOURCE_OWNER",
+    "effectiveDate": "2026-11-03",
+    "timezone": "Asia/Taipei",
+    "scope": "ALL_EXISTING_AND_FUTURE_ABIS_SYSTEM_PROJECTS",
+    "authority": {
+      "repository": "nooneknows70/abis-release-control",
+      "path": "ABIS_3PARTY_GOVERNANCE_V1_FROZEN.md",
+      "ref": "670fc90d5b25fcf327e056d9028f9c6c0afc6ff1"
+    },
+    "roles": {
+      "chatgpt": "SPEC_AND_ACCEPTANCE",
+      "codex": "SOLE_PRIMARY_ENGINEERING_EXECUTOR",
+      "sourceOwner": "POLICY_AND_MANAGEMENT_AUTHORIZATION"
+    },
+    "defaultTestMode": "ONE_SHOT",
+    "parallelPolicies": [
+      "ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_V1_20261026",
+      "ABIS_RELEASE_FLOW_V2_FROZEN"
+    ],
+    "releaseFlow": [
+      "RELEASE",
+      "GO-LIVE",
+      "FINAL VERIFY"
+    ],
+    "githubWriteState": "DRAFT_BRANCH_CANDIDATE",
+    "mainSynchronization": "NOT_MERGED",
+    "independentAcceptance": "NOT_VERIFIED",
+    "productionRelease": "OUT_OF_SCOPE",
+    "runtimeVerification": "NOT_RUN_DOCS_ONLY",
+    "safety": {
+      "productionWrites": 0,
+      "oauthTriggerDeploymentChanges": 0,
+      "mainMerges": 0,
+      "existingGatesPreserved": true
+    }
   }
 }
