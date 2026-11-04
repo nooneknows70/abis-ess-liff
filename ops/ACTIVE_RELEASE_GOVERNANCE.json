@@ -1,0 +1,13 @@
+{
+  "schema": "ABIS_ACTIVE_RELEASE_GOVERNANCE_V1",
+  "effectiveDecision": "Q75_SOURCE_OWNER_NAMED_IT_CREDENTIAL_CUSTODIAN",
+  "effectiveContract": "Q75_CUSTODIAN_APPOINTMENT_CONTRACT.json",
+  "effectiveGate": "Q75_RELEASE_HOLD_REPORT.json",
+  "historicalQ74Record": "PRESERVED_AS_OF_Q74",
+  "namedCustodian": {
+    "name": "Mike",
+    "companyEmail": "mike@abis-it.com"
+  },
+  "assignmentScope": "LIMITED_PLANNING_AND_NON_SENSITIVE_METADATA_ONLY",
+  "platformPermissionGrant": false
+}

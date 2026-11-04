@@ -1,5 +1,14 @@
 # ABIS ESS LIFF — Current State
 
+## 2026-11-04｜Q75 Source Owner 任命 Mike 為有限範圍 IT Credential Custodian；正式安全 Gate HOLD
+
+- Source Owner 具名指定 **Mike / mike@abis-it.com**，採 Q74=A 公司集中治理。初期職責僅：非敏感憑證清冊、權限治理規劃、到期及輪替程序規劃、稽核證據管理。
+- 任命狀態為 APPOINTED_LIMITED_GOVERNANCE_SCOPE；不代表帳號存在、Email所有權或runtime principal已獨立核實，也不與其他Mike帳號自動連結。沒有授予任何正式帳號、OAuth/IAM/ACL/金鑰、秘密保管或Production權限。
+- Q74的UNASSIGNED紀錄與原Gate保持歷史快照；目前治理以Q75新契約/Gate及ACTIVE_RELEASE_GOVERNANCE指標解析。Q74獨立驗收依本次Source Owner引用沿用，未捏造新驗收收據或重新跑Q69-Q74測試。
+- #161歷史CI **FAIL_UNRESOLVED**；完整ID獨立pin、有效OAuth、跨creator Trigger、fresh Provider HEAD仍NOT_VERIFIED；Gateway/全域租約未安裝/未強制。B11301/G7/Payroll發布均HOLD，Q11舊Apply disabled。任命不等於核薪或恢復授權。
+- 本輪僅Draft文件/契約同步，使用[skip ci]避免歷史測試重跑；不將跳過或待執行CI標PASS。既有main/正式來源/權限/Payroll/LINE均零變更；Payroll獨立Repo不動。
+- 下個唯一管理節點：Mike提出具體、有證據及精確變更清單的方案後，由Source Owner另案核准或否決正式權限/Gateway等特權變更範圍。Q75不核准這些變更；不再重問已完成的任命，日常規劃職責亦不需重複核准。
+
 ## 2026-11-04｜Q74 公司集中 Release Gateway 治理 Draft 完成；正式權限與發布 HOLD
 
 - Source Owner Q74=A 僅授權治理設計、非敏感 metadata 與合成工程。IT Named Custodian **UNASSIGNED**；不得推定 Oscar、Mike、Codex 或 ChatGPT 已被任命。
