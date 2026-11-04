@@ -1,5 +1,15 @@
 # ABIS ESS LIFF — Current State
 
+## 2026-11-04｜Q73 Draft release-safety engineering PASS；Production / G7 / Payroll HOLD
+
+- Backend [Draft #158](https://github.com/nooneknows70/abis-ess-backend/pull/158) source HEAD `889679c4cbd01904d6a4bb88f4579f22220fe92c`: new isolated evidence contract, exact79/exact80 inventory gates, private in-memory full-ID comparator, runtime OAuth / cross-creator Trigger boundaries and mock CAS/fencing coordinator. No runtime handler or src/manifest edits; old Q11 Apply remains disabled.
+- Q73 ONE-SHOT [CI 41746151208](https://github.com/nooneknows70/abis-ess-backend/actions/runs/41746151208), attempt 1, exact source SHA, **103/103 PASS / 0 fail / 0 skipped**; syntax/static safety PASS. This is new synthetic behavior only. Prior Q69-Q72 and Q14/Q16 evidence is reused without provider replay. Existing broad workflows may automatically run on the branch update; none is claimed as a new Q73 test or manually rerun.
+- Central [new Draft #26](https://github.com/nooneknows70/abis-release-control/pull/26) preserves main G7 Q64-Q67 and old #23 R4 Q63/Q64. Original #23 stays open/Draft/unmerged. Backend SSOT #161 and LIFF #36 carry the identical Q73 compatibility record; historical R4 Stage closure and G7 test-principal HOLD are retained.
+- Actual full Production Deployment ID pin, effective runtime OAuth grants and cross-creator Trigger completeness remain **NOT_VERIFIED**. Mock CAS cannot block editor/other clasp/uncontrolled credentials: global release lease is **UNENFORCEABLE_HOLD / NOT_INSTALLED**. Latest provider HEAD is not re-read in Q73. All-green fixture reaches only separate management review, with releaseAuthorized=false.
+- Last owner-observed Backend @173 Phase1A scope, last fully audited @170 and LIFF Manifest V153 are distinct. B11301 first; G7 rebase after actual B11301 release; no next version reserved. Recovery preserves prewrite HEAD79 with Sheets v4 and requires separate authorization. No automated recovery.
+- Payroll is independent `nooneknows70/abis-payroll`: compatibility-only; program, Release Manifest, policy and formal data changes **0**. Production/attendance/business/Payroll/LINE writes and main merges **0**. No Google/OAuth/Trigger/Deployment operation, historical Stage or old Q11 Apply execution.
+- **Single next management gate:** after ChatGPT independent exact-commit acceptance, approve/decline Q74 bounded safety-evidence and release-access-governance review using existing private receipts and deciding ownership of the future sole Release Gateway/credential custody. This does not authorize any grant, credential change, provider execution, deployment, recovery or Payroll operation. Missing evidence stays HOLD.
+
 ## 2026-11-02 20:33｜R4 Q64=A：Stage Writer 回鎖 PASS；LIFF V153 不變
 
 - Q48／Q63 單次純合成 CAS 已於 Q63 COMMITTED 且 SPENT；Source Owner Q64=A 提供 Q48 專用 Script `enabled:false`／儲存圖示，Mike Drive metadata 顯示交易後修改，**OWNER_UI_STAGE_RELOCK_PASS**。再由 Google Sheets 唯讀確認 Journal `COMMITTED`／Control `SPENT_COMMITTED`／RunCount=1，目標及 B99992／HR／Canary 不變，沒有再次執行 Writer。

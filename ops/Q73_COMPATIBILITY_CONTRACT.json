@@ -1,0 +1,59 @@
+{
+  "schema": "ABIS_Q73_CROSS_REPO_COMPATIBILITY_V1",
+  "scope": "DRAFT_ONLY_HERMETIC_ENGINEERING",
+  "backendPR": "https://github.com/nooneknows70/abis-ess-backend/pull/158",
+  "centralPR": "https://github.com/nooneknows70/abis-release-control/pull/26",
+  "backendSSOTPR": "https://github.com/nooneknows70/abis-ess-backend/pull/161",
+  "liffSSOTPR": "https://github.com/nooneknows70/abis-ess-liff/pull/36",
+  "priorCentralPR": "https://github.com/nooneknows70/abis-release-control/pull/23",
+  "productionBackend": "173_LAST_OWNER_OBSERVED_PHASE1A_ONLY",
+  "lastFullyAuditedBackend": 170,
+  "liffManifest": 153,
+  "releaseOrder": [
+    "B11301_FIRST",
+    "G7_REBASE_AFTER_ACTUAL_B11301_RELEASE"
+  ],
+  "oldQ11Apply": "SUPERSEDED_DISABLED",
+  "globalLease": "UNENFORCEABLE_HOLD_NOT_INSTALLED",
+  "deploymentIdPin": "NOT_VERIFIED",
+  "effectiveOAuthGrants": "NOT_VERIFIED",
+  "crossCreatorTriggers": "NOT_VERIFIED",
+  "B11301_RELEASE": "HOLD",
+  "G7_GO_LIVE": "HOLD",
+  "PAYROLL_FINALIZE": "HOLD",
+  "payroll": {
+    "repository": "nooneknows70/abis-payroll",
+    "scope": "COMPATIBILITY_CONTRACT_ONLY",
+    "codeChanges": 0,
+    "manifestChanges": 0,
+    "policyChanges": 0,
+    "dataWrites": 0
+  },
+  "Q69_Q72": "OWNER_REPORTED_HISTORICAL_REUSED_NO_REMOTE_RERUN",
+  "Q14_Q16": "PRIOR_EVIDENCE_REUSED_NO_REPLAY",
+  "productionWrites": 0,
+  "businessWrites": 0,
+  "payrollWrites": 0,
+  "lineSends": 0,
+  "mainMerges": 0,
+  "nextManagementGate": "Q74_BOUNDED_SAFETY_EVIDENCE_AND_RELEASE_ACCESS_GOVERNANCE_REVIEW_ONLY",
+  "backendSourceSHA": "889679c4cbd01904d6a4bb88f4579f22220fe92c",
+  "Q73_DRAFT_ENGINEERING": "PASS",
+  "localTests": {
+    "passed": 103,
+    "total": 103,
+    "failed": 0
+  },
+  "Q73_CI": {
+    "url": "https://github.com/nooneknows70/abis-ess-backend/actions/runs/41746151208",
+    "headSHA": "889679c4cbd01904d6a4bb88f4579f22220fe92c",
+    "conclusion": "success",
+    "attempt": 1,
+    "jobId": 126299533902,
+    "tests": 103,
+    "passed": 103,
+    "failed": 0,
+    "skipped": 0
+  },
+  "independentChatGPTAcceptance": "PENDING"
+}
