@@ -1,3 +1,17 @@
+## 2026-11-04｜Source Owner 授權文件專用合併；凍結結果由中央合併後讀回認列
+
+- 本 Repo 的治理文件已獲本輪明確合併授權；程式、Release Manifest、版本、Deployment、OAuth、Trigger 與業務資料不在範圍。先前 dated handoff 的 Draft／REPO_SYNC_PENDING 是歷史階段，不作為合併後最新判定。
+- 三方政策 `ABIS_TRIPARTITE_DELIVERY_GOVERNANCE_V1_20261103` 完整保留。GitHub 凍結最終狀態以中央 Registry 的 `tripartiteDeliveryGovernance` 及五 Repo **實際合併後** 20/20 讀回為 authority；本地狀態不得自行提前填 PASS。
+- 下一 Gate 為 ChatGPT 獨立驗收。Stage Q1-A 僅條件授權，不等於已取得合格測試身分／實際 readonly OAuth 或 Production 授權。
+
+
+## 2026-11-03｜三方分工治理：Source Owner 已核准，GitHub 同步待審查
+
+- 治理識別：`ABIS_TRIPARTITE_DELIVERY_GOVERNANCE_V1_20261103`，適用所有 ABIS 系統專案。ChatGPT 負責需求與獨立驗收；Codex 為主要工程執行者，負責候選程式、分支、Commit、Draft PR、CI 及 SSOT；Source Owner 負責管理政策、敏感存取、正式業務寫入與 Stage／Production 必要授權。
+- One-shot 為預設工程方式：集中實作、正常／負面／回復及回歸驗證；沿用未受影響的有效 PASS，不重跑已結案一次性交易。既定範圍內的一般技術決策不逐項重新詢問。
+- 中央政策：`nooneknows70/abis-release-control/ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_POLICY_FROZEN.md`；ADR：`docs/adr/0002-tripartite-delivery-governance.md`（中央 Repo）。Authority、Bootstrap、Fail-closed、Release Flow V2 三階段及正式發布權責完整保留；個別對話、子系統 PR 或重構不得自行取消本治理。
+- 本次為文件候選：`SOURCE_OWNER_APPROVED / REPO_SYNC_PENDING`；跨 Repo Draft PR 尚未合併，不宣稱全部 GitHub 凍結完成。所有既有 Release Manifest、版本、Deployment、業務與原始資料保持；Production Release／GO-LIVE 未獲本次授權。
+
 # ABIS ESS LIFF — Current State
 
 ## ABIS_ESS_V169_LEAVE_APPROVAL_LABEL_CLOSED_PASS_RECONCILED — FINAL VERIFY reconciled, 2026-10-27
