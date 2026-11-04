@@ -1,3 +1,9 @@
+## 2026-11-04｜Source Owner 授權文件專用合併；凍結結果由中央合併後讀回認列
+
+- 本 Repo 的治理文件已獲本輪明確合併授權；程式、Release Manifest、版本、Deployment、OAuth、Trigger 與業務資料不在範圍。先前 dated handoff 的 Draft／REPO_SYNC_PENDING 是歷史階段，不作為合併後最新判定。
+- 三方政策 `ABIS_TRIPARTITE_DELIVERY_GOVERNANCE_V1_20261103` 完整保留。GitHub 凍結最終狀態以中央 Registry 的 `tripartiteDeliveryGovernance` 及五 Repo **實際合併後** 20/20 讀回為 authority；本地狀態不得自行提前填 PASS。
+- 下一 Gate 為 ChatGPT 獨立驗收。Stage Q1-A 僅條件授權，不等於已取得合格測試身分／實際 readonly OAuth 或 Production 授權。
+
 
 ## 2026-11-03｜三方分工治理：Source Owner 已核准，GitHub 同步待審查
 

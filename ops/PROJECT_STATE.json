@@ -2216,7 +2216,9 @@
     "delivery": "ONE_SHOT_DEFAULT",
     "policy": "nooneknows70/abis-release-control/ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_POLICY_FROZEN.md",
     "adr": "nooneknows70/abis-release-control/docs/adr/0002-tripartite-delivery-governance.md",
-    "githubFreeze": "SOURCE_OWNER_APPROVED_REPO_SYNC_PENDING",
-    "productionRelease": "HOLD_NOT_AUTHORIZED"
+    "githubFreeze": "CENTRAL_POST_MERGE_READBACK_AUTHORITY",
+    "productionRelease": "HOLD_NOT_AUTHORIZED",
+    "githubFreezeAuthority": "nooneknows70/abis-release-control/ops/ABIS_MULTI_REPO_SSOT.json#tripartiteDeliveryGovernance",
+    "documentationMergeAuthorization": "SOURCE_OWNER_APPROVED_STAGE_Q1_A_2026-11-04"
   }
 }
