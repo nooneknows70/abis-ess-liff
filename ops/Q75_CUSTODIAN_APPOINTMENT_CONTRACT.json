@@ -1,0 +1,108 @@
+{
+  "schema": "ABIS_Q75_LIMITED_CUSTODIAN_APPOINTMENT_V1",
+  "decisionId": "Q75_SOURCE_OWNER_NAMED_IT_CREDENTIAL_CUSTODIAN",
+  "decisionDateTaipei": "2026-11-04",
+  "source": "Source Owner explicit Q75 user instruction",
+  "authority": "SOURCE_OWNER",
+  "governanceArchitecture": "Q74_A_COMPANY_CENTRAL_GOVERNANCE",
+  "IT_NAMED_CUSTODIAN": {
+    "name": "Mike",
+    "companyEmail": "mike@abis-it.com"
+  },
+  "IT_CUSTODIAN_ASSIGNMENT_STATUS": "APPOINTED_LIMITED_GOVERNANCE_SCOPE",
+  "appointmentEvidence": {
+    "type": "SOURCE_OWNER_MANAGEMENT_DECISION",
+    "platformAccountExistence": "NOT_VERIFIED",
+    "emailOwnership": "NOT_INDEPENDENTLY_VERIFIED",
+    "runtimePrincipalMapping": "NOT_VERIFIED",
+    "otherMikeAccountsLinked": false,
+    "credentialAccessImplied": false
+  },
+  "allowedInitialDuties": [
+    "NON_SENSITIVE_CREDENTIAL_INVENTORY_MANAGEMENT",
+    "PERMISSION_GOVERNANCE_PLANNING",
+    "EXPIRY_AND_ROTATION_PROCEDURE_PLANNING",
+    "AUDIT_EVIDENCE_MANAGEMENT"
+  ],
+  "roleSeparation": {
+    "releaseApprover": "SOURCE_OWNER",
+    "credentialGovernanceCustodian": "MIKE_APPOINTED_LIMITED_SCOPE",
+    "engineeringExecutor": "CODEX",
+    "independentAcceptance": "CHATGPT",
+    "payrollAuthority": "INDEPENDENT_PAYROLL_SUBSYSTEM"
+  },
+  "prohibitedByAppointment": [
+    "GRANT_FORMAL_ACCOUNT_ACCESS",
+    "OAUTH_CONSENT_OR_GRANT",
+    "IAM_OR_ACL_CHANGE",
+    "READ_COPY_TRANSFER_OR_ROTATE_CREDENTIAL_VALUES",
+    "KEY_CREATION_OR_ACCESS",
+    "GATEWAY_INSTALL_OR_DEPLOY",
+    "APPS_SCRIPT_SOURCE_OR_RUNTIME_OPERATION",
+    "TRIGGER_OR_DEPLOYMENT_CHANGE",
+    "PRODUCTION_EXECUTION_OR_RECOVERY",
+    "PAYROLL_ATTENDANCE_LEAVE_OR_LINE_WRITE",
+    "GIT_MAIN_MERGE"
+  ],
+  "noAutomaticPermissionGrant": true,
+  "credentialCustodyTransferred": false,
+  "formalPlatformAccessGranted": false,
+  "effectiveGovernance": {
+    "currentStage": "Q75",
+    "supersedesQ74Only": [
+      "UNASSIGNED_CUSTODIAN_STATUS",
+      "NEXT_HUMAN_GATE_NAME_AND_SCOPE_IT_CUSTODIAN"
+    ],
+    "retainsAllOtherQ74Gates": true,
+    "priorQ74Files": "IMMUTABLE_HISTORICAL_EVIDENCE_NOT_REWRITTEN"
+  },
+  "Q74_ACCEPTANCE_REUSE": {
+    "status": "REUSED_AS_REFERENCED_BY_SOURCE_OWNER",
+    "source": "Q75 Source Owner instruction to reuse Q74 independent acceptance",
+    "rawIndependentReviewReceiptProvided": false,
+    "receiptHash": null,
+    "newQ74ReviewPerformed": false,
+    "priorEngineeringSHA": "696e628b96c57539a76494620490488cf3505275",
+    "priorCI": {
+      "url": "https://github.com/nooneknows70/abis-ess-backend/actions/runs/41766539806",
+      "sha": "696e628b96c57539a76494620490488cf3505275",
+      "conclusion": "success",
+      "attempt": 1,
+      "jobId": 126366106474
+    }
+  },
+  "Q69_Q74_PASSED_TESTS": "REUSED_NO_RERUN_REQUESTED",
+  "Q75_CI_POLICY": "DOCS_CONTRACT_ONLY_SKIP_CI_NOT_A_CI_PASS",
+  "BACKEND_161_LEGACY_CI": "FAIL_UNRESOLVED",
+  "FULL_DEPLOYMENT_ID_INDEPENDENT_PIN": "NOT_VERIFIED",
+  "EFFECTIVE_OAUTH_GRANTS": "NOT_VERIFIED",
+  "TRIGGERS_CROSS_CREATOR": "NOT_VERIFIED",
+  "LATEST_PROVIDER_SOURCE_SNAPSHOT": "NOT_RECHECKED",
+  "GLOBAL_GATEWAY_INSTALLED": "NO",
+  "GLOBAL_LEASE_ENFORCED": "NO",
+  "Q75_RELEASE_AUTHORIZED": false,
+  "B11301_RELEASE": "HOLD",
+  "G7_GO_LIVE": "HOLD",
+  "PAYROLL_FINALIZE": "HOLD",
+  "releaseOrder": [
+    "B11301_FIRST",
+    "G7_REBASE_AFTER_ACTUAL_B11301_RELEASE"
+  ],
+  "oldQ11Apply": "SUPERSEDED_DISABLED",
+  "payroll": {
+    "repository": "nooneknows70/abis-payroll",
+    "boundary": "COMPATIBILITY_ONLY_NO_WAGE_OR_WRITE_AUTHORITY",
+    "codeChanges": 0,
+    "manifestChanges": 0,
+    "policyChanges": 0,
+    "dataWrites": 0
+  },
+  "OAUTH_OR_CREDENTIAL_CHANGE": 0,
+  "IAM_OR_ACL_CHANGE": 0,
+  "PRODUCTION_WRITES": 0,
+  "PAYROLL_WRITES": 0,
+  "LINE_SENDS": 0,
+  "GITHUB_MAIN_MERGES": 0,
+  "NEXT_HUMAN_GATE": "APPROVE_EXPLICIT_PRIVILEGED_CHANGE_SCOPE_AFTER_CUSTODIAN_PLAN",
+  "nextHumanGateDescription": "After Mike supplies a concrete evidence-backed change proposal, Source Owner separately approves or declines its exact privileged scope. No privileged change proposal is approved by Q75; current planning duties need no repeated appointment approval."
+}

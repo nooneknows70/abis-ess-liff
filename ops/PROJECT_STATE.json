@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T15:55:20.331Z",
+  "updatedAt": "2026-11-02T20:33:58+08:00",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -2195,6 +2195,272 @@
       "prodCurrentPromoted": true,
       "r2174Performance": "OPEN_NON_BLOCKING_SEPARATE",
       "unrelatedDeployments": "PASS_4_STABLE_IDS_OTHER_3_POINTERS_UNCHANGED_SINCE_20261025"
+    },
+    "attendanceR4Q63CrossRepoReadOnlyHandoff": {
+      "recordedDate": "2026-11-02",
+      "referenceBackend": "nooneknows70/abis-ess-backend",
+      "referenceBackendSsotDraft": "https://github.com/nooneknows70/abis-ess-backend/pull/161",
+      "centralSsotDraft": "https://github.com/nooneknows70/abis-release-control/pull/23",
+      "evidence": "https://github.com/nooneknows70/abis-ess-backend/pull/126#issuecomment-6576030096",
+      "stageEvent": "Q63_REAL_GOOGLE_SYNTHETIC_ONLY_COMMITTED_POSTREADBACK_15_15_PASS",
+      "frontendChange": "NONE",
+      "frontendSourceFilesChanged": 0,
+      "frontendReleaseManifestChanged": false,
+      "frontendGoLive": false,
+      "liffManifestAuthority": "V153_PROD_CURRENT_FRONTEND",
+      "liffMainAtCheck": "40c72af42fe7dba80bcd5eb4fd38c63769520640",
+      "backendActualOwnerObserved": "@173_PHASE1A_UI_ONLY",
+      "backendLastAuditedProdCurrent": "@170",
+      "formalR4Compat": "NOT_VERIFIED_NO_FRONTEND_WIRE",
+      "formalR4GoLive": "HOLD",
+      "q34FormalMasterCorrection": "0_3_HOLD",
+      "beforeDigestExternalAudit": "HOLD_NOT_REPRODUCED",
+      "sourceReLock": "Q64_PASS_OWNER_EDITOR_SCREENSHOT_ENABLED_FALSE_SAVED",
+      "q63NoReplay": true,
+      "independentG7State": "NO_CHANGE_PR35_DRAFT_HOLD",
+      "nextAction": "RETAIN_LIFF_V153_AND_NO_DEPLOY_UNTIL_BACKEND_FORMAL_R4_PROVIDER_AND_SEPARATE_FRONTEND_COMPAT_GATE_PASS",
+      "stageSafetyCloseout": "Q48_Q63_SYNTHETIC_STAGE_CLOSED_OWNER_RELOCK__PRODUCTION_HOLD",
+      "zeroTriggerDeployment": "Q62_OWNER_UI_ZERO_Q64_OWNER_ATTESTED_ZERO_NO_POST_TRANSACTION_DIRECT_API",
+      "afterRelockSheetReadback": "PASS_COMMITTED_SPENT_COMMITTED_RUNCOUNT1_NON_TARGET_HR_CANARY_UNCHANGED"
+    },
+    "q73ReleaseSafety": {
+      "schema": "ABIS_Q73_CROSS_REPO_COMPATIBILITY_V1",
+      "scope": "DRAFT_ONLY_HERMETIC_ENGINEERING",
+      "backendPR": "https://github.com/nooneknows70/abis-ess-backend/pull/158",
+      "centralPR": "https://github.com/nooneknows70/abis-release-control/pull/26",
+      "backendSSOTPR": "https://github.com/nooneknows70/abis-ess-backend/pull/161",
+      "liffSSOTPR": "https://github.com/nooneknows70/abis-ess-liff/pull/36",
+      "priorCentralPR": "https://github.com/nooneknows70/abis-release-control/pull/23",
+      "productionBackend": "173_LAST_OWNER_OBSERVED_PHASE1A_ONLY",
+      "lastFullyAuditedBackend": 170,
+      "liffManifest": 153,
+      "releaseOrder": [
+        "B11301_FIRST",
+        "G7_REBASE_AFTER_ACTUAL_B11301_RELEASE"
+      ],
+      "oldQ11Apply": "SUPERSEDED_DISABLED",
+      "globalLease": "UNENFORCEABLE_HOLD_NOT_INSTALLED",
+      "deploymentIdPin": "NOT_VERIFIED",
+      "effectiveOAuthGrants": "NOT_VERIFIED",
+      "crossCreatorTriggers": "NOT_VERIFIED",
+      "B11301_RELEASE": "HOLD",
+      "G7_GO_LIVE": "HOLD",
+      "PAYROLL_FINALIZE": "HOLD",
+      "payroll": {
+        "repository": "nooneknows70/abis-payroll",
+        "scope": "COMPATIBILITY_CONTRACT_ONLY",
+        "codeChanges": 0,
+        "manifestChanges": 0,
+        "policyChanges": 0,
+        "dataWrites": 0
+      },
+      "Q69_Q72": "OWNER_REPORTED_HISTORICAL_REUSED_NO_REMOTE_RERUN",
+      "Q14_Q16": "PRIOR_EVIDENCE_REUSED_NO_REPLAY",
+      "productionWrites": 0,
+      "businessWrites": 0,
+      "payrollWrites": 0,
+      "lineSends": 0,
+      "mainMerges": 0,
+      "nextManagementGate": "Q74_BOUNDED_SAFETY_EVIDENCE_AND_RELEASE_ACCESS_GOVERNANCE_REVIEW_ONLY",
+      "backendSourceSHA": "889679c4cbd01904d6a4bb88f4579f22220fe92c",
+      "Q73_DRAFT_ENGINEERING": "PASS",
+      "localTests": {
+        "passed": 103,
+        "total": 103,
+        "failed": 0
+      },
+      "Q73_CI": {
+        "url": "https://github.com/nooneknows70/abis-ess-backend/actions/runs/41746151208",
+        "headSHA": "889679c4cbd01904d6a4bb88f4579f22220fe92c",
+        "conclusion": "success",
+        "attempt": 1,
+        "jobId": 126299533902,
+        "tests": 103,
+        "passed": 103,
+        "failed": 0,
+        "skipped": 0
+      },
+      "independentChatGPTAcceptance": "PENDING"
+    },
+    "q74ReleaseGovernance": {
+      "schema": "ABIS_Q74_GOVERNANCE_CONTRACT_V1",
+      "Q74_AUTHORITY": "Q74_A_COMPANY_CENTRAL_GOVERNANCE",
+      "scope": "DRAFT_DESIGN_NON_SENSITIVE_METADATA_HERMETIC_ONLY",
+      "Q74_SOURCE_BASELINE_PIN": {
+        "central26": "68ce1c118c67129a2c3ffbeedd04fc1f39d08c92",
+        "backend158": "889679c4cbd01904d6a4bb88f4579f22220fe92c",
+        "backend161": "014edc469db1cfeb0aaf857743d189ac02672d33",
+        "liff36": "c3acbfe171c46297e94cecb636e02365e2946034"
+      },
+      "authorityMainAtObservation": {
+        "abis-release-control": "0e0a8b0a6ddb131378ff3294b4ed2b769e7106a8",
+        "abis-ess-backend": "b1811f346fe76b0e4cc68a468e391b771176616d",
+        "abis-ess-liff": "f056dd2e7f84201ac1a0e4a55ee1d4c8408aba94"
+      },
+      "Q74_GOVERNANCE_SPEC": "PASS",
+      "Q74_GOVERNANCE_SPEC_DRAFT": "PASS",
+      "Q74_CREDENTIAL_METADATA_INVENTORY": "PASS_WITH_UNKNOWN",
+      "Q74_SYNTHETIC_DESIGN": "PASS",
+      "Q74_HERMETIC_TESTS": {
+        "pass": 58,
+        "total": 58,
+        "fail": 0,
+        "skipped": 0
+      },
+      "Q74_EXACT_HEAD_CI": {
+        "url": "https://github.com/nooneknows70/abis-ess-backend/actions/runs/41766539806",
+        "sha": "696e628b96c57539a76494620490488cf3505275",
+        "conclusion": "success",
+        "attempt": 1,
+        "jobId": 126366106474
+      },
+      "Q73_PREVIOUS_EVIDENCE": {
+        "sha": "889679c4cbd01904d6a4bb88f4579f22220fe92c",
+        "run": 41746151208,
+        "tests": "103/103_PRIOR_SYNTHETIC_PASS_NOT_RELABELLED_AS_Q74"
+      },
+      "IT_NAMED_CUSTODIAN": "UNASSIGNED",
+      "EFFECTIVE_OAUTH_GRANTS": "NOT_VERIFIED",
+      "TRIGGERS_CROSS_CREATOR": "NOT_VERIFIED",
+      "FULL_DEPLOYMENT_ID_INDEPENDENT_PIN": "NOT_VERIFIED",
+      "GLOBAL_GATEWAY_INSTALLED": "NO",
+      "GLOBAL_LEASE_ENFORCED": "NO",
+      "BACKEND_161_LEGACY_CI": "FAIL_UNRESOLVED",
+      "Q74_RELEASE_AUTHORIZED": false,
+      "B11301_RELEASE": "HOLD",
+      "G7_GO_LIVE": "HOLD",
+      "PAYROLL_FINALIZE": "HOLD",
+      "releaseOrder": [
+        "B11301_FIRST",
+        "G7_REBASE_AFTER_ACTUAL_B11301_RELEASE"
+      ],
+      "oldQ11Apply": "SUPERSEDED_DISABLED",
+      "payroll": {
+        "repository": "nooneknows70/abis-payroll",
+        "boundary": "FUTURE_UNBOUND_INTERFACE_COMPATIBILITY_ONLY",
+        "codeChanges": 0,
+        "manifestChanges": 0,
+        "policyChanges": 0,
+        "dataWrites": 0
+      },
+      "GLOBAL_CUSTODY_ASSIGNED": false,
+      "OAUTH_OR_CREDENTIAL_CHANGE": 0,
+      "PRODUCTION_WRITES": 0,
+      "sourceWrite": 0,
+      "sourceWriteDefinition": "PRODUCTION_APPS_SCRIPT_SOURCE",
+      "BUSINESS_DATA_WRITES": 0,
+      "LINE_SENDS": 0,
+      "GITHUB_MAIN_MERGES": 0,
+      "NEXT_HUMAN_GATE": "NAME_AND_SCOPE_IT_CUSTODIAN",
+      "independentChatGPTAcceptance": "PENDING"
+    },
+    "q75CustodianAppointment": {
+      "schema": "ABIS_Q75_LIMITED_CUSTODIAN_APPOINTMENT_V1",
+      "decisionId": "Q75_SOURCE_OWNER_NAMED_IT_CREDENTIAL_CUSTODIAN",
+      "decisionDateTaipei": "2026-11-04",
+      "source": "Source Owner explicit Q75 user instruction",
+      "authority": "SOURCE_OWNER",
+      "governanceArchitecture": "Q74_A_COMPANY_CENTRAL_GOVERNANCE",
+      "IT_NAMED_CUSTODIAN": {
+        "name": "Mike",
+        "companyEmail": "mike@abis-it.com"
+      },
+      "IT_CUSTODIAN_ASSIGNMENT_STATUS": "APPOINTED_LIMITED_GOVERNANCE_SCOPE",
+      "appointmentEvidence": {
+        "type": "SOURCE_OWNER_MANAGEMENT_DECISION",
+        "platformAccountExistence": "NOT_VERIFIED",
+        "emailOwnership": "NOT_INDEPENDENTLY_VERIFIED",
+        "runtimePrincipalMapping": "NOT_VERIFIED",
+        "otherMikeAccountsLinked": false,
+        "credentialAccessImplied": false
+      },
+      "allowedInitialDuties": [
+        "NON_SENSITIVE_CREDENTIAL_INVENTORY_MANAGEMENT",
+        "PERMISSION_GOVERNANCE_PLANNING",
+        "EXPIRY_AND_ROTATION_PROCEDURE_PLANNING",
+        "AUDIT_EVIDENCE_MANAGEMENT"
+      ],
+      "roleSeparation": {
+        "releaseApprover": "SOURCE_OWNER",
+        "credentialGovernanceCustodian": "MIKE_APPOINTED_LIMITED_SCOPE",
+        "engineeringExecutor": "CODEX",
+        "independentAcceptance": "CHATGPT",
+        "payrollAuthority": "INDEPENDENT_PAYROLL_SUBSYSTEM"
+      },
+      "prohibitedByAppointment": [
+        "GRANT_FORMAL_ACCOUNT_ACCESS",
+        "OAUTH_CONSENT_OR_GRANT",
+        "IAM_OR_ACL_CHANGE",
+        "READ_COPY_TRANSFER_OR_ROTATE_CREDENTIAL_VALUES",
+        "KEY_CREATION_OR_ACCESS",
+        "GATEWAY_INSTALL_OR_DEPLOY",
+        "APPS_SCRIPT_SOURCE_OR_RUNTIME_OPERATION",
+        "TRIGGER_OR_DEPLOYMENT_CHANGE",
+        "PRODUCTION_EXECUTION_OR_RECOVERY",
+        "PAYROLL_ATTENDANCE_LEAVE_OR_LINE_WRITE",
+        "GIT_MAIN_MERGE"
+      ],
+      "noAutomaticPermissionGrant": true,
+      "credentialCustodyTransferred": false,
+      "formalPlatformAccessGranted": false,
+      "effectiveGovernance": {
+        "currentStage": "Q75",
+        "supersedesQ74Only": [
+          "UNASSIGNED_CUSTODIAN_STATUS",
+          "NEXT_HUMAN_GATE_NAME_AND_SCOPE_IT_CUSTODIAN"
+        ],
+        "retainsAllOtherQ74Gates": true,
+        "priorQ74Files": "IMMUTABLE_HISTORICAL_EVIDENCE_NOT_REWRITTEN"
+      },
+      "Q74_ACCEPTANCE_REUSE": {
+        "status": "REUSED_AS_REFERENCED_BY_SOURCE_OWNER",
+        "source": "Q75 Source Owner instruction to reuse Q74 independent acceptance",
+        "rawIndependentReviewReceiptProvided": false,
+        "receiptHash": null,
+        "newQ74ReviewPerformed": false,
+        "priorEngineeringSHA": "696e628b96c57539a76494620490488cf3505275",
+        "priorCI": {
+          "url": "https://github.com/nooneknows70/abis-ess-backend/actions/runs/41766539806",
+          "sha": "696e628b96c57539a76494620490488cf3505275",
+          "conclusion": "success",
+          "attempt": 1,
+          "jobId": 126366106474
+        }
+      },
+      "Q69_Q74_PASSED_TESTS": "REUSED_NO_RERUN_REQUESTED",
+      "Q75_CI_POLICY": "DOCS_CONTRACT_ONLY_SKIP_CI_NOT_A_CI_PASS",
+      "BACKEND_161_LEGACY_CI": "FAIL_UNRESOLVED",
+      "FULL_DEPLOYMENT_ID_INDEPENDENT_PIN": "NOT_VERIFIED",
+      "EFFECTIVE_OAUTH_GRANTS": "NOT_VERIFIED",
+      "TRIGGERS_CROSS_CREATOR": "NOT_VERIFIED",
+      "LATEST_PROVIDER_SOURCE_SNAPSHOT": "NOT_RECHECKED",
+      "GLOBAL_GATEWAY_INSTALLED": "NO",
+      "GLOBAL_LEASE_ENFORCED": "NO",
+      "Q75_RELEASE_AUTHORIZED": false,
+      "B11301_RELEASE": "HOLD",
+      "G7_GO_LIVE": "HOLD",
+      "PAYROLL_FINALIZE": "HOLD",
+      "releaseOrder": [
+        "B11301_FIRST",
+        "G7_REBASE_AFTER_ACTUAL_B11301_RELEASE"
+      ],
+      "oldQ11Apply": "SUPERSEDED_DISABLED",
+      "payroll": {
+        "repository": "nooneknows70/abis-payroll",
+        "boundary": "COMPATIBILITY_ONLY_NO_WAGE_OR_WRITE_AUTHORITY",
+        "codeChanges": 0,
+        "manifestChanges": 0,
+        "policyChanges": 0,
+        "dataWrites": 0
+      },
+      "OAUTH_OR_CREDENTIAL_CHANGE": 0,
+      "IAM_OR_ACL_CHANGE": 0,
+      "PRODUCTION_WRITES": 0,
+      "PAYROLL_WRITES": 0,
+      "LINE_SENDS": 0,
+      "GITHUB_MAIN_MERGES": 0,
+      "NEXT_HUMAN_GATE": "APPROVE_EXPLICIT_PRIVILEGED_CHANGE_SCOPE_AFTER_CUSTODIAN_PLAN",
+      "nextHumanGateDescription": "After Mike supplies a concrete evidence-backed change proposal, Source Owner separately approves or declines its exact privileged scope. No privileged change proposal is approved by Q75; current planning duties need no repeated appointment approval."
     }
   },
   "leaveLabelBackendIntegration": {

@@ -14,6 +14,50 @@
 
 # ABIS ESS LIFF — Current State
 
+## 2026-11-04｜Q75 Source Owner 任命 Mike 為有限範圍 IT Credential Custodian；正式安全 Gate HOLD
+
+- Source Owner 具名指定 **Mike / mike@abis-it.com**，採 Q74=A 公司集中治理。初期職責僅：非敏感憑證清冊、權限治理規劃、到期及輪替程序規劃、稽核證據管理。
+- 任命狀態為 APPOINTED_LIMITED_GOVERNANCE_SCOPE；不代表帳號存在、Email所有權或runtime principal已獨立核實，也不與其他Mike帳號自動連結。沒有授予任何正式帳號、OAuth/IAM/ACL/金鑰、秘密保管或Production權限。
+- Q74的UNASSIGNED紀錄與原Gate保持歷史快照；目前治理以Q75新契約/Gate及ACTIVE_RELEASE_GOVERNANCE指標解析。Q74獨立驗收依本次Source Owner引用沿用，未捏造新驗收收據或重新跑Q69-Q74測試。
+- #161歷史CI **FAIL_UNRESOLVED**；完整ID獨立pin、有效OAuth、跨creator Trigger、fresh Provider HEAD仍NOT_VERIFIED；Gateway/全域租約未安裝/未強制。B11301/G7/Payroll發布均HOLD，Q11舊Apply disabled。任命不等於核薪或恢復授權。
+- 本輪僅Draft文件/契約同步，使用[skip ci]避免歷史測試重跑；不將跳過或待執行CI標PASS。既有main/正式來源/權限/Payroll/LINE均零變更；Payroll獨立Repo不動。
+- 下個唯一管理節點：Mike提出具體、有證據及精確變更清單的方案後，由Source Owner另案核准或否決正式權限/Gateway等特權變更範圍。Q75不核准這些變更；不再重問已完成的任命，日常規劃職責亦不需重複核准。
+
+## 2026-11-04｜Q74 公司集中 Release Gateway 治理 Draft 完成；正式權限與發布 HOLD
+
+- Source Owner Q74=A 僅授權治理設計、非敏感 metadata 與合成工程。IT Named Custodian **UNASSIGNED**；不得推定 Oscar、Mike、Codex 或 ChatGPT 已被任命。
+- Backend [Draft #158](https://github.com/nooneknows70/abis-ess-backend/pull/158) Q74 source `696e628b96c57539a76494620490488cf3505275`，[ONE-SHOT CI 41766539806](https://github.com/nooneknows70/abis-ess-backend/actions/runs/41766539806) attempt 1，**58/58 PASS、0 fail、0 skipped**。Q73 run 41746151208 / 103/103 是既有獨立範圍，未改列 Q74。
+- 新增未綁定 metadata/proof/grant/persistent-CAS/gateway/Payroll ports 與純 mock 三階段模型；正式方法 hard-deny。sourceWrite=0；GLOBAL_GATEWAY_INSTALLED=NO、GLOBAL_LEASE_ENFORCED=NO。Mock 不證明正式繞道封閉。
+- 中央 ADR 規範 Approver／Custodian／Engineer／Independent Reviewer 分工、七類繞道控制與秘密界線；11 項 metadata 清單僅標記可見 GitHub 欄位，其他保留 UNKNOWN/NOT_VERIFIED。沒有秘密、OAuth/IAM/ACL 或 Google Provider 操作。
+- Backend #161 Q24-Q28 舊 CI 五項均 **FAIL_UNRESOLVED**；逐項 workflow/run/job ID、失敗 guard、舊 frozen 條件、未解風險與守門建議見 Q74_BACKEND_161_LEGACY_CI_DIAGNOSIS.json。沒有修改／停用 workflow、放寬 assertion 或重跑舊 Provider。
+- 最新 main 的三方治理文件凍結 PASS 與獨立 Stage Q1-A HOLD 仍是權威；本輪只增補舊 Draft 的 Q74紀錄，保留 G7/R4/Q73 歷史與原 #23，不據此授權 main 合併。各 main SHA 記於 Q74 契約。
+- Full Deployment ID 獨立 pin、runtime OAuth、跨 creator Trigger、fresh Provider HEAD 及真正全域互斥均未證實；B11301_RELEASE / G7_GO_LIVE / PAYROLL_FINALIZE **HOLD**。先 B11301、後 G7 實際來源 rebase；Q11 舊 Apply disabled。
+- Payroll `nooneknows70/abis-payroll` 只有未來相容介面，Repo/Manifest/政策/資料零變更。正式 source/出勤/Payroll/LINE、憑證變更及 main merge 均 0。
+- **唯一下一管理節點：Source Owner 具名指定公司 IT 憑證管理責任人，並明確核准其管理範圍。** 任命本身不授權 credential/permission 調整、Gateway 安裝、發布或恢復；後者須再獨立核准。ChatGPT 精確提交獨立驗收尚待完成。
+
+## 2026-11-04｜Q73 Draft release-safety engineering PASS；Production / G7 / Payroll HOLD
+
+- Backend [Draft #158](https://github.com/nooneknows70/abis-ess-backend/pull/158) source HEAD `889679c4cbd01904d6a4bb88f4579f22220fe92c`: new isolated evidence contract, exact79/exact80 inventory gates, private in-memory full-ID comparator, runtime OAuth / cross-creator Trigger boundaries and mock CAS/fencing coordinator. No runtime handler or src/manifest edits; old Q11 Apply remains disabled.
+- Q73 ONE-SHOT [CI 41746151208](https://github.com/nooneknows70/abis-ess-backend/actions/runs/41746151208), attempt 1, exact source SHA, **103/103 PASS / 0 fail / 0 skipped**; syntax/static safety PASS. This is new synthetic behavior only. Prior Q69-Q72 and Q14/Q16 evidence is reused without provider replay. Existing broad workflows may automatically run on the branch update; none is claimed as a new Q73 test or manually rerun.
+- Central [new Draft #26](https://github.com/nooneknows70/abis-release-control/pull/26) preserves main G7 Q64-Q67 and old #23 R4 Q63/Q64. Original #23 stays open/Draft/unmerged. Backend SSOT #161 and LIFF #36 carry the identical Q73 compatibility record; historical R4 Stage closure and G7 test-principal HOLD are retained.
+- Actual full Production Deployment ID pin, effective runtime OAuth grants and cross-creator Trigger completeness remain **NOT_VERIFIED**. Mock CAS cannot block editor/other clasp/uncontrolled credentials: global release lease is **UNENFORCEABLE_HOLD / NOT_INSTALLED**. Latest provider HEAD is not re-read in Q73. All-green fixture reaches only separate management review, with releaseAuthorized=false.
+- Last owner-observed Backend @173 Phase1A scope, last fully audited @170 and LIFF Manifest V153 are distinct. B11301 first; G7 rebase after actual B11301 release; no next version reserved. Recovery preserves prewrite HEAD79 with Sheets v4 and requires separate authorization. No automated recovery.
+- Payroll is independent `nooneknows70/abis-payroll`: compatibility-only; program, Release Manifest, policy and formal data changes **0**. Production/attendance/business/Payroll/LINE writes and main merges **0**. No Google/OAuth/Trigger/Deployment operation, historical Stage or old Q11 Apply execution.
+- **Single next management gate:** after ChatGPT independent exact-commit acceptance, approve/decline Q74 bounded safety-evidence and release-access-governance review using existing private receipts and deciding ownership of the future sole Release Gateway/credential custody. This does not authorize any grant, credential change, provider execution, deployment, recovery or Payroll operation. Missing evidence stays HOLD.
+
+## 2026-11-02 20:33｜R4 Q64=A：Stage Writer 回鎖 PASS；LIFF V153 不變
+
+- Q48／Q63 單次純合成 CAS 已於 Q63 COMMITTED 且 SPENT；Source Owner Q64=A 提供 Q48 專用 Script `enabled:false`／儲存圖示，Mike Drive metadata 顯示交易後修改，**OWNER_UI_STAGE_RELOCK_PASS**。再由 Google Sheets 唯讀確認 Journal `COMMITTED`／Control `SPENT_COMMITTED`／RunCount=1，目標及 B99992／HR／Canary 不變，沒有再次執行 Writer。
+- Trigger/Deployment 的 Q62 人工畫面為 0/0，Q64 A 再次人工確認仍 0/0，但 Q64 圖片未展示清單，**不能宣稱最新獨立 API 零清單證據**。原始碼完整雲端 SHA 與 `BeforeDigest` 外部重建仍為稽核未完成。
+- **LIFF 正式功能、Manifest V153、Git main 及 G7 PR #35 完全不變**。Q48 Stage 收尾不等於 Backend 正式 R4／LIFF 相容發布 PASS；A11507 Q34 0/3 與 R4 Production HOLD 繼續保持。中央／Backend／LIFF 三個 SSOT Draft 同步但均未合併 main。
+
+## 2026-11-02｜Attendance R4 Q63 獨立合成 Stage COMMITTED；LIFF V153 不變（兼容狀態 HOLD）
+
+- Backend/Q48 真實 Google **純合成** Stage `Q48-TX-20261102-B99991-001` 單次 CAS，Source Owner 手動執行一次，Google 原生讀回 Journal `COMMITTED`、Control `SPENT_COMMITTED`／RunCount=1，目標第2/4列和非目標／HR 驗證 15/15 PASS，`AfterDigest` 外部重算 PASS；`BeforeDigest` 外部重建未核實且 Stage Script 回鎖 `enabled:false` 尚待 Owner 證據。此交易**不得重跑**。原始稽核：[Backend PR #126 Q63](https://github.com/nooneknows70/abis-ess-backend/pull/126#issuecomment-6576030096)。
+- 本 **LIFF** Repo 沒有任何 Q63 source、API contract、Manifest、UI 或部署變更。正式 Release Manifest 仍 `V153`，本 Repo Git `main` `40c72af4...`。Backend 最新運行 Owner 讀回 `@173` 為獨立 Phase1A UI Scope、最後稽核 PROD_CURRENT `@170`；正式 R4 尚無安全 Provider 與 LIFF 實際接線，**跨 Repo 相容性 `NOT_VERIFIED`，不能以 Q63 Stage PASS 升級 LIFF 或 R4 Production**。
+- Backend R4 [PR #126](https://github.com/nooneknows70/abis-ess-backend/pull/126) 仍 Draft 未合併，B11301 [PR #158](https://github.com/nooneknows70/abis-ess-backend/pull/158) 需優先。G7 LIFF [PR #35](https://github.com/nooneknows70/abis-ess-liff/pull/35) 仍 Draft/未發布，互不影響；Payroll、LINE、正式請假與出勤零更動。
+- 只同步候選文件／SSOT，**不更改 LIFF Manifest、不合併 main、不進行任何實際正式發布**。後續依 Backend R4 正式 bounded provider 設計與獨立 Release Flow V2 相容性 Gate 判定。
+
 ## ABIS_ESS_V169_LEAVE_APPROVAL_LABEL_CLOSED_PASS_RECONCILED — FINAL VERIFY reconciled, 2026-10-27
 
 - Source Owner @169 original Production Deployment ID, immutable @169, HEAD, and Git source **79/79 PASS**, manager button **核准申請** UI PASS, published frontend asset and post-release web app api/doGet completed.
