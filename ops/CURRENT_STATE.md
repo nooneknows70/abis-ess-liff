@@ -1,5 +1,17 @@
 # ABIS ESS LIFF — Current State
 
+## 2026-11-04｜Q74 公司集中 Release Gateway 治理 Draft 完成；正式權限與發布 HOLD
+
+- Source Owner Q74=A 僅授權治理設計、非敏感 metadata 與合成工程。IT Named Custodian **UNASSIGNED**；不得推定 Oscar、Mike、Codex 或 ChatGPT 已被任命。
+- Backend [Draft #158](https://github.com/nooneknows70/abis-ess-backend/pull/158) Q74 source `696e628b96c57539a76494620490488cf3505275`，[ONE-SHOT CI 41766539806](https://github.com/nooneknows70/abis-ess-backend/actions/runs/41766539806) attempt 1，**58/58 PASS、0 fail、0 skipped**。Q73 run 41746151208 / 103/103 是既有獨立範圍，未改列 Q74。
+- 新增未綁定 metadata/proof/grant/persistent-CAS/gateway/Payroll ports 與純 mock 三階段模型；正式方法 hard-deny。sourceWrite=0；GLOBAL_GATEWAY_INSTALLED=NO、GLOBAL_LEASE_ENFORCED=NO。Mock 不證明正式繞道封閉。
+- 中央 ADR 規範 Approver／Custodian／Engineer／Independent Reviewer 分工、七類繞道控制與秘密界線；11 項 metadata 清單僅標記可見 GitHub 欄位，其他保留 UNKNOWN/NOT_VERIFIED。沒有秘密、OAuth/IAM/ACL 或 Google Provider 操作。
+- Backend #161 Q24-Q28 舊 CI 五項均 **FAIL_UNRESOLVED**；逐項 workflow/run/job ID、失敗 guard、舊 frozen 條件、未解風險與守門建議見 Q74_BACKEND_161_LEGACY_CI_DIAGNOSIS.json。沒有修改／停用 workflow、放寬 assertion 或重跑舊 Provider。
+- 最新 main 的三方治理文件凍結 PASS 與獨立 Stage Q1-A HOLD 仍是權威；本輪只增補舊 Draft 的 Q74紀錄，保留 G7/R4/Q73 歷史與原 #23，不據此授權 main 合併。各 main SHA 記於 Q74 契約。
+- Full Deployment ID 獨立 pin、runtime OAuth、跨 creator Trigger、fresh Provider HEAD 及真正全域互斥均未證實；B11301_RELEASE / G7_GO_LIVE / PAYROLL_FINALIZE **HOLD**。先 B11301、後 G7 實際來源 rebase；Q11 舊 Apply disabled。
+- Payroll `nooneknows70/abis-payroll` 只有未來相容介面，Repo/Manifest/政策/資料零變更。正式 source/出勤/Payroll/LINE、憑證變更及 main merge 均 0。
+- **唯一下一管理節點：Source Owner 具名指定公司 IT 憑證管理責任人，並明確核准其管理範圍。** 任命本身不授權 credential/permission 調整、Gateway 安裝、發布或恢復；後者須再獨立核准。ChatGPT 精確提交獨立驗收尚待完成。
+
 ## 2026-11-04｜Q73 Draft release-safety engineering PASS；Production / G7 / Payroll HOLD
 
 - Backend [Draft #158](https://github.com/nooneknows70/abis-ess-backend/pull/158) source HEAD `889679c4cbd01904d6a4bb88f4579f22220fe92c`: new isolated evidence contract, exact79/exact80 inventory gates, private in-memory full-ID comparator, runtime OAuth / cross-creator Trigger boundaries and mock CAS/fencing coordinator. No runtime handler or src/manifest edits; old Q11 Apply remains disabled.

@@ -1,0 +1,127 @@
+{
+  "schema": "ABIS_Q74_GOVERNANCE_CONTRACT_V1",
+  "observedAt": "2026-11-04T03:22:01Z",
+  "source": "Exact GitHub PR/CI job logs and safe metadata; no Google/API credential interrogation",
+  "confidence": "DRAFT_SOURCE_AND_HERMETIC_CI_ONLY",
+  "receiptHash": null,
+  "verifiedBy": "Codex; independent ChatGPT acceptance pending",
+  "Q74_AUTHORITY": "Q74_A_COMPANY_CENTRAL_GOVERNANCE",
+  "scope": "DRAFT_DESIGN_NON_SENSITIVE_METADATA_HERMETIC_ONLY",
+  "Q74_SOURCE_BASELINE_PIN": {
+    "central26": "68ce1c118c67129a2c3ffbeedd04fc1f39d08c92",
+    "backend158": "889679c4cbd01904d6a4bb88f4579f22220fe92c",
+    "backend161": "014edc469db1cfeb0aaf857743d189ac02672d33",
+    "liff36": "c3acbfe171c46297e94cecb636e02365e2946034"
+  },
+  "authorityMainAtObservation": {
+    "abis-release-control": "0e0a8b0a6ddb131378ff3294b4ed2b769e7106a8",
+    "abis-ess-backend": "b1811f346fe76b0e4cc68a468e391b771176616d",
+    "abis-ess-liff": "f056dd2e7f84201ac1a0e4a55ee1d4c8408aba94"
+  },
+  "Q74_GOVERNANCE_SPEC": "PASS",
+  "Q74_GOVERNANCE_SPEC_DRAFT": "PASS",
+  "Q74_CREDENTIAL_METADATA_INVENTORY": "PASS_WITH_UNKNOWN",
+  "Q74_SYNTHETIC_DESIGN": "PASS",
+  "Q74_HERMETIC_TESTS": {
+    "pass": 58,
+    "total": 58,
+    "fail": 0,
+    "skipped": 0
+  },
+  "Q74_EXACT_HEAD_CI": {
+    "url": "https://github.com/nooneknows70/abis-ess-backend/actions/runs/41766539806",
+    "sha": "696e628b96c57539a76494620490488cf3505275",
+    "conclusion": "success",
+    "attempt": 1,
+    "jobId": 126366106474
+  },
+  "Q73_PREVIOUS_EVIDENCE": {
+    "sha": "889679c4cbd01904d6a4bb88f4579f22220fe92c",
+    "run": 41746151208,
+    "tests": "103/103_PRIOR_SYNTHETIC_PASS_NOT_RELABELLED_AS_Q74"
+  },
+  "IT_NAMED_CUSTODIAN": "UNASSIGNED",
+  "EFFECTIVE_OAUTH_GRANTS": "NOT_VERIFIED",
+  "TRIGGERS_CROSS_CREATOR": "NOT_VERIFIED",
+  "FULL_DEPLOYMENT_ID_INDEPENDENT_PIN": "NOT_VERIFIED",
+  "GLOBAL_GATEWAY_INSTALLED": "NO",
+  "GLOBAL_LEASE_ENFORCED": "NO",
+  "BACKEND_161_LEGACY_CI": "FAIL_UNRESOLVED",
+  "Q74_RELEASE_AUTHORIZED": false,
+  "B11301_RELEASE": "HOLD",
+  "G7_GO_LIVE": "HOLD",
+  "PAYROLL_FINALIZE": "HOLD",
+  "releaseOrder": [
+    "B11301_FIRST",
+    "G7_REBASE_AFTER_ACTUAL_B11301_RELEASE"
+  ],
+  "oldQ11Apply": "SUPERSEDED_DISABLED",
+  "payroll": {
+    "repository": "nooneknows70/abis-payroll",
+    "boundary": "FUTURE_UNBOUND_INTERFACE_COMPATIBILITY_ONLY",
+    "codeChanges": 0,
+    "manifestChanges": 0,
+    "policyChanges": 0,
+    "dataWrites": 0
+  },
+  "GLOBAL_CUSTODY_ASSIGNED": false,
+  "OAUTH_OR_CREDENTIAL_CHANGE": 0,
+  "PRODUCTION_WRITES": 0,
+  "sourceWrite": 0,
+  "sourceWriteDefinition": "PRODUCTION_APPS_SCRIPT_SOURCE",
+  "BUSINESS_DATA_WRITES": 0,
+  "LINE_SENDS": 0,
+  "GITHUB_MAIN_MERGES": 0,
+  "NEXT_HUMAN_GATE": "NAME_AND_SCOPE_IT_CUSTODIAN",
+  "independentChatGPTAcceptance": "PENDING",
+  "HOLD_MATRIX": [
+    {
+      "id": "NAMED_IT_CUSTODIAN",
+      "status": "UNASSIGNED",
+      "needed": "Source Owner names person and approves precise scope; no installation permission inferred"
+    },
+    {
+      "id": "RUNTIME_OAUTH_AND_PRINCIPAL",
+      "status": "NOT_VERIFIED",
+      "needed": "Original effective-grant and execution-principal metadata; requested/manifest/CLI/connector facts do not suffice"
+    },
+    {
+      "id": "FULL_DEPLOYMENT_ID_PIN",
+      "status": "NOT_VERIFIED",
+      "needed": "Two independent complete private observations and safe proof; Q73/Q74 use synthetic IDs only"
+    },
+    {
+      "id": "TRIGGER_ALL_CREATORS",
+      "status": "NOT_VERIFIED",
+      "needed": "Known creators with traceable per-creator receipts and no unknown set; preserve failed R4 risk"
+    },
+    {
+      "id": "DURABLE_CAS_AND_ALL_BYPASSES",
+      "status": "NO_ENFORCEMENT_INSTALLED",
+      "needed": "Later independently authorized custody/access controls and unique gateway; memory CAS cannot close external writers"
+    },
+    {
+      "id": "LATEST_PROVIDER_HEAD_AND_RECOVERY",
+      "status": "NOT_RECHECKED_NOT_AUTHORIZED",
+      "needed": "Before later write, fresh exact HEAD79 and safe prewrite receipt; separate recovery approval; no replay of old passed checks now"
+    },
+    {
+      "id": "BACKEND_161_HISTORICAL_WORKFLOWS",
+      "status": "FAIL_UNRESOLVED",
+      "needed": "Preserve five failure receipts and gates; frozen-baseline explanation is not a waiver"
+    },
+    {
+      "id": "INDEPENDENT_ACCEPTANCE",
+      "status": "PENDING",
+      "needed": "ChatGPT reviews exact Draft commits, new CI and failure matrix"
+    }
+  ],
+  "observedMetadataAssets": 11,
+  "unverifiedMetadataAssets": 7,
+  "notes": [
+    "Repository permission flags describe only current connection; no IT appointment or Google authority inferred.",
+    "Existing broad PR path filters may automatically execute old offline workflows; no manual historical rerun, credential/Google call or closed Stage replay was requested.",
+    "Current main tripartite governance and separate Stage Q1-A HOLD remain authoritative; these older Drafts do not supersede main or authorize merge.",
+    "No old workflow/guard/assertion was edited, disabled or relaxed."
+  ]
+}
