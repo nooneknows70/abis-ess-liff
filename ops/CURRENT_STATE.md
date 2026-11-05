@@ -1,3 +1,14 @@
+## 2026-11-06｜LIFF #39 candidate / Draft PR #40 CI receipt
+
+- Draft PR: https://github.com/nooneknows70/abis-ess-liff/pull/40 。未 merge、未 Pages 發布；Backend paired Issue #173 Index wiring candidate 進行中。
+- CI-tested implementation commit: `2e8afa5a9ab29fcc3e2cb6020ba900c81ef89eb5`。
+- Dedicated CI: https://github.com/nooneknows70/abis-ess-liff/actions/runs/42126485660 （attempt 1，SUCCESS，23/23 PASS，0 failed / 0 skipped）。
+- 本回執僅改 ops；adapter / base bundle / tests / workflow exact carry-forward，不因 docs delta 重跑 CI。
+- Asset blob `58085324e443c24c4bd5ab6eca3ec289172f29d0`；SHA-256 `36775a9d7d39bc4662f1f6e1f373fd5d441ac301596493e36454757510f67076`。
+- Base bundle blob before/after `24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b`。
+- NEXT_GATE=`HRLB_V1_1_1_LIFF_ADAPTER_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED`。
+- Production mutations=0；real business writes=0；既有 Backend @174 / Stage / 63/63 / 34/34 carry-forward；不修改 release manifest、不宣稱 asset 已 HTTP 發布。
+
 ## 2026-11-06｜HRLB V1.1.1 versioned frontend entry candidate
 
 - SSOT: LIFF #39 / Backend #173. Source Owner A consumed; engineering only, no merge/Pages publish/Production release.

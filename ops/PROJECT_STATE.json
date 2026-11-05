@@ -2245,9 +2245,20 @@
       "passed": 23,
       "failed": 0
     },
-    "status": "LOCAL_TARGETED_PASS_REMOTE_CI_PENDING",
+    "status": "TARGETED_CI_PASS_DRAFT_ACCEPTANCE_REQUIRED",
     "productionMutations": 0,
     "realBusinessWrites": 0,
-    "nextGate": "HRLB_V1_1_1_LIFF_ADAPTER_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED"
+    "nextGate": "HRLB_V1_1_1_LIFF_ADAPTER_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED",
+    "pullRequest": 40,
+    "ciTestedImplementationCommit": "2e8afa5a9ab29fcc3e2cb6020ba900c81ef89eb5",
+    "dedicatedCI": {
+      "runId": 42126485660,
+      "attempt": 1,
+      "conclusion": "success",
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "receiptDelta": "OPS_ONLY_EXACT_CODE_TEST_WORKFLOW_CARRY_FORWARD"
   }
 }
