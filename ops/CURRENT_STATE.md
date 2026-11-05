@@ -1,3 +1,15 @@
+## 2026-11-06｜HRLB V1.1.1 versioned frontend entry candidate
+
+- SSOT: LIFF #39 / Backend #173. Source Owner A consumed; engineering only, no merge/Pages publish/Production release.
+- Fetched BASE `3b056bef26a45f4d10b17943fdebc00e7fd451df`; fresh branch `feat/hrlb-v1-1-1-ui-entry-20261106`.
+- Add `assets/ess-20261106-hrlb-v1-1-ui-entry/abis-hrlb-ui-entry.js`; blob `58085324e443c24c4bd5ab6eca3ec289172f29d0`; SHA-256 `36775a9d7d39bc4662f1f6e1f373fd5d441ac301596493e36454757510f67076`.
+- Legacy bundle remains exact blob `24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b`. No rebuild. Release manifest unchanged; asset path is a candidate and not published authority.
+- Accepted Backend HRLB interaction block is byte-exact; adapter wraps only management/panel/navigation integration and delegates all other tools. Missing prerequisites/anchor drift/duplicate load fail closed without replacing existing renderer.
+- Actual full legacy bundle + adapter synthetic tests: local 23/23 PASS (including actual account renderer/click navigation, roles/order/panel, preview/modal/double-submit/same-ID recovery, all old tools). All network calls forbidden except in-memory fake HRLB transport; no real API calls.
+- Dedicated CI pending first branch push; ops-only receipt will carry forward exact tested source and not rerun.
+- Backend @174 and existing backend Stage/63/63/34/34 = CARRY_FORWARD_PASS, not rerun. Production mutations / real business writes = 0.
+- NEXT_GATE=`HRLB_V1_1_1_LIFF_ADAPTER_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED`; paired Backend Index wiring follows candidate delivery, no deployment.
+
 ## 2026-11-05｜DELTA_ONLY V1.1：六 Repo + 能力分級隔離正式凍結
 
 - Source Owner 擴充治理範圍：`ABIS_CRM` 正式納入中央跨 Repo SSOT，ABIS 員工／CRM 相關治理由原 5 Repo 改為 **6 Repo**。
