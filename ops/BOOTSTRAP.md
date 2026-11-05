@@ -1,5 +1,13 @@
 # abis-ess-liff Cross-Window Bootstrap
 
+## Active human-gate and isolation governance
+
+- Policy: `ABIS_HUMAN_GATE_DELTA_ONLY_V1_1_20261105`
+- Path: `docs/governance/ABIS_HUMAN_GATE_DELTA_ONLY_V1_1_20261105.md`
+- Rule: reuse accepted evidence; machine-verifiable facts are not retyped by humans.
+- Isolation: capability-based. I0 offline/static = no isolation; I1 bounded READ_ONLY = no separate account required when fail-closed and target-pinned; I2 synthetic writes = pinned synthetic resources and reusable approved Stage; I3 formal mutation/privilege/external effect = human gate.
+- Do not recreate test accounts, Apps Script projects, workbooks, or Stage resources unless the actual capability/risk boundary changed.
+
 ## Mandatory read order
 
 1. Frozen policy: `nooneknows70/abis-release-control/ABIS_MULTI_REPO_CROSS_WINDOW_SSOT_POLICY_FROZEN.md`
