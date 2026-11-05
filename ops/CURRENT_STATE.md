@@ -1,3 +1,11 @@
+## 2026-11-05｜DELTA_ONLY V1.1：六 Repo + 能力分級隔離正式凍結
+
+- Source Owner 擴充治理範圍：`ABIS_CRM` 正式納入中央跨 Repo SSOT，ABIS 員工／CRM 相關治理由原 5 Repo 改為 **6 Repo**。
+- `ABIS_HUMAN_GATE_DELTA_ONLY_V1_1_20261105` 取代 `ABIS_HUMAN_GATE_DELTA_ONLY_V1_20261105`。已確認且未 drift 的事實維持 `CARRY_FORWARD_PASS`；機器可驗證者不得重複人工輸入。
+- 隔離測試改為 **capability-based**：I0 離線／靜態免隔離；I1 bounded READ_ONLY 不強制獨立帳號；I2 合成寫入只要求資源邊界，既有合格 Stage／帳號／Script／Workbook 可重用；只有 I3 正式 mutation／擴權／外發才要求強人工 Gate 與完整正式安全控制。
+- 純輸入錯誤、fresh nonce 重試、既有隔離證據 carry-forward 均不得觸發重建帳號／專案／工作簿。只針對實際 drift 的依賴重驗。
+- 本次僅治理與 SSOT 文件同步；不修改 Production、Deployment、OAuth、Trigger、Payroll、Attendance、Leave、Raw Punch、CRM 正式業務資料或外部發送。中央政策：`docs/governance/ABIS_HUMAN_GATE_DELTA_ONLY_V1_1_20261105.md`。
+
 ## 2026-11-05｜DELTA_ONLY_V1 人工 Gate 治理正式凍結；五 Repo 同步
 
 - Source Owner 已核准並凍結 `ABIS_HUMAN_GATE_DELTA_ONLY_V1_20261105`：人工確認改為 **delta-only**。已被可追溯證據確認、且相關依賴未 drift 的事實一律 `CARRY_FORWARD_PASS`；機器可由 Git／JSON／hash／Manifest／provider readback／ACL metadata 等確認者，不得改成人工重複輸入。
