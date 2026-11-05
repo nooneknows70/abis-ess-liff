@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-10-26T15:55:20.331Z",
+  "updatedAt": "2026-11-05",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -2220,5 +2220,16 @@
     "productionRelease": "HOLD_NOT_AUTHORIZED",
     "githubFreezeAuthority": "nooneknows70/abis-release-control/ops/ABIS_MULTI_REPO_SSOT.json#tripartiteDeliveryGovernance",
     "documentationMergeAuthorization": "SOURCE_OWNER_APPROVED_STAGE_Q1_A_2026-11-04"
+  },
+  "humanGateGovernance": {
+    "id": "ABIS_HUMAN_GATE_DELTA_ONLY_V1_1_20261105",
+    "status": "FROZEN_SOURCE_OWNER_APPROVED",
+    "registeredRepoCount": 6,
+    "includesABISCRM": true,
+    "isolationModel": "CAPABILITY_BASED",
+    "evidenceCarryForward": true,
+    "readOnlySeparateAccountRequired": false,
+    "syntheticStageReuseAllowed": true,
+    "formalMutationHumanGateRequired": true
   }
 }
