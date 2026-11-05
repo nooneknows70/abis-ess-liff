@@ -1,3 +1,10 @@
+## 2026-11-05｜DELTA_ONLY_V1 人工 Gate 治理正式凍結；五 Repo 同步
+
+- Source Owner 已核准並凍結 `ABIS_HUMAN_GATE_DELTA_ONLY_V1_20261105`：人工確認改為 **delta-only**。已被可追溯證據確認、且相關依賴未 drift 的事實一律 `CARRY_FORWARD_PASS`；機器可由 Git／JSON／hash／Manifest／provider readback／ACL metadata 等確認者，不得改成人工重複輸入。
+- One-shot 為預設：沿用未受影響的有效 PASS，剩餘 READ_ONLY／offline／synthetic／static checks 集中執行，只在**新的正式 mutation、權限擴張、Deployment／Trigger／OAuth／外發、授權範圍擴大或 material drift**時建立新人工 Gate。單純時間經過、新對話、新 Runner 或輸入格式錯誤不是重驗理由。
+- 純輸入錯誤若已證明 `mutationUnlocked=false`、`releaseContinued=false` 且所有 Production/source/schema/version/deployment/property/trigger/business/Payroll/Raw Punch/external-send writes 均為 0，分類為 `PRE_MUTATION_INPUT_HOLD`，允許 fresh attempt + fresh nonce，直接沿用上游 PASS；不得刪除 spent ledger，mutation 狀態不明則維持 HOLD。
+- 本次僅治理文件／SSOT 同步；**不修改程式、Release Manifest、Production、Deployment、OAuth、Trigger、Payroll、Attendance、Leave、Raw Punch、LINE 或其他業務資料**。中央權威文件：`docs/governance/ABIS_HUMAN_GATE_DELTA_ONLY_V1_20261105.md`。
+
 ## 2026-11-04｜Source Owner 授權文件專用合併；凍結結果由中央合併後讀回認列
 
 - 本 Repo 的治理文件已獲本輪明確合併授權；程式、Release Manifest、版本、Deployment、OAuth、Trigger 與業務資料不在範圍。先前 dated handoff 的 Draft／REPO_SYNC_PENDING 是歷史階段，不作為合併後最新判定。
