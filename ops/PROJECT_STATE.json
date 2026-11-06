@@ -2285,5 +2285,24 @@
     "nonHrAdminVisibility": "ABSENT_BY_ACCEPTED_ROLE_GATE",
     "forbiddenWrites": 0,
     "evidence": "ops/evidence/HRLB_V1_1_1_PRODUCTION_UI_ENTRY_FINAL_VERIFY_20261106.json"
+  },
+  "hrlbV112UiRecovery": {
+    "issue": 41,
+    "backendIssue": 176,
+    "base": "0c649d848704311e35b14003a9e8f15e1fc8fecb",
+    "branch": "fix/hrlb-v1-1-2-ui-recovery-20261106",
+    "asset": "assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js",
+    "blob": "2b003401f7060d8702c169e26eec4f16cd5009c4",
+    "sha256": "2af7448b3cbd9a8faffa6941d8bfbb5c01e8661f3b875bd41493b5caa53dbff9",
+    "localUiTests": 36,
+    "localBackendTests": 23,
+    "localPairedTests": 59,
+    "status": "LOCAL_PAIRED_PASS_REMOTE_CI_PENDING",
+    "recovery": "STATUS_ONLY_SAME_REQUEST_NO_SECOND_ONECLICK",
+    "productionCalls": 0,
+    "productionMutations": 0,
+    "realRecoveryExecutions": 0,
+    "realBusinessWrites": 0,
+    "nextGate": "HRLB_V1_1_2_UI_RECOVERY_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED"
   }
 }
