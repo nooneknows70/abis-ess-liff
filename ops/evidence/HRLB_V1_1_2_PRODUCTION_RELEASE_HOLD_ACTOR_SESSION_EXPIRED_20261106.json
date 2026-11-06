@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0",
+  "recordedAt": "2026-11-06T22:06:48+08:00",
+  "repository": "nooneknows70/abis-ess-liff",
+  "release": "ABIS_ESS_HRLB_V1_1_2_PAIRED_PRODUCTION_RELEASE",
+  "status": "HOLD_RECOVERY_NOT_EXECUTED",
+  "finalGate": "HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD__ACTOR_SESSION_EXPIRED",
+  "pullRequest": 42,
+  "candidateHead": "7f9e2f449d770f229e407522176e96b0960db15f",
+  "mergeCommit": "27ad4d3a9bf976d6887c688ca742f91858209d93",
+  "asset": "assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js",
+  "assetBlob": "2b003401f7060d8702c169e26eec4f16cd5009c4",
+  "pages": {
+    "url": "https://nooneknows70.github.io/abis-ess-liff/assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js",
+    "httpStatus": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "contentLength": 22440,
+    "actualHttpBodySha256": "2af7448b3cbd9a8faffa6941d8bfbb5c01e8661f3b875bd41493b5caa53dbff9",
+    "htmlFallback": false,
+    "status": "PASS"
+  },
+  "pairedBackend": {
+    "repository": "nooneknows70/abis-ess-backend",
+    "issue": 176,
+    "pullRequest": 177,
+    "mergeCommit": "c3d205dfb1482ec89783b5372f2859530e234538",
+    "productionVersion": 176,
+    "rollbackVersion": 174,
+    "deploymentCount": 4,
+    "headParity": "PASS_80_80",
+    "immutableParity": "PASS_80_80",
+    "runtimeUi": "PASS",
+    "recoveryExecution": "NOT_EXECUTED_ACTOR_SESSION_EXPIRED",
+    "fullReceipt": "release/HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD_ACTOR_SESSION_EXPIRED_20261106.json"
+  },
+  "forbiddenWriteCounters": {
+    "realLeaveWrites": 0,
+    "attendanceBusinessWrites": 0,
+    "payrollWrites": 0,
+    "rawPunchWrites": 0,
+    "lineSends": 0,
+    "emailSends": 0,
+    "triggerWrites": 0,
+    "oauthChanges": 0,
+    "aclChanges": 0,
+    "advancedServiceChanges": 0,
+    "schemaChanges": 0,
+    "propertyChanges": 0,
+    "newDeploymentIds": 0
+  }
+}

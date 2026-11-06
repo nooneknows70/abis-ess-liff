@@ -1,3 +1,12 @@
+## 2026-11-06｜HRLB V1.1.2 Pages/Production released; B10601 recovery HOLD
+
+- LIFF PR #42 exact candidate `7f9e2f449d770f229e407522176e96b0960db15f` normal merge `27ad4d3a9bf976d6887c688ca742f91858209d93`.
+- Versioned Pages asset returned HTTP 200, JavaScript, 22,440-byte non-HTML body; actual response SHA-256 exact `2af7448b3cbd9a8faffa6941d8bfbb5c01e8661f3b875bd41493b5caa53dbff9`.
+- Paired Backend PR #177 normal merge `c3d205dfb1482ec89783b5372f2859530e234538`; bounded Apps Script carrier reached `@176` with HEAD/immutable 80/80 and 4 deployments.
+- Real Admin/HR UI runtime and human validation PASS. Actual read-only recovery status call returned `登入已逾時`; no recovery mutation/retry, no new RequestID/Leave/approval/Fact/Daily.
+- Production remains `@176` because runtime/UI are safe; rollback immutables preserved. Evidence: `ops/evidence/HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD_ACTOR_SESSION_EXPIRED_20261106.json`.
+- FINAL_GATE=`HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD__ACTOR_SESSION_EXPIRED`. Not project closure.
+
 ## 2026-11-06｜HRLB V1.1.2 paired one-shot candidate completion / CI receipt
 
 - Backend Issue #176 / Draft PR https://github.com/nooneknows70/abis-ess-backend/pull/177 ；LIFF Issue #41 / Draft PR https://github.com/nooneknows70/abis-ess-liff/pull/42 。同一完整候選，未 merge、未發布。

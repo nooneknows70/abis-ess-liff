@@ -2325,5 +2325,28 @@
     "b10601DuplicateLeaveCount": 0,
     "b10601DuplicateApprovalCount": 0,
     "b10205B10602EvidenceTier": "ACCEPTED_ISSUE_FACTS_IN_READ_ONLY_SYNTHETIC_FIXTURES_NO_FRESH_PRODUCTION_READBACK"
+  },
+  "hrlbV112ProductionReleaseHold": {
+    "status": "HOLD_RECOVERY_NOT_EXECUTED",
+    "finalGate": "HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD__ACTOR_SESSION_EXPIRED",
+    "issue": 41,
+    "pullRequest": 42,
+    "candidateHead": "7f9e2f449d770f229e407522176e96b0960db15f",
+    "mergeCommit": "27ad4d3a9bf976d6887c688ca742f91858209d93",
+    "asset": "assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js",
+    "assetBlob": "2b003401f7060d8702c169e26eec4f16cd5009c4",
+    "pagesHttpStatus": 200,
+    "pagesContentLength": 22440,
+    "pagesSha256": "2af7448b3cbd9a8faffa6941d8bfbb5c01e8661f3b875bd41493b5caa53dbff9",
+    "backendMergeCommit": "c3d205dfb1482ec89783b5372f2859530e234538",
+    "productionVersion": 176,
+    "rollbackVersion": 174,
+    "sourceParity": "PASS_80_80",
+    "deploymentCount": 4,
+    "runtimeAdminHrUi": "PASS",
+    "recoveryExecutions": 0,
+    "forbiddenBusinessAndAuthorityWrites": 0,
+    "rollbackPerformed": false,
+    "evidence": "ops/evidence/HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD_ACTOR_SESSION_EXPIRED_20261106.json"
   }
 }

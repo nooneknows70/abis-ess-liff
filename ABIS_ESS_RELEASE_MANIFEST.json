@@ -348,5 +348,21 @@
     "otherDeployments": "PASS_STABLE_20261025_TO_20261027",
     "originalRunnerLog": "NOT_AVAILABLE_POSTFACTO_RECONCILED",
     "releaseEvidence": "abis-ess-backend/release/PROD_CURRENT_V169_LEAVE_APPROVAL_LABEL_RECONCILED_FINAL_VERIFY_20261027.json"
+  },
+  "hrlbV112ProductionReleaseHold": {
+    "status": "HOLD_RECOVERY_NOT_EXECUTED",
+    "finalGate": "HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD__ACTOR_SESSION_EXPIRED",
+    "mergeCommit": "27ad4d3a9bf976d6887c688ca742f91858209d93",
+    "asset": "assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js",
+    "assetBlob": "2b003401f7060d8702c169e26eec4f16cd5009c4",
+    "pagesHttpStatus": 200,
+    "pagesSha256": "2af7448b3cbd9a8faffa6941d8bfbb5c01e8661f3b875bd41493b5caa53dbff9",
+    "backendMergeCommit": "c3d205dfb1482ec89783b5372f2859530e234538",
+    "backendProductionVersion": 176,
+    "backendSourceParity": "PASS_80_80",
+    "runtimeUi": "PASS",
+    "recoveryExecution": "NOT_EXECUTED_ACTOR_SESSION_EXPIRED",
+    "forbiddenBusinessAndAuthorityWrites": 0,
+    "evidence": "ops/evidence/HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD_ACTOR_SESSION_EXPIRED_20261106.json"
   }
 }
