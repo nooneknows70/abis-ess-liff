@@ -1,0 +1,65 @@
+{
+  "finalGate": "HRLB_V1_1_1_PRODUCTION_UI_ENTRY_FINAL_VERIFY_PASS",
+  "liffIssue": 39,
+  "liffPullRequest": 40,
+  "liffHead": "85bfffd79c256c64fbad0184e45e8b2bab405446",
+  "liffMergeCommit": "942f9521bfdca33d73de97c6e0498ed63e58284b",
+  "mergeMethod": "NORMAL_MERGE_COMMIT",
+  "adapterPath": "assets/ess-20261106-hrlb-v1-1-ui-entry/abis-hrlb-ui-entry.js",
+  "adapterBlob": "58085324e443c24c4bd5ab6eca3ec289172f29d0",
+  "adapterSha256": "36775a9d7d39bc4662f1f6e1f373fd5d441ac301596493e36454757510f67076",
+  "legacyBundleBlobBeforeAfter": "24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b",
+  "pages": {
+    "url": "https://nooneknows70.github.io/abis-ess-liff/assets/ess-20261106-hrlb-v1-1-ui-entry/abis-hrlb-ui-entry.js",
+    "httpStatus": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "htmlFallback": false,
+    "sha256": "36775a9d7d39bc4662f1f6e1f373fd5d441ac301596493e36454757510f67076",
+    "pagesBuildRunId": 42145511867,
+    "pagesBuildConclusion": "success"
+  },
+  "pairedBackend": {
+    "issue": 173,
+    "pullRequest": 174,
+    "head": "8f1cd8f048af69362ef21193c2730bb9b732e178",
+    "mergeCommit": "22987ba3df4bb75d1499b60b177101c91fea071e",
+    "productionBaseline": 174,
+    "productionVersion": 175,
+    "rollbackVersion": 174,
+    "sourceParity": "PASS_80_80",
+    "deploymentCount": 4
+  },
+  "uiVerify": {
+    "realAdminHr": "PASS",
+    "managementToolsOrder": [
+      "員工管理",
+      "帳號管理",
+      "出勤管理",
+      "請假管理",
+      "歷史請假補登核定",
+      "管理報表"
+    ],
+    "entryCount": 1,
+    "entryClickable": true,
+    "panelOpened": true,
+    "primaryAction": "補登並核准",
+    "primaryActionCount": 1,
+    "nonHrAdminVisibility": "ABSENT_BY_ACCEPTED_ROLE_GATE",
+    "realLeaveSubmitted": false
+  },
+  "forbiddenWrites": {
+    "realLeaveWrites": 0,
+    "attendanceBusinessWrites": 0,
+    "payrollWrites": 0,
+    "rawPunchWrites": 0,
+    "lineSends": 0,
+    "emailSends": 0,
+    "triggerWrites": 0,
+    "oauthChanges": 0,
+    "aclChanges": 0,
+    "advancedServiceChanges": 0,
+    "schemaChanges": 0,
+    "propertyChanges": 0,
+    "newDeploymentIds": 0
+  }
+}

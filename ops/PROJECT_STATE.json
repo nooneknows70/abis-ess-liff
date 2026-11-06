@@ -2260,5 +2260,30 @@
       "skipped": 0
     },
     "receiptDelta": "OPS_ONLY_EXACT_CODE_TEST_WORKFLOW_CARRY_FORWARD"
+  },
+  "hrlbV111ProductionUiEntry": {
+    "status": "PASS",
+    "finalGate": "HRLB_V1_1_1_PRODUCTION_UI_ENTRY_FINAL_VERIFY_PASS",
+    "issue": 39,
+    "pullRequest": 40,
+    "pullRequestHead": "85bfffd79c256c64fbad0184e45e8b2bab405446",
+    "mergeCommit": "942f9521bfdca33d73de97c6e0498ed63e58284b",
+    "mergeMethod": "NORMAL_MERGE_COMMIT",
+    "adapterBlob": "58085324e443c24c4bd5ab6eca3ec289172f29d0",
+    "adapterSha256": "36775a9d7d39bc4662f1f6e1f373fd5d441ac301596493e36454757510f67076",
+    "legacyBundleBlobUnchanged": "24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b",
+    "pagesHttpStatus": 200,
+    "pagesContentType": "application/javascript; charset=utf-8",
+    "pagesHtmlFallback": false,
+    "pagesBuildRunId": 42145511867,
+    "backendMergeCommit": "22987ba3df4bb75d1499b60b177101c91fea071e",
+    "productionVersion": 175,
+    "rollbackVersion": 174,
+    "sourceParity": "PASS_80_80",
+    "deploymentCount": 4,
+    "realAdminHrUi": "PASS",
+    "nonHrAdminVisibility": "ABSENT_BY_ACCEPTED_ROLE_GATE",
+    "forbiddenWrites": 0,
+    "evidence": "ops/evidence/HRLB_V1_1_1_PRODUCTION_UI_ENTRY_FINAL_VERIFY_20261106.json"
   }
 }

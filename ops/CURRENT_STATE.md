@@ -1,3 +1,11 @@
+## 2026-11-06｜HRLB V1.1.1 paired frontend Production UI entry FINAL VERIFY PASS
+
+- LIFF PR #40 HEAD `85bfffd79c256c64fbad0184e45e8b2bab405446` 已 normal merge 為 `942f9521bfdca33d73de97c6e0498ed63e58284b`。Versioned adapter blob `58085324e443c24c4bd5ab6eca3ec289172f29d0`；舊 bundle blob `24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b` exact unchanged。
+- 正式 Pages URL HTTP 200、`application/javascript`、非 HTML fallback；SHA-256 exact `36775a9d7d39bc4662f1f6e1f373fd5d441ac301596493e36454757510f67076`。
+- Paired Backend PR #174 normal merge `22987ba3df4bb75d1499b60b177101c91fea071e`；Production bounded release `@174 → @175`、80/80、4 deployments、rollback `@174`。
+- 真實 Admin/HR UI：六個 HR 工具順序 exact；`歷史請假補登核定` exact once、可點擊、panel/欄位與唯一 primary `補登並核准` PASS。Employee/Supervisor visibility 由 accepted role gate 保持 absent；未送出或確認真實假單。
+- Forbidden writes 全為 0。Evidence：`ops/evidence/HRLB_V1_1_1_PRODUCTION_UI_ENTRY_FINAL_VERIFY_20261106.json`。Final gate：`HRLB_V1_1_1_PRODUCTION_UI_ENTRY_FINAL_VERIFY_PASS`。
+
 ## 2026-11-06｜LIFF #39 candidate / Draft PR #40 CI receipt
 
 - Draft PR: https://github.com/nooneknows70/abis-ess-liff/pull/40 。未 merge、未 Pages 發布；Backend paired Issue #173 Index wiring candidate 進行中。
