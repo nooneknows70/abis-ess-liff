@@ -2297,12 +2297,33 @@
     "localUiTests": 36,
     "localBackendTests": 23,
     "localPairedTests": 59,
-    "status": "LOCAL_PAIRED_PASS_REMOTE_CI_PENDING",
+    "status": "PAIRED_ONE_SHOT_CI_PASS_DRAFT_INDEPENDENT_ACCEPTANCE_REQUIRED",
     "recovery": "STATUS_ONLY_SAME_REQUEST_NO_SECOND_ONECLICK",
     "productionCalls": 0,
     "productionMutations": 0,
     "realRecoveryExecutions": 0,
     "realBusinessWrites": 0,
-    "nextGate": "HRLB_V1_1_2_UI_RECOVERY_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED"
+    "nextGate": "HRLB_V1_1_2_UI_RECOVERY_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED",
+    "pullRequest": 42,
+    "pairedPullRequest": 177,
+    "backendTestedSource": "45543590cd20ba058d2eb2d9ae1c943f5414ca2c",
+    "liffTestedSource": "d34ba58922c1aa6bf37c87a8f9f76f95ecb190bc",
+    "pairedCI": {
+      "runId": 42194372753,
+      "url": "https://github.com/nooneknows70/abis-ess-backend/actions/runs/42194372753",
+      "attempt": 1,
+      "conclusion": "success",
+      "passed": 59,
+      "failed": 0,
+      "skipped": 0,
+      "backendTests": 23,
+      "liffTests": 36
+    },
+    "ciReceiptDelta": "OPS_ONLY_EXACT_SOURCE_TEST_WORKFLOW_CARRY_FORWARD",
+    "backendCoreBlob": "a1b214f031e6c09e01e96d0accda990cf1ded4c5",
+    "backendIndexBlob": "fb1536a4032a2447c65e1d8a5d71448e35c38c3d",
+    "b10601DuplicateLeaveCount": 0,
+    "b10601DuplicateApprovalCount": 0,
+    "b10205B10602EvidenceTier": "ACCEPTED_ISSUE_FACTS_IN_READ_ONLY_SYNTHETIC_FIXTURES_NO_FRESH_PRODUCTION_READBACK"
   }
 }

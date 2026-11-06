@@ -1,3 +1,18 @@
+## 2026-11-06｜HRLB V1.1.2 paired one-shot candidate completion / CI receipt
+
+- Backend Issue #176 / Draft PR https://github.com/nooneknows70/abis-ess-backend/pull/177 ；LIFF Issue #41 / Draft PR https://github.com/nooneknows70/abis-ess-liff/pull/42 。同一完整候選，未 merge、未發布。
+- Backend BASE `070e74079078a56f13e5c542c5bfb1bc510124c6`，CI-tested implementation `45543590cd20ba058d2eb2d9ae1c943f5414ca2c`。
+- LIFF BASE `0c649d848704311e35b14003a9e8f15e1fc8fecb`，CI-tested implementation `d34ba58922c1aa6bf37c87a8f9f76f95ecb190bc`。
+- 唯一 paired CI https://github.com/nooneknows70/abis-ess-backend/actions/runs/42194372753 ：attempt 1，SUCCESS，59/59 PASS（Backend 23 + LIFF 36），0 fail / 0 skip。只跑本輪新 suite；未重跑舊 Stage/63/63/34/34；無單獨 LIFF CI。本回執只改 ops，source/tests/workflow exact carry-forward，不重跑。
+- Backend functional delta: `src/P5A1_HR_LEAVE_BACKFILL_RC1.js`（blob `a1b214f031e6c09e01e96d0accda990cf1ded4c5`）+ `src/Index.html`（blob `fb1536a4032a2447c65e1d8a5d71448e35c38c3d`）。Index 接線的必要 scope 已先記錄 #176 comment 6681309139；其餘 src/manifest unchanged。
+- LIFF functional delta 只新增 `assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js`，blob `2b003401f7060d8702c169e26eec4f16cd5009c4`，SHA-256 `2af7448b3cbd9a8faffa6941d8bfbb5c01e8661f3b875bd41493b5caa53dbff9`。Published V1.1.1 adapter / legacy bundle byte-exact unchanged。新 versioned URL 尚未正式發布。
+- Date canonicalization PASS；true employee/type/actor/date/hours drift HOLD；原 B10601 RequestID/LeaveID 在 in-memory fixture reuse；duplicate Leave=0、duplicate BACKFILL_APPROVE=0；Fact+Daily 未 verified 不可 COMPLETE。
+- B10205/B10602 2026-10-15 regression PASS 指 accepted Issue #176 facts 的 READ_ONLY fixtures byte-identical；不是 fresh live Production readback。正式資料未讀寫、未新增電子假單或修補 Fact/Daily。
+- UI actual current legacy bundle + adapter + actual renderer / parsed synthetic DOM lifecycle PASS：human field/inline/focus errors、frozen Primary、local spinner/single-flight、form/account-root node identity preserved、body overlay compact modal、confirm loading 同 modal/dialog/context、cancel/Escape zero submit。
+- Result UX NOT_FOUND / APPROVED_PENDING / RECEIPT_MISMATCH / UNAVAILABLE / COMPLETE 分流；known approval HOLD 不顯示 generic unknown。所有 recovery 僅同 RequestID status，第二次 OneClick=0；pending/unknown 不解鎖新 RequestID。
+- Production baseline @175 / rollback @174 carry-forward；Production calls=0、Production mutations=0、real recovery executions=0、real business writes=0。無 @176 / deployment / schema / property / Trigger / OAuth / ACL / Advanced Service / Payroll / Raw Punch / Attendance / LINE / Email 操作；不改 Release Manifest、不進行正式 B10601 recovery。
+- FINAL_GATE=`HRLB_V1_1_2_UI_RECOVERY_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED`。交 ChatGPT Independent Acceptance；不自行 merge/publish/recover。
+
 ## 2026-11-06｜HRLB V1.1.2 paired one-shot UI/recovery candidate（LIFF #41 / Backend #176）
 
 - Source Owner「一次修復」已消化；fresh branch `fix/hrlb-v1-1-2-ui-recovery-20261106` from exact BASE `0c649d848704311e35b14003a9e8f15e1fc8fecb`。
