@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-11-05",
+  "updatedAt": "2026-11-06",
   "repository": "nooneknows70/abis-ess-liff",
   "branch": "main",
   "role": "ESS_LIFF_FRONTEND",
@@ -2231,5 +2231,34 @@
     "readOnlySeparateAccountRequired": false,
     "syntheticStageReuseAllowed": true,
     "formalMutationHumanGateRequired": true
+  },
+  "hrlbV111UiEntry": {
+    "issue": 39,
+    "pairedBackendIssue": 173,
+    "base": "3b056bef26a45f4d10b17943fdebc00e7fd451df",
+    "branch": "feat/hrlb-v1-1-1-ui-entry-20261106",
+    "adapterPath": "assets/ess-20261106-hrlb-v1-1-ui-entry/abis-hrlb-ui-entry.js",
+    "adapterBlob": "58085324e443c24c4bd5ab6eca3ec289172f29d0",
+    "adapterSha256": "36775a9d7d39bc4662f1f6e1f373fd5d441ac301596493e36454757510f67076",
+    "bundleBlobBeforeAfter": "24c579dd495ec9d9a8c39e078c2ed07ebc61fd5b",
+    "localTests": {
+      "passed": 23,
+      "failed": 0
+    },
+    "status": "TARGETED_CI_PASS_DRAFT_ACCEPTANCE_REQUIRED",
+    "productionMutations": 0,
+    "realBusinessWrites": 0,
+    "nextGate": "HRLB_V1_1_1_LIFF_ADAPTER_CANDIDATE_PASS__CHATGPT_ACCEPTANCE_REQUIRED",
+    "pullRequest": 40,
+    "ciTestedImplementationCommit": "2e8afa5a9ab29fcc3e2cb6020ba900c81ef89eb5",
+    "dedicatedCI": {
+      "runId": 42126485660,
+      "attempt": 1,
+      "conclusion": "success",
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "receiptDelta": "OPS_ONLY_EXACT_CODE_TEST_WORKFLOW_CARRY_FORWARD"
   }
 }
