@@ -1,3 +1,11 @@
+## 2026-11-07｜HRLB V1.1.2 B10601 recovery operator PASS
+
+- Gate: `HRLB_V1_1_2_UI_RECOVERY_FINAL_VERIFY_PASS`; ChatGPT independent acceptance pending, issues remain open.
+- Fresh server-side session PASS; one existing transaction execution, A09701, same RequestID/LeaveID. Leave count=1, BACKFILL_APPROVE count=1.
+- Fact ACTIVE/PROD/事假8HR reused unchanged; Daily 2026-10-02|B10601=事假8HR, no Punch/OT; Journal COMPLETE / FORMAL_DAILY_VERIFIED.
+- B10205/B10602 exact read-cell parity PASS. Forbidden writes=0; release-control writes=0; Production remains @176 with four deployments. No release/Stage/CI rerun.
+- Evidence: `ops/evidence/HRLB_V1_1_2_B10601_RECOVERY_FINAL_VERIFY_20261107.json`.
+
 ## 2026-11-06｜HRLB V1.1.2 Pages/Production released; B10601 recovery HOLD
 
 - LIFF PR #42 exact candidate `7f9e2f449d770f229e407522176e96b0960db15f` normal merge `27ad4d3a9bf976d6887c688ca742f91858209d93`.
