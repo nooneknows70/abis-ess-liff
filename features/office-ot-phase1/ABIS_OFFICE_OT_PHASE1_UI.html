@@ -1,0 +1,139 @@
+<!--
+  ABIS ESS Office OT Phase 1 candidate. NOT installed in LIFF or Production.
+  Embed only behind Backend-provided canSubmitOfficeOt gate after approved release.
+  Uses injected `client(action,payload)`; intentionally never calls LINE APIs.
+-->
+<style>
+.abis-ot-root{font:inherit;max-width:980px;margin:0 auto;color:var(--text,#263343)}
+.abis-ot-root *{box-sizing:border-box}
+.abis-ot-panel{border:1px solid #dbe2ea;border-radius:12px;padding:18px;background:#fff;margin:12px 0}
+.abis-ot-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.abis-ot-root h2{font-size:20px;margin:0 0 8px}.abis-ot-root h3{font-size:17px;margin:0 0 10px}
+.abis-ot-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+.abis-ot-field{display:flex;flex-direction:column;gap:5px;font-size:14px}
+.abis-ot-root input,.abis-ot-root select,.abis-ot-root textarea{font:inherit;padding:10px 12px;border:1px solid #b8c4cf;border-radius:8px;min-width:0;width:100%;background:white}
+.abis-ot-root textarea{min-height:70px}.abis-ot-wide{grid-column:1/-1}
+.abis-ot-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.abis-ot-root button{background:#1454a0;color:#fff;border:0;border-radius:8px;padding:10px 14px;font:inherit;cursor:pointer}
+.abis-ot-root button:disabled{opacity:.5;cursor:wait}.abis-ot-root button.abis-ot-muted{background:#e9edf4;color:#1a3553}
+.abis-ot-root button.abis-ot-danger{background:#782a31}
+.abis-ot-item{border:1px solid #e2e8ee;border-radius:8px;padding:12px;margin-top:9px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.abis-ot-small{font-size:13px;color:#526073}.abis-ot-root [role=status]{margin:8px 0;min-height:18px}
+.abis-ot-modal-layer{position:fixed;inset:0;background:#111827a6;display:flex;align-items:center;justify-content:center;z-index:12000;padding:16px}
+.abis-ot-modal{background:white;padding:22px;border-radius:12px;max-width:530px;width:100%;max-height:85vh;overflow:auto}
+.abis-ot-modal h3{margin-bottom:10px}.abis-ot-status{font-size:13px;font-weight:600;color:#264a65}
+</style>
+<script>
+/* Cross-repo integration candidate: no app startup side effects. */
+var ABISOfficeOTPhase1UI=(function(){
+  'use strict';
+  function node(tag,txt,clazz){var n=document.createElement(tag);if(txt!=null)n.textContent=String(txt);if(clazz)n.className=clazz;return n;}
+  function field(label,type,name,required){var box=node('label',null,'abis-ot-field'),span=node('span',label),input=node(type==='textarea'?'textarea':'input');
+    if(type!=='textarea')input.type=type;input.name=name;input.required=!!required;box.appendChild(span);box.appendChild(input);return {root:box,input:input};}
+  function button(label,action,clazz){var b=node('button',label,clazz);b.type='button';b.addEventListener('click',action);return b;}
+  function stamp(day,time){return day+'T'+time+':00+08:00';}
+  function duration(a,b){var start=Date.parse(a),end=Date.parse(b);return Number.isFinite(start)&&Number.isFinite(end)&&end>start?Math.round((end-start)/60000):null;}
+  function safeCase(c){return {id:String(c.id||''),revision:Number(c.revision||0),status:String(c.status||''),
+    requestedDate:String(c.requestedDate||''),start:String(c.start||''),end:String(c.end||''),minutes:Number(c.requestedMinutes||0)};}
+  function mount(target,client,ctx){
+    if(!target||typeof client!=='function')throw Error('OFFICE_OT_CLIENT_NOT_CONFIGURED');
+    if(!ctx||!ctx.sessionToken||ctx.canSubmitOfficeOt!==true)throw Error('OFFICE_OT_ELIGIBILITY_GATE_HOLD');
+    target.classList.add('abis-ot-root');target.textContent='';
+    var state={busy:false,requests:[],inbox:[],proofs:[]};
+    var title=node('h2','我的加班 | Office OT'),status=node('div','',null);status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+    target.appendChild(title);target.appendChild(status);
+    var panel=node('section',null,'abis-ot-panel');panel.appendChild(node('h3','申請加班'));
+    var form=node('form',null,'abis-ot-form');form.noValidate=false;
+    var f={date:field('加班日期','date','date',true),start:field('開始時間','time','start',true),end:field('結束時間','time','end',true),reason:field('加班原因','textarea','reason',true),work:field('具體工作內容','textarea','workContent',true),posthoc:field('事後補申請原因（如適用）','textarea','posthocReason',false),breakStart:field('實際休息起始（選填）','time','breakStart',false),breakEnd:field('實際休息結束（選填）','time','breakEnd',false)};
+    Object.keys(f).forEach(function(k){if(['reason','work','posthoc'].includes(k))f[k].root.classList.add('abis-ot-wide');form.appendChild(f[k].root);});
+    var place=node('label',null,'abis-ot-field');place.appendChild(node('span','辦公場域'));var site=node('select');[
+      ['OFFICE','公司辦公室'],['XINDIAN_OFFICE','新店廠辦公區'],['CHANGBIN_OFFICE','彰濱廠辦公區']
+    ].forEach(function(x){var o=node('option',x[1]);o.value=x[0];site.appendChild(o);});place.appendChild(site);form.appendChild(place);
+    var preview=node('p','填寫日期、開始及結束時間後計算申請分鐘數。休息不預設扣除。','abis-ot-small abis-ot-wide');form.appendChild(preview);
+    function read(){
+      var d=f.date.input.value,st=f.start.input.value,en=f.end.input.value;
+      if(!d||!st||!en)throw Error('請填寫加班日期與時段');
+      var a=stamp(d,st),stop=stamp(d,en);
+      if(Date.parse(stop)<=Date.parse(a)){
+        var z=new Date(Date.parse(d+'T00:00:00+08:00')+86400000+8*3600000).toISOString().slice(0,10);
+        stop=stamp(z,en);
+      }
+      var br=[];
+      if(f.breakStart.input.value||f.breakEnd.input.value){
+        if(!f.breakStart.input.value||!f.breakEnd.input.value)throw Error('請填完整實際休息起迄');
+        var bs=stamp(d,f.breakStart.input.value),be=stamp(d,f.breakEnd.input.value);
+        br=[{start:bs,end:be,actualBreak:true,dutyFree:true}];
+      }
+      return {start:a,end:stop,reason:f.reason.input.value.trim(),workContent:f.work.input.value.trim(),
+        posthocReason:f.posthoc.input.value.trim(),workplace:site.value,breaks:br};
+    }
+    function recalc(){try{var p=read(),m=duration(p.start,p.end);var breaks=p.breaks.reduce(function(n,b){return n+(duration(b.start,b.end)||0);},0);
+      preview.textContent='申請總分鐘數：'+String(m-breaks)+' 分鐘（休息依實際填報，不預扣 30 分鐘；此非核實或可計薪時數）';}
+      catch(_){preview.textContent='請先填寫完整日期和時間，再確認預計加班時數。';}}
+    ['date','start','end','breakStart','breakEnd'].forEach(function(k){f[k].input.addEventListener('change',recalc);});
+    var submit=button('送出申請',function(){
+      try {var data=read();if(data.reason.length<3||data.workContent.length<3)throw Error('原因與工作內容至少三個字');
+        var stableRequestId='OTUI-'+Date.now()+'-'+Math.random().toString(36).slice(2);
+        confirmDialog('確認加班申請','請確認 '+data.start+' 至 '+data.end+'，工作內容已填寫。主管核准不代表完成加班或可計薪。',function(){
+          return client('officeOtSubmit',{sessionToken:ctx.sessionToken,requestId:stableRequestId,...data});
+        },{requestId:stableRequestId});
+      }catch(e){status.textContent=e.message||String(e);}
+    });
+    var actions=node('div',null,'abis-ot-actions');actions.appendChild(submit);form.appendChild(actions);panel.appendChild(form);target.appendChild(panel);
+    var history=node('section',null,'abis-ot-panel');history.appendChild(node('h3','我的加班與核准區間'));
+    var histList=node('div');history.appendChild(histList);target.appendChild(history);
+    var review=node('section',null,'abis-ot-panel');review.appendChild(node('h3','待我處理（主管）'));
+    var inboxList=node('div');review.appendChild(inboxList);target.appendChild(review);
+    function setBusy(b){state.busy=b;submit.disabled=b;submit.textContent=b?'處理中…':'送出申請';}
+    function confirmDialog(header,body,callback,options){
+      if(state.busy)return;
+      var layer=node('div',null,'abis-ot-modal-layer'),box=node('div',null,'abis-ot-modal');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',header);
+      box.appendChild(node('h3',header));box.appendChild(node('p',body));
+      var reasonField=null;
+      if(options&&options.requireReason){reasonField=field('主管處理原因（必填）','textarea','decisionNote',true);box.appendChild(reasonField.root);}
+      var row=node('div',null,'abis-ot-actions'),no=button('取消',function(){layer.remove();},'abis-ot-muted'),yes=button('確認',async function(){
+        if(reasonField&&reasonField.input.value.trim().length<3){status.textContent='退回／拒絕必須填寫至少三個字的原因';reasonField.input.focus();return;}
+        setBusy(true);yes.disabled=true;no.disabled=true;status.textContent='送出中，請勿重複操作。';
+        try{var v=await callback(reasonField?reasonField.input.value.trim():'');if(!v||v.ok===false)throw Error((v&&v.code)||'REQUEST_HOLD');layer.remove();status.textContent='作業已提交；請於我的加班確認狀態。';await refresh();}
+        catch(e){
+          var rid=options&&options.requestId;
+          var verified=null;
+          if(rid){try{verified=await client('officeOtStatus',{sessionToken:ctx.sessionToken,requestId:rid});}catch(_){} }
+          if(verified&&verified.found===true){layer.remove();status.textContent='已依 RequestID 查到案件，未重複送出。';await refresh();}
+          else {status.textContent='操作未確認：'+(e.code||e.message||'查詢狀態失敗')+'；RequestID='+String(rid||'UNKNOWN')+'，請勿重複送件。';yes.disabled=true;no.disabled=false;}
+        }
+        finally{setBusy(false);}
+      });row.appendChild(no);row.appendChild(yes);box.appendChild(row);layer.appendChild(box);target.appendChild(layer);yes.focus();
+      layer.addEventListener('keydown',function(e){if(e.key==='Escape'&&!state.busy){layer.remove();return;}if(e.key==='Tab'){
+        var focusable=(reasonField?[reasonField.input,no,yes]:[no,yes]).filter(function(x){return !x.disabled;});if(!focusable.length){e.preventDefault();return;}
+        if(e.shiftKey&&document.activeElement===focusable[0]){e.preventDefault();focusable[focusable.length-1].focus();}
+        else if(!e.shiftKey&&document.activeElement===focusable[focusable.length-1]){e.preventDefault();focusable[0].focus();}
+      }});
+    }
+    function showList(host,rows,manager){host.textContent='';if(!rows||!rows.length){host.appendChild(node('p',manager?'目前無待審案件':'尚無申請紀錄','abis-ot-small'));return;}
+      rows.forEach(function(raw){var r=safeCase(raw),item=node('div',null,'abis-ot-item'),left=node('div');left.appendChild(node('strong',r.requestedDate+' · '+r.minutes+' 分鐘'));
+        left.appendChild(node('div',r.start.slice(11,16)+'–'+r.end.slice(11,16)+' | '+r.status,'abis-ot-small'));
+        if(raw.approvedSnapshot)left.appendChild(node('div','已核准（實際待核對；不等於計薪）','abis-ot-status'));
+        item.appendChild(left);
+        if(manager){var buttons=node('div',null,'abis-ot-actions');
+          [['APPROVE','核准'],['RETURN_FOR_REVISION','退回'],['REJECT','拒絕']].forEach(function(d){buttons.appendChild(button(d[1],function(){
+            var stableDecisionId='OTUI-'+Date.now()+'-'+Math.random().toString(36).slice(2);
+            confirmDialog('確認主管決策',d[1]+'此筆加班申請？',function(note){return client('officeOtDecide',{sessionToken:ctx.sessionToken,
+              requestId:stableDecisionId,otRequestId:r.id,
+              expectedRevision:r.revision,decision:d[0],note:note});},{requireReason:d[0]!=='APPROVE',requestId:stableDecisionId});
+          }));});item.appendChild(buttons);}
+        host.appendChild(item);
+      });
+    }
+    async function refresh(){
+      try{var out=await Promise.all([client('officeOtMy',{sessionToken:ctx.sessionToken}),client('officeOtInbox',{sessionToken:ctx.sessionToken})]);
+        state.requests=Array.isArray(out[0])?out[0]:(out[0]&&out[0].rows)||[];
+        state.inbox=Array.isArray(out[1])?out[1]:(out[1]&&out[1].rows)||[];
+        showList(histList,state.requests,false);showList(inboxList,state.inbox,true);
+      }catch(e){status.textContent='讀取加班申請狀態失敗：'+(e&&e.code||'READ_ONLY_HOLD');}
+    }
+    refresh();return {refresh:refresh,destroy:function(){target.textContent='';},context:'P1_OFFLINE_CANDIDATE_NOT_MERGED'};
+  }
+  return {mount:mount};
+}());
+</script>
