@@ -196,6 +196,7 @@
         accessToken: accessToken || '',
         routeToken: routeToken(),
         bootRoute: bootRoute(),
+        leaveId: (() => { const id = new URLSearchParams(location.search).get('leaveId') || ''; return /^LV-[0-9A-Za-z-]{10,40}$/.test(id) ? id : ''; })(),
         forceFullAuth: forceFullAuth() ? '1' : '',
         bridgeVersion: CONFIG.bridgeVersion,
         bridgeStartedAt: String(BRIDGE_EPOCH_T0),
