@@ -122,3 +122,32 @@ _Avoid_: Version Drift, Content Drift
 **Deployment Drift**:
 Source 或 Candidate 已前進，但 Production 的已部署狀態仍停留在另一組版本。
 _Avoid_: Runtime Drift
+
+
+## Long Leave Executive Approval Language (policy frozen 2026-10-27)
+
+**Long Leave**:
+A leave request that qualifies for the existing executive approval route at three or more equivalent working days. It is not a separate leave type.
+
+**Supervisor Review**:
+The direct supervisor's assessment of the reason and handover arrangement, followed by forwarding for executive decision. It is never final long-leave approval.
+_Avoid_: Supervisor Approval, Manager Final Approval
+
+**Handover Attestation**:
+The supervisor's explicit declaration and explanatory note that work coverage has been arranged. This is evidence of supervisor attestation, not independent proof that every task was completed.
+
+**Executive Decision**:
+A final long-leave approval or rejection made by the authorized executive or a formally valid executive delegate.
+
+**Supervisor Supplement Return**:
+A nonfinal executive request for the current direct supervisor to provide further information while preserving the original request. It is distinct from a Returned Revision Draft and from final rejection.
+
+**Final Rejection**:
+A terminal decision on the submitted long-leave request. A subsequent leave application uses a new LeaveID.
+_Avoid_: Return for Supplement
+
+**Executive Delegation**:
+A formally approved, scope- and time-bounded authority allowing an eligible delegate to make the executive decision. Being a direct supervisor alone does not confer this authority.
+
+**Historical Long Leave**:
+A request created before the V1 activation boundary. Existing pending requests retain their prior workflow and must not have missing handover evidence fabricated.
