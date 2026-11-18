@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>HF9 P1 preview</title>
+  <link rel="stylesheet" href="abis-ess.css">
+</head>
+<body>
+  <div class="wrap" id="root"></div>
+  <button type="button" class="abis-async-busy" id="hf9AsyncProbe" style="position:absolute;left:-2000px;top:0;width:40px">probe</button>
+  <pre id="measure" hidden></pre>
+  <script>
+  (function () {
+    var params = new URLSearchParams(location.search);
+    var view = params.get('view') || 'login';
+    var lang = String(params.get('lang') || 'zh').toLowerCase();
+    var copy = {
+      zh: {
+        login: '登入', employeeId: '員工編號', pin: '6 位 PIN', remember: '記住員工編號（不保存PIN）',
+        hint: '一般登入請輸入個人 6 位 PIN；新進員工或 HR 重設後，請輸入 HR 發送的 Temporary PIN。',
+        forgot: '忘記 PIN？', back: '返回登入', send: '發送驗證碼',
+        forgotHint: '若帳號已綁定 ABIS 官方 LINE，系統會將一次性驗證碼傳送到您的 LINE。未綁定 LINE 請聯絡 HR。',
+        tagline: '更簡單的工作．更好的每一天', home: '首頁', dash: 'Dashboard',
+        today: '今日狀態', tasks: '待處理事項', viewAll: '查看全部',
+        quick: '快捷入口', recent: '近期紀錄', notices: '通知摘要',
+        shift: '班別', clockIn: '上班',
+        tasksLabels: ['請假退回', '出勤異常', '待簽核', '補件'],
+        titles: ['我要請假', '我的假單', '我的出勤', '待我處理'],
+        subs: ['申請各類假別', '查詢申請進度', '查看打卡與出勤紀錄', '審核與待辦事項'],
+        recentRows: [['11/16', '事假 8 小時', '審核中'], ['11/12', '出勤補正', '已退回']],
+        notes: '通知中心', mark: '全部標為已讀',
+        tabs: ['全部', '未讀', '系統', '公告', '人資'],
+        notesRows: [
+          ['假單已退回', '請確認 11/12 的事假內容後再送出。', '系統', '11/16 09:12'],
+          ['出勤異常', '11/14 缺少下班卡，請提出補正或說明。', '人資', '11/15 18:40']
+        ]
+      },
+      en: {
+        login: 'Sign in', employeeId: 'Employee ID', pin: '6-digit PIN', remember: 'Remember the employee ID (PIN is not stored)',
+        hint: 'Use your personal 6-digit PIN. After a new-hire or HR reset, use the Temporary PIN from HR.',
+        forgot: 'Forgot PIN?', back: 'Back to sign in', send: 'Send code',
+        forgotHint: 'If this account is bound to the official LINE account, a one-time code is sent there. Otherwise contact HR.',
+        tagline: 'Simpler work. Better days.', home: 'Home', dash: 'Dashboard',
+        today: 'Today', tasks: 'To do', viewAll: 'View all',
+        quick: 'Shortcuts', recent: 'Recent records', notices: 'Notices',
+        shift: 'Shift', clockIn: 'In',
+        tasksLabels: ['Returned', 'Exceptions', 'To approve', 'More info'],
+        titles: ['Request leave', 'My requests', 'My attendance', 'Waiting for me'],
+        subs: ['Choose a leave type', 'Check status', 'Punches and records', 'Approvals and tasks'],
+        recentRows: [['11/16', 'Personal leave 8h', 'In review'], ['11/12', 'Attendance correction', 'Returned']],
+        notes: 'Notifications', mark: 'Mark all read',
+        tabs: ['All', 'Unread', 'System', 'Notice', 'HR'],
+        notesRows: [
+          ['Leave returned', 'Check the 11/12 personal leave, then send it again.', 'System', '11/16 09:12'],
+          ['Attendance exception', '11/14 is missing a clock-out. Submit a correction.', 'HR', '11/15 18:40']
+        ]
+      },
+      vi: {
+        login: 'Đăng nhập', employeeId: 'Mã nhân viên', pin: 'PIN 6 số', remember: 'Nhớ mã nhân viên (không lưu PIN)',
+        hint: 'Đăng nhập bằng PIN cá nhân 6 số. Nhân viên mới hoặc sau khi HR đặt lại, dùng Temporary PIN.',
+        forgot: 'Quên PIN?', back: 'Về đăng nhập', send: 'Gửi mã',
+        forgotHint: 'Nếu tài khoản đã liên kết LINE chính thức, hệ thống gửi mã một lần vào LINE. Chưa liên kết thì liên hệ HR.',
+        tagline: 'Công việc đơn giản hơn · Mỗi ngày tốt hơn', home: 'Trang chủ', dash: 'Dashboard',
+        today: 'Hôm nay', tasks: 'Việc cần xử lý', viewAll: 'Xem tất cả',
+        quick: 'Truy cập nhanh', recent: 'Gần đây', notices: 'Thông báo',
+        shift: 'Ca', clockIn: 'Vào',
+        tasksLabels: ['Đơn bị trả', 'Bất thường', 'Chờ duyệt', 'Bổ sung'],
+        titles: ['Xin nghỉ', 'Đơn của tôi', 'Chấm công', 'Chờ tôi xử lý'],
+        subs: ['Gửi đơn nghỉ', 'Xem tiến độ', 'Xem chấm công', 'Duyệt và xử lý'],
+        recentRows: [['11/16', 'Nghỉ việc riêng 8 giờ', 'Đang duyệt'], ['11/12', 'Điều chỉnh công', 'Bị trả']],
+        notes: 'Trung tâm thông báo', mark: 'Đánh dấu đã đọc',
+        tabs: ['Tất cả', 'Chưa đọc', 'Hệ thống', 'Thông báo', 'Nhân sự'],
+        notesRows: [
+          ['Đơn bị trả', 'Hãy kiểm tra đơn ngày 11/12 rồi gửi lại.', 'Hệ thống', '11/16 09:12'],
+          ['Chấm công bất thường', 'Ngày 11/14 thiếu giờ ra. Hãy gửi điều chỉnh.', 'Nhân sự', '11/15 18:40']
+        ]
+      },
+      th: {
+        login: 'เข้าสู่ระบบ', employeeId: 'รหัสพนักงาน', pin: 'PIN 6 หลัก', remember: 'จำรหัสพนักงาน (ไม่เก็บ PIN)',
+        hint: 'เข้าสู่ระบบด้วย PIN ส่วนตัว 6 หลัก พนักงานใหม่หรือหลัง HR รีเซ็ต ให้ใช้ Temporary PIN',
+        forgot: 'ลืม PIN?', back: 'กลับไปเข้าสู่ระบบ', send: 'ส่งรหัส',
+        forgotHint: 'ถ้าบัญชีผูกกับ LINE ทางการ ระบบจะส่งรหัสครั้งเดียวไปที่ LINE หากยังไม่ผูก ให้ติดต่อ HR',
+        tagline: 'ทำงานง่ายขึ้น · ทุกวันดีขึ้น', home: 'หน้าแรก', dash: 'Dashboard',
+        today: 'สถานะวันนี้', tasks: 'งานที่ต้องจัดการ', viewAll: 'ดูทั้งหมด',
+        quick: 'ทางลัด', recent: 'รายการล่าสุด', notices: 'สรุปการแจ้งเตือน',
+        shift: 'กะ', clockIn: 'เข้า',
+        tasksLabels: ['ใบลาถูกส่งกลับ', 'เวลาผิดปกติ', 'รออนุมัติ', 'เอกสารเพิ่ม'],
+        titles: ['ขอลา', 'ใบลาของฉัน', 'เวลาทำงาน', 'รอฉันจัดการ'],
+        subs: ['ยื่นคำขอลา', 'ดูความคืบหน้า', 'ดูบันทึกเวลา', 'อนุมัติและงานค้าง'],
+        recentRows: [['11/16', 'ลากิจ 8 ชั่วโมง', 'รออนุมัติ'], ['11/12', 'แก้ไขเวลา', 'ถูกส่งกลับ']],
+        notes: 'ศูนย์แจ้งเตือน', mark: 'อ่านทั้งหมด',
+        tabs: ['ทั้งหมด', 'ยังไม่อ่าน', 'ระบบ', 'ประกาศ', 'บุคคล'],
+        notesRows: [
+          ['ใบลาถูกส่งกลับ', 'โปรดตรวจใบลาวันที่ 11/12 แล้วส่งอีกครั้ง', 'ระบบ', '11/16 09:12'],
+          ['เวลาผิดปกติ', 'วันที่ 11/14 ขาดเวลาออก โปรดส่งคำขอแก้ไข', 'บุคคล', '11/15 18:40']
+        ]
+      }
+    };
+    var t = copy[lang] || copy.zh;
+    var icon = {
+      calendar: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg>',
+      doc: '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h5M9 12h6M9 16h6"/></svg>',
+      clock: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>',
+      people: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 19c1-3 3.5-4.5 6-4.5S14 16 15 19"/><circle cx="17" cy="9" r="2"/><path d="M16 14.5c2.2.3 3.8 1.5 4.7 3.5"/></svg>',
+      bell: '<svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>'
+    };
+    var root = document.getElementById('root');
+    var banner = '<div class="company-banner frozen-company-banner" role="banner"><div class="frozen-topline"><div class="frozen-entry-source"><span class="frozen-line-mark">LINE</span><span>WEB</span></div></div><div class="frozen-brand-row"><div class="company-logo" style="display:grid;place-items:center;font-weight:900;color:#0b438c">A</div><div class="frozen-brand-copy"><div class="company-title">ABIS</div><div class="company-subtitle">' + t.tagline + '</div></div></div></div>';
+    var langs = '<div class="lang-switch"><button type="button" class="' + (lang === 'zh' ? 'active' : '') + '">中文</button><button type="button" class="' + (lang === 'vi' ? 'active' : '') + '">Tiếng Việt</button><button type="button" class="' + (lang === 'th' ? 'active' : '') + '">ไทย</button></div>';
+    if (view === 'login' || view === 'forgot') {
+      document.body.className = '';
+      var loginHide = view === 'login' ? '' : ' hide';
+      var forgotHide = view === 'forgot' ? '' : ' hide';
+      root.innerHTML = banner + langs +
+        '<section id="login" class="card' + loginHide + '"><h2>' + t.login + '</h2><div class="build-tag">HF9 P1 preview</div><label>' + t.employeeId + '</label><input id="loginId" value="A09701"><label><input id="rememberId" type="checkbox" style="width:auto"> ' + t.remember + '</label><label>' + t.pin + '</label><input id="loginPin" type="password" value="••••••"><div class="tiny" style="margin:8px 0 12px">' + t.hint + '</div><button id="loginBtn" type="button">' + t.login + '</button><button class="secondary" type="button">' + t.forgot + '</button></section>' +
+        '<section id="forgotPin" class="card' + forgotHide + '"><h2>' + t.forgot + '</h2><div class="notice tiny">' + t.forgotHint + '</div><label>' + t.employeeId + '</label><input id="forgotEmployeeId" value="A09701"><button id="forgotSendBtn" type="button">' + t.send + '</button><button class="secondary" type="button">' + t.back + '</button></section>';
+    } else if (view === 'home') {
+      document.body.className = 'home-view';
+      var tones = ['green', 'blue', 'teal', 'orange'];
+      var icons = [icon.calendar, icon.doc, icon.clock, icon.people];
+      var quick = t.titles.map(function (title, i) {
+        return '<button class="fh-quick ' + tones[i] + '" type="button"><span class="fh-quick-icon">' + icons[i] + '</span><span class="fh-quick-copy"><b>' + title + '</b><span>' + t.subs[i] + '</span></span><span class="fh-chevron">›</span></button>';
+      }).join('');
+      var recent = t.recentRows.map(function (row) {
+        return '<div class="fh-list-row"><span class="fh-list-date">' + row[0] + '</span><span class="fh-list-main">' + row[1] + '</span><span class="fh-list-state">' + row[2] + '</span><span class="fh-chevron">›</span></div>';
+      }).join('');
+      root.innerHTML = banner +
+        '<section id="home" class="home-dashboard">' +
+        '<div class="home-dashboard-title"><strong>' + t.home + '</strong><span>' + t.dash + '</span></div>' +
+        '<div class="fh-card"><div class="fh-card-head"><div class="fh-head-left"><span class="fh-card-title">' + t.today + '</span></div><span class="fh-date">2026/11/16</span></div><div class="fh-status-list"><div class="fh-status-row">' + icon.calendar + '<span class="fh-status-label">' + t.shift + '</span><span class="fh-status-value">D1</span></div><div class="fh-status-row">' + icon.clock + '<span class="fh-status-label">' + t.clockIn + '</span><span class="fh-status-value">08:03</span></div></div></div>' +
+        '<div class="fh-card"><div class="fh-card-head"><span class="fh-card-title">' + t.tasks + '</span></div><div class="fh-task-grid"><button class="fh-task red" type="button"><span class="fh-task-label">' + t.tasksLabels[0] + '</span><b>1</b></button><button class="fh-task orange" type="button"><span class="fh-task-label">' + t.tasksLabels[1] + '</span><b>0</b></button><button class="fh-task blue" type="button"><span class="fh-task-label">' + t.tasksLabels[2] + '</span><b>2</b></button><button class="fh-task purple" type="button"><span class="fh-task-label">' + t.tasksLabels[3] + '</span><b>0</b></button></div></div>' +
+        '<div class="fh-card"><div class="fh-card-head"><span class="fh-card-title">' + t.quick + '</span></div><div class="fh-quick-grid">' + quick + '</div></div>' +
+        '<div class="fh-card"><div class="fh-card-head"><span class="fh-card-title">' + t.recent + '</span></div><div class="fh-list">' + recent + '</div></div>' +
+        '<div class="fh-card"><div class="fh-card-head"><span class="fh-card-title">' + t.notices + '</span></div><div class="fh-notice-row"><span class="fh-notice-dot"></span><span class="fh-notice-text">' + t.notesRows[0][0] + '</span><span class="fh-notice-time">09:12</span></div></div>' +
+        '</section>';
+    } else {
+      document.body.className = 'inner-view';
+      var tabs = t.tabs.map(function (name, i) {
+        return '<button type="button" class="' + (i === 0 ? '' : 'secondary') + ' small">' + name + '</button>';
+      }).join('');
+      var rows = t.notesRows.map(function (row, i) {
+        return '<div class="notification-row' + (i === 0 ? ' unread' : '') + '">' + (i === 0 ? '<span class="notification-unread-dot"></span>' : '') + '<div class="notification-row-title">' + row[0] + '</div><div class="notification-row-body">' + row[1] + '</div><div class="notification-row-meta"><span class="notification-category">' + row[2] + '</span><span>' + row[3] + '</span></div></div>';
+      }).join('');
+      root.innerHTML =
+        '<div class="rc2-inner-topbar"><button type="button" class="rc2-inner-back">‹</button><div class="rc2-inner-title">' + t.notes + '</div><span class="rc2-inner-spacer"></span></div>' +
+        '<main id="app"><section id="notifications" class="card"><div class="notification-center-head"><h2>' + t.notes + '</h2><button id="notificationMarkAllBtn" type="button" class="secondary notification-mark-all">' + t.mark + '</button></div><div class="notification-tabs">' + tabs + '</div><div id="notificationCenterList">' + rows + '</div></section></main>';
+    }
+
+    function firstLineChars(el) {
+      var text = el.textContent || '';
+      var node = el.firstChild;
+      if (!node || !text) return 0;
+      var range = document.createRange();
+      range.setStart(node, 0);
+      range.setEnd(node, 1);
+      var top = range.getBoundingClientRect().top;
+      var best = 1;
+      for (var i = 1; i <= text.length; i++) {
+        range.setStart(node, 0);
+        range.setEnd(node, i);
+        var rects = range.getClientRects();
+        var last = rects[rects.length - 1];
+        if (!last) break;
+        if (last.top > top + 1) break;
+        best = i;
+      }
+      return best;
+    }
+    function linesOf(el) {
+      var lh = parseFloat(getComputedStyle(el).lineHeight);
+      if (!lh) return 1;
+      return Math.round(el.getBoundingClientRect().height / lh);
+    }
+    var overflow = [];
+    var vw = document.documentElement.clientWidth;
+    document.querySelectorAll('.card,.wrap,.fh-quick,.notification-row,#notifications,#login,#forgotPin').forEach(function (el) {
+      if (el.id === 'hf9AsyncProbe') return;
+      var r = el.getBoundingClientRect();
+      if (r.width < 1) return;
+      if (r.right > vw + 1 || r.left < -1) overflow.push({ tag: el.id || el.className, left: Math.round(r.left), right: Math.round(r.right), vw: vw });
+    });
+    var titles = [];
+    document.querySelectorAll('.fh-quick-copy b').forEach(function (el) {
+      titles.push({ text: el.textContent, first: firstLineChars(el), lines: linesOf(el), width: Math.round(el.getBoundingClientRect().width) });
+    });
+    var login = document.getElementById('login');
+    var loginBtn = document.getElementById('loginBtn');
+    var probe = document.getElementById('hf9AsyncProbe');
+    var report = {
+      view: view,
+      lang: lang,
+      vw: vw,
+      overflow: overflow,
+      titles: titles,
+      cardBox: login ? getComputedStyle(login).boxSizing : (document.querySelector('.card') ? getComputedStyle(document.querySelector('.card')).boxSizing : ''),
+      quickDisplay: document.querySelector('.fh-quick') ? getComputedStyle(document.querySelector('.fh-quick')).flexDirection : '',
+      loginColor: loginBtn ? getComputedStyle(loginBtn).color : '',
+      asyncCursor: probe ? getComputedStyle(probe).cursor : '',
+      asyncColor: probe ? getComputedStyle(probe).color : ''
+    };
+    var slot = document.getElementById('measure');
+    slot.textContent = JSON.stringify(report);
+  })();
+  </script>
+</body>
+</html>
