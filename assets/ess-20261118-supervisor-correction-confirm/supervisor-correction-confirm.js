@@ -73,6 +73,7 @@
       approving: '正在同意 {i}/{n}',
       returnedDay: '已退回 {date}',
       errorFriendly: '沒有送出，請稍後再試（{code}）',
+      errorFields: '請先按修改，把還沒填的欄位補上（{code}）',
       annual: '特休',
       personal: '事假',
       sick: '病假',
@@ -135,6 +136,7 @@
       approving: 'Đang đồng ý {i}/{n}',
       returnedDay: 'Đã trả lại {date}',
       errorFriendly: 'Chưa gửi được, vui lòng thử lại ({code})',
+      errorFields: 'Hãy bấm Sửa và điền chỗ còn thiếu ({code})',
       annual: 'phép năm',
       personal: 'việc riêng',
       sick: 'ốm',
@@ -197,6 +199,7 @@
       approving: 'กำลังเห็นด้วย {i}/{n}',
       returnedDay: 'ส่งกลับแล้ว {date}',
       errorFriendly: 'ยังส่งไม่สำเร็จ โปรดลองอีกครั้ง ({code})',
+      errorFields: 'กดแก้ไขแล้วเติมช่องที่ยังว่าง ({code})',
       annual: 'ลาพักร้อน',
       personal: 'ลากิจ',
       sick: 'ลาป่วย',
@@ -259,6 +262,7 @@
       approving: 'Agreeing {i}/{n}',
       returnedDay: 'Returned {date}',
       errorFriendly: 'Could not send. Please try again ({code})',
+      errorFields: 'Open Edit and fill the missing fields ({code})',
       annual: 'annual leave',
       personal: 'personal leave',
       sick: 'sick leave',
@@ -356,10 +360,12 @@
     };
   }
 
+  var LEAVE_REQUEST_MARK = 'ABIS:LEAVE_REQUEST';
+
   function leaveReturnNote(reason) {
     var hint = analyzeReason(reason);
-    if (!hint.leave) return sccT('leaveNoteGeneric');
-    return fill('leaveNote', { type: leaveTypeName(hint.leaveType), hours: hint.hours });
+    var text = !hint.leave ? sccT('leaveNoteGeneric') : fill('leaveNote', { type: leaveTypeName(hint.leaveType), hours: hint.hours });
+    return text + '\n' + LEAVE_REQUEST_MARK;
   }
 
   function missingFields(row) {
@@ -425,11 +431,12 @@ function rawPunchLines(row) {
     var snap = snapshotOf(row);
     if (!snap) return '';
     if (snap.anomalyDescription) return String(snap.anomalyDescription);
-    if (snap.missingIn && snap.missingOut) return '上下班都缺卡';
-    if (snap.missingOut) return '缺下班卡';
-    if (snap.missingIn) return '缺上班卡';
-    if (snap.anomalyCode) return String(snap.anomalyCode);
-    return '';
+    if (snap.missingIn && snap.missingOut) return sccT('typeMissingBoth');
+    if (snap.missingOut) return sccT('typeMissingOut');
+    if (snap.missingIn) return sccT('typeMissingIn');
+    var code = String(snap.anomalyCode || '');
+    var key = TYPE_KEY[code];
+    return key ? sccT(key) : code;
   }
 
   function requestClockText(row) {
@@ -792,7 +799,8 @@ function rawPunchLines(row) {
       try { console.error(err); } catch (ignore) {}
       if (err.code || err.errorCode) code = String(err.code || err.errorCode);
     }
-    return fill('errorFriendly', { code: code });
+    var tone = (code === 'SCC_CONFIRM_FIELDS' || code === 'SCC_FIELDS_INCOMPLETE') ? 'errorFields' : 'errorFriendly';
+    return fill(tone, { code: code });
   }
 
   function agreeBlock(row, root) {
@@ -1146,6 +1154,7 @@ function rawPunchLines(row) {
     buildPayload: buildPayload,
     validateReject: validateReject,
     leaveReturnNote: leaveReturnNote,
+    leaveRequestMark: LEAVE_REQUEST_MARK,
     renderManagerHtml: renderManagerHtml,
     approveSequential: approveSequential,
     cardHtml: cardHtml,

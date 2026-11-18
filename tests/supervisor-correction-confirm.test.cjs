@@ -160,6 +160,7 @@ test('return requires a reason and the leave action prefills one', () => {
   assert.equal(payload.action, 'REJECT');
   assert.match(payload.note, /請特休 8 小時/);
   assert.match(payload.note, /假單/);
+  assert.match(payload.note, /ABIS:LEAVE_REQUEST/);
   assert.equal(Object.prototype.hasOwnProperty.call(payload, 'payrollImpact'), false);
   const html = ui.cardHtml(cards[2], { openReturn: true, returnNote: payload.note });
   assert.match(html, /退回並請員工改申請假單/);
@@ -253,4 +254,26 @@ test('screen errors show a code and keep the raw message off the page', () => {
   assert.match(bare, /SCC_REJECT_FAILED/);
   assert.doesNotMatch(bare, /secret/);
   assert.doesNotMatch(source, /err\.message/);
+  const fields = ui.publicError(null, 'SCC_FIELDS_INCOMPLETE');
+  assert.match(fields, /SCC_FIELDS_INCOMPLETE/);
+  assert.match(fields, /修改/);
+  assert.doesNotMatch(fields, /請稍後再試/);
+  const confirm = ui.publicError(null, 'SCC_CONFIRM_FIELDS');
+  assert.doesNotMatch(confirm, /請稍後再試/);
+});
+
+test('anomaly fallback is translated and a different requested shift is only displayed', () => {
+  const context = { console, document: undefined, currentLang: 'VI' };
+  vm.createContext(context);
+  vm.runInContext(source, context, { filename: 'supervisor-correction-confirm.js' });
+  const vi = context.ABIS_SUPERVISOR_CORRECTION_CONFIRM;
+  const snap = { missingOut: true, missingIn: false };
+  assert.equal(vi.anomalyText({ systemSnapshot: snap }), vi.texts.VI.typeMissingOut);
+  assert.notEqual(vi.anomalyText({ systemSnapshot: snap }), '缺下班卡');
+  const different = Object.assign({}, cards[0], { requestedShiftCode: 'N1' });
+  assert.equal(ui.cardFlags(different).warning, false);
+  assert.equal(ui.missingFields(different), false);
+  const html = ui.cardHtml(different, {});
+  assert.match(html, /夜班/);
+  assert.doesNotMatch(html, /data-scc-warn="1"/);
 });
