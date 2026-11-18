@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>主管出勤補正確認</title>
+  <style>
+    body{margin:0;background:#f3f4f6;color:#1f2937}
+    main{max-width:390px;margin:0 auto;padding:16px 14px 28px;box-sizing:border-box}
+    .preview-note{margin:0 0 12px;color:#6b7280;font:12px/1.4 system-ui,sans-serif}
+    #status{min-height:1.2em;margin:8px 0 0;font:14px/1.4 system-ui,sans-serif;color:#166534}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="preview-note" id="previewNote">預覽資料 · 潘淑華 B09502 · 不會送出</p>
+    <div id="app"></div>
+    <p id="status" role="status"></p>
+  </main>
+  <script src="supervisor-correction-confirm.js"></script>
+  <script>
+    (function () {
+      var ui = window.ABIS_SUPERVISOR_CORRECTION_CONFIRM;
+      var params = new URLSearchParams(location.search);
+      var shot = params.get('shot') || 'grouped';
+      var data = ui.fixtureB09502();
+      var options = { deps: {
+        sessionToken: function () { return 'preview'; },
+        call: function () { return Promise.resolve({ ok: true, preview: true }); },
+        message: function (text) {
+          var el = document.getElementById('status');
+          if (el) el.textContent = text;
+        }
+      }};
+      if (shot === 'single' || shot === 'edit' || shot === 'reject') {
+        data = Object.assign({}, data, { managerCorrections: data.managerCorrections.slice(0, 1) });
+      }
+      if (shot === 'hints') {
+        data = Object.assign({}, data, { managerCorrections: data.managerCorrections.slice(2) });
+      }
+      if (shot === 'edit') options.openEditId = data.managerCorrections[0].correctionRequestId;
+      if (shot === 'reject') {
+        options.openReturnId = data.managerCorrections[0].correctionRequestId;
+        options.returnNote = '';
+      }
+      if (shot === 'leave-return') {
+        data = Object.assign({}, data, { managerCorrections: [data.managerCorrections[2]] });
+        options.openReturnId = data.managerCorrections[0].correctionRequestId;
+        options.returnNote = ui.leaveReturnNote(data.managerCorrections[0].reason);
+      }
+      var note = document.getElementById('previewNote');
+      if (shot === 'single') note.textContent = '預覽 · 單筆 · 潘淑華 B09502';
+      if (shot === 'grouped') note.textContent = '預覽 · 同一人 4 筆 · 潘淑華 B09502';
+      ui.mount('#app', data, options);
+    })();
+  </script>
+</body>
+</html>
