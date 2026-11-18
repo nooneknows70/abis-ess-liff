@@ -364,7 +364,12 @@
 
   function leaveReturnNote(reason) {
     var hint = analyzeReason(reason);
-    var text = !hint.leave ? sccT('leaveNoteGeneric') : fill('leaveNote', { type: leaveTypeName(hint.leaveType), hours: hint.hours });
+    return !hint.leave ? sccT('leaveNoteGeneric') : fill('leaveNote', { type: leaveTypeName(hint.leaveType), hours: hint.hours });
+  }
+
+  function withLeaveRequestMark(note) {
+    var text = String(note || '').replace(/\s+$/, '');
+    if (text.indexOf(LEAVE_REQUEST_MARK) >= 0) return text;
     return text + '\n' + LEAVE_REQUEST_MARK;
   }
 
@@ -891,6 +896,7 @@ function rawPunchLines(row) {
     if (!row || !root) return;
     var note = readNote(root);
     var problem = validateReject(note);
+    if (root.getAttribute('data-scc-leave-mark') === '1') note = withLeaveRequestMark(note);
     if (problem) {
       setError(id, problem);
       var field = root.querySelector('[data-scc-note]');
@@ -922,13 +928,14 @@ function rawPunchLines(row) {
     if (agree && missingFields(rowById(id))) agree.disabled = !open;
   }
 
-  function openReturn(id, note) {
+  function openReturn(id, note, leaveRequest) {
     var root = cardRoot(id);
     if (!root) return;
     var box = root.querySelector('[data-scc-return-box]');
     if (box) box.hidden = false;
     var field = root.querySelector('[data-scc-note]');
     if (field && note) field.value = note;
+    if (leaveRequest) root.setAttribute('data-scc-leave-mark', '1');
     if (field) field.focus();
   }
 
@@ -947,7 +954,7 @@ function rawPunchLines(row) {
     if (leave) {
       var leaveId = leave.getAttribute('data-scc-leave-return');
       var leaveRow = rowById(leaveId);
-      openReturn(leaveId, leaveReturnNote(leaveRow && leaveRow.reason));
+      openReturn(leaveId, leaveReturnNote(leaveRow && leaveRow.reason), true);
       return;
     }
     var send = target.closest('[data-scc-return-send]');
@@ -1154,6 +1161,7 @@ function rawPunchLines(row) {
     buildPayload: buildPayload,
     validateReject: validateReject,
     leaveReturnNote: leaveReturnNote,
+    withLeaveRequestMark: withLeaveRequestMark,
     leaveRequestMark: LEAVE_REQUEST_MARK,
     renderManagerHtml: renderManagerHtml,
     approveSequential: approveSequential,

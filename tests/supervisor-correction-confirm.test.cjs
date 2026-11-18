@@ -154,18 +154,25 @@ test('agree and return use the existing per-item action, one call at a time', as
 test('return requires a reason and the leave action prefills one', () => {
   assert.match(ui.validateReject(''), /退回要寫原因/);
   assert.equal(ui.validateReject('請改申請假單'), '');
-  const payload = ui.buildPayload(cards[2], 'REJECT', ui.buildSuggestion(cards[2]), ui.leaveReturnNote(cards[2].reason), {
+  const visible = ui.leaveReturnNote(cards[2].reason);
+  assert.match(visible, /請特休 8 小時/);
+  assert.match(visible, /假單/);
+  assert.doesNotMatch(visible, /ABIS:LEAVE_REQUEST/);
+  const sent = ui.withLeaveRequestMark(visible);
+  assert.match(sent, /\nABIS:LEAVE_REQUEST$/);
+  assert.equal(ui.withLeaveRequestMark(sent), sent);
+  const payload = ui.buildPayload(cards[2], 'REJECT', ui.buildSuggestion(cards[2]), sent, {
     nextRequestId: () => 'REJECT-1'
   });
   assert.equal(payload.action, 'REJECT');
   assert.match(payload.note, /請特休 8 小時/);
-  assert.match(payload.note, /假單/);
-  assert.match(payload.note, /ABIS:LEAVE_REQUEST/);
+  assert.match(payload.note, /\nABIS:LEAVE_REQUEST$/);
   assert.equal(Object.prototype.hasOwnProperty.call(payload, 'payrollImpact'), false);
-  const html = ui.cardHtml(cards[2], { openReturn: true, returnNote: payload.note });
+  const html = ui.cardHtml(cards[2], { openReturn: true, returnNote: visible });
   assert.match(html, /退回並請員工改申請假單/);
   assert.match(html, /請特休 8 小時/);
   assert.match(html, /請改申請假單/);
+  assert.doesNotMatch(html, /ABIS:LEAVE_REQUEST/);
 });
 
 test('rest-day hint is guidance and stays out of batch agree', () => {
