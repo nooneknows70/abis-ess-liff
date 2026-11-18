@@ -77,8 +77,18 @@ test('missing punch context is omitted instead of breaking', () => {
   assert.match(html, /忘記打卡/);
   assert.doesNotMatch(html, /原始打卡/);
   assert.doesNotMatch(html, /排班/);
+  assert.equal(ui.buildSuggestion(row).payrollImpact, 'N');
   assert.equal(ui.buildSuggestion(row).payrollSource, 'fallback');
-  assert.match(ui.suggestionSentence(row), /先依不影響/);
+  assert.match(ui.cardHtml(row, {}), /預設：不影響（系統無建議）/);
+  assert.doesNotMatch(ui.cardHtml(cards[0], {}), /預設：/);
+  assert.doesNotMatch(ui.suggestionSentence(cards[0]), /預設：/);
+  assert.match(ui.texts.EN.payDefault, /Default: no payroll impact/);
+  assert.match(ui.texts.VI.payDefault, /Mặc định/);
+  assert.match(ui.texts.TH.payDefault, /ค่าเริ่มต้น/);
+  const stored = Object.assign({}, row, { payrollImpact: 'Y' });
+  assert.equal(ui.buildSuggestion(stored).payrollSource, 'stored');
+  assert.equal(ui.buildSuggestion(stored).payrollImpact, 'Y');
+  assert.doesNotMatch(ui.cardHtml(stored, {}), /預設：|Default:|Mặc định|ค่าเริ่มต้น/);
 });
 
 test('raw punches render as text and are not inputs', () => {
@@ -183,4 +193,64 @@ test('install waits for the existing inbox renderer and does not claim a release
   assert.match(html, /10\/14/);
   assert.match(html, /hr-count">1/);
   assert.doesNotMatch(source, /releaseSet|PROD_CURRENT/);
+});
+
+test('tap targets for return, edit, leave action, and the checkbox are 48px', () => {
+  const css = ui.styles();
+  assert.match(css, /\.scc-edit,\.scc-quiet,\.scc-return,\.scc-return-send\{[^}]*min-height:48px/);
+  assert.match(css, /\.scc-check input\{[^}]*width:48px;height:48px/);
+  assert.match(css, /\.scc-check\{[^}]*min-height:48px;min-width:48px/);
+  assert.doesNotMatch(css, /width:22px|min-height:44px/);
+});
+
+test('vi and th copy cover every zh string', () => {
+  const keys = Object.keys(ui.texts.ZH);
+  ['VI', 'TH', 'EN'].forEach((lang) => {
+    keys.forEach((key) => {
+      assert.equal(typeof ui.texts[lang][key], 'string', lang + '.' + key);
+      assert.ok(ui.texts[lang][key].length > 0, lang + '.' + key);
+    });
+    assert.equal(Object.keys(ui.texts[lang]).length, keys.length);
+  });
+});
+
+test('vietnamese cards use vi labels', () => {
+  const context = { console, document: undefined, currentLang: 'VI' };
+  vm.createContext(context);
+  vm.runInContext(source, context, { filename: 'supervisor-correction-confirm.js' });
+  const html = context.ABIS_SUPERVISOR_CORRECTION_CONFIRM.cardHtml(cards[2], { openReturn: true, returnNote: 'x' });
+  assert.match(html, /Đồng ý/);
+  assert.match(html, /Sửa/);
+  assert.match(html, /Trả lại và bảo nhân viên xin phép/);
+  assert.doesNotMatch(html, />同意</);
+});
+
+test('missing backend fields cannot be one-tap or batch agreed', () => {
+  const row = ui.fixtureMissingFields().managerCorrections[0];
+  assert.equal(ui.missingFields(row), true);
+  assert.equal(ui.missingFields(cards[0]), false);
+  assert.match(ui.suggestionSentence(row), /未填/);
+  assert.equal(ui.cardFlags(row).warning, true);
+  assert.equal(JSON.stringify(ui.batchIds([row, cards[0]], null)), JSON.stringify(['ACR-B09502-1014']));
+  const html = ui.renderManagerHtml(ui.fixtureMissingFields(), {});
+  assert.match(html, /這筆還缺欄位/);
+  assert.match(html, /data-scc-agree="ACR-B09502-MISSING" disabled/);
+  assert.doesNotMatch(html, /data-scc-pick="ACR-B09502-MISSING"/);
+  assert.match(html, /全部同意（1）/);
+  assert.equal(ui.agreeBlock(row, { querySelector: () => ({ hidden: true }) }), 'SCC_CONFIRM_FIELDS');
+  assert.equal(ui.agreeBlock(row, { querySelector: (sel) => sel === '.scc-form' ? { hidden: false } : null }), 'SCC_FIELDS_INCOMPLETE');
+  assert.equal(ui.agreeBlock(cards[0], null), '');
+});
+
+test('screen errors show a code and keep the raw message off the page', () => {
+  const err = new Error('ScriptLock timeout raw detail');
+  err.code = 'LOCK_CONTENTION';
+  const coded = ui.publicError(err, 'SCC_AGREE_FAILED');
+  assert.match(coded, /LOCK_CONTENTION/);
+  assert.match(coded, /沒有送出/);
+  assert.doesNotMatch(coded, /ScriptLock|raw detail/);
+  const bare = ui.publicError(new Error('secret detail'), 'SCC_REJECT_FAILED');
+  assert.match(bare, /SCC_REJECT_FAILED/);
+  assert.doesNotMatch(bare, /secret/);
+  assert.doesNotMatch(source, /err\.message/);
 });

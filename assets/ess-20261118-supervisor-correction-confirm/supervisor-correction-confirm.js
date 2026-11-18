@@ -11,18 +11,293 @@
 (function (global) {
   'use strict';
 
-  var TYPE_LABEL = {
-    MISSING_IN: '缺上班卡',
-    MISSING_OUT: '缺下班卡',
-    MISSING_BOTH: '上下班都缺卡',
-    WRONG_IN: '上班時間不正確',
-    WRONG_OUT: '下班時間不正確',
-    SHIFT_SCHEDULE: '班別不正確',
-    MULTI: '多項補正',
-    OTHER: '其他'
+  var TYPE_KEY = {
+    MISSING_IN: 'typeMissingIn',
+    MISSING_OUT: 'typeMissingOut',
+    MISSING_BOTH: 'typeMissingBoth',
+    WRONG_IN: 'typeWrongIn',
+    WRONG_OUT: 'typeWrongOut',
+    SHIFT_SCHEDULE: 'typeShift',
+    MULTI: 'typeMulti',
+    OTHER: 'typeOther'
   };
 
-  var LEAVE_RETURN_NOTE = '這筆看起來是請假，請改申請假單。出勤補正先退回。';
+  var SCC_UI = {
+    ZH: {
+      title: '主管出勤補正確認',
+      employee: '員工',
+      pending: '{n} 筆待確認',
+      batch: '全部同意（{n}）',
+      batchNote: '只同意沒有提醒的日期。有提醒的請單獨看。',
+      schedule: '排班',
+      rawPunch: '原始打卡',
+      anomaly: '異常',
+      request: '員工申請',
+      locked: '不能改',
+      noPunch: '未打卡',
+      inWord: '上班',
+      outWord: '下班',
+      shiftWord: '班別',
+      blank: '未填',
+      shiftBlank: '班別未填',
+      shiftMissing: '班別未提供',
+      thisDay: '這一天',
+      payNo: '不影響薪資',
+      payYes: '影響薪資',
+      payDefault: '預設：不影響（系統無建議）',
+      suggestClocks: '建議採認上班 {in}、下班 {out}，{shift}，{pay}。',
+      suggestDay: '建議採認{shift}，{pay}。',
+      edit: '修改',
+      collapse: '收合',
+      labelIn: '採認上班',
+      labelOut: '採認下班',
+      labelShift: '採認班別',
+      labelPay: '是否影響薪資',
+      leaveHint: '原因像是請假（{type} {hours} 小時）。這筆應走請假，不是出勤補正。',
+      leaveAction: '退回並請員工改申請假單',
+      restHint: '原因提到休假日。先對一下當天班表，再決定要不要同意。',
+      missingHint: '這筆還缺欄位，請先按修改確認後，再單筆同意。',
+      agree: '同意',
+      return: '退回',
+      returnLabel: '退回原因',
+      returnPlaceholder: '跟員工說為什麼退回',
+      returnHelp: '只有退回要寫原因。同意不用。',
+      returnSend: '送出退回',
+      returnNeed: '退回要寫原因，員工才知道要改什麼。',
+      leaveNote: '這筆看起來是請{type} {hours} 小時，請改申請假單。出勤補正先退回。',
+      leaveNoteGeneric: '這筆看起來是請假，請改申請假單。出勤補正先退回。',
+      agreedDay: '已同意 {date}',
+      agreedCount: '已同意 {n} 筆',
+      agreedPartial: '已同意 {n} 筆，後面停下。',
+      noneToBatch: '沒有可一次同意的日期',
+      approving: '正在同意 {i}/{n}',
+      returnedDay: '已退回 {date}',
+      errorFriendly: '沒有送出，請稍後再試（{code}）',
+      annual: '特休',
+      personal: '事假',
+      sick: '病假',
+      typeMissingIn: '缺上班卡',
+      typeMissingOut: '缺下班卡',
+      typeMissingBoth: '上下班都缺卡',
+      typeWrongIn: '上班時間不正確',
+      typeWrongOut: '下班時間不正確',
+      typeShift: '班別不正確',
+      typeMulti: '多項補正',
+      typeOther: '其他'
+    },
+    VI: {
+      title: 'Xác nhận điều chỉnh chấm công',
+      employee: 'Nhân viên',
+      pending: '{n} mục cần xác nhận',
+      batch: 'Đồng ý tất cả ({n})',
+      batchNote: 'Chỉ đồng ý những ngày không có nhắc. Ngày có nhắc hãy xem riêng.',
+      schedule: 'Ca',
+      rawPunch: 'Chấm công gốc',
+      anomaly: 'Bất thường',
+      request: 'Nhân viên xin',
+      locked: 'Không sửa được',
+      noPunch: 'Chưa chấm',
+      inWord: 'Vào',
+      outWord: 'Ra',
+      shiftWord: 'Ca',
+      blank: 'Chưa có',
+      shiftBlank: 'Chưa có ca',
+      shiftMissing: 'Chưa có ca',
+      thisDay: 'ngày này',
+      payNo: 'Không ảnh hưởng lương',
+      payYes: 'Có ảnh hưởng lương',
+      payDefault: 'Mặc định: không ảnh hưởng (hệ thống không đề xuất)',
+      suggestClocks: 'Đề nghị nhận vào {in}, ra {out}, {shift}, {pay}.',
+      suggestDay: 'Đề nghị nhận {shift}, {pay}.',
+      edit: 'Sửa',
+      collapse: 'Thu gọn',
+      labelIn: 'Giờ vào xác nhận',
+      labelOut: 'Giờ ra xác nhận',
+      labelShift: 'Ca xác nhận',
+      labelPay: 'Ảnh hưởng lương',
+      leaveHint: 'Lý do giống đơn nghỉ ({type} {hours} giờ). Nên xin nghỉ, không dùng điều chỉnh chấm công.',
+      leaveAction: 'Trả lại và bảo nhân viên xin phép',
+      restHint: 'Lý do nói đến ngày nghỉ. Hãy đối chiếu ca làm trước khi đồng ý.',
+      missingHint: 'Thiếu dữ liệu. Hãy bấm Sửa để kiểm tra, rồi đồng ý từng mục.',
+      agree: 'Đồng ý',
+      return: 'Trả lại',
+      returnLabel: 'Lý do trả lại',
+      returnPlaceholder: 'Nói với nhân viên vì sao trả lại',
+      returnHelp: 'Chỉ khi trả lại mới cần lý do.',
+      returnSend: 'Gửi trả lại',
+      returnNeed: 'Hãy viết lý do trả lại để nhân viên biết cần sửa gì.',
+      leaveNote: 'Mục này giống nghỉ {type} {hours} giờ. Hãy xin phép. Điều chỉnh chấm công được trả lại.',
+      leaveNoteGeneric: 'Mục này giống đơn nghỉ. Hãy xin phép. Điều chỉnh chấm công được trả lại.',
+      agreedDay: 'Đã đồng ý {date}',
+      agreedCount: 'Đã đồng ý {n} mục',
+      agreedPartial: 'Đã đồng ý {n} mục, các mục sau dừng lại.',
+      noneToBatch: 'Không có ngày nào để đồng ý một lần',
+      approving: 'Đang đồng ý {i}/{n}',
+      returnedDay: 'Đã trả lại {date}',
+      errorFriendly: 'Chưa gửi được, vui lòng thử lại ({code})',
+      annual: 'phép năm',
+      personal: 'việc riêng',
+      sick: 'ốm',
+      typeMissingIn: 'Thiếu giờ vào',
+      typeMissingOut: 'Thiếu giờ ra',
+      typeMissingBoth: 'Thiếu cả giờ vào và ra',
+      typeWrongIn: 'Giờ vào không đúng',
+      typeWrongOut: 'Giờ ra không đúng',
+      typeShift: 'Ca không đúng',
+      typeMulti: 'Nhiều mục',
+      typeOther: 'Khác'
+    },
+    TH: {
+      title: 'ยืนยันการแก้ไขเวลาทำงาน',
+      employee: 'พนักงาน',
+      pending: '{n} รายการรอยืนยัน',
+      batch: 'เห็นด้วยทั้งหมด ({n})',
+      batchNote: 'เห็นด้วยเฉพาะวันที่ไม่มีการเตือน วันที่เตือนให้ดูทีละรายการ',
+      schedule: 'กะ',
+      rawPunch: 'เวลาตอกบัตรเดิม',
+      anomaly: 'ผิดปกติ',
+      request: 'พนักงานขอ',
+      locked: 'แก้ไม่ได้',
+      noPunch: 'ไม่ได้ตอก',
+      inWord: 'เข้า',
+      outWord: 'ออก',
+      shiftWord: 'กะ',
+      blank: 'ยังไม่มี',
+      shiftBlank: 'ยังไม่มีกะ',
+      shiftMissing: 'ยังไม่มีกะ',
+      thisDay: 'วันนี้',
+      payNo: 'ไม่กระทบเงินเดือน',
+      payYes: 'กระทบเงินเดือน',
+      payDefault: 'ค่าเริ่มต้น: ไม่กระทบ (ระบบไม่มีคำแนะนำ)',
+      suggestClocks: 'แนะนำให้รับรองเข้า {in} ออก {out} กะ {shift} {pay}',
+      suggestDay: 'แนะนำให้รับรอง{shift} {pay}',
+      edit: 'แก้ไข',
+      collapse: 'ย่อ',
+      labelIn: 'เวลาเข้าที่รับรอง',
+      labelOut: 'เวลาออกที่รับรอง',
+      labelShift: 'กะที่รับรอง',
+      labelPay: 'ผลต่อเงินเดือน',
+      leaveHint: 'เหตุผลคล้ายการลา ({type} {hours} ชั่วโมง) ควรยื่นใบลา ไม่ใช่แก้เวลาทำงาน',
+      leaveAction: 'ส่งกลับและให้พนักงานยื่นใบลา',
+      restHint: 'เหตุผลพูดถึงวันหยุด ตรวจกะของวันนั้นก่อนตัดสินใจ',
+      missingHint: 'ข้อมูลยังไม่ครบ กดแก้ไขเพื่อตรวจ แล้วค่อยเห็นด้วยทีละรายการ',
+      agree: 'เห็นด้วย',
+      return: 'ส่งกลับ',
+      returnLabel: 'เหตุผลที่ส่งกลับ',
+      returnPlaceholder: 'บอกพนักงานว่าต้องแก้อะไร',
+      returnHelp: 'ต้องเขียนเหตุผลเฉพาะตอนส่งกลับ',
+      returnSend: 'ยืนยันส่งกลับ',
+      returnNeed: 'กรุณาเขียนเหตุผลที่ส่งกลับ เพื่อให้พนักงานรู้ว่าต้องแก้อะไร',
+      leaveNote: 'รายการนี้คล้ายลา{type} {hours} ชั่วโมง กรุณายื่นใบลา การแก้เวลาถูกส่งกลับ',
+      leaveNoteGeneric: 'รายการนี้คล้ายการลา กรุณายื่นใบลา การแก้เวลาถูกส่งกลับ',
+      agreedDay: 'เห็นด้วยแล้ว {date}',
+      agreedCount: 'เห็นด้วยแล้ว {n} รายการ',
+      agreedPartial: 'เห็นด้วยแล้ว {n} รายการ รายการถัดไปหยุดไว้',
+      noneToBatch: 'ไม่มีวันที่เห็นด้วยพร้อมกันได้',
+      approving: 'กำลังเห็นด้วย {i}/{n}',
+      returnedDay: 'ส่งกลับแล้ว {date}',
+      errorFriendly: 'ยังส่งไม่สำเร็จ โปรดลองอีกครั้ง ({code})',
+      annual: 'ลาพักร้อน',
+      personal: 'ลากิจ',
+      sick: 'ลาป่วย',
+      typeMissingIn: 'ขาดเวลาเข้า',
+      typeMissingOut: 'ขาดเวลาออก',
+      typeMissingBoth: 'ขาดทั้งเวลาเข้าและออก',
+      typeWrongIn: 'เวลาเข้าไม่ถูกต้อง',
+      typeWrongOut: 'เวลาออกไม่ถูกต้อง',
+      typeShift: 'กะไม่ถูกต้อง',
+      typeMulti: 'หลายรายการ',
+      typeOther: 'อื่นๆ'
+    },
+    EN: {
+      title: 'Confirm attendance correction',
+      employee: 'Employee',
+      pending: '{n} to confirm',
+      batch: 'Agree all ({n})',
+      batchNote: 'Agree only covers days with no hint. Review hinted days one by one.',
+      schedule: 'Shift',
+      rawPunch: 'Raw punches',
+      anomaly: 'Anomaly',
+      request: 'Employee asked',
+      locked: 'Cannot change',
+      noPunch: 'No punch',
+      inWord: 'In',
+      outWord: 'Out',
+      shiftWord: 'Shift',
+      blank: 'Missing',
+      shiftBlank: 'Shift missing',
+      shiftMissing: 'No shift',
+      thisDay: 'this day',
+      payNo: 'No payroll impact',
+      payYes: 'Affects payroll',
+      payDefault: 'Default: no payroll impact (no system suggestion)',
+      suggestClocks: 'Suggested in {in}, out {out}, {shift}, {pay}.',
+      suggestDay: 'Suggested {shift}, {pay}.',
+      edit: 'Edit',
+      collapse: 'Hide',
+      labelIn: 'Confirmed in',
+      labelOut: 'Confirmed out',
+      labelShift: 'Confirmed shift',
+      labelPay: 'Payroll impact',
+      leaveHint: 'This reason looks like leave ({type}, {hours} hours). It should be a leave request, not an attendance correction.',
+      leaveAction: 'Return and ask for a leave request',
+      restHint: 'The reason mentions a rest day. Check the schedule before agreeing.',
+      missingHint: 'Some fields are missing. Open Edit, confirm them, then agree this day only.',
+      agree: 'Agree',
+      return: 'Return',
+      returnLabel: 'Return reason',
+      returnPlaceholder: 'Tell the employee what to change',
+      returnHelp: 'A reason is required only when you return this.',
+      returnSend: 'Send return',
+      returnNeed: 'Write a return reason so the employee knows what to change.',
+      leaveNote: 'This looks like {type} leave for {hours} hours. Please submit a leave request. This correction is returned.',
+      leaveNoteGeneric: 'This looks like leave. Please submit a leave request. This correction is returned.',
+      agreedDay: 'Agreed {date}',
+      agreedCount: 'Agreed {n}',
+      agreedPartial: 'Agreed {n}, then stopped.',
+      noneToBatch: 'No days can be agreed together',
+      approving: 'Agreeing {i}/{n}',
+      returnedDay: 'Returned {date}',
+      errorFriendly: 'Could not send. Please try again ({code})',
+      annual: 'annual leave',
+      personal: 'personal leave',
+      sick: 'sick leave',
+      typeMissingIn: 'Missing in punch',
+      typeMissingOut: 'Missing out punch',
+      typeMissingBoth: 'Missing both punches',
+      typeWrongIn: 'In time is wrong',
+      typeWrongOut: 'Out time is wrong',
+      typeShift: 'Shift is wrong',
+      typeMulti: 'Several items',
+      typeOther: 'Other'
+    }
+  };
+
+  function langCode() {
+    var lang = typeof currentLang === 'string' ? currentLang.toUpperCase() : 'ZH';
+    return SCC_UI[lang] ? lang : 'ZH';
+  }
+
+  function sccT(key) {
+    var pack = SCC_UI[langCode()] || SCC_UI.ZH;
+    var value = pack && pack[key];
+    return value || (SCC_UI.ZH[key] || key);
+  }
+
+  function fill(key, map) {
+    var text = sccT(key);
+    Object.keys(map || {}).forEach(function (name) {
+      text = text.split('{' + name + '}').join(map[name] == null ? '' : String(map[name]));
+    });
+    return text;
+  }
+
+  function leaveTypeName(name) {
+    if (name === '特休') return sccT('annual');
+    if (name === '事假') return sccT('personal');
+    if (name === '病假') return sccT('sick');
+    return name || '';
+  }
 
   function esc(value) {
     return String(value == null ? '' : value)
@@ -83,8 +358,29 @@
 
   function leaveReturnNote(reason) {
     var hint = analyzeReason(reason);
-    if (!hint.leave) return LEAVE_RETURN_NOTE;
-    return '這筆看起來是請' + hint.leaveType + ' ' + hint.hours + ' 小時，請改申請假單。出勤補正先退回。';
+    if (!hint.leave) return sccT('leaveNoteGeneric');
+    return fill('leaveNote', { type: leaveTypeName(hint.leaveType), hours: hint.hours });
+  }
+
+  function missingFields(row) {
+    var sug = buildSuggestion(row);
+    var inn = hm(sug.firstIn);
+    var out = hm(sug.lastOut);
+    var shift = String(sug.shiftCode || '');
+    return !!((inn || out) && (!inn || !out || !shift));
+  }
+
+  function cardFlags(row) {
+    var hint = analyzeReason(row && row.reason);
+    var missing = missingFields(row);
+    return {
+      leave: hint.leave,
+      leaveType: hint.leaveType,
+      hours: hint.hours,
+      restDay: hint.restDay,
+      missing: missing,
+      warning: !!(hint.warning || missing)
+    };
   }
 
 function rawPunchLines(row) {
@@ -99,25 +395,25 @@ function rawPunchLines(row) {
       var out = String(punch && punch.direction || '').toUpperCase() === 'OUT';
       if (out) hasOut = true;
       else hasIn = true;
-      lines.push((out ? '下班 ' : '上班 ') + (hm(punch && punch.at) || '未打卡'));
+      lines.push((out ? sccT('outWord') : sccT('inWord')) + ' ' + (hm(punch && punch.at) || sccT('noPunch')));
     });
-    if (snap && snap.missingIn && !hasIn) lines.unshift('上班 未打卡');
-    if (snap && snap.missingOut && !hasOut) lines.push('下班 未打卡');
+    if (snap && snap.missingIn && !hasIn) lines.unshift(sccT('inWord') + ' ' + sccT('noPunch'));
+    if (snap && snap.missingOut && !hasOut) lines.push(sccT('outWord') + ' ' + sccT('noPunch'));
     return lines;
   }
     if (!snap) return null;
     var hasPunch = snap.firstIn || snap.lastOut || snap.missingIn != null || snap.missingOut != null;
     if (!hasPunch) return null;
-    var inn = snap.missingIn || !hm(snap.firstIn) ? '未打卡' : hm(snap.firstIn);
-    var out = snap.missingOut || !hm(snap.lastOut) ? '未打卡' : hm(snap.lastOut);
-    return ['上班 ' + inn, '下班 ' + out];
+    var inn = snap.missingIn || !hm(snap.firstIn) ? sccT('noPunch') : hm(snap.firstIn);
+    var out = snap.missingOut || !hm(snap.lastOut) ? sccT('noPunch') : hm(snap.lastOut);
+    return [sccT('inWord') + ' ' + inn, sccT('outWord') + ' ' + out];
   }
 
   function scheduleText(row) {
     var snap = snapshotOf(row);
     if (!snap) return '';
     if (!snap.shiftName && !snap.shiftCode && !snap.expectedStart && !snap.expectedEnd) return '';
-    var name = snap.shiftName || shiftName(snap.shiftCode, row) || '班別未提供';
+    var name = snap.shiftName || shiftName(snap.shiftCode, row) || sccT('shiftMissing');
     var start = hm(snap.expectedStart);
     var end = hm(snap.expectedEnd);
     if (start && end) return name + ' ' + start + '–' + end;
@@ -138,9 +434,9 @@ function rawPunchLines(row) {
 
   function requestClockText(row) {
     var bits = [];
-    if (row && row.requestedFirstIn) bits.push('上班 ' + (hm(row.requestedFirstIn) || row.requestedFirstIn));
-    if (row && row.requestedLastOut) bits.push('下班 ' + (hm(row.requestedLastOut) || row.requestedLastOut));
-    if (row && row.requestedShiftCode) bits.push('班別 ' + (shiftName(row.requestedShiftCode, row) || row.requestedShiftCode));
+    if (row && row.requestedFirstIn) bits.push(sccT('inWord') + ' ' + (hm(row.requestedFirstIn) || row.requestedFirstIn));
+    if (row && row.requestedLastOut) bits.push(sccT('outWord') + ' ' + (hm(row.requestedLastOut) || row.requestedLastOut));
+    if (row && row.requestedShiftCode) bits.push(sccT('shiftWord') + ' ' + (shiftName(row.requestedShiftCode, row) || row.requestedShiftCode));
     return bits.join('、');
   }
 
@@ -171,25 +467,22 @@ function rawPunchLines(row) {
     };
   }
 
-function suggestionSentence(row) {
-  var sug = buildSuggestion(row);
-  var inn = hm(sug.firstIn);
-  var out = hm(sug.lastOut);
-  var shift = shiftName(sug.shiftCode, row) || '';
-  var pay = sug.payrollImpact === 'Y' ? '影響薪資' : '不影響薪資';
-  var text = inn || out
-    ? '建議採認上班 ' + (inn || '未填') + '、下班 ' + (out || '未填') + '，' + (shift || '班別未填') + '，' + pay + '。'
-    : '建議採認' + (shift ? shift : '這一天') + '，' + pay + '。';
-    if (sug.payrollSource === 'fallback') {
-      text += '系統還沒標是否影響薪資，先依不影響。要改再按修改。';
-    }
+  function suggestionSentence(row) {
+    var sug = buildSuggestion(row);
+    var inn = hm(sug.firstIn);
+    var out = hm(sug.lastOut);
+    var shift = shiftName(sug.shiftCode, row) || '';
+    var pay = sug.payrollImpact === 'Y' ? sccT('payYes') : sccT('payNo');
+    var text = inn || out
+      ? fill('suggestClocks', { in: inn || sccT('blank'), out: out || sccT('blank'), shift: shift || sccT('shiftBlank'), pay: pay })
+      : fill('suggestDay', { shift: shift || sccT('thisDay'), pay: pay });
     return text;
   }
 
   function batchIds(rows, picked) {
     return (rows || []).filter(function (row) {
       if (!row || !row.correctionRequestId) return false;
-      if (analyzeReason(row.reason).warning) return false;
+      if (cardFlags(row).warning) return false;
       if (picked && !picked[row.correctionRequestId]) return false;
       return true;
     }).map(function (row) { return row.correctionRequestId; });
@@ -216,7 +509,7 @@ function suggestionSentence(row) {
   }
 
   function validateReject(note) {
-    return String(note || '').trim() ? '' : '退回要寫原因，員工才知道要改什麼。';
+    return String(note || '').trim() ? '' : sccT('returnNeed');
   }
 
   function fact(label, body) {
@@ -237,20 +530,21 @@ function suggestionSentence(row) {
     if (selected && !seen[selected]) {
       html = '<option value="' + esc(selected) + '" selected>' + esc(shiftName(selected, row) || selected) + '</option>' + html;
     }
-    if (!html) html = '<option value="">班別未提供</option>';
+    if (!html) html = '<option value="">' + esc(sccT('shiftMissing')) + '</option>';
     return html;
   }
 
   function cardHtml(row, options) {
     options = options || {};
     var id = String(row.correctionRequestId || '');
-    var hint = analyzeReason(row.reason);
+    var hint = cardFlags(row);
     var sug = buildSuggestion(row);
     var punches = rawPunchLines(row);
     var schedule = scheduleText(row);
     var anomaly = anomalyText(row);
     var requestClock = requestClockText(row);
-    var typeLabel = TYPE_LABEL[String(row.requestType || '').toUpperCase()] || '';
+    var typeKey = TYPE_KEY[String(row.requestType || '').toUpperCase()];
+    var typeLabel = typeKey ? sccT(typeKey) : '';
     var chip = anomaly || typeLabel;
     var openEdit = !!options.openEdit;
     var openReturn = !!options.openReturn;
@@ -259,23 +553,26 @@ function suggestionSentence(row) {
     var showPick = !!options.showPick && !hint.warning;
 
     var facts = '';
-    facts += fact('排班', schedule ? esc(schedule) : '');
+    facts += fact(sccT('schedule'), schedule ? esc(schedule) : '');
     if (punches) {
-      facts += fact('原始打卡', punches.map(esc).join('<br>') + '<span class="scc-lock">不能改</span>');
+      facts += fact(sccT('rawPunch'), punches.map(esc).join('<br>') + '<span class="scc-lock">' + esc(sccT('locked')) + '</span>');
     }
-    facts += fact('異常', anomaly ? esc(anomaly) : '');
+    facts += fact(sccT('anomaly'), anomaly ? esc(anomaly) : '');
     var requestBody = '';
     if (requestClock) requestBody += esc(requestClock);
     if (row.reason) requestBody += (requestBody ? '<br>' : '') + esc(row.reason);
-    facts += fact('員工申請', requestBody);
+    facts += fact(sccT('request'), requestBody);
 
     var hints = '';
     if (hint.leave) {
-      hints += '<div class="scc-hint scc-hint-leave" role="note"><p>原因像是請假（' + esc(hint.leaveType) + ' ' + esc(hint.hours) + ' 小時）。這筆應走請假，不是出勤補正。</p>' +
-        '<button type="button" class="scc-quiet" data-scc-leave-return="' + esc(id) + '">退回並請員工改申請假單</button></div>';
+      hints += '<div class="scc-hint scc-hint-leave" role="note"><p>' + esc(fill('leaveHint', { type: leaveTypeName(hint.leaveType), hours: hint.hours })) + '</p>' +
+        '<button type="button" class="scc-quiet" data-scc-leave-return="' + esc(id) + '">' + esc(sccT('leaveAction')) + '</button></div>';
     }
     if (hint.restDay) {
-      hints += '<div class="scc-hint scc-hint-rest" role="note"><p>原因提到休假日。先對一下當天班表，再決定要不要同意。</p></div>';
+      hints += '<div class="scc-hint scc-hint-rest" role="note"><p>' + esc(sccT('restHint')) + '</p></div>';
+    }
+    if (hint.missing) {
+      hints += '<div class="scc-hint scc-hint-missing" role="note"><p>' + esc(sccT('missingHint')) + '</p></div>';
     }
 
     var pick = showPick
@@ -286,26 +583,27 @@ function suggestionSentence(row) {
       '<div class="scc-card-top">' + pick + (chip ? '<span class="scc-chip">' + esc(chip) + '</span>' : '') + '</div>' +
       (facts ? '<dl class="scc-facts">' + facts + '</dl>' : '') +
       '<p class="scc-suggest">' + esc(suggestionSentence(row)) + '</p>' +
-      '<button type="button" class="scc-edit" data-scc-edit="' + esc(id) + '" aria-expanded="' + (openEdit ? 'true' : 'false') + '">' + (openEdit ? '收合' : '修改') + '</button>' +
+      (sug.payrollSource === 'fallback' ? '<p class="scc-default">' + esc(sccT('payDefault')) + '</p>' : '') +
+      '<button type="button" class="scc-edit" data-scc-edit="' + esc(id) + '" aria-expanded="' + (openEdit ? 'true' : 'false') + '">' + esc(openEdit ? sccT('collapse') : sccT('edit')) + '</button>' +
       '<div class="scc-form"' + (openEdit ? '' : ' hidden') + '>' +
-        '<label>採認上班<input type="datetime-local" data-scc-in="' + esc(id) + '" value="' + esc(dtLocal(sug.firstIn, row.date)) + '"></label>' +
-        '<label>採認下班<input type="datetime-local" data-scc-out="' + esc(id) + '" value="' + esc(dtLocal(sug.lastOut, row.date)) + '"></label>' +
-        '<label>採認班別<select data-scc-shift="' + esc(id) + '">' + shiftOptionsHtml(row, sug.shiftCode) + '</select></label>' +
-        '<label>是否影響薪資<select data-scc-pay="' + esc(id) + '">' +
-          '<option value="N"' + (sug.payrollImpact !== 'Y' ? ' selected' : '') + '>不影響薪資</option>' +
-          '<option value="Y"' + (sug.payrollImpact === 'Y' ? ' selected' : '') + '>影響薪資</option>' +
+        '<label>' + esc(sccT('labelIn')) + '<input type="datetime-local" data-scc-in="' + esc(id) + '" value="' + esc(dtLocal(sug.firstIn, row.date)) + '"></label>' +
+        '<label>' + esc(sccT('labelOut')) + '<input type="datetime-local" data-scc-out="' + esc(id) + '" value="' + esc(dtLocal(sug.lastOut, row.date)) + '"></label>' +
+        '<label>' + esc(sccT('labelShift')) + '<select data-scc-shift="' + esc(id) + '">' + shiftOptionsHtml(row, sug.shiftCode) + '</select></label>' +
+        '<label>' + esc(sccT('labelPay')) + '<select data-scc-pay="' + esc(id) + '">' +
+          '<option value="N"' + (sug.payrollImpact !== 'Y' ? ' selected' : '') + '>' + esc(sccT('payNo')) + '</option>' +
+          '<option value="Y"' + (sug.payrollImpact === 'Y' ? ' selected' : '') + '>' + esc(sccT('payYes')) + '</option>' +
         '</select></label>' +
       '</div>' +
       hints +
       '<div class="scc-actions">' +
-        '<button type="button" class="scc-agree" data-scc-agree="' + esc(id) + '">同意</button>' +
-        '<button type="button" class="scc-return" data-scc-return="' + esc(id) + '">退回</button>' +
+        '<button type="button" class="scc-agree" data-scc-agree="' + esc(id) + '"' + (hint.missing && !openEdit ? ' disabled' : '') + '>' + esc(sccT('agree')) + '</button>' +
+        '<button type="button" class="scc-return" data-scc-return="' + esc(id) + '">' + esc(sccT('return')) + '</button>' +
       '</div>' +
       '<div class="scc-return-box"' + (openReturn ? '' : ' hidden') + ' data-scc-return-box="' + esc(id) + '">' +
-        '<label>退回原因<textarea data-scc-note="' + esc(id) + '" maxlength="500" placeholder="跟員工說為什麼退回">' + esc(returnNote) + '</textarea></label>' +
-        '<p class="scc-help">只有退回要寫原因。同意不用。</p>' +
+        '<label>' + esc(sccT('returnLabel')) + '<textarea data-scc-note="' + esc(id) + '" maxlength="500" placeholder="' + esc(sccT('returnPlaceholder')) + '">' + esc(returnNote) + '</textarea></label>' +
+        '<p class="scc-help">' + esc(sccT('returnHelp')) + '</p>' +
         '<p class="scc-error" data-scc-error="' + esc(id) + '" hidden></p>' +
-        '<button type="button" class="scc-return-send" data-scc-return-send="' + esc(id) + '">送出退回</button>' +
+        '<button type="button" class="scc-return-send" data-scc-return-send="' + esc(id) + '">' + esc(sccT('returnSend')) + '</button>' +
       '</div>' +
     '</article>';
   }
@@ -338,7 +636,7 @@ function suggestionSentence(row) {
     if (typeof options.filter === 'function') rows = rows.filter(options.filter);
     if (!rows.length) return '';
     var groups = groupRows(rows);
-    return '<section class="scc" data-scc-root="1"><h2 class="scc-title">主管出勤補正確認</h2>' +
+    return '<section class="scc" data-scc-root="1"><h2 class="scc-title">' + esc(sccT('title')) + '</h2>' +
       groups.map(function (group) { return groupHtml(group, options); }).join('') +
       '</section>';
   }
@@ -346,13 +644,13 @@ function suggestionSentence(row) {
   function groupHtml(group, options) {
     var clean = batchIds(group.rows, null);
     var showBatch = group.rows.length > 1 && clean.length > 0 && !options.hideBatch;
-    var person = (group.employeeName || '員工') + (group.employeeId ? ' · ' + group.employeeId : '');
+    var person = (group.employeeName || sccT('employee')) + (group.employeeId ? ' · ' + group.employeeId : '');
     var batch = showBatch
-      ? '<button type="button" class="scc-batch" data-scc-batch="' + esc(group.employeeId) + '">全部同意（' + clean.length + '）</button>' +
-        '<p class="scc-batch-note">只同意沒有提醒的日期。有提醒的請單獨看。</p>'
+      ? '<button type="button" class="scc-batch" data-scc-batch="' + esc(group.employeeId) + '">' + esc(fill('batch', { n: clean.length })) + '</button>' +
+        '<p class="scc-batch-note">' + esc(sccT('batchNote')) + '</p>'
       : '';
     return '<section class="scc-person" data-scc-employee="' + esc(group.employeeId) + '">' +
-      '<header class="scc-person-head"><p class="scc-name">' + esc(person) + '</p><p class="scc-count">' + group.rows.length + ' 筆待確認</p>' + batch + '</header>' +
+      '<header class="scc-person-head"><p class="scc-name">' + esc(person) + '</p><p class="scc-count">' + esc(fill('pending', { n: group.rows.length })) + '</p>' + batch + '</header>' +
       group.rows.map(function (row) {
         var cardOptions = {
           openEdit: options.openEditId && options.openEditId === row.correctionRequestId,
@@ -397,7 +695,7 @@ function suggestionSentence(row) {
     for (var i = 0; i < ids.length; i++) {
       var row = byId[ids[i]];
       if (!row) continue;
-      if (analyzeReason(row.reason).warning && !opts.allowWarning) continue;
+      if (cardFlags(row).warning && !opts.allowWarning) continue;
       var values = typeof opts.values === 'function' ? opts.values(row) : buildSuggestion(row);
       var payload = buildPayload(row, 'APPROVE', values, '', opts);
       payloads.push(payload);
@@ -423,8 +721,8 @@ function suggestionSentence(row) {
       '.scc-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:14px;margin:10px 0;box-shadow:0 1px 2px rgba(17,24,39,.04)}',
       '.scc-card.is-warn{border-color:#fdba74}',
       '.scc-card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}',
-      '.scc-check{display:flex;align-items:center;gap:8px;font-weight:800}',
-      '.scc-check input{width:22px;height:22px;margin:0}',
+      '.scc-check{display:flex;align-items:center;gap:8px;font-weight:800;min-height:48px;min-width:48px}',
+      '.scc-check input{width:48px;height:48px;min-width:48px;min-height:48px;margin:0;flex:0 0 48px}',
       '.scc-date{font-size:18px;font-weight:800}',
       '.scc-chip{margin-left:auto;background:#fff7ed;color:#9a3412;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:700}',
       '.scc-facts{margin:0;display:grid;gap:8px}',
@@ -433,7 +731,8 @@ function suggestionSentence(row) {
       '.scc-facts dd{margin:0;font-size:15px;line-height:1.45;font-weight:650}',
       '.scc-lock{display:block;margin-top:2px;color:#6b7280;font-size:12px;font-weight:500}',
       '.scc-suggest{margin:10px 0 0;background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.5}',
-      '.scc-edit,.scc-quiet,.scc-return,.scc-return-send{background:#fff;color:#1f2937;border:1px solid #d1d5db;border-radius:12px;min-height:44px;font-weight:700}',
+      '.scc-default{margin:8px 0 0;color:#92400e;font-size:13px;font-weight:700;line-height:1.4}',
+      '.scc-edit,.scc-quiet,.scc-return,.scc-return-send{background:#fff;color:#1f2937;border:1px solid #d1d5db;border-radius:12px;min-height:48px;font-weight:700}',
       '.scc-edit,.scc-quiet{width:auto;padding:8px 12px;margin-top:8px}',
       '.scc-form{display:grid;gap:8px;margin-top:8px}',
       '.scc-form[hidden],.scc-return-box[hidden],.scc-error[hidden]{display:none !important}',
@@ -443,6 +742,7 @@ function suggestionSentence(row) {
       '.scc-hint p{margin:0}',
       '.scc-hint-leave{background:#fff7ed;border:1px solid #fdba74}',
       '.scc-hint-rest{background:#eff6ff;border:1px solid #bfdbfe}',
+      '.scc-hint-missing{background:#fff7ed;border:1px solid #fdba74}',
       '.scc-actions{display:grid;gap:8px;margin-top:12px}',
       '.scc-agree{border:0;border-radius:12px;background:#157a45;color:#fff;font-weight:800;font-size:16px;min-height:48px}',
       '.scc-return,.scc-return-send{width:100%}',
@@ -486,6 +786,24 @@ function suggestionSentence(row) {
     if (model.deps && typeof model.deps.message === 'function') model.deps.message(text);
   }
 
+  function publicError(err, fallbackCode) {
+    var code = String(fallbackCode || 'SCC_FAILED');
+    if (err) {
+      try { console.error(err); } catch (ignore) {}
+      if (err.code || err.errorCode) code = String(err.code || err.errorCode);
+    }
+    return fill('errorFriendly', { code: code });
+  }
+
+  function agreeBlock(row, root) {
+    if (!missingFields(row)) return '';
+    var form = root && root.querySelector ? root.querySelector('.scc-form') : null;
+    if (!form || form.hidden) return 'SCC_CONFIRM_FIELDS';
+    var values = readValues(row, root);
+    if (!hm(values.firstIn) || !hm(values.lastOut) || !values.shiftCode) return 'SCC_FIELDS_INCOMPLETE';
+    return '';
+  }
+
   async function sendOne(row, action, values, note) {
     if (!model.deps || typeof model.deps.call !== 'function') throw new Error('目前無法送出');
     var payload = buildPayload(row, action, values, note, {
@@ -500,14 +818,20 @@ function suggestionSentence(row) {
     if (model.busy) return;
     var row = rowById(id);
     if (!row) return;
+    var root = cardRoot(id);
+    var block = agreeBlock(row, root);
+    if (block) {
+      showStatus(publicError(null, block));
+      return;
+    }
     model.busy = true;
     if (button) button.disabled = true;
     try {
-      await sendOne(row, 'APPROVE', readValues(row, cardRoot(id)), '');
-      showStatus('已同意 ' + shortDate(row.date));
+      await sendOne(row, 'APPROVE', readValues(row, root), '');
+      showStatus(fill('agreedDay', { date: shortDate(row.date) }));
       if (model.deps.refresh) await model.deps.refresh();
     } catch (err) {
-      showStatus(err && err.message ? err.message : '沒有送出');
+      showStatus(publicError(err, 'SCC_AGREE_FAILED'));
     } finally {
       model.busy = false;
       if (button) button.disabled = false;
@@ -526,7 +850,7 @@ function suggestionSentence(row) {
     });
     var ids = batchIds(rows, picked);
     if (!ids.length) {
-      showStatus('沒有可一次同意的日期');
+      showStatus(sccT('noneToBatch'));
       return;
     }
     model.busy = true;
@@ -534,20 +858,20 @@ function suggestionSentence(row) {
     var done = 0;
     try {
       for (var i = 0; i < ids.length; i++) {
-        if (button) button.textContent = '正在同意 ' + (i + 1) + '/' + ids.length;
+        if (button) button.textContent = fill('approving', { i: i + 1, n: ids.length });
         var row = rowById(ids[i]);
         await sendOne(row, 'APPROVE', readValues(row, cardRoot(ids[i])), '');
         done += 1;
       }
-      showStatus('已同意 ' + done + ' 筆');
+      showStatus(fill('agreedCount', { n: done }));
       if (model.deps.refresh) await model.deps.refresh();
     } catch (err) {
-      showStatus((done ? '已同意 ' + done + ' 筆，後面停下。' : '') + (err && err.message ? err.message : '沒有送出'));
+      showStatus((done ? fill('agreedPartial', { n: done }) : '') + publicError(err, 'SCC_BATCH_FAILED'));
     } finally {
       model.busy = false;
       if (button) {
         button.disabled = false;
-        button.textContent = '全部同意（' + ids.length + '）';
+        button.textContent = fill('batch', { n: ids.length });
       }
     }
   }
@@ -569,10 +893,10 @@ function suggestionSentence(row) {
     model.busy = true;
     try {
       await sendOne(row, 'REJECT', readValues(row, root), note);
-      showStatus('已退回 ' + shortDate(row.date));
+      showStatus(fill('returnedDay', { date: shortDate(row.date) }));
       if (model.deps.refresh) await model.deps.refresh();
     } catch (err) {
-      setError(id, err && err.message ? err.message : '沒有送出');
+      setError(id, publicError(err, 'SCC_REJECT_FAILED'));
     } finally {
       model.busy = false;
     }
@@ -585,7 +909,9 @@ function suggestionSentence(row) {
     var open = form.hidden;
     form.hidden = !open;
     button.setAttribute('aria-expanded', open ? 'true' : 'false');
-    button.textContent = open ? '收合' : '修改';
+    button.textContent = open ? sccT('collapse') : sccT('edit');
+    var agree = root.querySelector('.scc-agree');
+    if (agree && missingFields(rowById(id))) agree.disabled = !open;
   }
 
   function openReturn(id, note) {
@@ -779,8 +1105,38 @@ function suggestionSentence(row) {
     };
   }
 
+  function fixtureMissingFields() {
+    var base = fixtureB09502();
+    var shifts = base.shiftOptions;
+    return {
+      shiftOptions: shifts,
+      managerCorrections: [
+        {
+          correctionRequestId: 'ACR-B09502-MISSING',
+          employeeId: 'B09502',
+          employeeName: '潘淑華',
+          date: '2026-11-04',
+          requestType: 'MISSING_OUT',
+          reason: '只記得下班時間',
+          requestedFirstIn: '',
+          requestedLastOut: '2026-11-04 17:20',
+          requestedShiftCode: '',
+          payrollImpact: '',
+          shiftOptions: shifts
+        },
+        base.managerCorrections[0]
+      ]
+    };
+  }
+
   var api = {
     analyzeReason: analyzeReason,
+    missingFields: missingFields,
+    cardFlags: cardFlags,
+    agreeBlock: agreeBlock,
+    publicError: publicError,
+    sccT: sccT,
+    texts: SCC_UI,
     buildSuggestion: buildSuggestion,
     rawPunchLines: rawPunchLines,
     scheduleText: scheduleText,
@@ -794,6 +1150,7 @@ function suggestionSentence(row) {
     approveSequential: approveSequential,
     cardHtml: cardHtml,
     fixtureB09502: fixtureB09502,
+    fixtureMissingFields: fixtureMissingFields,
     install: install,
     mount: mount,
     styles: styles

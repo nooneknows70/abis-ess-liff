@@ -48,9 +48,20 @@
         options.openReturnId = data.managerCorrections[0].correctionRequestId;
         options.returnNote = ui.leaveReturnNote(data.managerCorrections[0].reason);
       }
+      if (shot === 'missing_fields') data = ui.fixtureMissingFields();
+      var lang = (params.get('lang') || 'ZH').toUpperCase();
+      if (lang === 'VI' || lang === 'TH' || lang === 'ZH' || lang === 'EN') window.currentLang = lang;
       var note = document.getElementById('previewNote');
-      if (shot === 'single') note.textContent = '預覽 · 單筆 · 潘淑華 B09502';
-      if (shot === 'grouped') note.textContent = '預覽 · 同一人 4 筆 · 潘淑華 B09502';
+      var notes = {
+        single: '預覽 · 單筆 · 潘淑華 B09502',
+        grouped: '預覽 · 同一人 4 筆 · 潘淑華 B09502',
+        edit: '預覽 · 修改已展開',
+        reject: '預覽 · 退回要寫原因',
+        hints: '預覽 · 請假與休假日提示',
+        'leave-return': '預覽 · 改申請假單，原因已帶入',
+        missing_fields: '預覽 · 缺欄位 · 不能一鍵同意，也不在全部同意裡'
+      };
+      if (notes[shot]) note.textContent = notes[shot];
       ui.mount('#app', data, options);
     })();
   </script>
