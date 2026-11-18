@@ -1,0 +1,22 @@
+{
+  "version": "P5A1_HF9_P1_CANDIDATE_20261118",
+  "baseAsset": "assets/ess-20261007-rc13-hf8",
+  "status": "CANDIDATE",
+  "production": false,
+  "businessRulesChanged": false,
+  "backendChanged": false,
+  "changes": [
+    "Login and forgot-PIN cards use border-box so width 100% includes padding.",
+    "Notification center card and rows stay inside the viewport.",
+    "Home quick actions put the icon above a horizontal title of at most two lines.",
+    "Home order is quick actions, then recent records.",
+    "Stray style tags and HTML comments are removed so later CSS parses.",
+    "Native confirm() calls go through the in-app dialog.",
+    "Screen errors are localized friendly text plus a short code. Raw errors stay on console.error."
+  ],
+  "patchCopies": [
+    "punch-exempt-admin.js",
+    "ess-dialog-hf4.js",
+    "leave-submit-hf3r1.js"
+  ]
+}

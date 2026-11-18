@@ -1,0 +1,37 @@
+name: ABIS ESS hf9 P1 candidate (synthetic only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p1-hf9-ci.yml'
+      - 'assets/ess-20261118-p1-hf9/**'
+      - 'tests/p1-hf9.test.cjs'
+  push:
+    branches:
+      - 'cursor/p1-hf9-ui-fixes-3d74'
+    paths:
+      - '.github/workflows/p1-hf9-ci.yml'
+      - 'assets/ess-20261118-p1-hf9/**'
+      - 'tests/p1-hf9.test.cjs'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic:
+    name: hf9 P1 contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout candidate without persisting credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Parse hf9 JavaScript
+        run: |
+          node --check assets/ess-20261118-p1-hf9/abis-ess.bundle.js
+          node --check assets/ess-20261118-p1-hf9/punch-exempt-admin.js
+          node --check assets/ess-20261118-p1-hf9/ess-dialog-hf4.js
+          node --check assets/ess-20261118-p1-hf9/leave-submit-hf3r1.js
+      - name: Run hf9 contract tests
+        run: node --test tests/p1-hf9.test.cjs
