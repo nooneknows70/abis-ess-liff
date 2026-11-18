@@ -394,61 +394,70 @@
     "doesNotReplace": "ABIS_ESS_PHASE1A_RC1_33_PROD_20261018_V153",
     "prodCurrentReleaseSet": "ABIS_ESS_PHASE1A_RC1_33_PROD_20261018_V153",
     "recordedAt": "2026-11-18",
-    "purpose": "Register issues #43 and #44 on a candidate release set. Production stays V153.",
+    "purpose": "Register issues #43 and #44 on a candidate release set that loads the hf9 bundle. Production stays V153.",
     "backendDependency": {
       "issue": 199,
       "repository": "nooneknows70/abis-ess-backend",
       "mainCommit": "5ec7de86284772079f1549ef3ed5f3d48baf7cd4",
       "note": "Lite systemSnapshot/suggestion is already on backend main 5ec7de8. Backend Index.html wiring is a separate backend draft PR and is not part of this candidate."
     },
-    "followUp": "assets/ess-20261118-p1-hf9 is a separate P1 candidate bundle. It is not coupled here. If that bundle is accepted, a later candidate should point the main bundle at hf9 instead of hf8.",
+    "followUp": "This candidate points the stylesheet, main bundle, and the three hf9 patch copies at assets/ess-20261118-p1-hf9/. The other four patch scripts stay on their existing paths. #43 and #44 load last.",
     "components": [
       {
         "order": 0,
         "role": "STYLESHEET",
-        "path": "assets/ess-20261007-rc13-hf8/abis-ess.css"
+        "path": "assets/ess-20261118-p1-hf9/abis-ess.css",
+        "sha256": "3b342805843b392a85836c561fe4ccaf106b101681986a2666b0810a6ab859f8"
       },
       {
         "order": 1,
         "role": "MAIN_BUNDLE",
-        "path": "assets/ess-20261007-rc13-hf8/abis-ess.bundle.js"
+        "path": "assets/ess-20261118-p1-hf9/abis-ess.bundle.js",
+        "sha256": "239ae2fa06631c5919d2f11493d533992b741cf8bf9c26541785f7575fe97a40"
       },
       {
         "order": 2,
         "role": "PATCH",
-        "path": "assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js"
+        "path": "assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js",
+        "sha256": "05e88c68df9ef8942b4e2e2d4e118ba8a391c3b9b7d85cc4aa33792208e61c3d"
       },
       {
         "order": 3,
         "role": "PATCH",
-        "path": "assets/ess-20261007-rc13-hf81/attendance-hold-hf81.js"
+        "path": "assets/ess-20261007-rc13-hf81/attendance-hold-hf81.js",
+        "sha256": "2a335d7f17a018276c9d8b73f109432fa559e70fedad3306190aae3341409bbc"
       },
       {
         "order": 4,
         "role": "PATCH",
-        "path": "assets/ess-20261007-rc13-hf2/leave-submit-hf2.js"
+        "path": "assets/ess-20261007-rc13-hf2/leave-submit-hf2.js",
+        "sha256": "492cb06bfe04a8bf1419f8070defc2c4a70068b30337eaac90c362f6cdf4d6a9"
       },
       {
         "order": 5,
         "role": "PATCH",
-        "path": "assets/ess-20261007-rc13-hf3r1/leave-submit-hf3r1.js"
+        "path": "assets/ess-20261118-p1-hf9/leave-submit-hf3r1.js",
+        "sha256": "187c3e26b392d41d732189bf4fc466cd3acfbad2433676c8befefc506845bb96"
       },
       {
         "order": 6,
         "role": "PATCH",
-        "path": "assets/ess-20261007-rc13-hf4/ess-dialog-hf4.js"
+        "path": "assets/ess-20261118-p1-hf9/ess-dialog-hf4.js",
+        "sha256": "bd504478e1d3b019e21c5338706cd94d124365141ce44cede61d598b204f4b32"
       },
       {
         "order": 7,
         "role": "PATCH",
         "conditional": "HR",
-        "path": "assets/ess-20261009-r2180d-rc1_2_2/punch-exempt-admin.js"
+        "path": "assets/ess-20261118-p1-hf9/punch-exempt-admin.js",
+        "sha256": "53c9982a823df5312202b2af1ad56567093acf42729df810df38e50e9c9d118a"
       },
       {
         "order": 8,
         "role": "PATCH",
         "conditional": "HR",
-        "path": "assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js"
+        "path": "assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js",
+        "sha256": "2af7448b3cbd9a8faffa6941d8bfbb5c01e8661f3b875bd41493b5caa53dbff9"
       },
       {
         "order": 9,
@@ -456,7 +465,8 @@
         "issue": 43,
         "path": "assets/ess-20261118-supervisor-correction-confirm/supervisor-correction-confirm.js",
         "wraps": "p5a2rc1AttendanceInboxHtml_",
-        "install": "install() wraps p5a2rc1AttendanceInboxHtml_ and must load after the main bundle"
+        "install": "install() wraps p5a2rc1AttendanceInboxHtml_ and must load after the hf9 bundle",
+        "sha256": "bb68a6736a5c00a3cefce2b1f123e9a1123f4f37b58a55d8799ca06b68325509"
       },
       {
         "order": 10,
@@ -464,8 +474,11 @@
         "issue": 44,
         "path": "assets/ess-20261118-employee-correction-return/employee-correction-return.js",
         "wraps": "p5a202CorrectionStateHtml_",
-        "install": "install() wraps p5a202CorrectionStateHtml_ and must load after the main bundle"
+        "install": "install() wraps p5a202CorrectionStateHtml_ and must load after the hf9 bundle",
+        "sha256": "d7284b9ec54936f0106907491596c2e45cd5e3bcc26b24545e9251fa57a764b3"
       }
-    ]
+    ],
+    "dependsOnPullRequest": 45,
+    "mergeOrder": "Pull request #45 must merge before this candidate. The hf9 assets live on that branch."
   }
 }
