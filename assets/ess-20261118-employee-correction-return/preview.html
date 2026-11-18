@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>出勤補正退回</title>
+  <style>
+    body{margin:0;background:#f3f4f6}
+    main{max-width:390px;margin:0 auto;padding:16px 14px 28px;box-sizing:border-box}
+    .preview-note{margin:0 0 12px;color:#6b7280;font:12px/1.4 system-ui,sans-serif}
+    #status{min-height:1.2em;margin:8px 0 0;font:14px/1.4 system-ui,sans-serif;color:#166534}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="preview-note" id="previewNote">預覽 · 員工出勤補正</p>
+    <div id="app"></div>
+    <p id="status" role="status"></p>
+  </main>
+  <script src="employee-correction-return.js"></script>
+  <script>
+    (function () {
+      var ui = window.ABIS_EMPLOYEE_CORRECTION_RETURN;
+      var params = new URLSearchParams(location.search);
+      var shot = params.get('shot') || 'rejected';
+      var lang = (params.get('lang') || 'ZH').toUpperCase();
+      if (lang === 'VI' || lang === 'TH' || lang === 'ZH' || lang === 'EN') window.currentLang = lang;
+      var day = ui.fixtureRejected(shot === 'rejected_leave' ? 'leave' : 'plain');
+      var note = document.getElementById('previewNote');
+      note.textContent = shot === 'rejected_leave'
+        ? '預覽 · 退回並請改申請假單'
+        : '預覽 · 主管退回，顯示理由';
+      ui.mount('#app', day);
+      document.addEventListener('click', function (event) {
+        var button = event.target.closest && event.target.closest('[data-ecr-leave]');
+        if (!button) return;
+        var status = document.getElementById('status');
+        if (status) status.textContent = '請假頁日期 ' + (button.getAttribute('data-ecr-leave') || '');
+      });
+    })();
+  </script>
+</body>
+</html>
