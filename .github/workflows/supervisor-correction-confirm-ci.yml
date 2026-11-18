@@ -1,0 +1,33 @@
+name: ABIS ESS supervisor correction confirm (synthetic only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/supervisor-correction-confirm-ci.yml'
+      - 'assets/ess-20261118-supervisor-correction-confirm/**'
+      - 'tests/supervisor-correction-confirm.test.cjs'
+  push:
+    branches:
+      - 'cursor/supervisor-correction-confirm-2e56'
+    paths:
+      - '.github/workflows/supervisor-correction-confirm-ci.yml'
+      - 'assets/ess-20261118-supervisor-correction-confirm/**'
+      - 'tests/supervisor-correction-confirm.test.cjs'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic:
+    name: Confirm page contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout candidate without persisting credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Parse the confirm page
+        run: node --check assets/ess-20261118-supervisor-correction-confirm/supervisor-correction-confirm.js
+      - name: Run synthetic confirm-page tests
+        run: node --test tests/supervisor-correction-confirm.test.cjs
