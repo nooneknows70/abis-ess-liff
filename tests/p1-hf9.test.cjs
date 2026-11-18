@@ -33,6 +33,17 @@ test('home quick actions are a column with a two-line title', () => {
   assert.equal(/tasks \+ recent \+ 4 quick actions/.test(css), false);
 });
 
+test('quick-action titles keep CJK words intact and shrink slightly at 360px', () => {
+  assert.match(
+    css,
+    /\.fh-quick-copy b,\s*body\.home-view \.fh-quick-copy b\{[^}]*word-break:keep-all!important/
+  );
+  const narrow = css.slice(css.lastIndexOf('@media (max-width:360px)'));
+  assert.match(narrow, /\.fh-quick-copy b/);
+  assert.match(narrow, /font-size:26px!important/);
+  assert.match(narrow, /letter-spacing:-0\.03em!important/);
+});
+
 test('renderHome paints quick actions before recent records', () => {
   const start = bundle.indexOf('function renderHome()');
   const end = bundle.indexOf('function fillLeaveTypes()');

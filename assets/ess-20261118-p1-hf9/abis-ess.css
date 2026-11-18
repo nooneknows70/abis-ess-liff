@@ -3066,9 +3066,10 @@ body.inner-view #account .abis-m8-source-boundaries p.abis-m8-source-boundary-no
 /* ============================================================
    HF9 P1 | 2026-11-18
    Card box model, notification width, and quick-action layout.
-   Newly parsed contrast / async-button rules stay. The previously
-   unparsed 30px quick-title size is kept, but the card is a column
-   so the title stays horizontal and clamps at two lines.
+   Newly parsed contrast / async-button rules stay. Quick titles are a
+   column, horizontal, and at most two lines. CJK titles stay one word:
+   word-break:keep-all, and at 360px the type is slightly smaller so a
+   four-character title fits without a mid-word break.
    ============================================================ */
 .wrap{box-sizing:border-box}
 .card,
@@ -3109,7 +3110,8 @@ body.home-view .fh-quick-copy b{
   line-clamp:2!important;
   overflow:hidden!important;
   white-space:normal!important;
-  word-break:normal!important;
+  word-break:keep-all!important;
+  line-break:strict!important;
   overflow-wrap:break-word!important;
   max-width:100%!important;
   text-align:left!important;
@@ -3128,4 +3130,12 @@ body.home-view .fh-quick-copy span{
 @media (max-width:430px){
   .fh-quick,
   body.home-view .fh-quick{grid-template-columns:none!important}
+}
+@media (max-width:360px){
+  .fh-quick-copy b,
+  body.home-view .fh-quick-copy b{
+    font-size:26px!important;
+    letter-spacing:-0.03em!important;
+    line-height:1.2!important;
+  }
 }
