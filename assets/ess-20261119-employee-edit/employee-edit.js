@@ -235,6 +235,7 @@
     ['basicShort', '基本', 'Cơ bản', 'พื้นฐาน', 'Basic', true],
     ['advanced', '進階', 'Nâng cao', 'ขั้นสูง', 'Advanced', true],
     ['advancedHint', '其餘欄位使用預設值，需要時再打開。', 'Các mục còn lại dùng giá trị mặc định. Mở ra khi cần.', 'ช่องที่เหลือใช้ค่าเริ่มต้น เปิดเมื่อต้องการ', 'The other fields use defaults. Open them when you need to change them.', true],
+    ['missingFields', '還差', 'Còn thiếu', 'ยังขาด', 'Still needed', true],
     ['auditCredentialFailed', '帳號建立未完成', 'Chưa tạo được tài khoản', 'ยังสร้างบัญชีไม่สำเร็จ', 'The account was not created', true],
     ['auditNewEmployee', '新增員工', 'Thêm nhân viên', 'เพิ่มพนักงาน', 'New employee', true]
   ];
@@ -809,11 +810,14 @@
     var next = Object.assign({}, values || {});
     if (!next['簽核權限']) next['簽核權限'] = 'NONE';
     if (!next.PreferredLanguage) next.PreferredLanguage = 'zh-TW';
-    if (!next['出勤管理類型'] && next['人員類別'] === '廠務') next['出勤管理類型'] = 'NORMAL';
+    if (!next['出勤管理類型'] && (next['人員類別'] === '廠務' || next['人員類別'] === '辦公室')) next['出勤管理類型'] = 'NORMAL';
     if (!next['簽核路由群組'] && next['人員類別'] === '廠務') next['簽核路由群組'] = 'FACTORY';
     if (!next['簽核路由群組'] && (next['人員類別'] === '辦公室' || next['工作地點'] === '辦公室')) next['簽核路由群組'] = 'OFFICE';
     if (!next['組織設定確認']) next['組織設定確認'] = '待確認';
-    if (!next['代理人指定方式'] && next['人員類別'] === '廠務') next['代理人指定方式'] = 'SUPERVISOR_ASSIGN';
+    if (!next['代理人指定方式'] && (next['人員類別'] === '廠務' || next['人員類別'] === '辦公室')) next['代理人指定方式'] = 'SUPERVISOR_ASSIGN';
+    if (!next['工作地點'] && next['人員類別'] === '辦公室') next['工作地點'] = '辦公室';
+    if (!next['工作地點'] && next['人員類別'] === '廠務') next['工作地點'] = '新店廠';
+    if (!next['正式班別'] && next['人員類別'] && next['人員類別'] !== '外部顧問') next['正式班別'] = '日班';
     if (!next['代理候選優先規則']) next['代理候選優先規則'] = 'N/A';
     if (!next['最終需代理人']) next['最終需代理人'] = 'Y';
     if (!next['免打卡']) next['免打卡'] = 'N';
@@ -910,12 +914,14 @@
   }
 
   function diffLabel(row) {
+    var field = row && row.field;
+    if (field && FIELD_LABEL[field]) return label(field);
     if (row && row.label && typeof row.label === 'object') {
       var lang = readLang();
-      return row.label[lang] || row.label.ZH || label(row.field);
+      return row.label[lang] || row.label.ZH || label(field);
     }
     if (row && typeof row.label === 'string' && row.label) return row.label;
-    return label(row && row.field);
+    return label(field);
   }
 
   function localWarnings(changes) {
@@ -1070,6 +1076,8 @@
       '.ee-error{color:var(--ee-red)}',
       '.ee-lock{color:var(--ee-disabled)}',
       '.ee-warn{background:var(--ee-orange-bg);color:var(--ee-orange);border-radius:12px;padding:12px;margin:0 0 12px;line-height:1.5}',
+      '.ee-warn-strong{font-size:18px;font-weight:800;border:2px solid var(--ee-orange)}',
+      '.ee-warn-strong strong{font-weight:800}',
       '.ee-bar{position:sticky;bottom:0;z-index:3;margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--ee-page)}',
       '.ee-pair{display:flex;flex-direction:column;gap:2px;margin:0 0 12px;min-width:0}',
       '.ee-label{color:var(--ee-muted);font-size:13px;font-weight:700}',
@@ -1209,6 +1217,7 @@
     }
     var hr = fields['HR確認'];
     var hrText = hr != null && String(hr).trim() !== '' ? human(hr) : '';
+    if (!hrText && String(fields['組織設定確認'] || '') === '待確認') hrText = t('pendingConfirm');
     var status = '';
     if (hrText || fields['在職狀態']) {
       status = '<p class="ee-status" role="status"><span class="ee-label">' + esc(t('employmentStatus')) + '</span><b>' + esc(human(fields['在職狀態'] || '')) + '</b>' +
@@ -1281,9 +1290,6 @@
       if (!error && field.key === '部門' && view.newDept) html += esc(t('newDeptHint'));
       if (!error) html += '</p>';
     }
-    if (field.key === '打卡號' && view.formMode === 'CREATE') {
-      html += '<label class="ee-hint"><input data-ee-punch-confirm type="checkbox"' + (view.punchConfirmed ? ' checked' : '') + '> ' + esc(t('useSuggestion')) + '</label>';
-    }
     html += '</div>';
     return html;
   }
@@ -1291,14 +1297,11 @@
   function renderForm(view) {
     var mode = view.formMode || 'CREATE';
     var title = mode === 'CREATE' ? t('addEmployee') : t('editEmployee');
-    var primary = mode === 'CREATE' ? t('confirmAdd') : t('reviewChanges');
+    var primary = t('reviewChanges');
     var action = 'review';
     var errors = validateClient(view.form, mode, { actorId: view.actorId, employeeId: view.employeeId, baseline: view.baseline });
     var changes = mode === 'UPDATE' ? buildChanges(view.baseline, view.form, { actorId: view.actorId, employeeId: view.employeeId, mode: 'UPDATE' }) : {};
     var disabled = view.busy || errors.length > 0 || (mode === 'UPDATE' && !Object.keys(changes).length);
-    if (mode === 'CREATE' && String((view.form || {})['打卡號'] || '').trim() && !view.punchConfirmed && (view.form['免打卡'] !== 'Y' && view.form['出勤管理類型'] !== 'EXTERNAL')) {
-      disabled = true;
-    }
     var notes = '';
     if (mode === 'CREATE') {
       if (!view.error) notes += '<p class="ee-warn">' + esc(view.mode === 'SHADOW' ? t('shadowNote') : t('createPinNote')) + '</p>';
@@ -1308,7 +1311,7 @@
       }
       if (createNeedsReason(view.form, view.today || todayTaipei())) notes += '<p class="ee-hint">' + esc(t('hireDatePast')) + '</p>';
     }
-    var basicCreate = { 'V2員工ID': 1, '姓名': 1, '人員類別': 1, '到職日': 1, '部門': 1, '直屬主管ID': 1, '打卡號': 1 };
+    var basicCreate = { 'V2員工ID': 1, '姓名': 1, '人員類別': 1, '到職日': 1, '部門': 1, '直屬主管ID': 1, '打卡號': 1, '工作地點': 1, '簽核路由群組': 1, '正式班別': 1, '出勤管理類型': 1, '代理人指定方式': 1 };
     var fields = '';
     if (mode === 'CREATE') {
       var basic = '';
@@ -1330,41 +1333,74 @@
         return '<h2 class="ee-section ee-wide">' + esc(t(section[1])) + '</h2>' + inner;
       }).join('');
     }
+    var missing = '';
+    if (disabled && errors.length) {
+      var seen = {};
+      var names = [];
+      errors.forEach(function (item) {
+        if (!item.field || seen[item.field]) return;
+        seen[item.field] = 1;
+        names.push(label(item.field));
+      });
+      if (names.length) missing = '<p class="ee-error">' + esc(t('missingFields')) + '：' + esc(names.join('、')) + '</p>';
+    }
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(title) + '</h1></header>' +
       banner(view) + notes + '<div class="ee-fields">' + fields + '</div>' +
-      '<div class="ee-bar">' + button('ee-primary', action, primary, { disabled: disabled, busy: view.busy }) + button('ee-secondary', 'cancel', t('cancel')) + '</div>';
+      '<div class="ee-bar">' + missing + button('ee-primary', action, primary, { disabled: disabled, busy: view.busy }) + button('ee-secondary', 'cancel', t('cancel')) + '</div>';
   }
 
   function renderDiff(view) {
     var changes = view.changes || {};
+    var creating = view.operation === 'CREATE';
     var rows = view.diff && view.diff.length ? view.diff : Object.keys(changes).map(function (key) {
       return { field: key, before: (view.baseline || {})[key] || '', after: changes[key] };
     });
-    var required = Object.keys(changes).length > 0 || !!(view.diff && view.diff.length) || view.operation === 'CREATE';
+    if (creating) {
+      rows = rows.filter(function (row) {
+        return String(row.after == null ? '' : row.after).trim() !== '';
+      });
+    }
+    var required = Object.keys(changes).length > 0 || rows.length > 0 || creating;
     var needsImpact = !!(view.requires && view.requires.hrConfirmStep);
     var ready = reasonOk(view.reason, required) && !view.busy;
+    var repeated = {};
+    repeated[t('firstDayNote')] = 1;
+    repeated[t('hireRecalcNote')] = 1;
+    repeated[t('hrConfirmImpact')] = 1;
     var body = rows.map(function (row) {
       var extra = '';
       var changed = String(row.before == null ? '' : row.before) !== String(row.after == null ? '' : row.after);
-      if (row.field === '到職日' && changed) extra = '<p class="ee-warn">' + esc(t('firstDayNote')) + '</p><p class="ee-warn">' + esc(t('hireRecalcNote')) + '</p>';
+      if (row.field === '到職日' && (creating || changed)) {
+        extra = '<p class="ee-warn"><strong>⚠ ' + esc(t('firstDayNote')) + '</strong></p><p class="ee-warn"><strong>⚠ ' + esc(t('hireRecalcNote')) + '</strong></p>';
+      }
+      if (creating) {
+        return '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div class="ee-diff-after">' + esc(human(row.after)) + '</div>' + extra + '</article>';
+      }
       return '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div>' + esc(t('before')) + ' ' + esc(human(row.before)) + '</div><div class="ee-diff-after">' + esc(t('after')) + ' ' + esc(human(row.after)) + '</div>' + extra + '</article>';
     }).join('');
-    var warns = (view.warnings || []).map(function (item) {
-      return '<p class="ee-warn">' + esc(typeof item === 'string' ? item : t('downstreamNote')) + '</p>';
+    var warns = (view.warnings || []).filter(function (item) {
+      var text = typeof item === 'string' ? item : '';
+      return text && !repeated[text];
+    }).map(function (item) {
+      return '<p class="ee-warn">' + esc(item) + '</p>';
     }).join('');
     var reason = view.reason || {};
     var options = '<option value="">' + esc(t('selectPlaceholder')) + '</option>' + REASONS.map(function (item) {
       return '<option value="' + item[0] + '"' + (reason.code === item[0] ? ' selected' : '') + '>' + esc(t(item[1])) + '</option>';
     }).join('');
+    var who = '';
+    if (view.name || view.employeeId) {
+      who = '<p class="ee-name">' + esc(view.name || '') + (view.employeeId ? '（' + esc(view.employeeId) + '）' : '') + '</p>';
+    }
+    var impact = needsImpact ? '<p class="ee-warn ee-warn-strong" role="alert"><strong>⚠ ' + esc(t('hrConfirmImpact')) + '</strong></p>' : '';
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(t('reviewChanges')) + '</h1></header>' +
-      '<p class="ee-name">' + esc(view.name || '') + '（' + esc(view.employeeId || '') + '）</p>' +
+      who + impact +
       body + warns +
       '<div class="ee-field"><label for="ee-reason">' + esc(t('changeReason')) + '<span class="ee-req">*</span></label><select id="ee-reason" data-ee-reason="code">' + options + '</select>' +
       (reason.code === 'OTHER' ? '<textarea class="ee-note" data-ee-reason="note" aria-label="' + esc(t('reasonNote')) + '">' + esc(reason.note || '') + '</textarea>' : '') +
-      (needsImpact ? '<p class="ee-warn">' + esc(t('hrConfirmImpact')) + '</p>' : '') +
       (ready ? '' : '<p class="ee-error">' + esc(t('reasonRequired')) + '</p>') + '</div>' +
       banner(view) +
-      '<div class="ee-bar">' + button('ee-secondary', 'cancel', t('cancel')) + button('ee-primary', 'save', view.operation === 'CREATE' ? t('confirmAdd') : t('confirmSave'), { disabled: !ready, busy: view.busy }) + '</div>';
+      '<div class="ee-bar">' + button('ee-secondary', 'cancel', t('cancel')) + button('ee-primary', 'save', creating ? t('confirmAdd') : t('confirmSave'), { disabled: !ready, busy: view.busy }) + '</div>';
   }
 
   function renderPin(view) {
@@ -1427,7 +1463,10 @@
   }
 
   function viewFromState() {
-    var changes = buildChanges(state.baseline, state.form, { actorId: state.actorId || readActor(), employeeId: state.employeeId, mode: 'UPDATE' });
+    var actorId = state.actorId || readActor();
+    var changes = state.operation === 'CREATE'
+      ? createChanges(state.form)
+      : buildChanges(state.baseline, state.form, { actorId: actorId, employeeId: state.employeeId, mode: 'UPDATE' });
     return {
       screen: state.screen,
       mode: state.mode,
@@ -1441,8 +1480,8 @@
       fields: state.detail || {},
       form: state.form,
       baseline: state.baseline,
-      actorId: state.actorId || readActor(),
-      employeeId: state.employeeId,
+      actorId: actorId,
+      employeeId: state.employeeId || (state.form && state.form['V2員工ID']) || '',
       diff: state.diff,
       changes: changes,
       reason: state.reason,
@@ -1453,7 +1492,7 @@
       busy: state.busy || state.acking,
       audit: state.audit,
       leaveGuard: state.leaveGuard,
-      name: (state.created && state.created.name) || (state.detail && state.detail['姓名']) || '',
+      name: (state.created && state.created.name) || (state.form && state.form['姓名']) || (state.detail && state.detail['姓名']) || '',
       hireDate: state.created && state.created.hireDate || '',
       punch: state.created && state.created.punch || '',
       expiresAt: state.expiresAt,
@@ -1721,6 +1760,7 @@
     }
     state.busy = true;
     state.impactConfirmed = true;
+    if (String((state.form && state.form['打卡號']) || '').trim()) state.punchConfirmed = true;
     state.operation = 'CREATE';
     rerender();
     var changes = createChanges(state.form);
@@ -1788,6 +1828,7 @@
       state.screen = 'pin';
       state.leaveGuard = false;
       markPinHistory();
+      hookNavigation();
       state.requestId = '';
       if (cred) cred.tempPin = '';
       return { ok: true };
@@ -1819,6 +1860,7 @@
       state.errorKey = 'noChanges';
       return { ok: false };
     }
+    if (String((state.form && state.form['打卡號']) || '').trim()) state.punchConfirmed = true;
     state.busy = true;
     rerender();
     try {
@@ -1872,6 +1914,7 @@
     }
     state.busy = true;
     state.impactConfirmed = true;
+    if (String((state.form && state.form['打卡號']) || '').trim()) state.punchConfirmed = true;
     state.operation = 'UPDATE';
     rerender();
     var expected = state.rowVersion || '';
@@ -1941,6 +1984,7 @@
       failed = true;
     } finally {
       pinMemory = '';
+      wipePinDom();
       state.acking = false;
       state.leaveGuard = false;
       state.ackFailed = failed;
@@ -1966,10 +2010,40 @@
     return { blocked: false };
   }
 
+  function wipePinDom() {
+    var doc = global.document;
+    if (!doc || !doc.querySelectorAll) return;
+    var pins = doc.querySelectorAll('.ee-pin');
+    for (var i = 0; i < pins.length; i += 1) pins[i].textContent = '';
+    var modals = doc.querySelectorAll('.ee-modal');
+    for (var j = 0; j < modals.length; j += 1) {
+      if (modals[j].parentNode) modals[j].parentNode.removeChild(modals[j]);
+    }
+  }
+
+  function scrubAccount() {
+    wipePinDom();
+    var doc = global.document;
+    if (!doc || !doc.getElementById) return;
+    ['account', 'accountContent', 'accountPanel'].forEach(function (id) {
+      var node = doc.getElementById(id);
+      if (node) node.innerHTML = '';
+    });
+  }
+
   function clearPin() {
     pinMemory = '';
     pinEventId = '';
     pinHistory = false;
+    state.leaveGuard = false;
+    scrubAccount();
+  }
+
+  function dropSession() {
+    clearPin();
+    pendingLeave = null;
+    state = blankState();
+    state.active = false;
   }
 
   function markPinHistory() {
@@ -1988,6 +2062,7 @@
     if (pinMemory) {
       state.screen = 'pin';
       markPinHistory();
+      hookNavigation();
     }
   }
 
@@ -2112,6 +2187,13 @@
     node.style.height = next + 'px';
   }
 
+  function growAll() {
+    var doc = global.document;
+    if (!doc || !doc.querySelectorAll) return;
+    var nodes = doc.querySelectorAll('.ee-grow');
+    for (var i = 0; i < nodes.length; i += 1) growField(nodes[i]);
+  }
+
   function captureFocus() {
     var doc = global.document;
     var active = doc && doc.activeElement;
@@ -2155,7 +2237,6 @@
       var errors = validateClient(state.form, mode, { actorId: view.actorId, employeeId: state.employeeId, baseline: state.baseline });
       var changes = mode === 'UPDATE' ? buildChanges(state.baseline, state.form, { actorId: view.actorId, employeeId: state.employeeId, mode: 'UPDATE' }) : {};
       disabled = !!(state.busy || state.acking || errors.length || (mode === 'UPDATE' && !Object.keys(changes).length));
-      if (mode === 'CREATE' && String((state.form || {})['打卡號'] || '').trim() && !state.punchConfirmed && state.form['免打卡'] !== 'Y' && state.form['出勤管理類型'] !== 'EXTERNAL') disabled = true;
     } else if (state.screen === 'diff') {
       var diffChanges = state.operation === 'CREATE' ? createChanges(state.form) : buildChanges(state.baseline, state.form, { actorId: view.actorId, employeeId: state.employeeId, mode: 'UPDATE' });
       var required = Object.keys(diffChanges).length > 0 || (state.diff && state.diff.length) || state.operation === 'CREATE';
@@ -2179,8 +2260,8 @@
     if (node.getAttribute('data-ee-query') != null) state.query = node.value;
     if (node.getAttribute('data-ee-reason') === 'code') state.reason.code = node.value;
     if (node.getAttribute('data-ee-reason') === 'note') state.reason.note = node.value;
-    if (node.getAttribute('data-ee-punch-confirm') != null) state.punchConfirmed = !!node.checked;
-    if (node.getAttribute('data-ee-reason') === 'code' || node.getAttribute('data-ee-query') != null) {
+    if (field === '人員類別' || field === '工作地點') state.form = suggestDefaults(state.form);
+    if (node.getAttribute('data-ee-reason') === 'code' || node.getAttribute('data-ee-query') != null || field === '人員類別' || field === '工作地點') {
       rerender(true);
       return;
     }
@@ -2252,6 +2333,7 @@
       painted = true;
     }
     if (!painted) syncPrimary();
+    growAll();
     if (saved) restoreFocus(saved);
     else {
       var dialog = global.document && global.document.querySelector && global.document.querySelector('.ee-modal button');
@@ -2261,12 +2343,34 @@
     }
   }
 
+  function revealPinGuard() {
+    requestClosePin();
+    try {
+      if (typeof accountPanel_ !== 'undefined') accountPanel_ = 'employeeManagement';
+    } catch (ignore) {}
+    rerender();
+    ensureModal();
+  }
+
+  function ensureModal() {
+    var doc = global.document;
+    if (!doc || !pinMemory || !state.leaveGuard || !doc.createElement) return;
+    if (doc.querySelector && doc.querySelector('.ee-modal')) return;
+    if (!doc.body || !doc.body.appendChild) return;
+    ensureStyles();
+    var holder = doc.createElement('div');
+    holder.innerHTML = renderLeaveModal();
+    if (holder.firstChild) doc.body.appendChild(holder.firstChild);
+  }
+
   function activate(mode) {
+    hookNavigation();
     var host = hostFn('rc2AccountPanelHtml_');
     if (typeof host !== 'function' || host.__ee) {
       if (host && host.__ee) {
         state.active = true;
         state.mode = normalizeMode(mode);
+        hookNavigation();
         return true;
       }
       return false;
@@ -2280,19 +2384,22 @@
     if (typeof global.rc2OpenAccountPanel_ === 'function' && !global.rc2OpenAccountPanel_.__ee) {
       var openHost = global.rc2OpenAccountPanel_;
       function openWrapped(panel) {
-        if (pinMemory) {
-          var self = this;
-          var args = arguments;
-          pendingLeave = function () { return openHost.apply(self, args); };
-          requestClosePin();
-          rerender();
+        if (pinMemory && String(panel || '') !== 'employeeManagement') {
+          pendingLeave = function () { return openHost(panel); };
+          revealPinGuard();
           return { blocked: true };
         }
+        if (pinMemory) requestClosePin();
         var out = openHost.apply(this, arguments);
-        if (String(panel || '') === 'employeeManagement' && state.active) refreshList({}).then(rerender);
+        if (String(panel || '') === 'employeeManagement' && state.active && !pinMemory) refreshList({}).then(rerender);
+        if (pinMemory && state.leaveGuard) {
+          rerender();
+          ensureModal();
+        }
         return out;
       }
       openWrapped.__ee = true;
+      openWrapped.__eeHost = openHost;
       global.rc2OpenAccountPanel_ = openWrapped;
     }
     state.active = true;
@@ -2301,6 +2408,7 @@
     state.permission = readPermission();
     bind();
     ensureStyles();
+    hookNavigation();
     return true;
   }
 
@@ -2368,27 +2476,30 @@
     global[name] = wrapped;
   }
 
+  function hooksAlive() {
+    var html = hostFn('rc2AccountPanelHtml_');
+    return !!(html && html.__ee);
+  }
+
   function hookNavigation() {
     ['showPage', 'showHome', 'showMyAccount_', 'rc2InnerBack_', 'openHrCredentialAdmin'].forEach(function (name) {
       wrapHost(name, function (host, self, args) {
         if (!pinMemory) return host.apply(self, args);
         pendingLeave = function () { return host.apply(self, args); };
-        requestClosePin();
-        rerender();
+        revealPinGuard();
         return { blocked: true };
       });
     });
     wrapHost('logout', function (host, self, args) {
       if (pinMemory) {
         pendingLeave = function () {
-          clearPin();
+          dropSession();
           return host.apply(self, args);
         };
-        requestClosePin();
-        rerender();
+        revealPinGuard();
         return { blocked: true };
       }
-      clearPin();
+      dropSession();
       return host.apply(self, args);
     });
     if (global.history && typeof global.history.back === 'function' && !global.history.back.__eeGuard) {
@@ -2396,8 +2507,7 @@
       function guardedBack() {
         if (pinMemory) {
           pendingLeave = function () { return back.apply(global.history, []); };
-          requestClosePin();
-          rerender();
+          revealPinGuard();
           return { blocked: true };
         }
         return back.apply(global.history, arguments);
@@ -2413,23 +2523,22 @@
             try { if (global.history && global.history.back) global.history.back(); } catch (ignore) {}
           };
         }
-        requestClosePin();
-        try {
-          if (global.history && global.history.pushState) global.history.pushState({ eePinGuard: 1 }, '');
-        } catch (ignore) {}
-        rerender();
+        revealPinGuard();
       });
       global.__eePop = true;
     }
   }
 
   function afterLogin() {
-    if (state.active || !loggedIn()) return loginInstall;
+    hookNavigation();
+    if (!loggedIn()) return loginInstall;
+    if (state.active && hooksAlive()) return loginInstall;
     if (loginInstall) return loginInstall;
     loginInstall = Promise.resolve().then(function () {
       return install({});
     }).then(function (ok) {
       loginInstall = null;
+      hookNavigation();
       if (ok && readAccountPanel() === 'employeeManagement') rerender();
       return ok;
     }, function () {
@@ -2483,6 +2592,7 @@
     install: install,
     renderScreen: renderModel,
     renderCurrent: renderCurrent,
+    rerender: function (keepFocus) { rerender(keepFocus); },
     renderLeaveModal: renderLeaveModal,
     buildChanges: buildChanges,
     createChanges: createChanges,

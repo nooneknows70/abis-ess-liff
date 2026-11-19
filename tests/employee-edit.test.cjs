@@ -641,9 +641,17 @@ test('add form splits basic and collapsed advanced, and detail separates label f
   assert.match(html, /data-ee-field="姓名"/);
   assert.match(html, /data-ee-field="到職日"/);
   assert.match(html, /data-ee-field="直屬主管ID"/);
+  assert.match(html, /data-ee-field="工作地點"/);
+  assert.match(html, /data-ee-field="正式班別"/);
+  assert.match(html, /data-ee-field="出勤管理類型"/);
+  assert.match(html, /data-ee-field="代理人指定方式"/);
+  assert.match(html, /還差：/);
+  assert.match(html, /檢視變更/);
+  assert.doesNotMatch(html, /data-ee-punch-confirm/);
+  assert.doesNotMatch(html, /data-ee-action="review"[^>]*>確認新增/);
   assert.match(html, /<textarea class="ee-grow"[^>]*data-ee-field="姓名"/);
   assert.match(html, /<textarea class="ee-grow"[^>]*data-ee-field="部門"/);
-  assert.doesNotMatch(html, /data-ee-field="正式班別"/);
+  assert.doesNotMatch(html, /data-ee-field="特休制度"/);
   const open = page.renderScreen('add', {
     mode: 'LIVE',
     advancedOpen: true,
@@ -1015,8 +1023,144 @@ test('in-app navigation, back, and logout go through the PIN leave guard', async
   ctx.logout();
   assert.equal(loggedOut, 2);
   assert.equal(page.snapshot().pinHeld, false);
+  assert.equal(page.snapshot().active, false);
   assert.match(source, /typeof homeData !== 'undefined'/);
   assert.match(source, /typeof sessionToken !== 'undefined'/);
   assert.match(source, /typeof currentLang !== 'undefined'/);
   assert.match(source, /typeof accountPanel_ !== 'undefined'/);
+});
+
+test('logout restores a fresh install, and the host back button is guarded again', async () => {
+  const calls = [];
+  let backed = 0;
+  const account = { innerHTML: '<div class="ee-pin">482913</div><div class="ee-modal"></div>' };
+  const ctx = load({
+    document: {
+      readyState: 'complete',
+      body: { appendChild: function () {} },
+      head: { appendChild: function () {} },
+      addEventListener: function () {},
+      getElementById: function (id) { return id === 'account' ? account : null; },
+      createElement: function () { return { id: '', textContent: '', style: {} }; },
+      querySelector: function () { return null; },
+      querySelectorAll: function () { return []; }
+    },
+    rc2AccountPanelHtml_: function (panel) { return 'old:' + panel; },
+    rc2InnerBack_: function () { backed += 1; },
+    logout: function () {
+      ctx.rc2AccountPanelHtml_ = function (panel) { return 'restored:' + panel; };
+      ctx.rc2InnerBack_ = function () { backed += 1; };
+    },
+    enterApp: function () {},
+    google: {
+      script: {
+        run: {
+          withSuccessHandler: function (fn) { this._ok = fn; return this; },
+          withFailureHandler: function () { return this; },
+          api: function (action) {
+            calls.push(action);
+            this._ok({ ok: true, mode: 'LIVE', writesPerformed: 0 });
+          }
+        }
+      }
+    }
+  });
+  const page = ctx.ABIS_EMPLOYEE_EDIT;
+  ctx.sessionToken = 'sess';
+  ctx.homeData = { employee: { id: 'A09701', approvalPermission: 'HR' } };
+  ctx.enterApp();
+  await new Promise(function (resolve) { setTimeout(resolve, 0); });
+  assert.equal(page.snapshot().active, true);
+  assert.match(ctx.rc2AccountPanelHtml_('employeeManagement'), /新增員工/);
+  page.holdPin(PIN, { employeeId: 'B11513', tempPinEventId: 'TPIN-9' });
+  ctx.rc2InnerBack_ = function () { backed += 1; };
+  ctx.enterApp();
+  await new Promise(function (resolve) { setTimeout(resolve, 0); });
+  ctx.rc2InnerBack_();
+  assert.equal(backed, 0);
+  assert.equal(page.snapshot().leaveGuard, true);
+  assert.match(page.renderCurrent(), /role="dialog"/);
+  await page.handleAction('stay', {}, {});
+  ctx.logout();
+  assert.equal(page.snapshot().leaveGuard, true);
+  assert.equal(backed, 0);
+  await page.confirmWritten({
+    sessionToken: 'sess',
+    call: async function () { return { ok: true }; }
+  });
+  assert.equal(account.innerHTML, '');
+  assert.equal(page.snapshot().active, false);
+  assert.equal(page.snapshot().pinHeld, false);
+  ctx.enterApp();
+  await new Promise(function (resolve) { setTimeout(resolve, 0); });
+  assert.equal(page.snapshot().active, true);
+  assert.match(ctx.rc2AccountPanelHtml_('employeeManagement'), /新增員工/);
+  assert.ok(calls.length >= 2);
+});
+
+test('diff labels are localized, create diff is compact, and hire warnings are not repeated', () => {
+  const ctx = load();
+  ctx.currentLang = 'VI';
+  const page = ctx.ABIS_EMPLOYEE_EDIT;
+  const html = page.renderScreen('diff', {
+    operation: 'CREATE',
+    name: '',
+    employeeId: '',
+    form: { '姓名': '王小明', 'V2員工ID': 'B11513' },
+    changes: { '姓名': '王小明', PreferredLanguage: 'zh-TW', '人員類別': '廠務' },
+    diff: [
+      { field: 'PreferredLanguage', label: 'PreferredLanguage', before: '', after: 'zh-TW' },
+      { field: '人員類別', label: '人員類別', before: '', after: '廠務' },
+      { field: '特休制度', label: '特休制度', before: '', after: '' },
+      { field: '到職日', label: '到職日', before: '', after: '2026-12-01' }
+    ],
+    warnings: [page.t('firstDayNote'), page.t('hireRecalcNote')],
+    requires: { hrConfirmStep: true },
+    reason: { code: 'NEW_HIRE', note: '' },
+    rows: []
+  });
+  assert.match(html, /Ngôn ngữ tài khoản/);
+  assert.match(html, /Loại nhân viên/);
+  assert.match(html, /Ngày vào làm/);
+  assert.doesNotMatch(html, /PreferredLanguage/);
+  assert.doesNotMatch(html, />人員類別</);
+  assert.doesNotMatch(html, /（）/);
+  assert.doesNotMatch(html, /變更前/);
+  assert.equal((html.match(/Ngày vào làm không tính đi trễ/g) || []).length, 1);
+  assert.match(html, /ee-warn-strong/);
+  assert.match(html, /⚠/);
+  assert.equal((html.match(/data-ee-action="save"/g) || []).length, 1);
+  const detail = page.renderScreen('detail', {
+    fields: { '姓名': '新人', 'V2員工ID': 'B11520', '在職狀態': '在職', '組織設定確認': '待確認' },
+    audit: [],
+    rows: []
+  });
+  assert.match(detail, /HR確認|Xác nhận nhân sự/);
+  assert.match(detail, /Chờ xác nhận|待確認/);
+});
+
+test('textareas grow again after a rerender', () => {
+  const box = {
+    tagName: 'TEXTAREA',
+    style: {},
+    scrollHeight: 80,
+    className: 'ee-grow'
+  };
+  const root = { innerHTML: '' };
+  const ctx = load({
+    document: {
+      readyState: 'complete',
+      __eeBound: true,
+      head: { appendChild: function () {} },
+      addEventListener: function () {},
+      getElementById: function () { return { textContent: '' }; },
+      createElement: function () { return {}; },
+      querySelector: function (sel) { return sel === '[data-ee-root]' ? root : null; },
+      querySelectorAll: function (sel) { return sel === '.ee-grow' ? [box] : []; }
+    }
+  });
+  const page = ctx.ABIS_EMPLOYEE_EDIT;
+  page.reset({ active: true, mode: 'LIVE', screen: 'edit', form: { '姓名': '阮氏金鳳凰 Nguyễn Thị Kim Phượng' }, baseline: { '姓名': '阮氏金鳳凰 Nguyễn Thị Kim Phượng' } });
+  page.rerender();
+  assert.equal(box.style.height, '80px');
 });
