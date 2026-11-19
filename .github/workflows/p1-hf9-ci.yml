@@ -7,6 +7,8 @@ on:
       - 'assets/ess-20261118-p1-hf9/**'
       - 'tests/p1-hf9.test.cjs'
       - 'tests/p1-hf9-round.test.cjs'
+      - 'tests/p1-hf9-index-harness.test.cjs'
+      - 'tests/fixtures/index-r5.html'
   push:
     branches:
       - 'cursor/p1-hf9-ui-fixes-3d74'
@@ -15,6 +17,8 @@ on:
       - 'assets/ess-20261118-p1-hf9/**'
       - 'tests/p1-hf9.test.cjs'
       - 'tests/p1-hf9-round.test.cjs'
+      - 'tests/p1-hf9-index-harness.test.cjs'
+      - 'tests/fixtures/index-r5.html'
 
 permissions:
   contents: read
@@ -23,7 +27,7 @@ jobs:
   synthetic:
     name: hf9 P1 contract
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     steps:
       - name: Checkout candidate without persisting credentials
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -35,5 +39,15 @@ jobs:
           node --check assets/ess-20261118-p1-hf9/punch-exempt-admin.js
           node --check assets/ess-20261118-p1-hf9/ess-dialog-hf4.js
           node --check assets/ess-20261118-p1-hf9/leave-submit-hf3r1.js
+      - name: Install the Index.html harness DOM
+        run: npm install --no-save jsdom@25.0.1
+      - name: Install Chrome for computed layout
+        run: |
+          if ! command -v google-chrome >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y wget ca-certificates
+            wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt-get install -y /tmp/chrome.deb
+          fi
       - name: Run hf9 contract tests
-        run: node --test tests/p1-hf9.test.cjs tests/p1-hf9-round.test.cjs
+        run: HF9_REQUIRE_CHROME=1 node --test tests/p1-hf9.test.cjs tests/p1-hf9-round.test.cjs tests/p1-hf9-index-harness.test.cjs

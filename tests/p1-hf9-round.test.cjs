@@ -19,6 +19,10 @@ const ui = context.HF9_UI_ROUND;
 test('login bootstrap noise stays off the screen until a real failure', () => {
   assert.equal(ui.isBootNoise('homeBootstrap 缺少 home'), true);
   assert.equal(ui.isBootNoise(new Error('homeBootstrap 缺少 home')), true);
+  assert.equal(ui.isBootNoise({ code: 'HOME_BOOTSTRAP_RETRY', status: 'PENDING', retryable: true }), true);
+  assert.equal(ui.isRetryPayload({ code: 'HOME_BOOTSTRAP_RETRY', status: 'PENDING', retryable: true }), true);
+  assert.equal(ui.isRetryPayload({ code: 'HOME_BOOTSTRAP_OK', status: 'READY', home: { employee: { id: 'A1' } } }), false);
+  assert.equal(ui.isBootNoise({ employee: { id: 'A1' } }), false);
   assert.match(ui.friendlyBoot(), /HF9_LOGIN_BOOT/);
   assert.equal(ui.friendlyBoot().includes('homeBootstrap'), false);
   context.currentLang = 'EN';
@@ -55,12 +59,33 @@ test('internal codes and developer text become friendly labels', () => {
   assert.equal(/GMT/.test(ui.humanize(jsDate)), false);
 });
 
-test('a one-day attendance label expands to the month the totals cover', () => {
+test('a one-day gap stays a day, and only the month summary uses the period', () => {
   const bounds = ui.monthBounds('2026-11');
   assert.equal(bounds.start, '2026-11-01');
   assert.equal(bounds.end, '2026-11-30');
-  assert.equal(ui.expandRange('2026-11-01 ~ 2026-11-01', '2026-11'), '2026-11-01 ~ 2026-11-30');
+  assert.equal(ui.expandRange('2026-11-01 ~ 2026-11-01', '2026-11'), '2026-11-01 ~ 2026-11-01');
   assert.equal(ui.expandRange('2026-11-03 ~ 2026-11-18', '2026-11'), '2026-11-03 ~ 2026-11-18');
+  assert.equal(ui.expandRange('2026-11-01 ~ 2026-11-01', '2026-11', 'monthSummary'), '2026-11-01 ~ 2026-11-30');
+  assert.equal(ui.expandRange('2026-11-01 ~ 2026-11-01', null, {
+    monthSummary: true,
+    period: { start: '2026-11-01', end: '2026-11-30' }
+  }), '2026-11-01 ~ 2026-11-30');
+});
+
+test('shift and recent labels follow the active language', () => {
+  const day = {
+    shiftCode: 'OFFICE_DAY',
+    shiftName: '辦公室日班',
+    shiftLabels: { ZH: '辦公室日班', VI: 'Ca văn phòng', TH: 'กะออฟฟิศ', EN: 'Office day' },
+    recentLabels: { ZH: '出勤', VI: 'Chấm công', TH: 'ลงเวลา', EN: 'Attendance' }
+  };
+  context.currentLang = 'VI';
+  assert.equal(ui.shiftLabel(day), 'Ca văn phòng');
+  assert.equal(ui.recentLabel(day), 'Chấm công');
+  context.currentLang = 'TH';
+  assert.equal(ui.shiftLabel(day), 'กะออฟฟิศ');
+  context.currentLang = 'ZH';
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '辦公室日班');
 });
 
 test('logout clears the session keys the bundle stores', () => {
@@ -81,6 +106,7 @@ test('logout clears the session keys the bundle stores', () => {
 test('hf9 still declares the functions the correction pages wrap', () => {
   assert.match(bundle, /function p5a2rc1AttendanceInboxHtml_/);
   assert.match(bundle, /function p5a202CorrectionStateHtml_/);
+  assert.match(bundle, /\[1000, 2000, 4000, 8000\]/);
   assert.match(css, /button\.hf9-primary-action\{background:#0b8f5a/);
   assert.match(css, /min-height:48px!important/);
   assert.match(css, /\.hf9-skel\{/);
