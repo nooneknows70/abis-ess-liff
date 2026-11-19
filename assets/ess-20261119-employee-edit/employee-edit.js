@@ -1132,6 +1132,12 @@
       '.ee-meta{grid-column:1;color:var(--ee-muted);white-space:normal;word-break:break-word}',
       '.ee-chevron{grid-column:2;grid-row:1 / span 3;align-self:center;color:var(--ee-muted);font-size:22px}',
       '.ee-card{background:var(--ee-card);border:1px solid var(--ee-border);border-radius:16px;padding:16px;margin:0 0 12px}',
+      '.ee-defaults > summary{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;font-size:16px;font-weight:800;cursor:pointer}',
+      '.ee-defaults > summary::-webkit-details-marker{display:none}',
+      '.ee-defaults > summary::before{content:"▸";flex:0 0 auto;color:var(--ee-muted);font-weight:400}',
+      '.ee-defaults[open] > summary::before{content:"▾"}',
+      '.ee-defaults-title{flex:0 0 auto}',
+      '.ee-defaults-line{flex:1 1 auto;min-width:0;overflow:hidden;color:var(--ee-muted);font-weight:400;white-space:nowrap;text-overflow:ellipsis}',
       '.ee-section{margin:20px 0 8px;font-size:16px;font-weight:800}',
       '.ee-field{margin:0 0 14px}',
       '.ee-field label{display:block;margin-bottom:6px;font-weight:700}',
@@ -1417,6 +1423,27 @@
       '<div class="ee-bar">' + missing + button('ee-primary', action, primary, { disabled: disabled, busy: view.busy }) + button('ee-secondary', 'cancel', t('cancel')) + '</div>';
   }
 
+  var DEFAULT_SUMMARY_FIRST = ['簽核路由群組', '正式班別', '打卡號', '工作地點', '出勤管理類型'];
+
+  function defaultSummaryLine(rows) {
+    var ranked = [];
+    (rows || []).forEach(function (row, index) {
+      var shown = human(row && row.after);
+      if (!shown) return;
+      var rank = DEFAULT_SUMMARY_FIRST.indexOf(row && row.field);
+      ranked.push({
+        rank: rank < 0 ? DEFAULT_SUMMARY_FIRST.length : rank,
+        index: index,
+        shown: shown
+      });
+    });
+    ranked.sort(function (a, b) {
+      if (a.rank !== b.rank) return a.rank - b.rank;
+      return a.index - b.index;
+    });
+    return ranked.map(function (item) { return item.shown; }).join('・');
+  }
+
   function renderDiff(view) {
     var changes = view.changes || {};
     var creating = view.operation === 'CREATE';
@@ -1437,7 +1464,7 @@
     repeated[t('hrConfirmImpact')] = 1;
     var primaryRows = [];
     var defaults = [];
-    var defaultValues = [];
+    var defaultRows = [];
     rows.forEach(function (row) {
       var extra = '';
       var changed = String(row.before == null ? '' : row.before) !== String(row.after == null ? '' : row.after);
@@ -1450,16 +1477,15 @@
         : '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div>' + esc(t('before')) + ' ' + esc(human(row.before)) + '</div><div class="ee-diff-after">' + esc(t('after')) + ' ' + esc(human(row.after)) + '</div>' + extra + '</article>';
       if (creating && view.systemFilled && view.systemFilled[row.field]) {
         defaults.push(card);
-        var shown = human(row.after);
-        if (shown) defaultValues.push(shown);
+        defaultRows.push(row);
       } else primaryRows.push(card);
     });
     var body = primaryRows.join('');
     if (defaults.length) {
-      var preview = defaultValues.slice(0, 3).join('、');
-      var summary = t('systemDefaults') + ' · ' + String(defaults.length);
-      if (preview) summary += ' · ' + preview;
-      body += '<details class="ee-card"><summary>' + esc(summary) + '</summary>' + defaults.join('') + '</details>';
+      var preview = defaultSummaryLine(defaultRows);
+      body += '<details class="ee-card ee-defaults"><summary><span class="ee-defaults-title">' + esc(t('systemDefaults')) + '</span>' +
+        (preview ? '<span class="ee-defaults-line">' + esc(preview) + '</span>' : '') +
+        '</summary>' + defaults.join('') + '</details>';
     }
     var warns = (view.warnings || []).filter(function (item) {
       var text = typeof item === 'string' ? item : '';

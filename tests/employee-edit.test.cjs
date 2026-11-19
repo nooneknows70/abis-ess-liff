@@ -113,7 +113,9 @@ test('360px layout uses one column, 48px targets, and a blue primary', () => {
   assert.match(css, /\.ee-pin\{[^}]*white-space:nowrap/);
   assert.match(css, /@media \(min-width:768px\)/);
   assert.match(css, /grid-template-columns:minmax\(280px,380px\)/);
-  assert.doesNotMatch(css, /text-overflow:\s*ellipsis/);
+  assert.match(css, /\.ee-defaults-line\{[^}]*white-space:nowrap[^}]*text-overflow:ellipsis/);
+  assert.match(css, /\.ee-name\{[^}]*text-overflow:clip/);
+  assert.doesNotMatch(css.replace(/\.ee-defaults-line\{[^}]*\}/, ''), /text-overflow:\s*ellipsis/);
   const html = page.renderScreen('list', {
     rows: [{ employeeId: 'B11401', name: 'Nguyễn Thị Minh Châu', department: '廠務部', location: '新店廠', employmentStatus: '在職' }],
     chip: 'all',
@@ -1422,6 +1424,9 @@ test('collapsed system defaults show a one-line summary', () => {
     reason: { code: 'NEW_HIRE', note: '' },
     rows: []
   });
-  assert.match(html, /系統預設 · 4 · 廠務路線、一般出勤、新店廠/);
-  assert.match(html, /<details class="ee-card"><summary>/);
+  assert.match(html, /<details class="ee-card ee-defaults"><summary><span class="ee-defaults-title">系統預設<\/span><span class="ee-defaults-line">廠務路線・新店廠・一般出勤・否<\/span><\/summary>/);
+  assert.doesNotMatch(html, /<details[^>]*\sopen/);
+  const css = page.styles();
+  assert.match(css, /\.ee-defaults-line\{[^}]*overflow:hidden[^}]*white-space:nowrap[^}]*text-overflow:ellipsis/);
+  assert.match(css, /@media \(max-width:360px\)/);
 });
