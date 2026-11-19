@@ -228,6 +228,8 @@
     ['managerSelf', '主管不可為本人', 'Quản lý không thể là chính mình', 'หัวหน้าต้องไม่ใช่ตัวเอง', 'The manager cannot be the same person', true],
     ['managerCycle', '主管設定會互相循環，請改選別人', 'Cách đặt quản lý bị vòng lặp, hãy chọn người khác', 'การตั้งหัวหน้าวนกัน โปรดเลือกคนอื่น', 'The manager setup loops. Choose someone else.', true],
     ['shiftInvalid', '正式班別須為有效且已確認的班別', 'Ca chính thức phải là ca hợp lệ và đã xác nhận', 'กะอย่างเป็นทางการต้องเป็นกะที่ใช้ได้และยืนยันแล้ว', 'The shift must be an active, confirmed shift', true],
+    ['shiftEmpty', '目前沒有可選班別，請手動輸入', 'Chưa có ca để chọn, hãy nhập tay', 'ยังไม่มีกะให้เลือก โปรดกรอกเอง', 'No shifts are available. Enter one manually.', true],
+    ['legacyRoute', '{code}（舊值，請 HR 改為對應廠區）', '{code} (giá trị cũ, nhân sự hãy đổi sang khu vực tương ứng)', '{code} (ค่าเดิม ฝ่ายบุคคลโปรดเปลี่ยนเป็นโรงงานที่ตรงกัน)', '{code} (old value, HR should change it to the matching site)', true],
     ['valueNotAllowed', '這個選項不在允許清單', 'Giá trị này không nằm trong danh sách cho phép', 'ตัวเลือกนี้ไม่อยู่ในรายการที่อนุญาต', 'This value is not allowed', true],
     ['punchChanged', '建議打卡號已變更。請確認畫面上的新建議號碼，再按一次。', 'Mã chấm công đề xuất đã đổi. Hãy kiểm tra số mới trên màn hình rồi bấm lại.', 'รหัสลงเวลาที่แนะนำเปลี่ยนแล้ว โปรดตรวจเลขใหม่บนหน้าจอ แล้วกดอีกครั้ง', 'The suggested punch number changed. Check the new number on screen, then press again.', true],
     ['unknownResultEdit', '結果不明。請重新載入這位員工後再試。沒有看到「已儲存」前，不要假設已經儲存。', 'Chưa rõ kết quả. Hãy tải lại nhân viên này rồi thử lại. Chưa thấy "Đã lưu" thì đừng coi là đã lưu.', 'ยังไม่ทราบผล โปรดโหลดพนักงานคนนี้ใหม่แล้วลองอีกครั้ง หากยังไม่เห็น "บันทึกแล้ว" อย่าคิดว่าบันทึกแล้ว', 'The result is unknown. Reload this employee and try again. Until you see Saved, do not assume it was saved.', true],
@@ -501,6 +503,8 @@
       created: {},
       expiresAt: '',
       punchSuggestion: '',
+      punchHint: '',
+      punchFrozen: false,
       punchConfirmed: false,
       idTouched: false,
       catalog: {},
@@ -512,6 +516,9 @@
       requires: {},
       impactConfirmed: false,
       fieldCatalog: [],
+      routingGroups: [],
+      shifts: [],
+      shiftsLoaded: false,
       advancedOpen: false
     };
   }
@@ -654,6 +661,8 @@
     if (lower === 'false') return t('no');
     if (/^line\s+false$/i.test(raw)) return t('no');
     if (/^line\s+true$/i.test(raw)) return t('yes');
+    var named = lookupCatalogLabel(raw);
+    if (named) return named;
     if (VALUE_KEYS[raw]) return t(VALUE_KEYS[raw]);
     if (VALUE_KEYS[raw.toUpperCase()] && raw.toUpperCase() === raw) return t(VALUE_KEYS[raw.toUpperCase()]);
     if (/^[ABC]\d{5}$/.test(raw)) return raw;
@@ -662,7 +671,170 @@
     return raw;
   }
 
-  function choices(field, catalog) {
+  function siteMatches(location, site) {
+    var loc = String(location || '').trim();
+    var token = String(site || '').trim();
+    if (!loc || !token) return false;
+    if (loc === token) return true;
+    if (loc.indexOf(token) >= 0) return true;
+    if (token.indexOf(loc) >= 0) return true;
+    return false;
+  }
+
+  function normalizeRoute(item) {
+    if (!item) return null;
+    if (typeof item === 'string') return { code: item, label: item, site: '', legacy: false };
+    var code = item.code || item.value || '';
+    if (!String(code).trim()) return null;
+    return {
+      code: String(code),
+      label: item.label ? String(item.label) : String(code),
+      site: item.site == null ? '' : String(item.site),
+      legacy: item.legacy === true
+    };
+  }
+
+  function normalizeShift(item) {
+    if (!item || typeof item !== 'object') return null;
+    var code = item.code || item.value || item.label || '';
+    if (!String(code).trim()) return null;
+    return {
+      code: String(code),
+      label: item.label ? String(item.label) : String(code),
+      categories: Array.isArray(item.categories) ? item.categories.map(function (value) { return String(value); }) : [],
+      sites: Array.isArray(item.sites) ? item.sites.map(function (value) { return String(value); }) : [],
+      defaults: Array.isArray(item.defaults) ? item.defaults : []
+    };
+  }
+
+  function routeRows(view) {
+    var raw = view && Array.isArray(view.routingGroups) ? view.routingGroups : state.routingGroups;
+    var list = [];
+    (raw || []).forEach(function (item) {
+      var row = normalizeRoute(item);
+      if (row) list.push(row);
+    });
+    if (list.length) return list;
+    return [
+      { code: 'DEFAULT', label: 'DEFAULT', site: '', legacy: false },
+      { code: 'OFFICE', label: 'OFFICE', site: '', legacy: false },
+      { code: 'FACTORY', label: 'FACTORY', site: '', legacy: false }
+    ];
+  }
+
+  function routeLabel(item) {
+    if (item.legacy) {
+      var shown = item.label && item.label !== item.code ? item.label : item.code;
+      if (String(shown).indexOf('舊值') >= 0) return String(shown);
+      return fill('legacyRoute', { code: shown });
+    }
+    if (item.label && item.label !== item.code && !VALUE_KEYS[item.label]) return item.label;
+    return human(item.code);
+  }
+
+  function preferredRoute(person, location) {
+    var rows = routeRows(null).filter(function (item) { return !item.legacy; });
+    var hasSite = false;
+    var match = null;
+    var matchLen = -1;
+    rows.forEach(function (item) {
+      if (!String(item.site || '').trim()) return;
+      hasSite = true;
+      if (person === '外部顧問') return;
+      if (!siteMatches(location, item.site)) return;
+      if (String(item.site).length > matchLen) {
+        match = item;
+        matchLen = String(item.site).length;
+      }
+    });
+    if (match) return match.code;
+    var byCode = {};
+    rows.forEach(function (item) { byCode[item.code] = item; });
+    if (!hasSite) {
+      if (person === '外部顧問') return 'DEFAULT';
+      if (person === '廠務') return 'FACTORY';
+      if (person === '辦公室' || location === '辦公室') return 'OFFICE';
+      return '';
+    }
+    if (person === '外部顧問' && byCode.DEFAULT) return 'DEFAULT';
+    if ((person === '辦公室' || location === '辦公室') && byCode.OFFICE) return 'OFFICE';
+    return '';
+  }
+
+  function shiftRows(view) {
+    var raw = view && Array.isArray(view.shifts) ? view.shifts : state.shifts;
+    var list = [];
+    (raw || []).forEach(function (item) {
+      var row = normalizeShift(item);
+      if (row) list.push(row);
+    });
+    return list;
+  }
+
+  function preferredShift(category, location) {
+    if (state.shiftsLoaded) {
+      var rows = shiftRows(null);
+      if (!rows.length) return '';
+      for (var i = 0; i < rows.length; i += 1) {
+        var defs = rows[i].defaults || [];
+        for (var j = 0; j < defs.length; j += 1) {
+          var def = defs[j] || {};
+          if (String(def.category || '') === String(category || '') && siteMatches(location, def.site)) return rows[i].code;
+        }
+      }
+      return '';
+    }
+    return shiftList()[0] || '';
+  }
+
+  function routeChoices(view) {
+    var baseline = (view && view.baseline) || {};
+    var stored = String(baseline['簽核路由群組'] || '');
+    var creating = !view || view.formMode === 'CREATE' || (!view.formMode && !stored);
+    return routeRows(view).filter(function (item) {
+      if (!item.legacy) return true;
+      if (creating) return false;
+      return stored === item.code;
+    }).map(function (item) {
+      return { value: item.code, label: routeLabel(item) };
+    });
+  }
+
+  function shiftChoices(view) {
+    var loaded = view && view.shiftsLoaded != null ? !!view.shiftsLoaded : !!state.shiftsLoaded;
+    var rows = shiftRows(view);
+    if (!loaded && !rows.length) return null;
+    if (!rows.length) return null;
+    var form = (view && view.form) || {};
+    var baseline = (view && view.baseline) || {};
+    var category = String(form['人員類別'] || '');
+    var location = String(form['工作地點'] || '');
+    var options = rows.filter(function (item) {
+      var catOk = !item.categories.length || item.categories.indexOf(category) >= 0;
+      var siteOk = !item.sites.length || item.sites.some(function (site) { return siteMatches(location, site); });
+      return catOk && siteOk;
+    }).map(function (item) {
+      return { value: item.code, label: item.label || item.code };
+    });
+    function addExtra(value) {
+      if (!value) return;
+      if (options.some(function (item) { return item.value === value; })) return;
+      var known = null;
+      for (var i = 0; i < rows.length; i += 1) {
+        if (rows[i].code === value || rows[i].label === value) known = rows[i];
+      }
+      options.push({ value: value, label: known ? known.label : value });
+    }
+    addExtra(String(baseline['正式班別'] || ''));
+    var current = String(form['正式班別'] || '');
+    if (current && current !== String(baseline['正式班別'] || '')) addExtra(current);
+    return options;
+  }
+
+  function choices(field, view) {
+    if (field.key === '簽核路由群組') return routeChoices(view || {});
+    if (field.key === '正式班別') return shiftChoices(view || {});
+    var catalog = view && view.catalog;
     var fromServer = catalog && catalog[field.key];
     if (fromServer && fromServer.length) return fromServer;
     var list = CHOICES[field.key];
@@ -670,6 +842,26 @@
     return list.map(function (item) {
       return { value: item[0], label: t(item[1]) };
     });
+  }
+
+  function lookupCatalogLabel(raw) {
+    var lists = [state.routingGroups, state.shifts];
+    for (var i = 0; i < lists.length; i += 1) {
+      var list = lists[i] || [];
+      for (var j = 0; j < list.length; j += 1) {
+        var item = list[j];
+        if (!item || typeof item !== 'object') continue;
+        var code = String(item.code || item.value || '');
+        if (code !== raw) continue;
+        if (item.legacy === true) {
+          var shown = item.label && String(item.label) !== code ? String(item.label) : code;
+          if (shown.indexOf('舊值') >= 0) return shown;
+          return fill('legacyRoute', { code: shown });
+        }
+        if (item.label && String(item.label) !== raw) return String(item.label);
+      }
+    }
+    return '';
   }
 
   function isSelf(ctx) {
@@ -837,12 +1029,84 @@
     return true;
   }
 
+  function listOrNull(value) {
+    return Array.isArray(value) ? value : null;
+  }
+
+  function absorbCatalog(res) {
+    if (!res || typeof res !== 'object') return;
+    var routes = listOrNull(res.routingGroups);
+    var shifts = listOrNull(res.shifts);
+    var fields = listOrNull(res.fields);
+    if (fields) {
+      fields.forEach(function (entry) {
+        if (!entry) return;
+        var options = listOrNull(entry.options);
+        if (!options) return;
+        if (!routes && entry.field === '簽核路由群組') routes = options;
+        if (!shifts && entry.field === '正式班別') shifts = options;
+      });
+    }
+    if (routes) state.routingGroups = routes;
+    if (shifts) {
+      state.shifts = shifts;
+      state.shiftsLoaded = true;
+    }
+  }
+
+  function punchPayload(source) {
+    if (!source || typeof source !== 'object') return null;
+    var punch = source.punch;
+    if (punch && typeof punch === 'object') return punch;
+    if (typeof punch === 'string' || typeof punch === 'number') {
+      return { suggestion: String(punch), reason: '', requiresManual: false, frozen: false };
+    }
+    if (source.newSuggestion != null && String(source.newSuggestion).trim() !== '') {
+      return { suggestion: String(source.newSuggestion), reason: '', requiresManual: false, frozen: false };
+    }
+    return null;
+  }
+
+  function applyPunch(punch) {
+    if (!punch) return;
+    var suggestion = punch.suggestion == null ? '' : String(punch.suggestion).trim();
+    var notRequired = punch.reason === 'PUNCH_NOT_REQUIRED' || !allowPunchAutofill();
+    var manual = !notRequired && (punch.requiresManual === true || !suggestion);
+    state.punchFrozen = punch.frozen === true;
+    if (notRequired) {
+      state.punchSuggestion = '';
+      state.punchHint = '';
+      if (systemFilled['打卡號']) {
+        state.form['打卡號'] = '';
+        delete systemFilled['打卡號'];
+      }
+      return;
+    }
+    if (manual) {
+      state.punchSuggestion = '';
+      state.punchHint = 'punchManual';
+      if (systemFilled['打卡號']) {
+        state.form['打卡號'] = '';
+        delete systemFilled['打卡號'];
+      }
+      return;
+    }
+    state.punchHint = '';
+    state.punchSuggestion = suggestion;
+    if (punch.frozen === true) return;
+    var current = state.form['打卡號'];
+    var empty = current == null || String(current).trim() === '';
+    if (empty || systemFilled['打卡號']) {
+      state.form['打卡號'] = suggestion;
+      systemFilled['打卡號'] = true;
+    }
+  }
+
   function suggestDefaults(values, options) {
     var next = Object.assign({}, values || {});
     var refresh = !!(options && options.refreshSystem);
     var applied = {};
     var person = next['人員類別'];
-    var shift = shiftList()[0] || '';
     function put(key, value) {
       if (value == null || String(value).trim() === '') return;
       applied[key] = true;
@@ -864,22 +1128,22 @@
     if (person === '外部顧問') {
       put('出勤管理類型', 'EXTERNAL');
       put('免打卡', 'Y');
-      put('簽核路由群組', 'DEFAULT');
+      put('簽核路由群組', preferredRoute(person, next['工作地點']));
       put('代理人指定方式', 'SUPERVISOR_ASSIGN');
     } else if (person === '廠務') {
       put('出勤管理類型', 'NORMAL');
-      put('簽核路由群組', 'FACTORY');
       put('代理人指定方式', 'SUPERVISOR_ASSIGN');
       put('工作地點', '新店廠');
       put('免打卡', 'N');
-      put('正式班別', shift);
+      put('簽核路由群組', preferredRoute(person, next['工作地點']));
+      put('正式班別', preferredShift(person, next['工作地點']));
     } else if (person === '辦公室' || next['工作地點'] === '辦公室') {
       put('出勤管理類型', 'NORMAL');
-      put('簽核路由群組', 'OFFICE');
       put('代理人指定方式', 'SUPERVISOR_ASSIGN');
       if (person === '辦公室') put('工作地點', '辦公室');
       put('免打卡', 'N');
-      put('正式班別', shift);
+      put('簽核路由群組', preferredRoute(person, next['工作地點']));
+      put('正式班別', preferredShift(person, next['工作地點']));
     } else {
       put('免打卡', 'N');
     }
@@ -1318,7 +1582,7 @@
     if (required) html += '<span class="ee-req" aria-label="' + esc(t('requiredMark')) + '">*</span>';
     html += '</label>';
     if (reason) {
-      var lockedList = choices(field, view.catalog);
+      var lockedList = choices(field, view);
       if (lockedList) {
         html += '<select id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" disabled aria-disabled="true" aria-describedby="' + described + '">' +
           lockedList.map(function (item) {
@@ -1340,7 +1604,7 @@
       html += '<input id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" autocomplete="off" value="' + esc(value) + '" aria-describedby="' + described + '">';
       if (view.suggestion) html += '<p class="ee-hint">' + esc(t('suggestId')) + ' ' + esc(view.suggestion) + '</p>';
     } else {
-      var list = choices(field, view.catalog);
+      var list = choices(field, view);
       var disabled = '';
       if (list && field.key !== '部門') {
         html += '<select id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '"' + disabled + ' aria-describedby="' + described + '"><option value="">' + esc(t('selectPlaceholder')) + '</option>' +
@@ -1359,7 +1623,9 @@
       if (error) html += '<p class="ee-error" id="' + described + '">' + esc(t(error)) + '</p>';
       else html += '<p class="ee-hint" id="' + described + '">';
       if (!error && field.key === '到職日') html += esc(t('firstDayNote'));
-      if (!error && field.key === '打卡號' && view.punchSuggestion) html += esc(t('punchSuggested')) + ' ' + esc(view.punchSuggestion);
+      if (!error && field.key === '打卡號' && view.punchHint) html += esc(view.punchHint);
+      else if (!error && field.key === '打卡號' && view.punchSuggestion) html += esc(t('punchSuggested')) + ' ' + esc(view.punchSuggestion);
+      if (!error && field.key === '正式班別' && view.shiftHint) html += esc(view.shiftHint);
       if (!error && field.key === '部門' && view.newDept) html += esc(t('newDeptHint'));
       if (!error) html += '</p>';
     }
@@ -1607,6 +1873,12 @@
       expiresAt: state.expiresAt,
       pin: state.screen === 'pin' ? pinMemory : '',
       punchSuggestion: state.punchSuggestion,
+      punchHint: state.punchHint ? t(state.punchHint) : '',
+      punchFrozen: state.punchFrozen,
+      shiftHint: state.shiftsLoaded && !(state.shifts && state.shifts.length) ? t('shiftEmpty') : '',
+      routingGroups: state.routingGroups,
+      shifts: state.shifts,
+      shiftsLoaded: state.shiftsLoaded,
       punchConfirmed: state.punchConfirmed,
       suggestion: state.form.suggestedId || '',
       catalog: state.catalog,
@@ -1773,6 +2045,7 @@
       return;
     }
     if (!first || first.code === 'FEATURE_OFF') return;
+    absorbCatalog(first);
     if (first.rowVersion) state.rowVersion = first.rowVersion;
     if (first.ok === true) {
       state.fieldCatalog = first.fields || [];
@@ -1791,6 +2064,7 @@
         hrConfirmedPunch: false,
         hrConfirmedImpact: false
       }, deps);
+      absorbCatalog(second);
       if (second && second.ok === true) {
         state.fieldCatalog = second.fields || [];
         if (second.rowVersion) state.rowVersion = second.rowVersion;
@@ -1877,6 +2151,7 @@
     var expected = '';
     try {
       var validated = await rpc('hrEmployeeValidate', validateBody('CREATE', changes, deps, expected), deps);
+      absorbCatalog(validated);
       state.diff = validated && validated.diff || [];
       state.warnings = mapWarnings(validated && validated.warnings);
       state.requires = validated && validated.requires || {};
@@ -1975,17 +2250,11 @@
     rerender();
     try {
       var res = await rpc('hrEmployeeValidate', validateBody(operation, changes, deps, state.rowVersion || ''), deps);
+      absorbCatalog(res);
       state.diff = res && res.diff || [];
       state.warnings = mapWarnings(res && res.warnings, changes);
       state.requires = res && res.requires || {};
-      if (res && (res.newSuggestion || (res.punch && res.punch.suggestion))) {
-        state.punchSuggestion = res.newSuggestion || res.punch.suggestion;
-      }
-      if (res && res.punch && res.punch.suggestion) state.punchSuggestion = res.punch.suggestion;
-      if (state.operation === 'CREATE' && allowPunchAutofill() && state.punchSuggestion && (!state.form['打卡號'] || systemFilled['打卡號'])) {
-        state.form['打卡號'] = state.punchSuggestion;
-        systemFilled['打卡號'] = true;
-      }
+      if (state.operation === 'CREATE') applyPunch(punchPayload(res));
       if (res && (res.mode === 'SHADOW' || res.mode === 'LIVE')) state.mode = res.mode;
       if (res && res.fields) state.fieldCatalog = res.fields;
       if (!res || res.code === 'FEATURE_OFF') {
@@ -2034,6 +2303,7 @@
     var expected = state.rowVersion || '';
     try {
       var validated = await rpc('hrEmployeeValidate', validateBody('UPDATE', changes, deps, expected), deps);
+      absorbCatalog(validated);
       state.diff = validated && validated.diff || state.diff;
       state.warnings = mapWarnings(validated && validated.warnings, changes);
       state.requires = validated && validated.requires || state.requires;
@@ -2216,6 +2486,8 @@
       state.reason = { code: 'NEW_HIRE', note: '' };
       state.punchConfirmed = false;
       state.punchSuggestion = '';
+      state.punchHint = '';
+      state.punchFrozen = false;
       state.impactConfirmed = false;
       state.idTouched = false;
       state.requires = {};
@@ -2255,12 +2527,7 @@
           }, deps);
           var nextId = suggested && (suggested.employeeId || suggested.suggestedEmployeeId);
           if (nextId && !state.idTouched) state.form['V2員工ID'] = nextId;
-          state.punchSuggestion = suggested && (suggested.punch || suggested.punchNumber || (suggested.punch && suggested.punch.suggestion)) || state.punchSuggestion;
-          if (suggested && suggested.punch && suggested.punch.suggestion) state.punchSuggestion = suggested.punch.suggestion;
-          if (allowPunchAutofill() && state.punchSuggestion && (!state.form['打卡號'] || systemFilled['打卡號'])) {
-            state.form['打卡號'] = state.punchSuggestion;
-            systemFilled['打卡號'] = true;
-          }
+          applyPunch(punchPayload(suggested));
         } catch (ignore) {}
       }
       return { ok: true };
@@ -2411,8 +2678,7 @@
     if (node.getAttribute('data-ee-query') != null) state.query = node.value;
     if (node.getAttribute('data-ee-reason') === 'code') state.reason.code = node.value;
     if (node.getAttribute('data-ee-reason') === 'note') state.reason.note = node.value;
-    if (field === '人員類別') state.form = suggestDefaults(state.form, { refreshSystem: true });
-    else if (field === '工作地點') state.form = suggestDefaults(state.form);
+    if (field === '人員類別' || field === '工作地點') state.form = suggestDefaults(state.form, { refreshSystem: true });
     if (node.getAttribute('data-ee-reason') === 'code' || node.getAttribute('data-ee-query') != null || field === '人員類別' || field === '工作地點') {
       rerender(true);
       return;
@@ -2608,6 +2874,7 @@
           reason: { code: '', note: '' }
         }, opts);
         mode = featureMode(res);
+        absorbCatalog(res);
         if (res && (res.mode === 'SHADOW' || res.mode === 'LIVE')) mode = res.mode;
       } catch (ignore) {
         return false;

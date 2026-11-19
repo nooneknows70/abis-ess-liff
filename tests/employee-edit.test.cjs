@@ -1407,6 +1407,279 @@ test('punch suggestion is not written for an external consultant or punch-exempt
   assert.doesNotMatch(page.renderCurrent(), /value="11521"/);
 });
 
+function fieldInput(page, field, value) {
+  page.onInput({
+    target: {
+      value: value,
+      tagName: 'SELECT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? field : null; }
+    }
+  });
+}
+
+const SITE_ROUTES = [
+  { code: 'DEFAULT', label: '預設', site: '', legacy: false },
+  { code: 'FACTORY_CHANGBIN', label: '彰濱廠', site: '彰濱', legacy: false },
+  { code: 'FACTORY_XINDIAN', label: '新店廠', site: '新店', legacy: false },
+  { code: 'FACTORY', label: 'FACTORY', site: '', legacy: true }
+];
+
+const SITE_SHIFTS = [
+  { code: 'OFFICE_DAY', label: '辦公室日班', categories: ['辦公室'], sites: ['辦公室'], defaults: [{ category: '辦公室', site: '辦公室' }] },
+  { code: 'FACTORY_XINDIAN_DAY', label: '新店日班', categories: ['廠務'], sites: ['新店廠'], defaults: [{ category: '廠務', site: '新店廠' }] },
+  { code: 'FACTORY_CHANGBIN_EARLY', label: '彰濱早班', categories: ['廠務'], sites: ['彰濱廠'], defaults: [{ category: '廠務', site: '彰濱廠' }] }
+];
+
+test('routing group dropdown follows the catalog and keeps an unchanged legacy value', async () => {
+  const ctx = load({ rc2AccountPanelHtml_: function () { return ''; } });
+  const page = ctx.ABIS_EMPLOYEE_EDIT;
+  assert.equal(await page.install({
+    permission: 'HR',
+    call: async function () {
+      return {
+        ok: true,
+        mode: 'LIVE',
+        fields: [
+          { field: '簽核路由群組', options: SITE_ROUTES },
+          { field: '正式班別', options: SITE_SHIFTS }
+        ]
+      };
+    }
+  }), true);
+  await page.handleAction('add', {}, {});
+  fieldInput(page, '人員類別', '廠務');
+  let html = page.renderCurrent();
+  assert.match(html, /<select id="ee-簽核路由群組"/);
+  assert.match(html, /value="FACTORY_XINDIAN" selected/);
+  assert.match(html, />新店廠</);
+  assert.doesNotMatch(html, /<option value="FACTORY"/);
+  fieldInput(page, '工作地點', '彰濱廠');
+  html = page.renderCurrent();
+  assert.match(html, /value="FACTORY_CHANGBIN" selected/);
+  assert.match(html, /value="彰濱廠" selected/);
+  fieldInput(page, '簽核路由群組', 'DEFAULT');
+  fieldInput(page, '工作地點', '新店廠');
+  html = page.renderCurrent();
+  assert.match(html, /value="DEFAULT" selected/);
+  assert.match(html, /value="新店廠" selected/);
+  assert.doesNotMatch(html, /value="FACTORY_XINDIAN" selected/);
+
+  page.reset({
+    active: true,
+    screen: 'edit',
+    operation: 'UPDATE',
+    routingGroups: SITE_ROUTES,
+    employeeId: 'B11401',
+    baseline: { '簽核路由群組': 'FACTORY', '人員類別': '廠務', '工作地點': '新店廠', '部門': '廠務部' },
+    form: { '簽核路由群組': 'FACTORY', '人員類別': '廠務', '工作地點': '新店廠', '部門': '廠務部' }
+  });
+  html = page.renderCurrent();
+  assert.match(html, /<option value="FACTORY" selected>FACTORY（舊值，請 HR 改為對應廠區）<\/option>/);
+  const changes = page.buildChanges(
+    { '簽核路由群組': 'FACTORY', '部門': '廠務部' },
+    { '簽核路由群組': 'FACTORY', '部門': '品保部' },
+    { mode: 'UPDATE', employeeId: 'B11401', actorId: 'A00001' }
+  );
+  assert.equal(changes['簽核路由群組'], undefined);
+  assert.equal(changes['部門'], '品保部');
+  const errors = page.validateClient(
+    { '簽核路由群組': 'FACTORY', '部門': '品保部' },
+    'UPDATE',
+    { baseline: { '簽核路由群組': 'FACTORY', '部門': '廠務部' }, employeeId: 'B11401', actorId: 'A00001' }
+  );
+  assert.equal(errors.some(function (item) { return item.field === '簽核路由群組'; }), false);
+});
+
+test('shift dropdown filters by category and site and keeps a stored value', () => {
+  const page = ui();
+  page.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    shifts: SITE_SHIFTS,
+    shiftsLoaded: true,
+    routingGroups: SITE_ROUTES,
+    form: {}
+  });
+  fieldInput(page, '人員類別', '廠務');
+  let html = page.renderCurrent();
+  assert.match(html, /<select id="ee-正式班別"/);
+  assert.match(html, /value="FACTORY_XINDIAN_DAY" selected/);
+  assert.doesNotMatch(html, /OFFICE_DAY|彰濱早班/);
+  fieldInput(page, '工作地點', '彰濱廠');
+  html = page.renderCurrent();
+  assert.match(html, /value="FACTORY_CHANGBIN_EARLY" selected/);
+  assert.doesNotMatch(html, /新店日班/);
+  fieldInput(page, '正式班別', 'FACTORY_XINDIAN_DAY');
+  fieldInput(page, '工作地點', '彰濱廠');
+  html = page.renderCurrent();
+  assert.match(html, /value="FACTORY_XINDIAN_DAY" selected/);
+
+  page.reset({
+    active: true,
+    screen: 'edit',
+    operation: 'UPDATE',
+    shifts: SITE_SHIFTS,
+    shiftsLoaded: true,
+    employeeId: 'B11401',
+    baseline: { '正式班別': '日班', '人員類別': '廠務', '工作地點': '新店廠' },
+    form: { '正式班別': '日班', '人員類別': '廠務', '工作地點': '新店廠' }
+  });
+  html = page.renderCurrent();
+  assert.match(html, /value="日班" selected/);
+  assert.match(html, /value="FACTORY_XINDIAN_DAY"/);
+  assert.equal(page.buildChanges(
+    { '正式班別': '日班' },
+    { '正式班別': '日班' },
+    { mode: 'UPDATE', employeeId: 'B11401', actorId: 'A00001' }
+  )['正式班別'], undefined);
+
+  const empty = load({ SHIFT_RULES: ['夜班'] }).ABIS_EMPLOYEE_EDIT;
+  empty.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    shifts: [],
+    shiftsLoaded: true,
+    form: {}
+  });
+  fieldInput(empty, '人員類別', '廠務');
+  html = empty.renderCurrent();
+  assert.match(html, /<input id="ee-正式班別"/);
+  assert.doesNotMatch(html, /<select id="ee-正式班別"/);
+  assert.match(html, /目前沒有可選班別，請手動輸入/);
+  assert.doesNotMatch(html, /value="夜班"/);
+});
+
+test('suggest-id punch payload prefills, skips exempt people, and respects manual and frozen', async () => {
+  const page = ui();
+  page.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    form: page.suggestDefaults({
+      '人員類別': '廠務',
+      '姓名': '王小明',
+      '到職日': '2026-12-01',
+      '部門': '廠務部',
+      '直屬主管ID': 'A09700'
+    })
+  });
+  await page.handleAction('letter', { value: 'B' }, {
+    sessionToken: 'sess',
+    call: async function () {
+      return {
+        ok: true,
+        data: {
+          employeeId: 'B11501',
+          punch: { suggestion: '11501', reason: 'DEFAULT_ID_DIGITS', requiresManual: false, frozen: false, attempts: ['11501'] }
+        }
+      };
+    }
+  });
+  assert.match(page.renderCurrent(), /value="11501"/);
+  await page.handleAction('letter', { value: 'B' }, {
+    sessionToken: 'sess',
+    call: async function () {
+      return {
+        ok: true,
+        data: {
+          employeeId: 'B11501',
+          punch: { suggestion: '11502', reason: 'DEFAULT_ID_DIGITS', requiresManual: false, frozen: false, attempts: ['11502'] }
+        }
+      };
+    }
+  });
+  assert.match(page.renderCurrent(), /value="11502"/);
+  fieldInput(page, '打卡號', '31511');
+  await page.handleAction('letter', { value: 'B' }, {
+    sessionToken: 'sess',
+    call: async function () {
+      return {
+        ok: true,
+        data: {
+          employeeId: 'B11501',
+          punch: { suggestion: '11503', reason: 'DEFAULT_ID_DIGITS', requiresManual: false, frozen: false, attempts: ['11503'] }
+        }
+      };
+    }
+  });
+  assert.match(page.renderCurrent(), /value="31511"/);
+  assert.doesNotMatch(page.renderCurrent(), /value="11503"/);
+
+  page.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    form: page.suggestDefaults({ '人員類別': '廠務', '姓名': '王小明', '到職日': '2026-12-01' })
+  });
+  await page.handleAction('letter', { value: 'B' }, {
+    sessionToken: 'sess',
+    call: async function () {
+      return {
+        ok: true,
+        data: {
+          employeeId: 'B11509',
+          punch: { suggestion: null, reason: 'FIRST_DIGIT_EXHAUSTED', requiresManual: true, frozen: false, attempts: [] }
+        }
+      };
+    }
+  });
+  let manual = page.renderCurrent();
+  assert.doesNotMatch(manual, /value="11509"/);
+  assert.match(manual, /請手動輸入尚未使用的打卡號/);
+
+  page.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    form: page.suggestDefaults({ '人員類別': '外部顧問', '姓名': '顧問', '到職日': '2026-12-01' })
+  });
+  await page.handleAction('letter', { value: 'C' }, {
+    sessionToken: 'sess',
+    call: async function () {
+      return {
+        ok: true,
+        data: {
+          employeeId: 'C11501',
+          punch: { suggestion: null, reason: 'PUNCH_NOT_REQUIRED', requiresManual: false, frozen: false, attempts: [] }
+        }
+      };
+    }
+  });
+  const exempt = page.renderCurrent();
+  assert.match(exempt, /value="C11501"/);
+  assert.doesNotMatch(exempt, /value="11501"|請手動輸入尚未使用的打卡號/);
+
+  page.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    form: page.suggestDefaults({
+      '人員類別': '廠務',
+      '姓名': '王小明',
+      '到職日': '2026-12-01',
+      '打卡號': '31511'
+    })
+  });
+  fieldInput(page, '打卡號', '31511');
+  await page.handleAction('letter', { value: 'B' }, {
+    sessionToken: 'sess',
+    call: async function () {
+      return {
+        ok: true,
+        data: {
+          employeeId: 'B11501',
+          punch: { suggestion: '99999', reason: 'DEFAULT_ID_DIGITS', requiresManual: false, frozen: true, attempts: ['99999'] }
+        }
+      };
+    }
+  });
+  const frozen = page.renderCurrent();
+  assert.match(frozen, /value="31511"/);
+  assert.doesNotMatch(frozen, /value="99999"/);
+});
+
 test('collapsed system defaults show a one-line summary', () => {
   const page = ui();
   const html = page.renderScreen('diff', {
