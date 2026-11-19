@@ -637,8 +637,8 @@ body.home-view #home{margin:0!important;padding:0!important;border:0!important;b
 .frozen-icon-btn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .frozen-bell-dot{position:absolute;right:6px;top:5px;width:8px;height:8px;border-radius:50%;background:#ef4444;border:2px solid #fff}
 .frozen-user-chip{display:flex!important;align-items:center!important;gap:7px!important;font-size:13px!important;font-weight:850!important;min-width:0!important;max-width:100%!important;overflow:hidden!important}
-button.frozen-user-chip#homeUserBtn{flex:0 0 auto!important;width:max-content!important;min-width:48px!important;max-width:min(100%,14em)!important;overflow:hidden!important}
-#headerUserName{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;flex:0 1 auto;width:max-content;max-width:8em;min-width:0;overflow:hidden;white-space:normal;overflow-wrap:anywhere;line-height:1.15}
+button.frozen-user-chip#homeUserBtn{flex:0 0 auto!important;width:max-content!important;min-width:max(48px,min-content)!important;max-width:min(100%,14em)!important;overflow:hidden!important}
+button#homeUserBtn #headerUserName{display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;line-clamp:2!important;flex:0 0 auto!important;width:auto!important;min-width:4.2em!important;max-width:8em!important;overflow:hidden!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.15!important}
 .frozen-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#dcecff,#cce8e0);color:#164b77;border:2px solid #fff;box-shadow:0 2px 8px rgba(20,57,90,.10);font-weight:900}
 .frozen-brand-row{position:relative;z-index:1;display:flex;align-items:center;gap:13px;margin-top:9px}
 .frozen-company-banner .company-logo{width:64px!important;height:64px!important;min-width:64px!important;margin:0!important;border:0!important;border-radius:50%!important;box-shadow:0 6px 18px rgba(14,71,143,.14)!important;background:#fff!important}
@@ -3148,10 +3148,11 @@ body.home-view .fh-quick-copy span{
     letter-spacing:-0.03em!important;
     line-height:1.2!important;
   }
-  #headerUserName,
-  body.home-view #headerUserName{
+  button#homeUserBtn #headerUserName,
+  body.home-view button#homeUserBtn #headerUserName{
     font-size:13px!important;
-    max-width:none!important;
+    min-width:4.2em!important;
+    max-width:8em!important;
     white-space:normal!important;
   }
   .frozen-entry-source{font-size:12px}
