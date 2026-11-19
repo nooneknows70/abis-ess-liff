@@ -9823,3 +9823,539 @@ try {
   window.ABIS_LEAVE_SUBMIT_HOTFIX =
     Object.freeze(abisLeaveSubmitHotfixStatus_());
 } catch (ignore) {}
+
+/* HF9_UI_ROUND_START
+   Front-end round for login/logout, first paint, and user-facing labels.
+   Backend still owns homeBootstrap payload, shift-name localization,
+   attendance period bounds, and report timestamps. This layer only
+   displays them safely. */
+(function (global) {
+  'use strict';
+
+  function lang() {
+    var code = (typeof currentLang === 'string' ? currentLang : 'ZH').toUpperCase();
+    return code === 'EN' || code === 'VI' || code === 'TH' ? code : 'ZH';
+  }
+
+  var PACK = {
+    ZH: {
+      opening: '正在開啟，請稍候…',
+      bootFail: '登入還沒完成，請稍後再試（HF9_LOGIN_BOOT）',
+      other: '其他說明',
+      open: '處理中',
+      missingOut: '缺下班卡',
+      missingIn: '缺上班卡',
+      noPunch: '未打卡',
+      coverage: '這段期間的出勤資料還不完整',
+      officeDay: '辦公室日班',
+      factoryNight: '廠務夜班 20:00–04:00',
+      restore: '恢復首次登入',
+      noMissing: '無缺卡',
+      hasMissing: '有缺卡',
+      sourceStale: '原始打卡、請假或班表已更新，請看最新結果',
+      sourceFormal: '正式出勤資料',
+      hours: '小時',
+      leaveRef: '假單',
+      rule: '出勤規則'
+    },
+    EN: {
+      opening: 'Opening…',
+      bootFail: 'Sign-in is not finished yet. Please try again (HF9_LOGIN_BOOT)',
+      other: 'Other note',
+      open: 'In progress',
+      missingOut: 'Missing clock-out',
+      missingIn: 'Missing clock-in',
+      noPunch: 'No punches',
+      coverage: 'Attendance data does not cover this whole period yet',
+      officeDay: 'Office day',
+      factoryNight: 'Factory night 20:00–04:00',
+      restore: 'Restore first sign-in',
+      noMissing: 'No missing punch',
+      hasMissing: 'Missing punch',
+      sourceStale: 'The original punch, leave, or shift was updated. Use the latest result.',
+      sourceFormal: 'Official attendance data',
+      hours: 'hours',
+      leaveRef: 'Leave',
+      rule: 'Attendance rule'
+    },
+    VI: {
+      opening: 'Đang mở…',
+      bootFail: 'Đăng nhập chưa xong. Vui lòng thử lại (HF9_LOGIN_BOOT)',
+      other: 'Ghi chú khác',
+      open: 'Đang xử lý',
+      missingOut: 'Thiếu giờ ra',
+      missingIn: 'Thiếu giờ vào',
+      noPunch: 'Chưa chấm công',
+      coverage: 'Dữ liệu chấm công chưa đủ cho cả giai đoạn này',
+      officeDay: 'Ca văn phòng ban ngày',
+      factoryNight: 'Ca nhà máy đêm 20:00–04:00',
+      restore: 'Khôi phục lần đăng nhập đầu',
+      noMissing: 'Không thiếu chấm công',
+      hasMissing: 'Thiếu chấm công',
+      sourceStale: 'Dữ liệu chấm công, đơn nghỉ hoặc ca gốc đã đổi. Hãy xem kết quả mới nhất.',
+      sourceFormal: 'Dữ liệu chấm công chính thức',
+      hours: 'giờ',
+      leaveRef: 'Đơn nghỉ',
+      rule: 'Quy tắc chấm công'
+    },
+    TH: {
+      opening: 'กำลังเปิด…',
+      bootFail: 'ยังเข้าสู่ระบบไม่เสร็จ โปรดลองอีกครั้ง (HF9_LOGIN_BOOT)',
+      other: 'หมายเหตุอื่น',
+      open: 'กำลังดำเนินการ',
+      missingOut: 'ขาดเวลาออก',
+      missingIn: 'ขาดเวลาเข้า',
+      noPunch: 'ไม่มีการลงเวลา',
+      coverage: 'ข้อมูลเวลายังไม่ครบช่วงนี้',
+      officeDay: 'กะออฟฟิศกลางวัน',
+      factoryNight: 'กะโรงงานกลางคืน 20:00–04:00',
+      restore: 'คืนค่าการเข้าสู่ระบบครั้งแรก',
+      noMissing: 'ไม่ขาดเวลา',
+      hasMissing: 'ขาดเวลา',
+      sourceStale: 'ข้อมูลตอกบัตร ใบลา หรือกะเดิมถูกอัปเดตแล้ว ให้ดูผลล่าสุด',
+      sourceFormal: 'ข้อมูลเวลาอย่างเป็นทางการ',
+      hours: 'ชั่วโมง',
+      leaveRef: 'ใบลา',
+      rule: 'กติกาเวลาทำงาน'
+    }
+  };
+
+  function t(key) {
+    var pack = PACK[lang()] || PACK.ZH;
+    return pack[key] || PACK.ZH[key] || key;
+  }
+
+  function isBootNoise(value) {
+    var text = String(value && value.message ? value.message : value || '');
+    return /homeBootstrap|缺少\s*home|FAST4 home refresh|returned no employee/i.test(text);
+  }
+
+  function friendlyBoot() {
+    return t('bootFail');
+  }
+
+  function localeTag() {
+    return lang() === 'VI' ? 'vi-VN' : lang() === 'TH' ? 'th-TH' : lang() === 'EN' ? 'en' : 'zh-TW';
+  }
+
+  function formatDateText(text) {
+    if (!/(?:GMT|Mon |Tue |Wed |Thu |Fri |Sat |Sun )/.test(text)) return text;
+    var parsed = new Date(text);
+    if (isNaN(parsed.getTime())) return text;
+    try {
+      return new Intl.DateTimeFormat(localeTag(), {
+        year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false
+      }).format(parsed);
+    } catch (ignore) {
+      return text;
+    }
+  }
+
+  function humanize(value) {
+    var text = String(value == null ? '' : value);
+    if (!text) return text;
+    if (isBootNoise(text)) return friendlyBoot();
+    text = text.replace(/唯語/g, '唯讀');
+    text = text.replace(/Restore First Login/gi, t('restore'));
+    text = text.replace(/SOURCE_COVERAGE_GAP/g, t('coverage'));
+    text = text.replace(/OTHER_TEXT/g, t('other'));
+    text = text.replace(/\bMISSING_OUT\b/g, t('missingOut'));
+    text = text.replace(/\bMISSING_IN\b/g, t('missingIn'));
+    text = text.replace(/\bNO_PUNCH\b/g, t('noPunch'));
+    text = text.replace(/\bOPEN\b/g, t('open'));
+    text = text.replace(/OFFICE_DAY/g, t('officeDay'));
+    text = text.replace(/FACTORY_NIGHT_2000_0400/g, t('factoryNight'));
+    text = text.replace(/R2180[A-Z0-9._-]*/g, t('rule'));
+    text = text.replace(/缺卡\s*N/g, t('noMissing'));
+    text = text.replace(/缺卡\s*Y/g, t('hasMissing'));
+    text = text.replace(/來源已失效｜原 Punch\/Leave\/排班/g, t('sourceStale'));
+    text = text.replace(/ABIS_出勤薪資_正式母表_V1/g, t('sourceFormal'));
+    text = text.replace(/\bLV-[A-Za-z0-9_-]{4,}\b/g, function (id) {
+      return t('leaveRef') + ' · ' + id.slice(-4);
+    });
+    text = text.replace(/(\d+(?:\.\d+)?)\s*HR\b/g, '$1 ' + t('hours'));
+    text = formatDateText(text);
+    if (/^\s*(shadow notice|shadow|影子模式|影子資料)\s*$/i.test(text)) return '';
+    return text;
+  }
+
+  function monthBounds(month) {
+    var parts = String(month || '').split('-');
+    var year = Number(parts[0]);
+    var mon = Number(parts[1]);
+    if (!year || !mon) return null;
+    var last = new Date(year, mon, 0).getDate();
+    var start = parts[0] + '-' + String(mon).padStart(2, '0') + '-01';
+    var end = parts[0] + '-' + String(mon).padStart(2, '0') + '-' + String(last).padStart(2, '0');
+    return { start: start, end: end };
+  }
+
+  function expandRange(text, month) {
+    var bounds = monthBounds(month);
+    if (!bounds) return String(text || '');
+    return String(text || '').replace(/(\d{4}-\d{2}-\d{2})\s*[~～]\s*(\d{4}-\d{2}-\d{2})/g, function (all, start, end) {
+      if (start === end) return bounds.start + ' ~ ' + bounds.end;
+      return all;
+    });
+  }
+
+  var SESSION_KEYS = [
+    'abis_session',
+    'abis_employee_id',
+    'abis_p5a1_line_fast_until_v1',
+    'abis_p5a1_line_timeout_draft_v1',
+    'abis_p4a13_pending_submit_v1',
+    'abis_p4a132_pending_approval_v1'
+  ];
+
+  function clearStores(localStore, sessionStore) {
+    SESSION_KEYS.forEach(function (key) {
+      try { if (localStore) localStore.removeItem(key); } catch (ignore) {}
+      try { if (sessionStore) sessionStore.removeItem(key); } catch (ignore) {}
+    });
+    if (sessionStore && sessionStore.clear) {
+      try { sessionStore.clear(); } catch (ignore) {}
+    }
+  }
+
+  var api = {
+    humanize: humanize,
+    isBootNoise: isBootNoise,
+    friendlyBoot: friendlyBoot,
+    monthBounds: monthBounds,
+    expandRange: expandRange,
+    sessionKeys: SESSION_KEYS.slice(),
+    clearStores: clearStores,
+    localeTag: localeTag,
+    pack: function () { return PACK[lang()]; }
+  };
+  global.HF9_UI_ROUND = api;
+
+  function $(id) { return typeof document !== 'undefined' ? document.getElementById(id) : null; }
+
+  function install() {
+    if (typeof document === 'undefined' || api.installed) return;
+    api.installed = true;
+
+    if (typeof message === 'function' && !message.__hf9Round) {
+      var baseMessage = message;
+      message = function (text, type) {
+        var raw = String(text == null ? '' : text);
+        if (isBootNoise(raw)) {
+          try { console.error(raw); } catch (ignore) {}
+          global.__hf9SawBootNoise = true;
+          if (global.__hf9LoginQuiet) return;
+          raw = friendlyBoot();
+          type = type || 'warning';
+        }
+        return baseMessage(humanize(raw), type);
+      };
+      message.__hf9Round = true;
+    }
+
+    if (typeof renderOperationStatus_ === 'function' && !renderOperationStatus_.__hf9Round) {
+      var baseStatus = renderOperationStatus_;
+      renderOperationStatus_ = function (kind, title, detail, withRetry) {
+        return baseStatus(kind, humanize(title), detail ? humanize(detail) : detail, withRetry);
+      };
+      renderOperationStatus_.__hf9Round = true;
+    }
+
+    if (typeof call === 'function' && !call.__hf9Round) {
+      var baseCall = call;
+      call = function (action, payload) {
+        function run() { return baseCall(action, payload); }
+        if (action !== 'login' && action !== 'home') return run();
+        return run().catch(function (err) {
+          if (!isBootNoise(err)) throw err;
+          try { console.error(err); } catch (ignore) {}
+          return new Promise(function (resolve) { setTimeout(resolve, 450); }).then(run);
+        });
+      };
+      call.__hf9Round = true;
+    }
+
+    if (typeof login === 'function' && !login.__hf9Round) {
+      var baseLogin = login;
+      login = async function () {
+        var tries = 0;
+        while (tries < 3) {
+          global.__hf9LoginQuiet = tries < 2;
+          global.__hf9SawBootNoise = false;
+          var btn = $('loginBtn');
+          if (btn) btn.textContent = t('opening');
+          await baseLogin();
+          global.__hf9LoginQuiet = false;
+          if (!global.__hf9SawBootNoise) return;
+          if (typeof sessionToken !== 'undefined' && sessionToken && typeof homeData !== 'undefined' && homeData) return;
+          tries += 1;
+          if (tries < 3) await new Promise(function (resolve) { setTimeout(resolve, 350 * tries); });
+        }
+      };
+      login.__hf9Round = true;
+    }
+
+    if (typeof logout === 'function' && !logout.__hf9Round) {
+      logout = async function () {
+        var token = typeof sessionToken !== 'undefined' ? sessionToken : '';
+        clearStores(global.localStorage, global.sessionStorage);
+        if (typeof sessionToken !== 'undefined') sessionToken = '';
+        if (typeof rememberedEmployeeId !== 'undefined') rememberedEmployeeId = '';
+        if (typeof homeData !== 'undefined') homeData = null;
+        if (typeof prefetchStarted !== 'undefined') prefetchStarted = false;
+        ['myLeavesCache', 'attendanceCache', 'inboxCache', 'dashboardCache', 'taskSummaryCache', 'notificationCache', 'proxyAssignmentsCache', 'hrCredentialSelected'].forEach(function (name) {
+          try { global[name] = name.indexOf('Cache') >= 0 && name !== 'taskSummaryCache' && name !== 'notificationCache' && name !== 'hrCredentialSelected' ? (name === 'inboxCache' || name === 'dashboardCache' || name === 'attendanceCache' || name === 'myLeavesCache' || name === 'proxyAssignmentsCache' ? null : null) : null; } catch (ignore) {}
+        });
+        try { myLeavesCache = null; attendanceCache = null; inboxCache = null; dashboardCache = null; taskSummaryCache = null; notificationCache = null; notificationFilterCache = {}; activeNotificationData = null; proxyAssignmentsCache = null; hrCredentialSelected = null; hrCredentialResultsCache = []; lineBindingStatusCache = null; } catch (ignore) {}
+        try { if (typeof p5a1ClearLineFast_ === 'function') p5a1ClearLineFast_(); } catch (ignore) {}
+        ['loginId', 'loginPin', 'forgotEmployeeId', 'setupId', 'setupPin', 'setupPin2'].forEach(function (id) {
+          var el = $(id);
+          if (el) el.value = '';
+        });
+        var remember = $('rememberId');
+        if (remember) remember.checked = false;
+        var avatar = $('headerAvatar');
+        var nameEl = $('headerUserName');
+        if (avatar) avatar.textContent = 'A';
+        if (nameEl) nameEl.textContent = 'ABIS';
+        var dot = $('homeBellDot');
+        if (dot) dot.classList.add('hide');
+        if (typeof showLogin === 'function') showLogin();
+        if (typeof clearMessage === 'function') clearMessage();
+        var op = $('opStatus');
+        if (op) op.classList.add('hide');
+        if (token && typeof call === 'function') {
+          var pending = call('logout', { sessionToken: token });
+          Promise.race([
+            pending,
+            new Promise(function (resolve) { setTimeout(resolve, 1500); })
+          ]).catch(function (err) { try { console.error(err); } catch (ignore) {} });
+        }
+      };
+      logout.__hf9Round = true;
+    }
+
+    if (typeof boot === 'function' && !boot.__hf9Round) {
+      var baseBoot = boot;
+      boot = async function () {
+        if (typeof sessionToken !== 'undefined' && sessionToken && (typeof homeData === 'undefined' || !homeData)) paintShell();
+        return baseBoot();
+      };
+      boot.__hf9Round = true;
+    }
+
+    if (typeof prefetchSecondaryData === 'function' && !prefetchSecondaryData.__hf9Round) {
+      prefetchSecondaryData = async function () {
+        if (typeof prefetchStarted !== 'undefined' && prefetchStarted) return;
+        if (typeof sessionToken === 'undefined' || !sessionToken) return;
+        prefetchStarted = true;
+        var jobs = [];
+        function push(run) { jobs.push(run().catch(function (err) { try { console.error(err); } catch (ignore) {} })); }
+        if (typeof abisPerf2LoadLeaves_ === 'function') push(function () { return abisPerf2LoadLeaves_().then(function () { if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); }); });
+        if (typeof abisPerf2LoadTaskSummary_ === 'function') push(function () { return abisPerf2LoadTaskSummary_().then(function () { if (typeof setInboxCount === 'function') setInboxCount(Number(taskSummaryCache && taskSummaryCache.total || 0)); if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); }); });
+        if (typeof abisPerf2LoadNotifications_ === 'function') push(function () { return abisPerf2LoadNotifications_('ALL').then(function () { if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); }); });
+        if (typeof abisPerf2LoadAttendance_ === 'function' && typeof currentMonthKey === 'function') push(function () { return abisPerf2LoadAttendance_(currentMonthKey()).then(function () { if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); }); });
+        if (typeof abisPerf2LoadTaskInbox_ === 'function') push(function () { return abisPerf2LoadTaskInbox_('ALL'); });
+        if (typeof abisPerf2LoadProxy_ === 'function') push(function () { return abisPerf2LoadProxy_(); });
+        await Promise.all(jobs);
+      };
+      prefetchSecondaryData.__hf9Round = true;
+    }
+
+    if (typeof fhNoticeItems_ === 'function' && !fhNoticeItems_.__hf9Round) {
+      var baseNotices = fhNoticeItems_;
+      fhNoticeItems_ = function () {
+        return baseNotices().filter(function (item) { return item && item.unread; });
+      };
+      fhNoticeItems_.__hf9Round = true;
+    }
+    if (typeof p5a1Rc2GeneralUnreadCount_ === 'function' && !p5a1Rc2GeneralUnreadCount_.__hf9Round) {
+      p5a1Rc2GeneralUnreadCount_ = function () {
+        if (typeof notificationCache !== 'undefined' && notificationCache && Array.isArray(notificationCache.items) && typeof p5a1Rc2GeneralNotifications_ === 'function') {
+          return p5a1Rc2GeneralNotifications_().filter(function (item) { return item && item.unread && !item.isActionable; }).length;
+        }
+        return Number(notificationCache && notificationCache.summary && notificationCache.summary.generalUnread || 0);
+      };
+      p5a1Rc2GeneralUnreadCount_.__hf9Round = true;
+    }
+
+    if (typeof renderHome === 'function' && !renderHome.__hf9Round) {
+      var baseHome = renderHome;
+      renderHome = function () {
+        baseHome();
+        var home = $('home');
+        if (!home) return;
+        if (typeof taskSummaryCache === 'undefined' || taskSummaryCache == null) {
+          home.querySelectorAll('.fh-task b').forEach(function (node) {
+            if (node.textContent === '—' || node.textContent === '-') node.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
+          });
+        }
+        if (typeof attendanceCache === 'undefined' || attendanceCache == null) {
+          home.querySelectorAll('.fh-status-value, .fh-status-pill').forEach(function (node) {
+            if (node.textContent === '—' || node.textContent === '-') node.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
+          });
+        }
+        polish(home);
+      };
+      renderHome.__hf9Round = true;
+    }
+
+    if (typeof renderMyAttendance_ === 'function' && !renderMyAttendance_.__hf9Round) {
+      var baseAttendance = renderMyAttendance_;
+      renderMyAttendance_ = function (data) {
+        baseAttendance(data);
+        var box = $('attendanceContent');
+        if (!box || !data) return;
+        var month = data.month || (typeof currentMonthKey === 'function' ? currentMonthKey() : '');
+        box.querySelectorAll('.tiny, .att-warning, .att-detail').forEach(function (node) {
+          if (node.childElementCount) return;
+          var next = expandRange(humanize(node.textContent), month);
+          if (next !== node.textContent) node.textContent = next;
+        });
+        box.innerHTML = expandRange(box.innerHTML, month);
+        polish(box);
+      };
+      renderMyAttendance_.__hf9Round = true;
+    }
+
+    if (typeof p5a2rc1AttendanceInboxHtml_ === 'function' && !p5a2rc1AttendanceInboxHtml_.__hf9Shadow) {
+      var baseInbox = p5a2rc1AttendanceInboxHtml_;
+      p5a2rc1AttendanceInboxHtml_ = function (data) {
+        return String(baseInbox(data) || '').replace(/<div class="notice tiny">[^<]*(?:[Ss]hadow|影子)[^<]*<\/div>/g, '');
+      };
+      p5a2rc1AttendanceInboxHtml_.__hf9Shadow = true;
+    }
+
+    if (typeof renderLeaves === 'function' && !renderLeaves.__hf9Round) {
+      var baseLeaves = renderLeaves;
+      renderLeaves = function (list) {
+        baseLeaves(list);
+        var root = $('leaveList');
+        if (!root || root.__hf9LeaveClick) return;
+        root.__hf9LeaveClick = true;
+        root.addEventListener('click', function (event) {
+          if (event.target.closest('button, a, input, select, textarea, label')) return;
+          var card = event.target.closest('.leave[data-leave-id]');
+          if (!card) return;
+          var id = card.getAttribute('data-leave-id') || '';
+          var more = card.querySelector('.hf9-leave-more');
+          if (more) { more.remove(); return; }
+          var row = (typeof myLeavesCache !== 'undefined' && myLeavesCache || []).filter(function (item) { return String(item.leaveId) === id; })[0] || {};
+          more = document.createElement('div');
+          more.className = 'hf9-leave-more';
+          more.textContent = [row.startDate, row.endDate && row.endDate !== row.startDate ? row.endDate : '', row.reason || '', row.handover || ''].filter(Boolean).join(' · ');
+          card.appendChild(more);
+        });
+        polish(root);
+      };
+      renderLeaves.__hf9Round = true;
+    }
+
+    if (typeof rc2ManagementToolsHtml_ === 'function' && !rc2ManagementToolsHtml_.__hf9Hrlb) {
+      var baseTools = rc2ManagementToolsHtml_;
+      rc2ManagementToolsHtml_ = function () {
+        var html = baseTools.apply(this, arguments);
+        try {
+          if (typeof abisEssHrlbAllowed_ === 'function' && abisEssHrlbAllowed_() && String(html).indexOf('historicalLeaveBackfill') < 0) {
+            var button = typeof abisEssM2ToolButton_ === 'function'
+              ? abisEssM2ToolButton_('歷史請假補登核定', "rc2OpenAccountPanel_('historicalLeaveBackfill')")
+              : '<button type="button" class="abis-m2-tool-row" onclick="rc2OpenAccountPanel_(\'historicalLeaveBackfill\')">歷史請假補登核定</button>';
+            if (String(html).indexOf('abis-m2-tool-group') >= 0) html = String(html).replace('</section>', button + '</section>');
+            else html = String(html) + button;
+          }
+        } catch (ignore) {}
+        return html;
+      };
+      rc2ManagementToolsHtml_.__hf9Hrlb = true;
+    }
+
+    if (typeof setLanguage === 'function' && !setLanguage.__hf9Round) {
+      var baseLang = setLanguage;
+      setLanguage = function (code, persist) {
+        var result = baseLang(code, persist);
+        stampInputs(document);
+        return result;
+      };
+      setLanguage.__hf9Round = true;
+    }
+
+    function paintShell() {
+      var app = $('app');
+      var home = $('home');
+      var loginEl = $('login');
+      if (loginEl) loginEl.classList.add('hide');
+      if (app) app.classList.remove('hide');
+      document.body.classList.add('home-view');
+      if (home && !home.innerHTML) {
+        home.innerHTML = '<div class="home-dashboard-title"><strong>' + t('opening') + '</strong></div>' +
+          '<div class="fh-card"><div class="hf9-skel hf9-skel-block"></div><div class="hf9-skel hf9-skel-line"></div></div>' +
+          '<div class="fh-card"><div class="fh-task-grid"><b class="hf9-skel"></b><b class="hf9-skel"></b><b class="hf9-skel"></b><b class="hf9-skel"></b></div></div>';
+      }
+    }
+
+    function stampInputs(root) {
+      if (!root || !root.querySelectorAll) return;
+      var tag = localeTag();
+      root.querySelectorAll('input[type="date"], input[type="month"], input[type="time"], input[type="datetime-local"]').forEach(function (el) {
+        el.lang = tag;
+        if (el.type === 'month' && el.value && /^\d{4}-\d{2}$/.test(el.value)) {
+          var label = el.parentNode && el.parentNode.querySelector('.hf9-month-label');
+          if (!label && el.parentNode) {
+            label = document.createElement('div');
+            label.className = 'hf9-month-label';
+            el.parentNode.appendChild(label);
+          }
+          if (label) {
+            try {
+              var parts = el.value.split('-');
+              label.textContent = new Intl.DateTimeFormat(tag, { year: 'numeric', month: 'long' }).format(new Date(Number(parts[0]), Number(parts[1]) - 1, 1));
+            } catch (ignore) {}
+          }
+        }
+      });
+    }
+
+    function classifyButtons(root) {
+      if (!root || !root.querySelectorAll) return;
+      root.querySelectorAll('button').forEach(function (btn) {
+        var label = (btn.textContent || '').replace(/\s+/g, '');
+        if (!label) return;
+        if (/不採認|退回修改|退回/.test(label) && !/補登並核准/.test(label)) {
+          btn.classList.add('hf9-secondary-action');
+          btn.classList.remove('hf9-primary-action');
+          return;
+        }
+        if (/採認|核准申請|補登並核准|送出補正申請/.test(label)) {
+          btn.classList.add('hf9-primary-action');
+          btn.classList.remove('hf9-secondary-action');
+        }
+      });
+    }
+
+    function polish(root) {
+      if (!root) return;
+      stampInputs(root);
+      classifyButtons(root);
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function (node) {
+        if (!node.parentElement || node.parentElement.closest('script, style, input, textarea')) return;
+        var next = humanize(node.nodeValue);
+        if (next !== node.nodeValue) node.nodeValue = next;
+      });
+    }
+
+    if (typeof MutationObserver === 'function') {
+      var observer = new MutationObserver(function () { polish(document.body); });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+    polish(document.body);
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
+    else install();
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+/* HF9_UI_ROUND_END */
