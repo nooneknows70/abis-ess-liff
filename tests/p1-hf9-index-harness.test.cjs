@@ -214,14 +214,18 @@ async function withChrome(run) {
     '--no-first-run',
     '--no-default-browser-check',
     '--disable-gpu',
+    '--no-sandbox',
+    '--disable-dev-shm-usage',
     'about:blank'
   ], { stdio: ['ignore', 'pipe', 'pipe'] });
   let debugPort = 0;
+  let chromeLog = '';
   try {
     debugPort = await new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('chrome did not open a debug port')), 10000);
+      const timer = setTimeout(() => reject(new Error('chrome did not open a debug port: ' + chromeLog.slice(-500))), 20000);
       function look(buf) {
-        const match = String(buf).match(/DevTools listening on ws:\/\/127\.0\.0\.1:(\d+)\//);
+        chromeLog += String(buf);
+        const match = chromeLog.match(/DevTools listening on ws:\/\/127\.0\.0\.1:(\d+)\//);
         if (match) {
           clearTimeout(timer);
           resolve(Number(match[1]));
@@ -229,6 +233,10 @@ async function withChrome(run) {
       }
       chrome.stderr.on('data', look);
       chrome.stdout.on('data', look);
+      chrome.on('exit', (code) => {
+        clearTimeout(timer);
+        reject(new Error('chrome exited ' + code + ': ' + chromeLog.slice(-500)));
+      });
     });
     const version = await fetch('http://127.0.0.1:' + debugPort + '/json/version').then((res) => res.json());
     const browser = new WebSocket(version.webSocketDebuggerUrl);
