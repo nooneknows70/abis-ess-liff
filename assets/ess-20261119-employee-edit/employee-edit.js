@@ -19,7 +19,7 @@
 
   var CONTRACT = {
     gate: 'A hrEmployeeValidate call that returns code FEATURE_OFF means the feature is off. Validation errors mean it is on. There is no separate options action.',
-    search: 'hrEmployeeSearch returns {ok:true, rows:[{employeeId,name,department,location,employmentStatus,isManager,newHire}]}. limit 200.',
+    search: 'hrEmployeeSearch rows include employeeId, name, company, location, department, employmentStatus, and personType. A filter chip is shown only when its field is actually on those rows.',
     detail: 'Read uses existing hrEmployeeDetail only. rowVersion, diff, confirmToken, and the field catalog come from hrEmployeeValidate.',
     validate: 'hrEmployeeValidate {sessionToken,mode,employeeId,expectedRowVersion,changes,reason,hrConfirmedPunch,hrConfirmedImpact} returns {ok,writesPerformed:0,mode,diff,requires,warnings,punch,rowVersion,confirmToken,fields}.',
     create: 'hrEmployeeCreate sends the same body plus requestId and confirmToken. credential.tempPin exists only on the first LIVE success. SHADOW returns mode SHADOW, writesPerformed 0, and no PIN.',
@@ -223,7 +223,24 @@
     ['auditPrivilege', '權限變更', 'Đổi quyền', 'เปลี่ยนสิทธิ์', 'Permission change', true],
     ['auditShadow', '預演', 'Diễn tập', 'ซ้อม', 'Rehearsal', true],
     ['auditFailed', '沒有完成', 'Chưa hoàn tất', 'ยังไม่สำเร็จ', 'Not completed', true],
-    ['auditPin', '已建立首次登入', 'Đã tạo đăng nhập lần đầu', 'สร้างการเข้าครั้งแรกแล้ว', 'First sign-in was created', true]
+    ['auditPin', '已建立首次登入', 'Đã tạo đăng nhập lần đầu', 'สร้างการเข้าครั้งแรกแล้ว', 'First sign-in was created', true],
+    ['managerNotFound', '找不到這位主管，或主管目前不是在職', 'Không tìm thấy quản lý, hoặc quản lý không còn làm việc', 'ไม่พบหัวหน้า หรือหัวหน้าไม่ได้ทำงานอยู่', 'That manager was not found, or is not currently employed', true],
+    ['managerSelf', '主管不可為本人', 'Quản lý không thể là chính mình', 'หัวหน้าต้องไม่ใช่ตัวเอง', 'The manager cannot be the same person', true],
+    ['managerCycle', '主管設定會互相循環，請改選別人', 'Cách đặt quản lý bị vòng lặp, hãy chọn người khác', 'การตั้งหัวหน้าวนกัน โปรดเลือกคนอื่น', 'The manager setup loops. Choose someone else.', true],
+    ['shiftInvalid', '正式班別須為有效且已確認的班別', 'Ca chính thức phải là ca hợp lệ và đã xác nhận', 'กะอย่างเป็นทางการต้องเป็นกะที่ใช้ได้และยืนยันแล้ว', 'The shift must be an active, confirmed shift', true],
+    ['shiftEmpty', '目前沒有可選班別，請手動輸入', 'Chưa có ca để chọn, hãy nhập tay', 'ยังไม่มีกะให้เลือก โปรดกรอกเอง', 'No shifts are available. Enter one manually.', true],
+    ['legacyRoute', '{code}（舊值，請 HR 改為對應廠區）', '{code} (giá trị cũ, nhân sự hãy đổi sang khu vực tương ứng)', '{code} (ค่าเดิม ฝ่ายบุคคลโปรดเปลี่ยนเป็นโรงงานที่ตรงกัน)', '{code} (old value, HR should change it to the matching site)', true],
+    ['valueNotAllowed', '這個選項不在允許清單', 'Giá trị này không nằm trong danh sách cho phép', 'ตัวเลือกนี้ไม่อยู่ในรายการที่อนุญาต', 'This value is not allowed', true],
+    ['punchChanged', '建議打卡號已變更。請確認畫面上的新建議號碼，再按一次。', 'Mã chấm công đề xuất đã đổi. Hãy kiểm tra số mới trên màn hình rồi bấm lại.', 'รหัสลงเวลาที่แนะนำเปลี่ยนแล้ว โปรดตรวจเลขใหม่บนหน้าจอ แล้วกดอีกครั้ง', 'The suggested punch number changed. Check the new number on screen, then press again.', true],
+    ['unknownResultEdit', '結果不明。請重新載入這位員工後再試。沒有看到「已儲存」前，不要假設已經儲存。', 'Chưa rõ kết quả. Hãy tải lại nhân viên này rồi thử lại. Chưa thấy "Đã lưu" thì đừng coi là đã lưu.', 'ยังไม่ทราบผล โปรดโหลดพนักงานคนนี้ใหม่แล้วลองอีกครั้ง หากยังไม่เห็น "บันทึกแล้ว" อย่าคิดว่าบันทึกแล้ว', 'The result is unknown. Reload this employee and try again. Until you see Saved, do not assume it was saved.', true],
+    ['hrConfirmLabel', 'HR確認', 'Xác nhận nhân sự', 'การยืนยันฝ่ายบุคคล', 'HR confirmation', true],
+    ['basicShort', '基本', 'Cơ bản', 'พื้นฐาน', 'Basic', true],
+    ['advanced', '進階', 'Nâng cao', 'ขั้นสูง', 'Advanced', true],
+    ['advancedHint', '其餘欄位使用預設值，需要時再打開。', 'Các mục còn lại dùng giá trị mặc định. Mở ra khi cần.', 'ช่องที่เหลือใช้ค่าเริ่มต้น เปิดเมื่อต้องการ', 'The other fields use defaults. Open them when you need to change them.', true],
+    ['missingFields', '還差', 'Còn thiếu', 'ยังขาด', 'Still needed', true],
+    ['systemDefaults', '系統預設', 'Giá trị hệ thống', 'ค่าเริ่มต้นของระบบ', 'System defaults', true],
+    ['auditCredentialFailed', '帳號建立未完成', 'Chưa tạo được tài khoản', 'ยังสร้างบัญชีไม่สำเร็จ', 'The account was not created', true],
+    ['auditNewEmployee', '新增員工', 'Thêm nhân viên', 'เพิ่มพนักงาน', 'New employee', true]
   ];
 
   var packs = { ZH: {}, VI: {}, TH: {}, EN: {} };
@@ -269,7 +286,7 @@
     'LINE綁定狀態': 'lineBound',
     '系統啟用': 'systemEnabled',
     '登入帳號狀態': 'credentialState',
-    'HR確認': 'orgConfirm',
+    'HR確認': 'hrConfirmLabel',
     '組織設定確認': 'orgConfirm'
   };
 
@@ -387,7 +404,7 @@
     CONFIRM_TOKEN_REQUIRED: 'confirmFirst',
     CONFIRM_TOKEN_MISMATCH: 'confirmExpired',
     HR_CONFIRM_REQUIRED: 'hrConfirmImpact',
-    PUNCH_SUGGESTION_CHANGED: 'punchSuggested',
+    PUNCH_SUGGESTION_CHANGED: 'punchChanged',
     AUDIT_WRITE_FAILED: 'genericFail',
     CREDENTIAL_ALREADY_EXISTS: 'credentialExists',
     CREDENTIAL_INSERT_FAILED: 'credentialInsert',
@@ -411,14 +428,14 @@
     FIELD_UNKNOWN: 'genericFail',
     DATE_FORMAT: 'dateInvalid',
     DATE_ORDER: 'dateInvalid',
-    VALUE_NOT_ALLOWED: 'required',
-    SHIFT_INVALID: 'required',
+    VALUE_NOT_ALLOWED: 'valueNotAllowed',
+    SHIFT_INVALID: 'shiftInvalid',
     DEPT_UNKNOWN: 'newDeptHint',
     HIRE_DATE_LOCKED_PERIOD: 'hireRecalcNote',
     ATTENDANCE_FLAGS_INCONSISTENT: 'flagMismatch',
-    MANAGER_NOT_FOUND: 'required',
-    MANAGER_SELF: 'required',
-    MANAGER_CYCLE: 'required',
+    MANAGER_NOT_FOUND: 'managerNotFound',
+    MANAGER_SELF: 'managerSelf',
+    MANAGER_CYCLE: 'managerCycle',
     READBACK_MISMATCH: 'genericFail',
     REQUEST_ID_REQUIRED: 'genericFail'
   };
@@ -442,6 +459,13 @@
   var pinMemory = '';
   var pinEmployeeId = '';
   var pinEventId = '';
+  var pinHistory = false;
+  var pendingLeave = null;
+  var loginInstall = null;
+  var systemFilled = {};
+  var eeTouched = false;
+  var pinWasHeld = false;
+  var lastScreen = '';
   var installed = false;
   var state = blankState();
 
@@ -479,6 +503,8 @@
       created: {},
       expiresAt: '',
       punchSuggestion: '',
+      punchHint: '',
+      punchFrozen: false,
       punchConfirmed: false,
       idTouched: false,
       catalog: {},
@@ -489,12 +515,19 @@
       confirmToken: '',
       requires: {},
       impactConfirmed: false,
-      fieldCatalog: []
+      fieldCatalog: [],
+      routingGroups: [],
+      shifts: [],
+      shiftsLoaded: false,
+      advancedOpen: false
     };
   }
 
   function readLang() {
-    var lang = typeof global.currentLang === 'string' ? global.currentLang.toUpperCase() : 'ZH';
+    var lang = '';
+    if (typeof currentLang !== 'undefined' && currentLang != null) lang = String(currentLang);
+    else if (global && typeof global.currentLang === 'string') lang = global.currentLang;
+    lang = String(lang || 'ZH').toUpperCase();
     if (lang === 'VI' || lang === 'TH') return lang;
     return 'ZH';
   }
@@ -537,29 +570,66 @@
     return 'OFF';
   }
 
+  function readHome() {
+    if (typeof homeData !== 'undefined') return homeData || null;
+    if (global && global.homeData) return global.homeData;
+    return null;
+  }
+
+  function readAccountPanel() {
+    if (typeof accountPanel_ !== 'undefined') return String(accountPanel_ || '');
+    if (global && typeof global.accountPanel_ === 'string') return global.accountPanel_;
+    return '';
+  }
+
+  function hostFn(name) {
+    if (global && typeof global[name] === 'function') return global[name];
+    try {
+      if (name === 'renderMyAccount_' && typeof renderMyAccount_ === 'function') return renderMyAccount_;
+      if (name === 'enterApp' && typeof enterApp === 'function') return enterApp;
+      if (name === 'logout' && typeof logout === 'function') return logout;
+      if (name === 'showHome' && typeof showHome === 'function') return showHome;
+      if (name === 'showPage' && typeof showPage === 'function') return showPage;
+      if (name === 'showMyAccount_' && typeof showMyAccount_ === 'function') return showMyAccount_;
+      if (name === 'rc2OpenAccountPanel_' && typeof rc2OpenAccountPanel_ === 'function') return rc2OpenAccountPanel_;
+      if (name === 'rc2InnerBack_' && typeof rc2InnerBack_ === 'function') return rc2InnerBack_;
+      if (name === 'openHrCredentialAdmin' && typeof openHrCredentialAdmin === 'function') return openHrCredentialAdmin;
+      if (name === 'rc2AccountPanelHtml_' && typeof rc2AccountPanelHtml_ === 'function') return rc2AccountPanelHtml_;
+    } catch (ignore) {}
+    return null;
+  }
+
   function readPermission() {
-    var home = global.homeData;
+    var home = readHome();
     if (home && home.employee && home.employee.approvalPermission) {
       return String(home.employee.approvalPermission);
     }
-    if (typeof global.canManageCredentials_ === 'function') {
+    var can = hostFn('canManageCredentials_');
+    if (typeof canManageCredentials_ === 'function') can = canManageCredentials_;
+    if (can) {
       try {
-        if (global.canManageCredentials_()) return 'HR';
+        if (can()) return 'HR';
       } catch (ignore) {}
     }
     return '';
   }
 
   function readActor() {
-    var home = global.homeData;
+    var home = readHome();
     if (home && home.employee && home.employee.id) return String(home.employee.id);
     return state.actorId || '';
   }
 
   function readSession(deps) {
     if (deps && typeof deps.sessionToken === 'string') return deps.sessionToken;
-    if (typeof global.sessionToken === 'string') return global.sessionToken;
+    if (typeof sessionToken !== 'undefined' && typeof sessionToken === 'string') return sessionToken;
+    if (global && typeof global.sessionToken === 'string') return global.sessionToken;
     return '';
+  }
+
+  function loggedIn() {
+    var home = readHome();
+    return !!(readSession({}) && home && home.employee);
   }
 
   function canInstall(opts) {
@@ -581,9 +651,18 @@
   }
 
   function human(value) {
+    if (value === true) return t('yes');
+    if (value === false) return t('no');
     if (value == null) return '';
     var raw = String(value).trim();
     if (!raw) return '';
+    var lower = raw.toLowerCase();
+    if (lower === 'true') return t('yes');
+    if (lower === 'false') return t('no');
+    if (/^line\s+false$/i.test(raw)) return t('no');
+    if (/^line\s+true$/i.test(raw)) return t('yes');
+    var named = lookupCatalogLabel(raw);
+    if (named) return named;
     if (VALUE_KEYS[raw]) return t(VALUE_KEYS[raw]);
     if (VALUE_KEYS[raw.toUpperCase()] && raw.toUpperCase() === raw) return t(VALUE_KEYS[raw.toUpperCase()]);
     if (/^[ABC]\d{5}$/.test(raw)) return raw;
@@ -592,7 +671,170 @@
     return raw;
   }
 
-  function choices(field, catalog) {
+  function siteMatches(location, site) {
+    var loc = String(location || '').trim();
+    var token = String(site || '').trim();
+    if (!loc || !token) return false;
+    if (loc === token) return true;
+    if (loc.indexOf(token) >= 0) return true;
+    if (token.indexOf(loc) >= 0) return true;
+    return false;
+  }
+
+  function normalizeRoute(item) {
+    if (!item) return null;
+    if (typeof item === 'string') return { code: item, label: item, site: '', legacy: false };
+    var code = item.code || item.value || '';
+    if (!String(code).trim()) return null;
+    return {
+      code: String(code),
+      label: item.label ? String(item.label) : String(code),
+      site: item.site == null ? '' : String(item.site),
+      legacy: item.legacy === true
+    };
+  }
+
+  function normalizeShift(item) {
+    if (!item || typeof item !== 'object') return null;
+    var code = item.code || item.value || item.label || '';
+    if (!String(code).trim()) return null;
+    return {
+      code: String(code),
+      label: item.label ? String(item.label) : String(code),
+      categories: Array.isArray(item.categories) ? item.categories.map(function (value) { return String(value); }) : [],
+      sites: Array.isArray(item.sites) ? item.sites.map(function (value) { return String(value); }) : [],
+      defaults: Array.isArray(item.defaults) ? item.defaults : []
+    };
+  }
+
+  function routeRows(view) {
+    var raw = view && Array.isArray(view.routingGroups) ? view.routingGroups : state.routingGroups;
+    var list = [];
+    (raw || []).forEach(function (item) {
+      var row = normalizeRoute(item);
+      if (row) list.push(row);
+    });
+    if (list.length) return list;
+    return [
+      { code: 'DEFAULT', label: 'DEFAULT', site: '', legacy: false },
+      { code: 'OFFICE', label: 'OFFICE', site: '', legacy: false },
+      { code: 'FACTORY', label: 'FACTORY', site: '', legacy: false }
+    ];
+  }
+
+  function routeLabel(item) {
+    if (item.legacy) {
+      var shown = item.label && item.label !== item.code ? item.label : item.code;
+      if (String(shown).indexOf('舊值') >= 0) return String(shown);
+      return fill('legacyRoute', { code: shown });
+    }
+    if (item.label && item.label !== item.code && !VALUE_KEYS[item.label]) return item.label;
+    return human(item.code);
+  }
+
+  function preferredRoute(person, location) {
+    var rows = routeRows(null).filter(function (item) { return !item.legacy; });
+    var hasSite = false;
+    var match = null;
+    var matchLen = -1;
+    rows.forEach(function (item) {
+      if (!String(item.site || '').trim()) return;
+      hasSite = true;
+      if (person === '外部顧問') return;
+      if (!siteMatches(location, item.site)) return;
+      if (String(item.site).length > matchLen) {
+        match = item;
+        matchLen = String(item.site).length;
+      }
+    });
+    if (match) return match.code;
+    var byCode = {};
+    rows.forEach(function (item) { byCode[item.code] = item; });
+    if (!hasSite) {
+      if (person === '外部顧問') return 'DEFAULT';
+      if (person === '廠務') return 'FACTORY';
+      if (person === '辦公室' || location === '辦公室') return 'OFFICE';
+      return '';
+    }
+    if (person === '外部顧問' && byCode.DEFAULT) return 'DEFAULT';
+    if ((person === '辦公室' || location === '辦公室') && byCode.OFFICE) return 'OFFICE';
+    return '';
+  }
+
+  function shiftRows(view) {
+    var raw = view && Array.isArray(view.shifts) ? view.shifts : state.shifts;
+    var list = [];
+    (raw || []).forEach(function (item) {
+      var row = normalizeShift(item);
+      if (row) list.push(row);
+    });
+    return list;
+  }
+
+  function preferredShift(category, location) {
+    if (state.shiftsLoaded) {
+      var rows = shiftRows(null);
+      if (!rows.length) return '';
+      for (var i = 0; i < rows.length; i += 1) {
+        var defs = rows[i].defaults || [];
+        for (var j = 0; j < defs.length; j += 1) {
+          var def = defs[j] || {};
+          if (String(def.category || '') === String(category || '') && siteMatches(location, def.site)) return rows[i].code;
+        }
+      }
+      return '';
+    }
+    return shiftList()[0] || '';
+  }
+
+  function routeChoices(view) {
+    var baseline = (view && view.baseline) || {};
+    var stored = String(baseline['簽核路由群組'] || '');
+    var creating = !view || view.formMode === 'CREATE' || (!view.formMode && !stored);
+    return routeRows(view).filter(function (item) {
+      if (!item.legacy) return true;
+      if (creating) return false;
+      return stored === item.code;
+    }).map(function (item) {
+      return { value: item.code, label: routeLabel(item) };
+    });
+  }
+
+  function shiftChoices(view) {
+    var loaded = view && view.shiftsLoaded != null ? !!view.shiftsLoaded : !!state.shiftsLoaded;
+    var rows = shiftRows(view);
+    if (!loaded && !rows.length) return null;
+    if (!rows.length) return null;
+    var form = (view && view.form) || {};
+    var baseline = (view && view.baseline) || {};
+    var category = String(form['人員類別'] || '');
+    var location = String(form['工作地點'] || '');
+    var options = rows.filter(function (item) {
+      var catOk = !item.categories.length || item.categories.indexOf(category) >= 0;
+      var siteOk = !item.sites.length || item.sites.some(function (site) { return siteMatches(location, site); });
+      return catOk && siteOk;
+    }).map(function (item) {
+      return { value: item.code, label: item.label || item.code };
+    });
+    function addExtra(value) {
+      if (!value) return;
+      if (options.some(function (item) { return item.value === value; })) return;
+      var known = null;
+      for (var i = 0; i < rows.length; i += 1) {
+        if (rows[i].code === value || rows[i].label === value) known = rows[i];
+      }
+      options.push({ value: value, label: known ? known.label : value });
+    }
+    addExtra(String(baseline['正式班別'] || ''));
+    var current = String(form['正式班別'] || '');
+    if (current && current !== String(baseline['正式班別'] || '')) addExtra(current);
+    return options;
+  }
+
+  function choices(field, view) {
+    if (field.key === '簽核路由群組') return routeChoices(view || {});
+    if (field.key === '正式班別') return shiftChoices(view || {});
+    var catalog = view && view.catalog;
     var fromServer = catalog && catalog[field.key];
     if (fromServer && fromServer.length) return fromServer;
     var list = CHOICES[field.key];
@@ -600,6 +842,26 @@
     return list.map(function (item) {
       return { value: item[0], label: t(item[1]) };
     });
+  }
+
+  function lookupCatalogLabel(raw) {
+    var lists = [state.routingGroups, state.shifts];
+    for (var i = 0; i < lists.length; i += 1) {
+      var list = lists[i] || [];
+      for (var j = 0; j < list.length; j += 1) {
+        var item = list[j];
+        if (!item || typeof item !== 'object') continue;
+        var code = String(item.code || item.value || '');
+        if (code !== raw) continue;
+        if (item.legacy === true) {
+          var shown = item.label && String(item.label) !== code ? String(item.label) : code;
+          if (shown.indexOf('舊值') >= 0) return shown;
+          return fill('legacyRoute', { code: shown });
+        }
+        if (item.label && String(item.label) !== raw) return String(item.label);
+      }
+    }
+    return '';
   }
 
   function isSelf(ctx) {
@@ -741,31 +1003,170 @@
     return String(pin).split('').join(' ');
   }
 
-  function suggestDefaults(values) {
+  function shiftList() {
+    var rules = null;
+    if (typeof SHIFT_RULES !== 'undefined') rules = SHIFT_RULES;
+    else if (global && global.SHIFT_RULES) rules = global.SHIFT_RULES;
+    if ((!rules || !rules.length) && state.catalog && state.catalog['正式班別']) rules = state.catalog['正式班別'];
+    if (!rules || !rules.length) return [];
+    var out = [];
+    for (var i = 0; i < rules.length; i += 1) {
+      var item = rules[i];
+      if (item && typeof item === 'object') {
+        if (item['有效'] === 'N' || item.valid === 'N' || item.valid === false) continue;
+        if (item['班別確認'] && item['班別確認'] !== '已確認') continue;
+        var name = item.value || item.name || item['班別名稱'] || item['班別代碼'] || '';
+        if (name) out.push(String(name));
+      } else if (item) out.push(String(item));
+    }
+    return out;
+  }
+
+  function allowPunchAutofill() {
+    var form = state.form || {};
+    if (form['人員類別'] === '外部顧問') return false;
+    if (form['免打卡'] === 'Y') return false;
+    return true;
+  }
+
+  function listOrNull(value) {
+    return Array.isArray(value) ? value : null;
+  }
+
+  function absorbCatalog(res) {
+    if (!res || typeof res !== 'object') return;
+    var routes = listOrNull(res.routingGroups);
+    var shifts = listOrNull(res.shifts);
+    var fields = listOrNull(res.fields);
+    if (fields) {
+      fields.forEach(function (entry) {
+        if (!entry) return;
+        var options = listOrNull(entry.options);
+        if (!options) return;
+        if (!routes && entry.field === '簽核路由群組') routes = options;
+        if (!shifts && entry.field === '正式班別') shifts = options;
+      });
+    }
+    if (routes) state.routingGroups = routes;
+    if (shifts) {
+      state.shifts = shifts;
+      state.shiftsLoaded = true;
+    }
+  }
+
+  function punchPayload(source) {
+    if (!source || typeof source !== 'object') return null;
+    var punch = source.punch;
+    if (punch && typeof punch === 'object') return punch;
+    if (typeof punch === 'string' || typeof punch === 'number') {
+      return { suggestion: String(punch), reason: '', requiresManual: false, frozen: false };
+    }
+    if (source.newSuggestion != null && String(source.newSuggestion).trim() !== '') {
+      return { suggestion: String(source.newSuggestion), reason: '', requiresManual: false, frozen: false };
+    }
+    return null;
+  }
+
+  function applyPunch(punch) {
+    if (!punch) return;
+    var suggestion = punch.suggestion == null ? '' : String(punch.suggestion).trim();
+    var notRequired = punch.reason === 'PUNCH_NOT_REQUIRED' || !allowPunchAutofill();
+    var manual = !notRequired && (punch.requiresManual === true || !suggestion);
+    state.punchFrozen = punch.frozen === true;
+    if (notRequired) {
+      state.punchSuggestion = '';
+      state.punchHint = '';
+      if (systemFilled['打卡號']) {
+        state.form['打卡號'] = '';
+        delete systemFilled['打卡號'];
+      }
+      return;
+    }
+    if (manual) {
+      state.punchSuggestion = '';
+      state.punchHint = 'punchManual';
+      if (systemFilled['打卡號']) {
+        state.form['打卡號'] = '';
+        delete systemFilled['打卡號'];
+      }
+      return;
+    }
+    state.punchHint = '';
+    state.punchSuggestion = suggestion;
+    if (punch.frozen === true) return;
+    var current = state.form['打卡號'];
+    var empty = current == null || String(current).trim() === '';
+    if (empty || systemFilled['打卡號']) {
+      state.form['打卡號'] = suggestion;
+      systemFilled['打卡號'] = true;
+    }
+  }
+
+  function suggestDefaults(values, options) {
     var next = Object.assign({}, values || {});
-    if (!next['簽核權限']) next['簽核權限'] = 'NONE';
-    if (!next.PreferredLanguage) next.PreferredLanguage = 'zh-TW';
-    if (!next['出勤管理類型'] && next['人員類別'] === '廠務') next['出勤管理類型'] = 'NORMAL';
-    if (!next['簽核路由群組'] && next['人員類別'] === '廠務') next['簽核路由群組'] = 'FACTORY';
-    if (!next['簽核路由群組'] && (next['人員類別'] === '辦公室' || next['工作地點'] === '辦公室')) next['簽核路由群組'] = 'OFFICE';
-    if (!next['組織設定確認']) next['組織設定確認'] = '待確認';
-    if (!next['代理人指定方式'] && next['人員類別'] === '廠務') next['代理人指定方式'] = 'SUPERVISOR_ASSIGN';
-    if (!next['代理候選優先規則']) next['代理候選優先規則'] = 'N/A';
-    if (!next['最終需代理人']) next['最終需代理人'] = 'Y';
-    if (!next['免打卡']) next['免打卡'] = 'N';
-    if (!next['免請假']) next['免請假'] = 'N';
-    if (!next['啟用出勤異常檢查']) next['啟用出勤異常檢查'] = 'Y';
-    if (!next['是否主管']) next['是否主管'] = 'N';
-    if (!next['班別確認']) next['班別確認'] = '待確認';
-    if (!next['特休制度']) next['特休制度'] = '週年制';
+    var refresh = !!(options && options.refreshSystem);
+    var applied = {};
+    var person = next['人員類別'];
+    function put(key, value) {
+      if (value == null || String(value).trim() === '') return;
+      applied[key] = true;
+      var empty = next[key] == null || String(next[key]).trim() === '';
+      if (!empty && !(refresh && systemFilled[key])) return;
+      next[key] = value;
+      systemFilled[key] = true;
+    }
+    put('簽核權限', 'NONE');
+    put('PreferredLanguage', 'zh-TW');
+    put('組織設定確認', '待確認');
+    put('代理候選優先規則', 'N/A');
+    put('最終需代理人', 'Y');
+    put('免請假', 'N');
+    put('啟用出勤異常檢查', 'Y');
+    put('是否主管', 'N');
+    put('班別確認', '待確認');
+    put('特休制度', '週年制');
+    if (person === '外部顧問') {
+      put('出勤管理類型', 'EXTERNAL');
+      put('免打卡', 'Y');
+      put('簽核路由群組', preferredRoute(person, next['工作地點']));
+      put('代理人指定方式', 'SUPERVISOR_ASSIGN');
+    } else if (person === '廠務') {
+      put('出勤管理類型', 'NORMAL');
+      put('代理人指定方式', 'SUPERVISOR_ASSIGN');
+      put('工作地點', '新店廠');
+      put('免打卡', 'N');
+      put('簽核路由群組', preferredRoute(person, next['工作地點']));
+      put('正式班別', preferredShift(person, next['工作地點']));
+    } else if (person === '辦公室' || next['工作地點'] === '辦公室') {
+      put('出勤管理類型', 'NORMAL');
+      put('代理人指定方式', 'SUPERVISOR_ASSIGN');
+      if (person === '辦公室') put('工作地點', '辦公室');
+      put('免打卡', 'N');
+      put('簽核路由群組', preferredRoute(person, next['工作地點']));
+      put('正式班別', preferredShift(person, next['工作地點']));
+    } else {
+      put('免打卡', 'N');
+    }
+    if (refresh) {
+      ['出勤管理類型', '免打卡', '簽核路由群組', '代理人指定方式', '工作地點', '正式班別'].forEach(function (key) {
+        if (systemFilled[key] && !applied[key]) {
+          next[key] = '';
+          delete systemFilled[key];
+        }
+      });
+    }
     return next;
   }
 
-  function errorKey(res) {
+  function errorKey(res, operation) {
     var code = '';
     if (res && res.code) code = res.code;
     else if (res && res.errors && res.errors[0]) code = res.errors[0].code || '';
-    return ERROR_KEYS[code] || 'genericFail';
+    var key = ERROR_KEYS[code] || 'genericFail';
+    if (operation === 'UPDATE' && (key === 'unknownResult' || key === 'credentialInsert' || key === 'credentialExists' || key === 'pinGone')) {
+      return 'unknownResultEdit';
+    }
+    return key;
   }
 
   function mapFieldErrors(res) {
@@ -782,7 +1183,7 @@
     return t(errorKey(res));
   }
 
-  function mapWarnings(list) {
+  function mapWarnings(list, changes) {
     var keys = {
       NEW_DEPARTMENT: 'newDeptHint',
       HIRE_DATE_BEFORE_TODAY: 'hireDatePast',
@@ -790,9 +1191,11 @@
       NAME_PUNCH_REMAP: 'namePunchHint',
       TEMP_PIN_EXPIRES_BEFORE_HIRE: 'pinBeforeHire'
     };
+    var hireChanged = !changes || Object.prototype.hasOwnProperty.call(changes, '到職日');
     var out = [];
     (list || []).forEach(function (item) {
       var code = item && (item.code || item);
+      if (!hireChanged && String(code || '').indexOf('HIRE_DATE') === 0) return;
       var key = keys[code];
       if (!key) return;
       var text = t(key);
@@ -840,12 +1243,14 @@
   }
 
   function diffLabel(row) {
+    var field = row && row.field;
+    if (field && FIELD_LABEL[field]) return label(field);
     if (row && row.label && typeof row.label === 'object') {
       var lang = readLang();
-      return row.label[lang] || row.label.ZH || label(row.field);
+      return row.label[lang] || row.label.ZH || label(field);
     }
     if (row && typeof row.label === 'string' && row.label) return row.label;
-    return label(row && row.field);
+    return label(field);
   }
 
   function localWarnings(changes) {
@@ -871,6 +1276,28 @@
     return /pin|hash|token|pepper|secret|密碼/i.test(String(name || ''));
   }
 
+  function reasonText(value) {
+    var raw = String(value == null ? '' : value).trim();
+    if (!raw) return '';
+    var mapped = {
+      NEW_EMPLOYEE: 'auditNewEmployee',
+      NEW_HIRE: 'reasonNewHire',
+      CREDENTIAL_INSERT_FAILED: 'auditCredentialFailed',
+      REORG: 'reasonReorg',
+      CORRECTION: 'reasonCorrection',
+      HIRE_DATE_CORRECTION: 'reasonHire',
+      PERMISSION_CHANGE: 'reasonPermission',
+      OTHER: 'reasonOther'
+    }[raw] || {
+      NEW_EMPLOYEE: 'auditNewEmployee',
+      NEW_HIRE: 'reasonNewHire',
+      CREDENTIAL_INSERT_FAILED: 'auditCredentialFailed',
+      REORG: 'reasonReorg'
+    }[raw.toUpperCase()];
+    if (mapped) return t(mapped);
+    return human(raw);
+  }
+
   function auditRow(row) {
     row = row || {};
     var field = row.field || row['欄位'] || '';
@@ -890,20 +1317,54 @@
       actor: row.actorName || row.actor || row.actorId || row['操作者ID'] || row.ActorEmployeeID || '',
       action: row.action || '',
       field: field,
-      before: human(before) || String(before || ''),
-      after: human(after) || String(after || ''),
-      reason: row.reason || row['原因'] || ''
+      before: human(before) || String(before == null ? '' : before),
+      after: human(after) || String(after == null ? '' : after),
+      reason: reasonText(row.reason || row.ReasonCode || row['原因'] || '')
     };
   }
 
+  function columnPresent(rows, keys) {
+    return (rows || []).some(function (row) {
+      if (!row) return false;
+      return keys.some(function (key) {
+        if (!Object.prototype.hasOwnProperty.call(row, key)) return false;
+        var value = row[key];
+        return value != null && String(value).trim() !== '';
+      });
+    });
+  }
+
+  function isNewHireRow(row) {
+    if (!row) return false;
+    if (row.newHire === true || row.isNewHire === true || row['新進人員'] === true || row['新進人員'] === 'Y' || row['新進人員'] === '是') return true;
+    if (row.newHire === false || row.isNewHire === false) return false;
+    var hire = String(row.hireDate || row['到職日'] || '').trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(hire)) return false;
+    var status = String(row.employmentStatus || row['在職狀態'] || '').trim();
+    if (status && status !== '在職') return false;
+    var person = String(row.personType || row['人員類別'] || '');
+    if (person === '外部顧問') return false;
+    var today = todayTaipei();
+    if (!today || hire >= today) return true;
+    var start = new Date(hire + 'T00:00:00Z');
+    var end = new Date(today + 'T00:00:00Z');
+    var days = Math.round((end - start) / 86400000);
+    return days >= 0 && days <= 30;
+  }
+
+  function isManagerRow(row) {
+    var manager = row && (row.isManager != null ? row.isManager : row['是否主管']);
+    return manager === true || manager === 'Y' || manager === '是' || String(manager).toLowerCase() === 'true';
+  }
+
   function filterRows(rows, query, chip) {
+    var list = rows || [];
     var text = String(query || '').trim().toLowerCase();
-    return (rows || []).filter(function (row) {
-      if (chip === 'new' && !(row && (row.newHire || row.isNewHire))) return false;
-      if (chip === 'manager') {
-        var manager = row && (row.isManager || row['是否主管']);
-        if (!(manager === true || manager === 'Y' || manager === '是')) return false;
-      }
+    var useNew = chip === 'new' && columnPresent(list, ['newHire', 'isNewHire', '新進人員', 'hireDate', '到職日']);
+    var useManager = chip === 'manager' && columnPresent(list, ['isManager', '是否主管']);
+    return list.filter(function (row) {
+      if (useNew && !isNewHireRow(row)) return false;
+      if (useManager && !isManagerRow(row)) return false;
       if (!text) return true;
       var name = String(row && (row.name || row['姓名']) || '').toLowerCase();
       var id = String(row && (row.employeeId || row['V2員工ID']) || '').toLowerCase();
@@ -913,18 +1374,20 @@
 
   function styles() {
     return [
-      '.ee{--ee-primary:#2E7D32;--ee-primary-press:#1B5E20;--ee-blue:#1565C0;--ee-ink:#0D47A1;--ee-orange:#E65100;--ee-orange-bg:#FFF3E0;--ee-red:#C62828;--ee-page:#E8EEF4;--ee-border:#D4DEE8;--ee-text:#1A2433;--ee-muted:#5C6B7A;--ee-disabled:#A8B2BD;--ee-card:#FFFFFF;box-sizing:border-box;width:100%;max-width:100%;min-height:100dvh;padding:12px 16px calc(96px + env(safe-area-inset-bottom));background:var(--ee-page);color:var(--ee-text);font-family:system-ui,-apple-system,"Noto Sans TC","Noto Sans Thai",sans-serif}',
+      '.ee{--ee-primary:#1565C0;--ee-primary-press:#0D47A1;--ee-blue:#1565C0;--ee-ink:#0D47A1;--ee-orange:#E65100;--ee-orange-bg:#FFF3E0;--ee-red:#C62828;--ee-page:#E8EEF4;--ee-border:#D4DEE8;--ee-text:#1A2433;--ee-muted:#5C6B7A;--ee-disabled:#A8B2BD;--ee-card:#FFFFFF;box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:100dvh;padding:12px 16px calc(96px + env(safe-area-inset-bottom));background:var(--ee-page);color:var(--ee-text);font-family:system-ui,-apple-system,"Noto Sans TC","Noto Sans Thai",sans-serif}',
       '.ee *,.ee *::before,.ee *::after{box-sizing:border-box}',
       '.ee button,.ee input,.ee select,.ee textarea{font:inherit;touch-action:manipulation}',
       '.ee button{min-height:48px !important;min-width:48px;white-space:normal;line-height:1.25}',
-      '.ee-chip{white-space:nowrap}',
+      '.ee-chip{white-space:normal;max-width:100%;overflow-wrap:anywhere}',
       '.ee h1,.ee h2{margin:0;font-size:22px;line-height:1.3;font-weight:800}',
       '.ee-top{display:flex;align-items:center;gap:8px;margin-bottom:12px}',
       '.ee-back{width:48px;background:transparent;color:var(--ee-ink);border:0;font-size:28px}',
-      '.ee-search input,.ee input,.ee select,.ee textarea{width:100%;min-height:48px;padding:12px 14px;border:1px solid var(--ee-border);border-radius:12px;background:#fff;color:var(--ee-text);font-size:16px}',
-      '.ee textarea{min-height:96px}',
-      '.ee-chips{display:flex;gap:8px;overflow-x:auto;position:sticky;top:0;z-index:2;padding:8px 0;background:var(--ee-page)}',
-      '.ee-chip{width:auto !important;flex:0 0 auto;min-height:48px;padding:0 14px;border-radius:999px;border:1px solid var(--ee-border);background:#fff;color:var(--ee-text)}',
+      '.ee-search input,.ee input,.ee select,.ee textarea{width:100%;max-width:100%;min-width:0;min-height:48px;padding:12px 14px;border:1px solid var(--ee-border);border-radius:12px;background:#fff;color:var(--ee-text);font-size:16px}',
+      '.ee textarea{min-height:48px;resize:none;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}',
+      '.ee textarea.ee-note{min-height:96px}',
+      '.ee-chips,.ee-letters{display:flex;flex-wrap:wrap;gap:8px;overflow:visible;max-width:100%;min-width:0;position:sticky;top:0;z-index:2;padding:8px 0;background:var(--ee-page)}',
+      '.ee-letters{position:static}',
+      '.ee-chip{width:auto !important;flex:1 1 auto;min-height:48px;padding:8px 14px;border-radius:999px;border:1px solid var(--ee-border);background:#fff;color:var(--ee-text)}',
       '.ee-chip.is-on{background:var(--ee-blue);color:#fff;border-color:var(--ee-blue)}',
       '.ee-list{display:flex;flex-direction:column;gap:12px}',
       '.ee-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;width:100%;min-height:64px;padding:16px;text-align:left;background:var(--ee-card);border:1px solid var(--ee-border);border-radius:16px;color:var(--ee-text)}',
@@ -933,6 +1396,12 @@
       '.ee-meta{grid-column:1;color:var(--ee-muted);white-space:normal;word-break:break-word}',
       '.ee-chevron{grid-column:2;grid-row:1 / span 3;align-self:center;color:var(--ee-muted);font-size:22px}',
       '.ee-card{background:var(--ee-card);border:1px solid var(--ee-border);border-radius:16px;padding:16px;margin:0 0 12px}',
+      '.ee-defaults > summary{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;font-size:16px;font-weight:800;cursor:pointer}',
+      '.ee-defaults > summary::-webkit-details-marker{display:none}',
+      '.ee-defaults > summary::before{content:"▸";flex:0 0 auto;color:var(--ee-muted);font-weight:400}',
+      '.ee-defaults[open] > summary::before{content:"▾"}',
+      '.ee-defaults-title{flex:0 0 auto}',
+      '.ee-defaults-line{flex:1 1 auto;min-width:0;overflow:hidden;color:var(--ee-muted);font-weight:400;white-space:nowrap;text-overflow:ellipsis}',
       '.ee-section{margin:20px 0 8px;font-size:16px;font-weight:800}',
       '.ee-field{margin:0 0 14px}',
       '.ee-field label{display:block;margin-bottom:6px;font-weight:700}',
@@ -942,21 +1411,30 @@
       '.ee-error{color:var(--ee-red)}',
       '.ee-lock{color:var(--ee-disabled)}',
       '.ee-warn{background:var(--ee-orange-bg);color:var(--ee-orange);border-radius:12px;padding:12px;margin:0 0 12px;line-height:1.5}',
+      '.ee-warn-strong{font-size:18px;font-weight:800;border:2px solid var(--ee-orange)}',
+      '.ee-warn-strong strong{font-weight:800}',
       '.ee-bar{position:sticky;bottom:0;z-index:3;margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--ee-page)}',
-      '.ee-primary{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border:0;border-radius:12px;background:#2E7D32;color:#fff;font-weight:800}',
+      '.ee-pair{display:flex;flex-direction:column;gap:2px;margin:0 0 12px;min-width:0}',
+      '.ee-label{color:var(--ee-muted);font-size:13px;font-weight:700}',
+      '.ee-value{font-size:16px;font-weight:800;overflow-wrap:anywhere}',
+      '.ee-status{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;background:#E3F2FD;color:var(--ee-ink);border-radius:12px;padding:12px;margin:0 0 12px}',
+      '.ee-status-warn{background:var(--ee-orange-bg);color:var(--ee-orange);font-weight:800;border:2px solid var(--ee-orange)}',
+      '.ee-success{background:#E8F5E9;color:#1B5E20;border-radius:12px;padding:12px;margin:0 0 12px;font-weight:800}',
+      '.ee-primary{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border:0;border-radius:12px;background:#1565C0;color:#fff;font-weight:800}',
       '.ee-primary:active{background:var(--ee-primary-press)}',
       '.ee-primary:disabled{background:var(--ee-disabled);color:#fff}',
       '.ee-secondary{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin-top:8px;border:0;background:transparent;color:var(--ee-ink);font-weight:700}',
-      '.ee-modal{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding:16px;background:rgba(26,36,51,.48)}',
-      '.ee-dialog{width:100%;max-width:420px;background:#fff;border-radius:16px;padding:16px}',
+      '.ee-modal{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding:16px;background:rgba(26,36,51,.48);min-width:0;max-width:100%}',
+      '.ee-dialog{width:100%;max-width:min(420px,100%);min-width:0;background:#fff;border-radius:16px;padding:16px}',
       '.ee-modal button{font-size:28px;min-height:48px}',
       '.ee-diff-after{color:var(--ee-ink);font-weight:800}',
-      '.ee-pin{margin:12px 0;font-family:ui-monospace,monospace;font-size:28px;font-weight:800;letter-spacing:.28em;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}',
+      '.ee-pin{margin:12px 0;max-width:100%;min-width:0;font-family:ui-monospace,monospace;font-size:28px;font-weight:800;letter-spacing:.28em;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}',
       '.ee-skel{height:64px;border-radius:16px;margin:0 0 12px;background:#d4dee8}',
       '.ee-spin{width:18px;height:18px;margin-right:8px;border:2px solid #fff;border-right-color:transparent;border-radius:50%;display:inline-block;animation:ee-spin .8s linear infinite}',
       '@keyframes ee-spin{to{transform:rotate(360deg)}}',
       '.ee [hidden]{display:none !important}',
-      '@media (max-width:767px){.ee{width:100%;max-width:100%}.ee-fields{display:block}.ee-side{display:none}.ee[data-ee-screen="list"] .ee-side{display:block}.ee-main{width:100%}}',
+      '@media (max-width:767px){.ee{width:100%;max-width:100%;min-width:0}.ee-fields{display:block}.ee-side{display:none}.ee[data-ee-screen="list"] .ee-side{display:block}.ee-main{width:100%;min-width:0;max-width:100%}}',
+      '@media (max-width:360px){.ee-pin{font-size:clamp(16px,4.8vw,22px);letter-spacing:.08em}.ee-modal{padding:8px}.ee-dialog,.ee-card,.ee-main{max-width:100%;min-width:0}}',
       '@media (min-width:768px){.ee[data-ee-screen="detail"],.ee[data-ee-screen="edit"],.ee[data-ee-screen="add"]{display:grid;grid-template-columns:minmax(280px,380px) minmax(0,1fr);column-gap:16px;align-items:start}.ee-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}.ee-wide{grid-column:1 / -1}.ee-modal{align-items:center}}',
       '@media (prefers-reduced-motion:reduce){.ee-spin{animation:none}}'
     ].join('');
@@ -974,10 +1452,17 @@
 
   function banner(view) {
     var html = '';
-    if (view.notice) html += '<p class="ee-warn" role="status">' + esc(view.notice) + '</p>';
+    if (view.notice) html += '<p class="ee-success" role="status">' + esc(view.notice) + '</p>';
     if (view.error) html += '<p class="ee-error" role="alert">' + esc(view.error) + '</p>';
     if (view.stale) html += '<p class="ee-hint">' + esc(t('stale')) + '</p>';
     return html;
+  }
+
+  function chipChoices(rows) {
+    var items = [['all', 'filterAll']];
+    if (columnPresent(rows, ['newHire', 'isNewHire', '新進人員', 'hireDate', '到職日'])) items.push(['new', 'filterNew']);
+    if (columnPresent(rows, ['isManager', '是否主管'])) items.push(['manager', 'filterManager']);
+    return items;
   }
 
   function renderList(view) {
@@ -985,13 +1470,13 @@
     var chip = view.chip || 'all';
     var filtered = filterRows(view.rows, query, chip);
     var shown = filtered.slice(0, view.limit || 20);
-    var chips = [
-      ['all', 'filterAll'],
-      ['new', 'filterNew'],
-      ['manager', 'filterManager']
-    ].map(function (item) {
+    var choices = chipChoices(view.rows);
+    var allowed = {};
+    choices.forEach(function (item) { allowed[item[0]] = true; });
+    if (!allowed[chip]) chip = 'all';
+    var chips = choices.length > 1 ? choices.map(function (item) {
       return button('ee-chip' + (chip === item[0] ? ' is-on' : ''), 'chip', t(item[1]), { value: item[0], pressed: chip === item[0] });
-    }).join('');
+    }).join('') : '';
     var body = '';
     if (view.loading && !shown.length) {
       body = '<div class="ee-skel"></div><div class="ee-skel"></div><div class="ee-skel"></div><p class="ee-hint">' + esc(t('loading')) + '</p>';
@@ -1009,7 +1494,7 @@
     var bar = view.embedded ? '' : '<div class="ee-bar">' + button('ee-primary', 'add', '＋ ' + t('addEmployee'), { busy: view.busy && view.screen === 'list' }) + '</div>';
     return '<header class="ee-top"><h1>' + esc(t('employeeManagement')) + '</h1></header>' +
       '<div class="ee-search"><input data-ee-query type="search" autocomplete="off" placeholder="' + esc(t('searchPlaceholder')) + '" value="' + esc(query) + '" aria-label="' + esc(t('search')) + '"></div>' +
-      '<div class="ee-chips" role="tablist">' + chips + '</div>' +
+      (chips ? '<div class="ee-chips" role="tablist">' + chips + '</div>' : '') +
       banner(view) + body + bar;
   }
 
@@ -1027,7 +1512,7 @@
         var value = fields[key];
         if (value == null || String(value).trim() === '') return '';
         var shown = key === '手機' ? maskPhone(value) : human(value);
-        return '<div class="ee-meta"><span>' + esc(label(key)) + '</span><b class="ee-name">' + esc(shown) + '</b></div>';
+        return '<div class="ee-pair"><span class="ee-label">' + esc(label(key)) + '</span><b class="ee-value">' + esc(shown) + '</b></div>';
       }).join('');
       if (!rows) return '';
       return '<section class="ee-card"><h2>' + esc(t(group[0])) + '</h2>' + rows + '</section>';
@@ -1066,8 +1551,18 @@
         if (days > 0) hireNote = fill('daysSince', { n: String(days) });
       }
     }
+    var hr = fields['HR確認'];
+    var hrText = hr != null && String(hr).trim() !== '' ? human(hr) : '';
+    if (!hrText && String(fields['組織設定確認'] || '') === '待確認') hrText = t('pendingConfirm');
+    var status = '';
+    var statusClass = 'ee-status' + (hrText && hrText === t('pendingConfirm') ? ' ee-status-warn' : '');
+    if (hrText || fields['在職狀態']) {
+      status = '<p class="' + statusClass + '" role="status"><span class="ee-label">' + esc(t('employmentStatus')) + '</span><b>' + esc(human(fields['在職狀態'] || '')) + '</b>' +
+        (hrText ? '<span class="ee-label">' + esc(t('hrConfirmLabel')) + '</span><b>' + esc(hrText) + '</b>' : '') + '</p>';
+    }
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(t('employeeDetail')) + '</h1></header>' +
-      '<section class="ee-card"><h2 class="ee-name">' + esc(name) + '</h2><p class="ee-id">' + esc(id) + '</p><p>' + esc(human(fields['在職狀態'] || '')) + '</p><p>' + esc(t('hireDate')) + ' ' + esc(hire) + (hireNote ? '｜' + esc(hireNote) : '') + '</p><p>' + esc(t('credentialState')) + ' ' + esc(human(fields['登入帳號狀態'] || '') || t('statusUnknown')) + '</p><p>' + esc(t('lineBound')) + ' ' + esc(human(fields['LINE綁定狀態'] || '') || t('unbound')) + '</p><p class="ee-hint">' + esc(t('attendanceSyncNote')) + '</p></section>' +
+      '<section class="ee-card"><h2 class="ee-name">' + esc(name) + '</h2><p class="ee-id">' + esc(id) + '</p>' + status + '<p class="ee-pair"><span class="ee-label">' + esc(t('hireDate')) + '</span><b class="ee-value">' + esc(hire) + (hireNote ? '｜' + esc(hireNote) : '') + '</b></p><p class="ee-pair"><span class="ee-label">' + esc(t('credentialState')) + '</span><b class="ee-value">' + esc(human(fields['登入帳號狀態'] || '') || t('statusUnknown')) + '</b></p><p class="ee-pair"><span class="ee-label">' + esc(t('lineBound')) + '</span><b class="ee-value">' + esc(human(fields['LINE綁定狀態'] || '') || t('unbound')) + '</b></p><p class="ee-hint">' + esc(t('attendanceSyncNote')) + '</p></section>' +
+      banner(view) +
       detailPairs(view) +
       renderAudit(view.audit) +
       '<div class="ee-bar">' + button('ee-primary', 'edit', t('edit')) + button('ee-secondary', 'account', t('goAccount')) + '</div>';
@@ -1087,27 +1582,29 @@
     if (required) html += '<span class="ee-req" aria-label="' + esc(t('requiredMark')) + '">*</span>';
     html += '</label>';
     if (reason) {
-      var lockedList = choices(field, view.catalog);
+      var lockedList = choices(field, view);
       if (lockedList) {
         html += '<select id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" disabled aria-disabled="true" aria-describedby="' + described + '">' +
           lockedList.map(function (item) {
             var selected = String(item.value) === String(value) ? ' selected' : '';
             return '<option value="' + esc(item.value) + '"' + selected + '>' + esc(item.label || human(item.value)) + '</option>';
           }).join('') + '</select>';
+      } else if (field.key === '姓名' || field.key === '部門') {
+        html += '<textarea class="ee-grow" id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" rows="1" disabled aria-disabled="true" aria-describedby="' + described + '">' + esc(human(value)) + '</textarea>';
       } else {
         html += '<input id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" disabled aria-disabled="true" value="' + esc(human(value)) + '" aria-describedby="' + described + '">';
       }
       html += '<p class="ee-hint" id="' + described + '">' + esc(t('fieldLocked')) + ' ' + esc(t(reason)) + '</p>';
     } else if (field.key === 'V2員工ID' && view.formMode === 'CREATE') {
       var chosenLetter = view.form && view.form.idLetter || '';
-      html += '<div class="ee-chips">' + ['A', 'B', 'C'].map(function (letter) {
+      html += '<div class="ee-letters">' + ['A', 'B', 'C'].map(function (letter) {
         var name = letter === 'A' ? 'letterOffice' : letter === 'B' ? 'letterFactory' : 'letterCorp';
         return button('ee-chip' + (chosenLetter === letter ? ' is-on' : ''), 'letter', letter + ' ' + t(name), { value: letter, pressed: chosenLetter === letter });
       }).join('') + '</div>';
       html += '<input id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" autocomplete="off" value="' + esc(value) + '" aria-describedby="' + described + '">';
       if (view.suggestion) html += '<p class="ee-hint">' + esc(t('suggestId')) + ' ' + esc(view.suggestion) + '</p>';
     } else {
-      var list = choices(field, view.catalog);
+      var list = choices(field, view);
       var disabled = '';
       if (list && field.key !== '部門') {
         html += '<select id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '"' + disabled + ' aria-describedby="' + described + '"><option value="">' + esc(t('selectPlaceholder')) + '</option>' +
@@ -1117,17 +1614,20 @@
           }).join('') + '</select>';
       } else {
         var type = field.type === 'date' ? 'date' : 'text';
-        html += '<input id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" type="' + type + '" autocomplete="off" value="' + esc(value) + '" aria-describedby="' + described + '">';
+        if (field.key === '姓名' || field.key === '部門') {
+          html += '<textarea class="ee-grow" id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" rows="1" autocomplete="off" aria-describedby="' + described + '">' + esc(value) + '</textarea>';
+        } else {
+          html += '<input id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" type="' + type + '" autocomplete="off" value="' + esc(value) + '" aria-describedby="' + described + '">';
+        }
       }
       if (error) html += '<p class="ee-error" id="' + described + '">' + esc(t(error)) + '</p>';
       else html += '<p class="ee-hint" id="' + described + '">';
       if (!error && field.key === '到職日') html += esc(t('firstDayNote'));
-      if (!error && field.key === '打卡號' && view.punchSuggestion) html += esc(t('punchSuggested')) + ' ' + esc(view.punchSuggestion);
+      if (!error && field.key === '打卡號' && view.punchHint) html += esc(view.punchHint);
+      else if (!error && field.key === '打卡號' && view.punchSuggestion) html += esc(t('punchSuggested')) + ' ' + esc(view.punchSuggestion);
+      if (!error && field.key === '正式班別' && view.shiftHint) html += esc(view.shiftHint);
       if (!error && field.key === '部門' && view.newDept) html += esc(t('newDeptHint'));
       if (!error) html += '</p>';
-    }
-    if (field.key === '打卡號' && view.formMode === 'CREATE') {
-      html += '<label class="ee-hint"><input data-ee-punch-confirm type="checkbox"' + (view.punchConfirmed ? ' checked' : '') + '> ' + esc(t('useSuggestion')) + '</label>';
     }
     html += '</div>';
     return html;
@@ -1136,63 +1636,146 @@
   function renderForm(view) {
     var mode = view.formMode || 'CREATE';
     var title = mode === 'CREATE' ? t('addEmployee') : t('editEmployee');
-    var primary = mode === 'CREATE' ? t('confirmAdd') : t('reviewChanges');
+    var primary = t('reviewChanges');
     var action = 'review';
     var errors = validateClient(view.form, mode, { actorId: view.actorId, employeeId: view.employeeId, baseline: view.baseline });
     var changes = mode === 'UPDATE' ? buildChanges(view.baseline, view.form, { actorId: view.actorId, employeeId: view.employeeId, mode: 'UPDATE' }) : {};
     var disabled = view.busy || errors.length > 0 || (mode === 'UPDATE' && !Object.keys(changes).length);
-    if (mode === 'CREATE' && String((view.form || {})['打卡號'] || '').trim() && !view.punchConfirmed && (view.form['免打卡'] !== 'Y' && view.form['出勤管理類型'] !== 'EXTERNAL')) {
-      disabled = true;
-    }
     var notes = '';
     if (mode === 'CREATE') {
-      notes += '<p class="ee-warn">' + esc(view.mode === 'SHADOW' ? t('shadowNote') : t('createPinNote')) + '</p>';
+      if (!view.error) notes += '<p class="ee-warn">' + esc(view.mode === 'SHADOW' ? t('shadowNote') : t('createPinNote')) + '</p>';
       notes += '<p class="ee-hint">' + esc(t('newHireStatus')) + '</p>';
       if (pinExpiresBeforeHire(view.form && view.form['到職日'], view.tempPinDays || 7, view.today || todayTaipei())) {
         notes += '<p class="ee-hint">' + esc(t('pinBeforeHire')) + '</p>';
       }
       if (createNeedsReason(view.form, view.today || todayTaipei())) notes += '<p class="ee-hint">' + esc(t('hireDatePast')) + '</p>';
     }
-    var fields = SECTIONS.map(function (section) {
-      var inner = FIELDS.filter(function (field) { return field.section === section[0]; }).map(function (field) {
-        return fieldControl(field, view);
+    var basicCreate = { 'V2員工ID': 1, '姓名': 1, '人員類別': 1, '到職日': 1, '部門': 1, '直屬主管ID': 1, '打卡號': 1, '工作地點': 1, '簽核路由群組': 1, '正式班別': 1, '出勤管理類型': 1, '代理人指定方式': 1 };
+    var fields = '';
+    if (mode === 'CREATE') {
+      var basic = '';
+      var advanced = '';
+      var showPunchExempt = (view.form && (view.form['人員類別'] === '外部顧問' || view.form['出勤管理類型'] === 'EXTERNAL' || view.form['出勤管理類型'] === 'EXEMPT'));
+      FIELDS.forEach(function (field) {
+        var html = fieldControl(field, view);
+        if (basicCreate[field.key] || (field.key === '免打卡' && showPunchExempt)) basic += html;
+        else advanced += html;
+      });
+      fields = '<h2 class="ee-section ee-wide">' + esc(t('basicShort')) + '</h2>' + basic +
+        '<div class="ee-wide">' + button('ee-secondary', 'advanced', t('advanced'), { pressed: !!view.advancedOpen }) +
+        '<p class="ee-hint">' + esc(t('advancedHint')) + '</p></div>' +
+        (view.advancedOpen ? '<div class="ee-advanced">' + advanced + '</div>' : '');
+    } else {
+      fields = SECTIONS.map(function (section) {
+        var inner = FIELDS.filter(function (field) { return field.section === section[0]; }).map(function (field) {
+          return fieldControl(field, view);
+        }).join('');
+        return '<h2 class="ee-section ee-wide">' + esc(t(section[1])) + '</h2>' + inner;
       }).join('');
-      return '<h2 class="ee-section ee-wide">' + esc(t(section[1])) + '</h2>' + inner;
-    }).join('');
+    }
+    var missing = '';
+    if (disabled && errors.length) {
+      var seen = {};
+      var names = [];
+      errors.forEach(function (item) {
+        if (!item.field || seen[item.field]) return;
+        seen[item.field] = 1;
+        names.push(label(item.field));
+      });
+      if (names.length) missing = '<p class="ee-error" data-ee-missing>' + esc(t('missingFields')) + '：' + esc(names.join('、')) + '</p>';
+    }
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(title) + '</h1></header>' +
       banner(view) + notes + '<div class="ee-fields">' + fields + '</div>' +
-      '<div class="ee-bar">' + button('ee-primary', action, primary, { disabled: disabled, busy: view.busy }) + button('ee-secondary', 'cancel', t('cancel')) + '</div>';
+      '<div class="ee-bar">' + missing + button('ee-primary', action, primary, { disabled: disabled, busy: view.busy }) + button('ee-secondary', 'cancel', t('cancel')) + '</div>';
+  }
+
+  var DEFAULT_SUMMARY_FIRST = ['簽核路由群組', '正式班別', '打卡號', '工作地點', '出勤管理類型'];
+
+  function defaultSummaryLine(rows) {
+    var ranked = [];
+    (rows || []).forEach(function (row, index) {
+      var shown = human(row && row.after);
+      if (!shown) return;
+      var rank = DEFAULT_SUMMARY_FIRST.indexOf(row && row.field);
+      ranked.push({
+        rank: rank < 0 ? DEFAULT_SUMMARY_FIRST.length : rank,
+        index: index,
+        shown: shown
+      });
+    });
+    ranked.sort(function (a, b) {
+      if (a.rank !== b.rank) return a.rank - b.rank;
+      return a.index - b.index;
+    });
+    return ranked.map(function (item) { return item.shown; }).join('・');
   }
 
   function renderDiff(view) {
     var changes = view.changes || {};
+    var creating = view.operation === 'CREATE';
     var rows = view.diff && view.diff.length ? view.diff : Object.keys(changes).map(function (key) {
       return { field: key, before: (view.baseline || {})[key] || '', after: changes[key] };
     });
-    var required = Object.keys(changes).length > 0 || !!(view.diff && view.diff.length) || view.operation === 'CREATE';
+    if (creating) {
+      rows = rows.filter(function (row) {
+        return String(row.after == null ? '' : row.after).trim() !== '';
+      });
+    }
+    var required = Object.keys(changes).length > 0 || rows.length > 0 || creating;
     var needsImpact = !!(view.requires && view.requires.hrConfirmStep);
-    var ready = reasonOk(view.reason, required) && (!needsImpact || view.impactConfirmed) && !view.busy;
-    var body = rows.map(function (row) {
+    var ready = reasonOk(view.reason, required) && !view.busy;
+    var repeated = {};
+    repeated[t('firstDayNote')] = 1;
+    repeated[t('hireRecalcNote')] = 1;
+    repeated[t('hrConfirmImpact')] = 1;
+    var primaryRows = [];
+    var defaults = [];
+    var defaultRows = [];
+    rows.forEach(function (row) {
       var extra = '';
-      if (row.field === '到職日') extra = '<p class="ee-warn">' + esc(t('firstDayNote')) + '</p><p class="ee-warn">' + esc(t('hireRecalcNote')) + '</p>';
-      return '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div>' + esc(t('before')) + ' ' + esc(human(row.before)) + '</div><div class="ee-diff-after">' + esc(t('after')) + ' ' + esc(human(row.after)) + '</div>' + extra + '</article>';
-    }).join('');
-    var warns = (view.warnings || []).map(function (item) {
-      return '<p class="ee-warn">' + esc(typeof item === 'string' ? item : t('downstreamNote')) + '</p>';
+      var changed = String(row.before == null ? '' : row.before) !== String(row.after == null ? '' : row.after);
+      if (row.field === '到職日' && (creating || changed)) {
+        extra = '<p class="ee-warn"><strong>⚠ ' + esc(t('firstDayNote')) + '</strong></p>';
+        if (!creating) extra += '<p class="ee-warn"><strong>⚠ ' + esc(t('hireRecalcNote')) + '</strong></p>';
+      }
+      var card = creating
+        ? '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div class="ee-diff-after">' + esc(human(row.after)) + '</div>' + extra + '</article>'
+        : '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div>' + esc(t('before')) + ' ' + esc(human(row.before)) + '</div><div class="ee-diff-after">' + esc(t('after')) + ' ' + esc(human(row.after)) + '</div>' + extra + '</article>';
+      if (creating && view.systemFilled && view.systemFilled[row.field]) {
+        defaults.push(card);
+        defaultRows.push(row);
+      } else primaryRows.push(card);
+    });
+    var body = primaryRows.join('');
+    if (defaults.length) {
+      var preview = defaultSummaryLine(defaultRows);
+      body += '<details class="ee-card ee-defaults"><summary><span class="ee-defaults-title">' + esc(t('systemDefaults')) + '</span>' +
+        (preview ? '<span class="ee-defaults-line">' + esc(preview) + '</span>' : '') +
+        '</summary>' + defaults.join('') + '</details>';
+    }
+    var warns = (view.warnings || []).filter(function (item) {
+      var text = typeof item === 'string' ? item : '';
+      return text && !repeated[text];
+    }).map(function (item) {
+      return '<p class="ee-warn">' + esc(item) + '</p>';
     }).join('');
     var reason = view.reason || {};
     var options = '<option value="">' + esc(t('selectPlaceholder')) + '</option>' + REASONS.map(function (item) {
       return '<option value="' + item[0] + '"' + (reason.code === item[0] ? ' selected' : '') + '>' + esc(t(item[1])) + '</option>';
     }).join('');
+    var who = '';
+    if (view.name || view.employeeId) {
+      who = '<p class="ee-name">' + esc(view.name || '') + (view.employeeId ? '（' + esc(view.employeeId) + '）' : '') + '</p>';
+    }
+    var impact = needsImpact ? '<p class="ee-warn ee-warn-strong" role="alert"><strong>⚠ ' + esc(t('hrConfirmImpact')) + '</strong></p>' : '';
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(t('reviewChanges')) + '</h1></header>' +
-      '<p class="ee-name">' + esc(view.name || '') + '（' + esc(view.employeeId || '') + '）</p>' +
+      who + impact +
       body + warns +
       '<div class="ee-field"><label for="ee-reason">' + esc(t('changeReason')) + '<span class="ee-req">*</span></label><select id="ee-reason" data-ee-reason="code">' + options + '</select>' +
-      (reason.code === 'OTHER' ? '<textarea data-ee-reason="note" aria-label="' + esc(t('reasonNote')) + '">' + esc(reason.note || '') + '</textarea>' : '') +
-      (needsImpact ? '<label class="ee-hint"><input data-ee-impact type="checkbox"' + (view.impactConfirmed ? ' checked' : '') + '> ' + esc(t('impactCheck')) + '</label><p class="ee-warn">' + esc(t('hrConfirmImpact')) + '</p>' : '') +
-      (ready ? '' : '<p class="ee-error">' + esc(needsImpact && !view.impactConfirmed ? t('hrConfirmImpact') : t('reasonRequired')) + '</p>') + '</div>' +
+      (reason.code === 'OTHER' ? '<textarea class="ee-note" data-ee-reason="note" aria-label="' + esc(t('reasonNote')) + '">' + esc(reason.note || '') + '</textarea>' : '') +
+      (ready ? '' : '<p class="ee-error">' + esc(t('reasonRequired')) + '</p>') + '</div>' +
       banner(view) +
-      '<div class="ee-bar">' + button('ee-secondary', 'cancel', t('cancel')) + button('ee-primary', 'save', view.operation === 'CREATE' ? t('confirmAdd') : t('confirmSave'), { disabled: !ready, busy: view.busy }) + '</div>';
+      '<div class="ee-bar">' + button('ee-secondary', 'cancel', t('cancel')) + button('ee-primary', 'save', creating ? t('confirmAdd') : t('confirmSave'), { disabled: !ready, busy: view.busy }) + '</div>';
   }
 
   function renderPin(view) {
@@ -1255,7 +1838,10 @@
   }
 
   function viewFromState() {
-    var changes = buildChanges(state.baseline, state.form, { actorId: state.actorId || readActor(), employeeId: state.employeeId, mode: 'UPDATE' });
+    var actorId = state.actorId || readActor();
+    var changes = state.operation === 'CREATE'
+      ? createChanges(state.form)
+      : buildChanges(state.baseline, state.form, { actorId: actorId, employeeId: state.employeeId, mode: 'UPDATE' });
     return {
       screen: state.screen,
       mode: state.mode,
@@ -1269,8 +1855,8 @@
       fields: state.detail || {},
       form: state.form,
       baseline: state.baseline,
-      actorId: state.actorId || readActor(),
-      employeeId: state.employeeId,
+      actorId: actorId,
+      employeeId: state.employeeId || (state.form && state.form['V2員工ID']) || '',
       diff: state.diff,
       changes: changes,
       reason: state.reason,
@@ -1281,12 +1867,18 @@
       busy: state.busy || state.acking,
       audit: state.audit,
       leaveGuard: state.leaveGuard,
-      name: (state.created && state.created.name) || (state.detail && state.detail['姓名']) || '',
+      name: (state.created && state.created.name) || (state.form && state.form['姓名']) || (state.detail && state.detail['姓名']) || '',
       hireDate: state.created && state.created.hireDate || '',
       punch: state.created && state.created.punch || '',
       expiresAt: state.expiresAt,
       pin: state.screen === 'pin' ? pinMemory : '',
       punchSuggestion: state.punchSuggestion,
+      punchHint: state.punchHint ? t(state.punchHint) : '',
+      punchFrozen: state.punchFrozen,
+      shiftHint: state.shiftsLoaded && !(state.shifts && state.shifts.length) ? t('shiftEmpty') : '',
+      routingGroups: state.routingGroups,
+      shifts: state.shifts,
+      shiftsLoaded: state.shiftsLoaded,
       punchConfirmed: state.punchConfirmed,
       suggestion: state.form.suggestedId || '',
       catalog: state.catalog,
@@ -1296,7 +1888,9 @@
       operation: state.operation,
       tempPinDays: state.tempPinDays,
       today: todayTaipei(),
-      newDept: false
+      newDept: false,
+      advancedOpen: state.advancedOpen,
+      systemFilled: systemFilled
     };
   }
 
@@ -1355,24 +1949,58 @@
 
   function flatDetail(res) {
     if (!res) return { fields: {}, rowVersion: '' };
-    if (res.fields && typeof res.fields === 'object') {
+    if (res.fields && typeof res.fields === 'object' && !res.employee && !res.work && !res.workflow) {
       return { fields: Object.assign({}, res.fields), rowVersion: res.rowVersion || '' };
     }
     var employee = res.employee || res;
-    var fields = {};
-    if (employee.employeeId) fields['V2員工ID'] = employee.employeeId;
-    if (employee.name) fields['姓名'] = employee.name;
-    function take(group, map) {
-      var source = employee[group] || {};
-      Object.keys(map).forEach(function (from) {
-        if (source[from] != null && source[from] !== '') fields[map[from]] = source[from];
-      });
+    function group(name) {
+      var outer = res[name] && typeof res[name] === 'object' ? res[name] : {};
+      var inner = employee[name] && typeof employee[name] === 'object' ? employee[name] : {};
+      return Object.assign({}, outer, inner);
     }
-    take('basic', { mobile: '手機', email: 'Email' });
-    take('employment', { hireDate: '到職日', terminationDate: '離職日', employmentStatus: '在職狀態', personType: '人員類別' });
-    take('organization', { department: '部門', location: '工作地點', manager1: '直屬主管ID', manager2: '第二主管ID', isManager: '是否主管', approvalPermission: '簽核權限' });
-    take('work', { formalShift: '正式班別', attendanceType: '出勤管理類型', punchExempt: '免打卡', leaveExempt: '免請假', punchNumber: '打卡號' });
-    take('system', { preferredLanguage: 'PreferredLanguage', systemEnabled: '系統啟用', credentialState: '登入帳號狀態', lineBound: 'LINE綁定狀態' });
+    var basic = group('basic');
+    var employment = group('employment');
+    var organization = group('organization');
+    var work = group('work');
+    var workflow = group('workflow');
+    var system = group('system');
+    var fields = {};
+    function put(key, value) {
+      if (value == null || String(value).trim() === '') return;
+      if (!Object.prototype.hasOwnProperty.call(fields, key)) fields[key] = value;
+    }
+    put('V2員工ID', employee.employeeId || employee['V2員工ID']);
+    put('姓名', employee.name || employee['姓名'] || basic.name);
+    put('手機', basic.mobile || basic['手機']);
+    put('到職日', work.hireDate || employment.hireDate || workflow.hireDate);
+    put('離職日', employment.terminationDate || work.terminationDate);
+    put('在職狀態', employment.employmentStatus || workflow.employmentStatus || work.employmentStatus);
+    put('人員類別', work.personType || employment.personType || workflow.personType);
+    put('部門', work.department || employment.department || organization.department);
+    put('工作地點', work.location || employment.location || organization.location);
+    put('直屬主管ID', organization.manager1 || work.manager1 || workflow.manager1);
+    put('第二主管ID', organization.manager2 || work.manager2 || workflow.manager2);
+    put('是否主管', organization.isManager != null ? organization.isManager : (work.isManager != null ? work.isManager : workflow.isManager));
+    put('簽核權限', organization.approvalPermission || workflow.approvalPermission);
+    put('正式班別', work.formalShift || work.shift);
+    put('班別確認', work.shiftConfirmed || work.shiftConfirm || workflow.shiftConfirmed);
+    put('出勤管理類型', work.attendanceType || workflow.attendanceType);
+    put('打卡號', work.punchNumber);
+    put('免打卡', work.punchExempt);
+    put('免請假', work.leaveExempt);
+    put('啟用出勤異常檢查', work.attendanceExceptionEnabled != null ? work.attendanceExceptionEnabled : work.anomalyCheck);
+    put('PreferredLanguage', system.preferredLanguage || workflow.preferredLanguage || employment.preferredLanguage);
+    put('系統啟用', system.systemEnabled);
+    put('登入帳號狀態', system.credentialState || workflow.credentialState);
+    put('LINE綁定狀態', system.lineBound != null ? system.lineBound : workflow.lineBound);
+    put('HR確認', workflow.hrConfirm || workflow.HR確認 || workflow['HR確認'] || workflow.identityConfirm || organization.hrConfirm || organization.HR確認 || organization['HR確認'] || system.hrConfirm || employment.hrConfirm || employee['HR確認']);
+    put('組織設定確認', organization.organizationConfirmed || organization.orgConfirmed || workflow.organizationConfirmed || workflow.orgConfirmed);
+    put('特休制度', employment.annualPolicy || work.annualPolicy || employment['特休制度']);
+    put('簽核路由群組', organization.routeGroup || workflow.routeGroup || work.routeGroup);
+    put('最終需代理人', organization.needsProxy != null ? organization.needsProxy : workflow.needsProxy);
+    put('代理候選優先規則', organization.proxyPriority || workflow.proxyPriority);
+    put('代理人指定方式', organization.proxyMode || workflow.proxyMode);
+    put('主管指派代理', organization.managerAssignProxy || workflow.managerAssignProxy);
     return { fields: fields, rowVersion: res.rowVersion || employee.rowVersion || '' };
   }
 
@@ -1417,6 +2045,7 @@
       return;
     }
     if (!first || first.code === 'FEATURE_OFF') return;
+    absorbCatalog(first);
     if (first.rowVersion) state.rowVersion = first.rowVersion;
     if (first.ok === true) {
       state.fieldCatalog = first.fields || [];
@@ -1435,6 +2064,7 @@
         hrConfirmedPunch: false,
         hrConfirmedImpact: false
       }, deps);
+      absorbCatalog(second);
       if (second && second.ok === true) {
         state.fieldCatalog = second.fields || [];
         if (second.rowVersion) state.rowVersion = second.rowVersion;
@@ -1513,18 +2143,22 @@
       return { ok: false };
     }
     state.busy = true;
+    state.impactConfirmed = true;
+    if (String((state.form && state.form['打卡號']) || '').trim()) state.punchConfirmed = true;
     state.operation = 'CREATE';
+    rerender();
     var changes = createChanges(state.form);
     var expected = '';
     try {
       var validated = await rpc('hrEmployeeValidate', validateBody('CREATE', changes, deps, expected), deps);
+      absorbCatalog(validated);
       state.diff = validated && validated.diff || [];
       state.warnings = mapWarnings(validated && validated.warnings);
       state.requires = validated && validated.requires || {};
       if (validated && (validated.mode === 'SHADOW' || validated.mode === 'LIVE')) state.mode = validated.mode;
       if (!validated || validated.ok === false) {
         pinMemory = '';
-        state.errorKey = errorKey(validated);
+        state.errorKey = errorKey(validated, 'CREATE');
         state.fieldErrors = mapFieldErrors(validated);
         state.screen = 'add';
         return { ok: false };
@@ -1542,7 +2176,7 @@
       }, deps);
       if (!res || res.ok === false) {
         pinMemory = '';
-        state.errorKey = errorKey(res);
+        state.errorKey = errorKey(res, 'CREATE');
         state.fieldErrors = mapFieldErrors(res);
         state.screen = 'add';
         state.keepRequest = !!(res && (res.code === 'SYSTEM_BUSY' || res.code === 'CREDENTIAL_INSERT_FAILED'));
@@ -1578,6 +2212,8 @@
       state.expiresAt = cred.expiresAt || '';
       state.screen = 'pin';
       state.leaveGuard = false;
+      markPinHistory();
+      hookNavigation();
       state.requestId = '';
       if (cred) cred.tempPin = '';
       return { ok: true };
@@ -1609,13 +2245,16 @@
       state.errorKey = 'noChanges';
       return { ok: false };
     }
+    if (String((state.form && state.form['打卡號']) || '').trim()) state.punchConfirmed = true;
     state.busy = true;
+    rerender();
     try {
       var res = await rpc('hrEmployeeValidate', validateBody(operation, changes, deps, state.rowVersion || ''), deps);
+      absorbCatalog(res);
       state.diff = res && res.diff || [];
-      state.warnings = mapWarnings(res && res.warnings);
+      state.warnings = mapWarnings(res && res.warnings, changes);
       state.requires = res && res.requires || {};
-      if (res && res.punch && res.punch.suggestion) state.punchSuggestion = res.punch.suggestion;
+      if (state.operation === 'CREATE') applyPunch(punchPayload(res));
       if (res && (res.mode === 'SHADOW' || res.mode === 'LIVE')) state.mode = res.mode;
       if (res && res.fields) state.fieldCatalog = res.fields;
       if (!res || res.code === 'FEATURE_OFF') {
@@ -1623,18 +2262,19 @@
         return { ok: false };
       }
       var blocking = (res.errors || []).filter(function (item) {
-        return item.code !== 'REASON_REQUIRED' && item.code !== 'HR_CONFIRM_REQUIRED';
+        return item && item.code !== 'REASON_REQUIRED' && item.code !== 'HR_CONFIRM_REQUIRED';
       });
-      if (res.ok === false && blocking.length) {
-        state.errorKey = errorKey({ code: blocking[0].code });
+      var softOnly = res.ok !== true && (res.errors || []).length > 0 && !blocking.length;
+      if (res.ok !== true && !softOnly) {
+        state.errorKey = errorKey(blocking.length ? { code: blocking[0].code } : res, operation);
         state.fieldErrors = mapFieldErrors(res);
         return { ok: false };
       }
       state.confirmToken = res.ok ? (res.confirmToken || '') : '';
       state.screen = 'diff';
-      state.errorKey = res.ok ? '' : errorKey(res);
-      state.fieldErrors = res.ok ? {} : mapFieldErrors(res);
-      return { ok: !!res.ok };
+      state.errorKey = '';
+      state.fieldErrors = {};
+      return { ok: true };
     } catch (ignore) {
       state.errorKey = 'genericFail';
       return { ok: false };
@@ -1656,17 +2296,21 @@
       return { ok: false };
     }
     state.busy = true;
+    state.impactConfirmed = true;
+    if (String((state.form && state.form['打卡號']) || '').trim()) state.punchConfirmed = true;
     state.operation = 'UPDATE';
+    rerender();
     var expected = state.rowVersion || '';
     try {
       var validated = await rpc('hrEmployeeValidate', validateBody('UPDATE', changes, deps, expected), deps);
+      absorbCatalog(validated);
       state.diff = validated && validated.diff || state.diff;
-      state.warnings = mapWarnings(validated && validated.warnings);
+      state.warnings = mapWarnings(validated && validated.warnings, changes);
       state.requires = validated && validated.requires || state.requires;
       if (!validated || validated.ok === false) {
-        state.errorKey = errorKey(validated);
+        state.errorKey = errorKey(validated, 'UPDATE');
         state.fieldErrors = mapFieldErrors(validated);
-        state.conflict = !!(validated && validated.code === 'ROW_VERSION_MISMATCH');
+        state.conflict = !!(validated && (validated.code === 'ROW_VERSION_MISMATCH' || (validated.errors && validated.errors[0] && validated.errors[0].code === 'ROW_VERSION_MISMATCH')));
         return { ok: false };
       }
       var requestId = ensureRequest();
@@ -1682,7 +2326,7 @@
         confirmToken: validated.confirmToken || ''
       }, deps);
       if (!res || res.ok === false) {
-        state.errorKey = errorKey(res);
+        state.errorKey = errorKey(res, 'UPDATE');
         state.conflict = !!(res && res.code === 'ROW_VERSION_MISMATCH');
         state.keepRequest = !!(res && (res.code === 'SYSTEM_BUSY' || res.code === 'CREDENTIAL_INSERT_FAILED'));
         if (!state.keepRequest) state.requestId = '';
@@ -1699,7 +2343,7 @@
       state.confirmToken = '';
       return { ok: true };
     } catch (ignore) {
-      state.errorKey = 'unknownResult';
+      state.errorKey = 'unknownResultEdit';
       state.keepRequest = true;
       return { ok: false, unknown: true };
     } finally {
@@ -1723,12 +2367,19 @@
     } catch (ignore) {
       failed = true;
     } finally {
+      if (pinMemory) pinWasHeld = true;
       pinMemory = '';
+      wipePinDom();
       state.acking = false;
       state.leaveGuard = false;
       state.ackFailed = failed;
       state.screen = failed ? 'ack-hint' : 'list';
       state.notice = failed ? '' : 'saved';
+      var run = pendingLeave;
+      pendingLeave = null;
+      if (typeof run === 'function') {
+        try { run(); } catch (ignoreRun) {}
+      }
     }
     return { ok: !failed, cleared: pinMemory === '' };
   }
@@ -1744,16 +2395,63 @@
     return { blocked: false };
   }
 
+  function wipePinDom() {
+    var doc = global.document;
+    if (!doc || !doc.querySelectorAll) return;
+    var pins = doc.querySelectorAll('.ee-pin');
+    for (var i = 0; i < pins.length; i += 1) pins[i].textContent = '';
+    var modals = doc.querySelectorAll('.ee-modal');
+    for (var j = 0; j < modals.length; j += 1) {
+      if (modals[j].parentNode) modals[j].parentNode.removeChild(modals[j]);
+    }
+  }
+
+  function scrubAccount() {
+    wipePinDom();
+    if (!eeTouched && !pinWasHeld) return;
+    var doc = global.document;
+    if (!doc || !doc.getElementById) return;
+    var content = doc.getElementById('accountContent');
+    if (content) content.innerHTML = '';
+    eeTouched = false;
+    pinWasHeld = false;
+  }
+
   function clearPin() {
+    if (pinMemory) pinWasHeld = true;
     pinMemory = '';
     pinEventId = '';
+    pinHistory = false;
+    state.leaveGuard = false;
+    if (pinWasHeld || eeTouched) scrubAccount();
+  }
+
+  function dropSession() {
+    clearPin();
+    pendingLeave = null;
+    state = blankState();
+    state.active = false;
+  }
+
+  function markPinHistory() {
+    if (!pinMemory || pinHistory) return;
+    if (!global.history || typeof global.history.pushState !== 'function') return;
+    try {
+      global.history.pushState({ eePinGuard: 1 }, '');
+      pinHistory = true;
+    } catch (ignore) {}
   }
 
   function holdPin(pin, meta) {
     pinMemory = /^\d{6}$/.test(pin || '') ? String(pin) : '';
+    if (pinMemory) pinWasHeld = true;
     pinEmployeeId = meta && meta.employeeId || pinEmployeeId;
     pinEventId = meta && meta.tempPinEventId || pinEventId;
-    if (pinMemory) state.screen = 'pin';
+    if (pinMemory) {
+      state.screen = 'pin';
+      markPinHistory();
+      hookNavigation();
+    }
   }
 
   async function handleAction(action, dataset, deps) {
@@ -1762,22 +2460,43 @@
     if (action === 'written' || action === 'written-close' || action === 'retry-ack') return confirmWritten(deps);
     if (action === 'stay') {
       state.leaveGuard = false;
+      pendingLeave = null;
       return { ok: true };
     }
     if (action === 'close-pin' || (action === 'back' && state.screen === 'pin')) return requestClosePin();
     if (action === 'add') {
       state.screen = 'add';
       state.operation = 'CREATE';
+      state.employeeId = '';
+      state.detail = null;
+      systemFilled = {};
       state.form = suggestDefaults({ idLetter: '' });
       state.baseline = {};
+      state.fieldCatalog = [];
+      state.catalog = {};
       state.fieldErrors = {};
       state.errorKey = '';
+      state.notice = '';
+      state.diff = [];
+      state.warnings = [];
+      state.rowVersion = '';
+      state.confirmToken = '';
       state.requestId = '';
       state.keepRequest = false;
       state.reason = { code: 'NEW_HIRE', note: '' };
       state.punchConfirmed = false;
+      state.punchSuggestion = '';
+      state.punchHint = '';
+      state.punchFrozen = false;
       state.impactConfirmed = false;
       state.idTouched = false;
+      state.requires = {};
+      state.advancedOpen = false;
+      state.audit = [];
+      return { ok: true };
+    }
+    if (action === 'advanced') {
+      state.advancedOpen = !state.advancedOpen;
       return { ok: true };
     }
     if (action === 'edit') {
@@ -1808,8 +2527,7 @@
           }, deps);
           var nextId = suggested && (suggested.employeeId || suggested.suggestedEmployeeId);
           if (nextId && !state.idTouched) state.form['V2員工ID'] = nextId;
-          state.punchSuggestion = suggested && (suggested.punch || suggested.punchNumber || (suggested.punch && suggested.punch.suggestion)) || state.punchSuggestion;
-          if (suggested && suggested.punch && suggested.punch.suggestion) state.punchSuggestion = suggested.punch.suggestion;
+          applyPunch(punchPayload(suggested));
         } catch (ignore) {}
       }
       return { ok: true };
@@ -1826,8 +2544,9 @@
       return { ok: true };
     }
     if (action === 'account') {
-      if (typeof global.openHrCredentialAdmin === 'function') {
-        try { global.openHrCredentialAdmin(); } catch (ignore) {}
+      var openAccount = hostFn('openHrCredentialAdmin');
+      if (openAccount) {
+        try { openAccount(); } catch (ignore) {}
       }
       return { ok: true };
     }
@@ -1850,6 +2569,101 @@
     }, {}).then(function () { rerender(); });
   }
 
+  function growField(node) {
+    if (!node || node.tagName !== 'TEXTAREA' || !node.style) return;
+    node.style.height = 'auto';
+    var scroll = typeof node.scrollHeight === 'number' ? node.scrollHeight : 0;
+    var extra = 0;
+    if (typeof node.offsetHeight === 'number' && typeof node.clientHeight === 'number') {
+      extra = node.offsetHeight - node.clientHeight;
+    }
+    if (!(extra > 0)) extra = 0;
+    var next = scroll + extra;
+    if (next < 48) next = 48;
+    node.style.height = next + 'px';
+  }
+
+  function growAll() {
+    var doc = global.document;
+    if (!doc || !doc.querySelectorAll) return;
+    var nodes = doc.querySelectorAll('.ee-grow');
+    for (var i = 0; i < nodes.length; i += 1) growField(nodes[i]);
+  }
+
+  function captureFocus() {
+    var doc = global.document;
+    var active = doc && doc.activeElement;
+    if (!active || !active.getAttribute) return null;
+    if (active.closest && !active.closest('.ee')) return null;
+    return {
+      field: active.getAttribute('data-ee-field') || '',
+      query: active.getAttribute('data-ee-query') != null,
+      reason: active.getAttribute('data-ee-reason') || '',
+      start: typeof active.selectionStart === 'number' ? active.selectionStart : null,
+      end: typeof active.selectionEnd === 'number' ? active.selectionEnd : null
+    };
+  }
+
+  function restoreFocus(saved) {
+    if (!saved || !global.document || !global.document.querySelector) return;
+    var sel = '';
+    if (saved.field) sel = '[data-ee-field="' + saved.field + '"]';
+    else if (saved.query) sel = '[data-ee-query]';
+    else if (saved.reason) sel = '[data-ee-reason="' + saved.reason + '"]';
+    if (!sel) return;
+    var node = global.document.querySelector(sel);
+    if (!node || !node.focus) return;
+    try { node.focus(); } catch (ignore) {}
+    if (saved.start != null && node.setSelectionRange) {
+      try { node.setSelectionRange(saved.start, saved.end); } catch (ignore) {}
+    }
+    growField(node);
+  }
+
+  function syncPrimary() {
+    var doc = global.document;
+    if (!doc || !doc.querySelector) return;
+    var node = doc.querySelector('.ee-main [data-ee-action="review"], .ee-main [data-ee-action="save"]');
+    if (!node) node = doc.querySelector('[data-ee-action="review"], [data-ee-action="save"]');
+    if (!node) return;
+    var view = viewFromState();
+    var disabled = false;
+    if (state.screen === 'add' || state.screen === 'edit') {
+      var mode = state.screen === 'add' ? 'CREATE' : 'UPDATE';
+      var errors = validateClient(state.form, mode, { actorId: view.actorId, employeeId: state.employeeId, baseline: state.baseline });
+      var changes = mode === 'UPDATE' ? buildChanges(state.baseline, state.form, { actorId: view.actorId, employeeId: state.employeeId, mode: 'UPDATE' }) : {};
+      disabled = !!(state.busy || state.acking || errors.length || (mode === 'UPDATE' && !Object.keys(changes).length));
+    } else if (state.screen === 'diff') {
+      var diffChanges = state.operation === 'CREATE' ? createChanges(state.form) : buildChanges(state.baseline, state.form, { actorId: view.actorId, employeeId: state.employeeId, mode: 'UPDATE' });
+      var required = Object.keys(diffChanges).length > 0 || (state.diff && state.diff.length) || state.operation === 'CREATE';
+      disabled = !(reasonOk(state.reason, required) && !state.busy && !state.acking);
+    }
+    node.disabled = disabled;
+    if (disabled) node.setAttribute('disabled', 'disabled');
+    else node.removeAttribute('disabled');
+    var hintText = '';
+    if (state.screen === 'add' && disabled && errors && errors.length) {
+      var names = [];
+      var seen = {};
+      errors.forEach(function (item) {
+        if (!item || !item.field || seen[item.field]) return;
+        seen[item.field] = 1;
+        names.push(label(item.field));
+      });
+      if (names.length) hintText = t('missingFields') + '：' + names.join('、');
+    }
+    var hint = doc.querySelector ? doc.querySelector('[data-ee-missing]') : null;
+    if (hintText) {
+      if (!hint && doc.createElement && node.parentNode && node.parentNode.insertBefore) {
+        hint = doc.createElement('p');
+        hint.className = 'ee-error';
+        if (hint.setAttribute) hint.setAttribute('data-ee-missing', '');
+        node.parentNode.insertBefore(hint, node);
+      }
+      if (hint) hint.textContent = hintText;
+    } else if (hint && hint.parentNode) hint.parentNode.removeChild(hint);
+  }
+
   function onInput(event) {
     var node = event.target;
     if (!node || !node.getAttribute || !state.active) return;
@@ -1859,12 +2673,18 @@
       if (FORBIDDEN[field]) return;
       state.form[field] = node.value;
       if (field === 'V2員工ID') state.idTouched = true;
+      if (field !== '人員類別') systemFilled[field] = false;
     }
     if (node.getAttribute('data-ee-query') != null) state.query = node.value;
     if (node.getAttribute('data-ee-reason') === 'code') state.reason.code = node.value;
     if (node.getAttribute('data-ee-reason') === 'note') state.reason.note = node.value;
-    if (node.getAttribute('data-ee-punch-confirm') != null) state.punchConfirmed = !!node.checked;
-    if (node.getAttribute('data-ee-impact') != null) state.impactConfirmed = !!node.checked;
+    if (field === '人員類別' || field === '工作地點') state.form = suggestDefaults(state.form, { refreshSystem: true });
+    if (node.getAttribute('data-ee-reason') === 'code' || node.getAttribute('data-ee-query') != null || field === '人員類別' || field === '工作地點') {
+      rerender(true);
+      return;
+    }
+    if (field) growField(node);
+    syncPrimary();
   }
 
   function onBeforeUnload(event) {
@@ -1899,6 +2719,10 @@
   function bind() {
     var doc = global.document;
     if (!doc || doc.__eeBound) return;
+    if (global.addEventListener && !global.__eeResize) {
+      global.addEventListener('resize', function () { growAll(); });
+      global.__eeResize = true;
+    }
     doc.addEventListener('click', onClick);
     doc.addEventListener('input', onInput);
     doc.addEventListener('change', onInput);
@@ -1916,32 +2740,91 @@
     (doc.head || doc.documentElement).appendChild(node);
   }
 
-  function rerender() {
-    if (!state.active) return;
-    ensureStyles();
-    if (typeof global.renderMyAccount_ === 'function' && global.accountPanel_ === 'employeeManagement') {
-      try { global.renderMyAccount_(); } catch (ignore) {}
+  function scrollTopIfScreenChanged() {
+    if (!lastScreen || lastScreen === state.screen) {
+      lastScreen = state.screen;
+      return;
     }
-    var root = global.document && global.document.querySelector('[data-ee-root]');
-    if (root) root.innerHTML = renderCurrent();
-    var dialog = global.document && global.document.querySelector('.ee-modal button');
-    if (dialog && dialog.focus) {
-      try { dialog.focus(); } catch (ignore) {}
+    lastScreen = state.screen;
+    try {
+      if (typeof global.scrollTo === 'function') global.scrollTo(0, 0);
+    } catch (ignore) {}
+  }
+
+  function scheduleGrow() {
+    var run = function () { try { growAll(); } catch (ignore) {} };
+    if (typeof global.requestAnimationFrame === 'function') {
+      try { global.requestAnimationFrame(run); return; } catch (ignore) {}
+    }
+    if (typeof global.setTimeout === 'function') global.setTimeout(run, 0);
+    else run();
+  }
+
+  function rerender(keepFocus) {
+    if (!state.active) return;
+    scrollTopIfScreenChanged();
+    var saved = keepFocus ? captureFocus() : null;
+    ensureStyles();
+    var painted = false;
+    var hostRender = hostFn('renderMyAccount_');
+    if (hostRender && readAccountPanel() === 'employeeManagement') {
+      try { hostRender(); painted = true; } catch (ignore) {}
+    }
+    var root = global.document && global.document.querySelector && global.document.querySelector('[data-ee-root]');
+    if (root) {
+      root.innerHTML = renderCurrent();
+      painted = true;
+    }
+    if (!painted) syncPrimary();
+    growAll();
+    if (saved) restoreFocus(saved);
+    else {
+      var dialog = global.document && global.document.querySelector && global.document.querySelector('.ee-modal button');
+      if (dialog && dialog.focus) {
+        try { dialog.focus(); } catch (ignore) {}
+      }
     }
   }
 
+  function revealPinGuard() {
+    requestClosePin();
+    try {
+      if (typeof accountPanel_ !== 'undefined') accountPanel_ = 'employeeManagement';
+    } catch (ignore) {}
+    rerender();
+    ensureModal();
+  }
+
+  function ensureModal() {
+    var doc = global.document;
+    if (!doc || !pinMemory || !state.leaveGuard || !doc.createElement) return;
+    if (doc.querySelector && doc.querySelector('.ee-modal')) return;
+    if (!doc.body || !doc.body.appendChild) return;
+    ensureStyles();
+    var holder = doc.createElement('div');
+    holder.innerHTML = renderLeaveModal();
+    if (holder.firstChild) doc.body.appendChild(holder.firstChild);
+  }
+
   function activate(mode) {
-    var host = global.rc2AccountPanelHtml_;
+    hookNavigation();
+    var host = hostFn('rc2AccountPanelHtml_');
     if (typeof host !== 'function' || host.__ee) {
       if (host && host.__ee) {
         state.active = true;
         state.mode = normalizeMode(mode);
+        hookNavigation();
         return true;
       }
       return false;
     }
     function wrapped(panel) {
-      if (String(panel || '') === 'employeeManagement' && state.active) return renderCurrent();
+      if (String(panel || '') === 'employeeManagement' && state.active) {
+        eeTouched = true;
+        var html = renderCurrent();
+        scheduleGrow();
+        return html;
+      }
       return host.apply(this, arguments);
     }
     wrapped.__ee = true;
@@ -1949,11 +2832,22 @@
     if (typeof global.rc2OpenAccountPanel_ === 'function' && !global.rc2OpenAccountPanel_.__ee) {
       var openHost = global.rc2OpenAccountPanel_;
       function openWrapped(panel) {
+        if (pinMemory && String(panel || '') !== 'employeeManagement') {
+          pendingLeave = function () { return openHost(panel); };
+          revealPinGuard();
+          return { blocked: true };
+        }
+        if (pinMemory) requestClosePin();
         var out = openHost.apply(this, arguments);
-        if (String(panel || '') === 'employeeManagement' && state.active) refreshList({}).then(rerender);
+        if (String(panel || '') === 'employeeManagement' && state.active && !pinMemory) refreshList({}).then(rerender);
+        if (pinMemory && state.leaveGuard) {
+          rerender();
+          ensureModal();
+        }
         return out;
       }
       openWrapped.__ee = true;
+      openWrapped.__eeHost = openHost;
       global.rc2OpenAccountPanel_ = openWrapped;
     }
     state.active = true;
@@ -1962,6 +2856,7 @@
     state.permission = readPermission();
     bind();
     ensureStyles();
+    hookNavigation();
     return true;
   }
 
@@ -1979,6 +2874,7 @@
           reason: { code: '', note: '' }
         }, opts);
         mode = featureMode(res);
+        absorbCatalog(res);
         if (res && (res.mode === 'SHADOW' || res.mode === 'LIVE')) mode = res.mode;
       } catch (ignore) {
         return false;
@@ -1994,6 +2890,12 @@
     pinMemory = '';
     pinEmployeeId = '';
     pinEventId = '';
+    pinHistory = false;
+    pendingLeave = null;
+    systemFilled = {};
+    eeTouched = false;
+    pinWasHeld = false;
+    lastScreen = '';
     var active = state.active;
     var mode = state.mode;
     state = blankState();
@@ -2017,11 +2919,115 @@
     };
   }
 
+  function wrapHost(name, decorate) {
+    var current = global && typeof global[name] === 'function' ? global[name] : null;
+    if (!current || current.__eeGuard) return;
+    function wrapped() {
+      return decorate(current, this, arguments);
+    }
+    wrapped.__eeGuard = true;
+    global[name] = wrapped;
+  }
+
+  function hooksAlive() {
+    var html = hostFn('rc2AccountPanelHtml_');
+    return !!(html && html.__ee);
+  }
+
+  function hookNavigation() {
+    ['showPage', 'showHome', 'showMyAccount_', 'rc2InnerBack_', 'openHrCredentialAdmin'].forEach(function (name) {
+      wrapHost(name, function (host, self, args) {
+        if (!pinMemory) return host.apply(self, args);
+        pendingLeave = function () { return host.apply(self, args); };
+        revealPinGuard();
+        return { blocked: true };
+      });
+    });
+    wrapHost('logout', function (host, self, args) {
+      if (pinMemory) {
+        pendingLeave = function () {
+          dropSession();
+          return host.apply(self, args);
+        };
+        revealPinGuard();
+        return { blocked: true };
+      }
+      dropSession();
+      return host.apply(self, args);
+    });
+    if (global.history && typeof global.history.back === 'function' && !global.history.back.__eeGuard) {
+      var back = global.history.back;
+      function guardedBack() {
+        if (pinMemory) {
+          pendingLeave = function () { return back.apply(global.history, []); };
+          revealPinGuard();
+          return { blocked: true };
+        }
+        return back.apply(global.history, arguments);
+      }
+      guardedBack.__eeGuard = true;
+      try { global.history.back = guardedBack; } catch (ignore) {}
+    }
+    if (global.addEventListener && !global.__eePop) {
+      global.addEventListener('popstate', function () {
+        if (!pinMemory) return;
+        if (!pendingLeave) {
+          pendingLeave = function () {
+            try { if (global.history && global.history.back) global.history.back(); } catch (ignore) {}
+          };
+        }
+        revealPinGuard();
+      });
+      global.__eePop = true;
+    }
+  }
+
+  function afterLogin() {
+    hookNavigation();
+    if (!loggedIn()) return loginInstall;
+    if (state.active && hooksAlive()) return loginInstall;
+    if (loginInstall) return loginInstall;
+    loginInstall = Promise.resolve().then(function () {
+      return install({});
+    }).then(function (ok) {
+      loginInstall = null;
+      hookNavigation();
+      if (ok && readAccountPanel() === 'employeeManagement') rerender();
+      return ok;
+    }, function () {
+      loginInstall = null;
+      return false;
+    });
+    return loginInstall;
+  }
+
+  function hookSessionStart() {
+    wrapHost('enterApp', function (host, self, args) {
+      var out = host.apply(self, args);
+      afterLogin();
+      return out;
+    });
+  }
+
   function boot() {
-    if (!global.document) return;
-    var start = function () { install({}); };
-    if (global.document.readyState === 'loading') global.document.addEventListener('DOMContentLoaded', start);
-    else start();
+    if (global.addEventListener && !global.__eeResize) {
+      global.addEventListener('resize', function () { growAll(); });
+      global.__eeResize = true;
+    }
+    hookNavigation();
+    hookSessionStart();
+    var start = function () {
+      hookNavigation();
+      hookSessionStart();
+      if (loggedIn()) afterLogin();
+    };
+    if (!global.document) {
+      if (loggedIn()) afterLogin();
+      return;
+    }
+    if (global.document.readyState === 'loading' && global.document.addEventListener) {
+      global.document.addEventListener('DOMContentLoaded', start);
+    } else start();
   }
 
   global.ABIS_EMPLOYEE_EDIT = {
@@ -2043,6 +3049,7 @@
     install: install,
     renderScreen: renderModel,
     renderCurrent: renderCurrent,
+    rerender: function (keepFocus) { rerender(keepFocus); },
     renderLeaveModal: renderLeaveModal,
     buildChanges: buildChanges,
     createChanges: createChanges,
@@ -2055,6 +3062,7 @@
     spacedPin: spacedPin,
     formatTaipei: formatTaipei,
     handleAction: handleAction,
+    onInput: onInput,
     submitCreate: submitCreate,
     submitUpdate: submitUpdate,
     confirmWritten: confirmWritten,
