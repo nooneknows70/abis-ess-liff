@@ -3139,3 +3139,24 @@ body.home-view .fh-quick-copy span{
     line-height:1.2!important;
   }
 }
+
+/* HF9 round: tap size, primary actions, overflow, skeletons, correction submit */
+.hf9-skel{display:inline-block;width:28px;height:16px;border-radius:6px;background:linear-gradient(90deg,#e5e7eb,#f3f4f6,#e5e7eb);background-size:200% 100%;animation:hf9shimmer 1.1s linear infinite;vertical-align:middle}
+.hf9-skel-block{display:block;width:46%;height:22px;margin-bottom:10px}
+.hf9-skel-line{display:block;width:72%;height:14px}
+@keyframes hf9shimmer{to{background-position:-200% 0}}
+button.hf9-primary-action{background:#0b8f5a!important;color:#fff!important;border:0!important;min-height:48px!important}
+button.hf9-secondary-action{background:#fff!important;color:#1f3b5b!important;border:1px solid #c5d0dc!important;min-height:48px!important}
+.att-work-actions button,.row-actions button,.att-correction-actions button,.confirm-actions button,button.small,.abis-m2-tool-row,.rc2-management-grid button,.rc2-account-row{min-height:48px!important}
+input[type="date"],input[type="month"],input[type="time"],input[type="datetime-local"]{min-height:48px!important}
+.att-correction-form,.att-correction-actions,.confirm-dialog{max-width:100%;box-sizing:border-box}
+.att-correction-actions,.att-correction-form .confirm-actions{position:sticky;bottom:0;background:#fff;padding-top:8px;z-index:3}
+.frozen-company-banner,.frozen-topline,.frozen-user-chip,.fh-card,.card,.wrap{max-width:100%}
+.frozen-user-chip,.fh-list-state,.pill,.notification-category{white-space:nowrap}
+body.home-view .fh-task span.fh-task-label{white-space:nowrap!important}
+.abis-m8-report-card{position:relative;display:grid!important;grid-template-columns:minmax(0,1fr)!important;padding-right:16px!important}
+.abis-m8-report-card i{position:static!important;transform:none!important;display:inline-block;margin-top:8px;color:#0b6de8}
+#opStatus,#msg{z-index:80}
+body.inner-view #opStatus{top:64px}
+.hf9-leave-more{margin-top:8px;font-size:13px;line-height:1.5}
+.hf9-month-label{font-size:13px;color:#53657d;margin-top:4px}

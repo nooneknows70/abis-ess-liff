@@ -134,6 +134,24 @@
         '<div class="fh-card"><div class="fh-card-head"><span class="fh-card-title">' + t.recent + '</span></div><div class="fh-list">' + recent + '</div></div>' +
         '<div class="fh-card"><div class="fh-card-head"><span class="fh-card-title">' + t.notices + '</span></div><div class="fh-notice-row"><span class="fh-notice-dot"></span><span class="fh-notice-text">' + t.notesRows[0][0] + '</span><span class="fh-notice-time">09:12</span></div></div>' +
         '</section>';
+    } else if (view === 'logout') {
+      document.body.className = '';
+      root.innerHTML = banner + langs + '<section id="login" class="card"><h2>' + t.login + '</h2><label>' + t.employeeId + '</label><input id="loginId" value=""><label>' + t.pin + '</label><input id="loginPin" type="password" value=""><button id="loginBtn" type="button">' + t.login + '</button></section>';
+    } else if (view === 'correction') {
+      document.body.className = 'inner-view';
+      root.innerHTML = '<div class="rc2-inner-topbar"><button type="button" class="rc2-inner-back">‹</button><div class="rc2-inner-title">出勤補正</div><span class="rc2-inner-spacer"></span></div><main id="app"><section class="card"><div class="att-correction-form"><h2>出勤補正</h2><label>類型</label><select><option>缺下班卡</option></select><label>原因</label><textarea>忘記打下班卡</textarea><div class="att-correction-actions confirm-actions"><button type="button" class="secondary hf9-secondary-action">取消</button><button type="button" class="hf9-primary-action">送出補正申請</button></div></div></section></main>';
+    } else if (view === 'approval') {
+      document.body.className = 'inner-view';
+      root.innerHTML = '<div class="rc2-inner-topbar"><button type="button" class="rc2-inner-back">‹</button><div class="rc2-inner-title">待我處理</div><span class="rc2-inner-spacer"></span></div><main id="app"><section class="card"><div class="att-work-card"><h3>主管出勤補正</h3><p>潘淑華 · 2026-11-01</p><div class="att-work-actions"><button type="button" class="hf9-primary-action">採認</button><button type="button" class="hf9-secondary-action">不採認</button></div></div><div class="att-work-card"><h3>請假簽核</h3><div class="att-work-actions"><button type="button" class="hf9-primary-action">核准申請</button><button type="button" class="hf9-secondary-action">退回修改</button></div></div></section></main>';
+    } else if (view === 'leaves') {
+      document.body.className = 'inner-view';
+      root.innerHTML = '<div class="rc2-inner-topbar"><button type="button" class="rc2-inner-back">‹</button><div class="rc2-inner-title">' + t.titles[1] + '</div><span class="rc2-inner-spacer"></span></div><main id="app"><section id="leaves" class="card"><div id="leaveList"><div id="leave-detail-LV2026" class="leave" data-leave-id="LV-2026-1101"><b>事假</b> <span class="pill">審核中</span><br><span class="muted">2026-11-01 · 8 小時</span></div></div></section></main>';
+    } else if (view === 'hrtools') {
+      document.body.className = 'inner-view';
+      root.innerHTML = '<div class="rc2-inner-topbar"><button type="button" class="rc2-inner-back">‹</button><div class="rc2-inner-title">管理工具</div><span class="rc2-inner-spacer"></span></div><main id="app"><section class="card"><div class="rc2-management-grid"><button type="button" class="abis-m2-tool-row">員工管理<span>›</span></button><button type="button" class="abis-m2-tool-row">帳號管理<span>›</span></button><button type="button" class="abis-m2-tool-row">出勤管理<span>›</span></button><button type="button" class="abis-m2-tool-row">請假管理<span>›</span></button><button type="button" class="abis-m2-tool-row">歷史請假補登核定<span>›</span></button><button type="button" class="abis-m2-tool-row">管理報表<span>›</span></button></div></section></main>';
+    } else if (view === 'reports') {
+      document.body.className = 'inner-view';
+      root.innerHTML = '<div class="rc2-inner-topbar"><button type="button" class="rc2-inner-back">‹</button><div class="rc2-inner-title">管理報表</div><span class="rc2-inner-spacer"></span></div><main id="app"><section class="card"><button type="button" class="abis-m8-report-card"><b>出勤報表</b><span>異常 3 · 缺卡 1</span><i>開啟查看</i></button><div id="opStatus" class="op-status warning"><div class="op-head"><span>已更新</span></div></div></section></main>';
     } else {
       document.body.className = 'inner-view';
       var tabs = t.tabs.map(function (name, i) {

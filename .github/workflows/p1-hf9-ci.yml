@@ -6,6 +6,7 @@ on:
       - '.github/workflows/p1-hf9-ci.yml'
       - 'assets/ess-20261118-p1-hf9/**'
       - 'tests/p1-hf9.test.cjs'
+      - 'tests/p1-hf9-round.test.cjs'
   push:
     branches:
       - 'cursor/p1-hf9-ui-fixes-3d74'
@@ -13,6 +14,7 @@ on:
       - '.github/workflows/p1-hf9-ci.yml'
       - 'assets/ess-20261118-p1-hf9/**'
       - 'tests/p1-hf9.test.cjs'
+      - 'tests/p1-hf9-round.test.cjs'
 
 permissions:
   contents: read
@@ -34,4 +36,4 @@ jobs:
           node --check assets/ess-20261118-p1-hf9/ess-dialog-hf4.js
           node --check assets/ess-20261118-p1-hf9/leave-submit-hf3r1.js
       - name: Run hf9 contract tests
-        run: node --test tests/p1-hf9.test.cjs
+        run: node --test tests/p1-hf9.test.cjs tests/p1-hf9-round.test.cjs
