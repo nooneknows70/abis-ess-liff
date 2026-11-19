@@ -1,0 +1,33 @@
+name: ABIS ESS employee edit (synthetic only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/employee-edit-ci.yml'
+      - 'assets/ess-20261119-employee-edit/**'
+      - 'tests/employee-edit.test.cjs'
+  push:
+    branches:
+      - 'cursor/employee-edit-v1-d52b'
+    paths:
+      - '.github/workflows/employee-edit-ci.yml'
+      - 'assets/ess-20261119-employee-edit/**'
+      - 'tests/employee-edit.test.cjs'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic:
+    name: Employee edit page contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout candidate without persisting credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Parse the employee edit page
+        run: node --check assets/ess-20261119-employee-edit/employee-edit.js
+      - name: Run synthetic employee edit tests
+        run: node --test tests/employee-edit.test.cjs
