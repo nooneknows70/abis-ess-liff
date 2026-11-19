@@ -1058,7 +1058,7 @@ function p5a202DateTimeLocal_(d,value,isOut){const v=String(value||'').trim();le
 function p5a202CorrectionTypeOptions_(){return [['',c2t('selectType')],['MISSING_IN',c2t('missingIn')],['MISSING_OUT',c2t('missingOut')],['MISSING_BOTH',c2t('missingBoth')],['WRONG_IN',c2t('wrongIn')],['WRONG_OUT',c2t('wrongOut')],['SHIFT_SCHEDULE',c2t('shift')],['OTHER',c2t('other')]].map(x=>`<option value="${x[0]}">${escapeHtml(x[1])}</option>`).join('')}
 function closeAttendanceCorrection_(){const el=$('attendanceCorrectionOverlay');if(el)el.remove()}
 function p5a202CorrectionToggle_(){const type=$('attCorrType')?$('attCorrType').value:'';const inBox=$('attCorrInBox'),outBox=$('attCorrOutBox');const needIn=['MISSING_IN','MISSING_BOTH','WRONG_IN'].includes(type),needOut=['MISSING_OUT','MISSING_BOTH','WRONG_OUT'].includes(type);if(inBox)inBox.classList.toggle('hide',!needIn);if(outBox)outBox.classList.toggle('hide',!needOut)}
-function openAttendanceCorrection_(encodedKey){const key=decodeURIComponent(String(encodedKey||''));const d=p5a202FindDay_(key);if(!d||!d.correctionEnabled){message(c2t('notAvailable'),'warning');return}if(d.activeCorrection){message(c2t('existing'),'warning');return}closeAttendanceCorrection_();const overlay=document.createElement('div');overlay.id='attendanceCorrectionOverlay';overlay.className='confirm-backdrop';const inDefault=p5a202DateTimeLocal_(d,d.firstIn||d.expectedStart,false),outDefault=p5a202DateTimeLocal_(d,d.lastOut||d.expectedEnd,true);overlay.innerHTML=`<div class="confirm-dialog att-correction-form"><h2>${escapeHtml(c2t('title'))}</h2><div class="current-box"><b>${escapeHtml(d.date||'')}</b><br>${escapeHtml(a2t('shift'))}：${escapeHtml(d.shiftName||d.shiftCode||'-')}<br>${escapeHtml(a2t('expected'))}：${escapeHtml(p5a2TimeOnly_(d.expectedStart))}–${escapeHtml(p5a2TimeOnly_(d.expectedEnd))}<br>${escapeHtml(a2t('firstIn'))}：${escapeHtml(p5a2TimeOnly_(d.firstIn))}　${escapeHtml(a2t('lastOut'))}：${escapeHtml(p5a2TimeOnly_(d.lastOut))}</div><div class="notice tiny">${escapeHtml(c2t('systemWillNotChange'))}</div><label>${escapeHtml(c2t('type'))}</label><select id="attCorrType" onchange="p5a202CorrectionToggle_()">${p5a202CorrectionTypeOptions_()}</select><div id="attCorrInBox" class="hide"><label>${escapeHtml(c2t('correctIn'))}</label><input id="attCorrFirstIn" type="datetime-local" value="${escapeHtml(inDefault)}"></div><div id="attCorrOutBox" class="hide"><label>${escapeHtml(c2t('correctOut'))}</label><input id="attCorrLastOut" type="datetime-local" value="${escapeHtml(outDefault)}"></div><label>${escapeHtml(c2t('reason'))}</label><textarea id="attCorrReason" maxlength="500"></textarea><div class="confirm-actions"><button type="button" class="secondary" onclick="closeAttendanceCorrection_()">${escapeHtml(c2t('cancel'))}</button><button id="attCorrSubmit" type="button">${escapeHtml(c2t('submit'))}</button></div></div>`;document.body.appendChild(overlay);$('attCorrSubmit').onclick=function(){submitAttendanceCorrectionUi_(d,this)};setTimeout(()=>{$('attCorrType')&&$('attCorrType').focus()},0)}
+function openAttendanceCorrection_(encodedKey){const key=decodeURIComponent(String(encodedKey||''));const d=p5a202FindDay_(key);if(!d||!d.correctionEnabled){message(c2t('notAvailable'),'warning');return}if(d.activeCorrection){message(c2t('existing'),'warning');return}closeAttendanceCorrection_();const overlay=document.createElement('div');overlay.id='attendanceCorrectionOverlay';overlay.className='confirm-backdrop';const inDefault=p5a202DateTimeLocal_(d,d.firstIn||d.expectedStart,false),outDefault=p5a202DateTimeLocal_(d,d.lastOut||d.expectedEnd,true);overlay.innerHTML=`<div class="confirm-dialog att-correction-form"><h2>${escapeHtml(c2t('title'))}</h2><div class="current-box"><b>${escapeHtml(d.date||'')}</b><br>${escapeHtml(a2t('shift'))}：${escapeHtml(d.shiftName||d.shiftCode||'-')}<br>${escapeHtml(a2t('expected'))}：${escapeHtml(p5a2TimeOnly_(d.expectedStart))}–${escapeHtml(p5a2TimeOnly_(d.expectedEnd))}<br>${escapeHtml(a2t('firstIn'))}：${escapeHtml(p5a2TimeOnly_(d.firstIn))}　${escapeHtml(a2t('lastOut'))}：${escapeHtml(p5a2TimeOnly_(d.lastOut))}</div><div class="notice tiny">${escapeHtml(c2t('systemWillNotChange'))}</div><label>${escapeHtml(c2t('type'))}</label><select id="attCorrType" onchange="p5a202CorrectionToggle_()">${p5a202CorrectionTypeOptions_()}</select><div id="attCorrInBox" class="hide"><label>${escapeHtml(c2t('correctIn'))}</label><input id="attCorrFirstIn" type="datetime-local" value="${escapeHtml(inDefault)}"></div><div id="attCorrOutBox" class="hide"><label>${escapeHtml(c2t('correctOut'))}</label><input id="attCorrLastOut" type="datetime-local" value="${escapeHtml(outDefault)}"></div><label>${escapeHtml(c2t('reason'))}</label><textarea id="attCorrReason" maxlength="500"></textarea><div class="confirm-actions"><button type="button" class="secondary" onclick="closeAttendanceCorrection_()">${escapeHtml(c2t('cancel'))}</button><button id="attCorrSubmit" type="button" class="hf9-primary-action">${escapeHtml(c2t('submit'))}</button></div></div>`;document.body.appendChild(overlay);$('attCorrSubmit').onclick=function(){submitAttendanceCorrectionUi_(d,this)};setTimeout(()=>{$('attCorrType')&&$('attCorrType').focus()},0)}
 async function submitAttendanceCorrectionUi_(d,triggerBtn){if(mutationBusy){message(nt('busy'),'warning');return}const type=$('attCorrType').value,reason=$('attCorrReason').value.trim(),requestedFirstIn=$('attCorrFirstIn').value||'',requestedLastOut=$('attCorrLastOut').value||'';if(!type){message(c2t('selectType'),'warning');return}if(!reason){message(c2t('reasonRequired'),'warning');return}const needIn=['MISSING_IN','MISSING_BOTH','WRONG_IN'].includes(type),needOut=['MISSING_OUT','MISSING_BOTH','WRONG_OUT'].includes(type);if((needIn&&!requestedFirstIn)||(needOut&&!requestedLastOut)){message(c2t('timeRequired'),'warning');return}const requestId=`ATT-CORR-${Date.now()}-${Math.random().toString(36).slice(2,8).toUpperCase()}`;mutationBusy=true;const op=beginOperation_(c2t('submitting'),nt('doNotRepeat'),triggerBtn);let success=false;try{await call('submitAttendanceCorrection',{sessionToken,attendanceKey:d.attendanceKey,requestType:type,requestedFirstIn:needIn?requestedFirstIn:'',requestedLastOut:needOut?requestedLastOut:'',reason,requestId});success=true}catch(e){if(e&&e.kind==='TRANSPORT'){try{const st=await call('attendanceCorrectionStatus',{sessionToken,requestId});if(st&&st.found)success=true}catch(ignore){}if(!success){mutationBusy=false;finishOperationUnknown_(op,nt('resultUnknown'),nt('unknownDetail'),false);return}}else{mutationBusy=false;finishOperationFailure_(op,e);message(hf9PublicError_(e,'HF9_038'));return}}if(success){closeAttendanceCorrection_();try{const data=await call('myAttendance',{sessionToken,month:p5a2AttendanceMonthValue_()});attendanceCache=data;attendanceViewMode='detail';renderMyAttendance_(data);finishOperationSuccess_(op,c2t('submitted'),'');message(c2t('submitted'),'success')}catch(refreshErr){finishOperationSuccess_(op,c2t('submitted'),nt('refreshAfterSuccessFail'));message(nt('refreshAfterSuccessFail'),'warning')}}mutationBusy=false}
 function renderMyAttendance_(data){attendanceCache=data||null;const box=$('attendanceContent');if(!box||!data)return;const calendarActive=attendanceViewMode==='calendar';box.innerHTML=p5a2AttendanceWarningsHtml_(data)+p5a2AttendanceSummaryHtml_(data)+`<div class="att-tabs"><button type="button" class="${calendarActive?'active':''}" onclick="setAttendanceView_('calendar')">${escapeHtml(a2t('calendar'))}</button><button type="button" class="${!calendarActive?'active':''}" onclick="setAttendanceView_('detail')">${escapeHtml(a2t('detail'))}</button></div><div id="attendanceViewBody">${calendarActive?p5a2AttendanceCalendarHtml_(data):p5a2AttendanceDetailHtml_(data)}</div><div class="tiny" style="margin-top:12px">${escapeHtml(a2t('source'))}：${escapeHtml(data.source||'')}</div>`;if(!calendarActive&&attendanceFocusDate_)rc2ApplyAttendanceFocus_()}
 function setAttendanceView_(mode){attendanceViewMode=mode==='detail'?'detail':'calendar';if(attendanceCache)renderMyAttendance_(attendanceCache)}
@@ -9841,6 +9841,8 @@ try {
     ZH: {
       opening: '正在開啟，請稍候…',
       bootFail: '登入還沒完成，請稍後再試（HF9_LOGIN_BOOT）',
+      retry: '再試一次',
+      unread: '有 {n} 則未讀通知',
       other: '其他說明',
       open: '處理中',
       missingOut: '缺下班卡',
@@ -9861,6 +9863,8 @@ try {
     EN: {
       opening: 'Opening…',
       bootFail: 'Sign-in is not finished yet. Please try again (HF9_LOGIN_BOOT)',
+      retry: 'Try again',
+      unread: '{n} unread notices',
       other: 'Other note',
       open: 'In progress',
       missingOut: 'Missing clock-out',
@@ -9881,6 +9885,8 @@ try {
     VI: {
       opening: 'Đang mở…',
       bootFail: 'Đăng nhập chưa xong. Vui lòng thử lại (HF9_LOGIN_BOOT)',
+      retry: 'Thử lại',
+      unread: 'Có {n} thông báo chưa đọc',
       other: 'Ghi chú khác',
       open: 'Đang xử lý',
       missingOut: 'Thiếu giờ ra',
@@ -9901,6 +9907,8 @@ try {
     TH: {
       opening: 'กำลังเปิด…',
       bootFail: 'ยังเข้าสู่ระบบไม่เสร็จ โปรดลองอีกครั้ง (HF9_LOGIN_BOOT)',
+      retry: 'ลองอีกครั้ง',
+      unread: 'มีการแจ้งเตือนที่ยังไม่อ่าน {n} รายการ',
       other: 'หมายเหตุอื่น',
       open: 'กำลังดำเนินการ',
       missingOut: 'ขาดเวลาออก',
@@ -9925,9 +9933,24 @@ try {
     return pack[key] || PACK.ZH[key] || key;
   }
 
+  function isRetryPayload(data) {
+    if (!data || typeof data !== 'object') return false;
+    if (data.code === 'HOME_BOOTSTRAP_OK' || data.status === 'READY') return false;
+    if (data.home && data.home.employee && data.code !== 'HOME_BOOTSTRAP_RETRY' && data.status !== 'PENDING') return false;
+    if (data.employee && data.employee.id && data.code !== 'HOME_BOOTSTRAP_RETRY' && data.status !== 'PENDING') return false;
+    if (data.code === 'HOME_BOOTSTRAP_RETRY') return true;
+    if (data.status === 'PENDING' && data.retryable === true && !data.home) return true;
+    return false;
+  }
+
   function isBootNoise(value) {
+    if (value && typeof value === 'object') {
+      if (value.code === 'HOME_BOOTSTRAP_RETRY') return true;
+      if (value.status === 'PENDING' && value.retryable === true) return true;
+      if (isRetryPayload(value)) return true;
+    }
     var text = String(value && value.message ? value.message : value || '');
-    return /homeBootstrap|缺少\s*home|FAST4 home refresh|returned no employee/i.test(text);
+    return /homeBootstrap|缺少\s*home|HOME_BOOTSTRAP_RETRY|FAST4 home refresh|returned no employee/i.test(text);
   }
 
   function friendlyBoot() {
@@ -9990,13 +10013,64 @@ try {
     return { start: start, end: end };
   }
 
-  function expandRange(text, month) {
-    var bounds = monthBounds(month);
-    if (!bounds) return String(text || '');
-    return String(text || '').replace(/(\d{4}-\d{2}-\d{2})\s*[~～]\s*(\d{4}-\d{2}-\d{2})/g, function (all, start, end) {
+  function expandRange(text, month, field) {
+    var source = String(text || '');
+    var summary = field === 'monthSummary' || !!(field && field.monthSummary === true);
+    if (!summary) return source;
+    var period = field && field.period;
+    var bounds = period && period.start && period.end
+      ? { start: String(period.start).slice(0, 10), end: String(period.end).slice(0, 10) }
+      : monthBounds(typeof month === 'string' ? month : (field && field.month));
+    if (!bounds) return source;
+    return source.replace(/(\d{4}-\d{2}-\d{2})\s*[~～]\s*(\d{4}-\d{2}-\d{2})/g, function (all, start, end) {
       if (start === end) return bounds.start + ' ~ ' + bounds.end;
       return all;
     });
+  }
+
+  function shiftLabel(day, language) {
+    var code = String(language || lang()).toUpperCase();
+    if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
+    var labels = day && day.shiftLabels;
+    if (labels && typeof labels === 'object' && labels[code]) return String(labels[code]);
+    var previous = typeof currentLang === 'string' ? currentLang : 'ZH';
+    if (typeof currentLang !== 'undefined') currentLang = code;
+    var raw = humanize(day && (day.shiftName || day.shiftCode) || '');
+    if (typeof currentLang !== 'undefined') currentLang = previous;
+    return raw;
+  }
+
+  function recentLabel(day, language) {
+    var code = String(language || lang()).toUpperCase();
+    if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
+    var labels = day && day.recentLabels;
+    if (labels && typeof labels === 'object' && labels[code]) return String(labels[code]);
+    return '';
+  }
+
+  function mapAttendanceDays(data) {
+    if (!data || !Array.isArray(data.days)) return data;
+    var changed = false;
+    var days = data.days.map(function (day) {
+      if (!day) return day;
+      var shift = shiftLabel(day);
+      var recent = recentLabel(day);
+      if (!shift && !recent) return day;
+      if (shift === (day.shiftName || '') && (!recent || recent === day.anomalyDescription)) return day;
+      changed = true;
+      var copy = {};
+      var key;
+      for (key in day) if (Object.prototype.hasOwnProperty.call(day, key)) copy[key] = day[key];
+      if (shift) copy.shiftName = shift;
+      if (recent) copy.anomalyDescription = recent;
+      return copy;
+    });
+    if (!changed) return data;
+    var out = {};
+    var name;
+    for (name in data) if (Object.prototype.hasOwnProperty.call(data, name)) out[name] = data[name];
+    out.days = days;
+    return out;
   }
 
   var SESSION_KEYS = [
@@ -10021,9 +10095,12 @@ try {
   var api = {
     humanize: humanize,
     isBootNoise: isBootNoise,
+    isRetryPayload: isRetryPayload,
     friendlyBoot: friendlyBoot,
     monthBounds: monthBounds,
     expandRange: expandRange,
+    shiftLabel: shiftLabel,
+    recentLabel: recentLabel,
     sessionKeys: SESSION_KEYS.slice(),
     clearStores: clearStores,
     localeTag: localeTag,
@@ -10036,6 +10113,7 @@ try {
   function install() {
     if (typeof document === 'undefined' || api.installed) return;
     api.installed = true;
+    api.sessionToken = function () { return sessionToken; };
 
     if (typeof message === 'function' && !message.__hf9Round) {
       var baseMessage = message;
@@ -10061,18 +10139,81 @@ try {
       renderOperationStatus_.__hf9Round = true;
     }
 
-    if (typeof call === 'function' && !call.__hf9Round) {
+    if (typeof call === 'function' && !global.__hf9CallWrapped) {
       var baseCall = call;
+      function retryDelays() {
+        var list = global.HF9_BOOT_RETRY_DELAYS;
+        if (!Array.isArray(list) && typeof HF9_BOOT_RETRY_DELAYS !== 'undefined') list = HF9_BOOT_RETRY_DELAYS;
+        return Array.isArray(list) && list.length ? list : [1000, 2000, 4000, 8000];
+      }
+      function wait(ms) {
+        if (!ms) return Promise.resolve();
+        return new Promise(function (resolve) { setTimeout(resolve, ms); });
+      }
+      function noteBootstrap(data) {
+        if (!data || typeof data !== 'object') return;
+        var summary = data.notificationSummary || (data.home && data.home.notificationSummary) || null;
+        if (!summary) return;
+        global.__hf9NotificationSummary = {
+          unread: Number(summary.unread || 0),
+          generalUnread: Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0)
+        };
+        try {
+          if (typeof notificationCache === 'undefined' || !notificationCache) notificationCache = { items: [], summary: global.__hf9NotificationSummary };
+          else notificationCache.summary = Object.assign({}, notificationCache.summary || {}, global.__hf9NotificationSummary);
+        } catch (ignore) {}
+      }
       call = function (action, payload) {
-        function run() { return baseCall(action, payload); }
-        if (action !== 'login' && action !== 'home') return run();
-        return run().catch(function (err) {
-          if (!isBootNoise(err)) throw err;
-          try { console.error(err); } catch (ignore) {}
-          return new Promise(function (resolve) { setTimeout(resolve, 450); }).then(run);
-        });
+        function once() { return Promise.resolve().then(function () { return baseCall(action, payload); }); }
+        var watched = action === 'login' || action === 'home' || action === 'homeBootstrap';
+        if (!watched) return once();
+        if ((action === 'home' || action === 'homeBootstrap') && typeof sessionToken !== 'undefined' && sessionToken) {
+          global.__hf9SavedSession = sessionToken;
+          try { paintShell(); } catch (ignore) {}
+        }
+        function attempt(index) {
+          return once().then(function (data) {
+            noteBootstrap(data);
+            if ((action === 'homeBootstrap' || action === 'home') && isRetryPayload(data)) {
+              var plan = retryDelays();
+              if (index >= plan.length) {
+                if (global.__hf9SavedSession) {
+                  global.__hf9RetryExhausted = true;
+                  global.__hf9HoldSession = true;
+                }
+                var err = new Error(friendlyBoot());
+                err.code = 'HOME_BOOTSTRAP_RETRY';
+                err.status = 'PENDING';
+                err.retryable = true;
+                throw err;
+              }
+              try { paintShell(); } catch (ignore) {}
+              return wait(plan[index]).then(function () { return attempt(index + 1); });
+            }
+            if (data && (data.home || data.employee || data.code === 'HOME_BOOTSTRAP_OK')) {
+              global.__hf9RetryExhausted = false;
+              global.__hf9HoldSession = false;
+            }
+            return data;
+          }, function (err) {
+            if (!isBootNoise(err)) throw err;
+            try { console.error(err); } catch (ignore) {}
+            var plan = retryDelays();
+            if (index >= plan.length) {
+              if (global.__hf9SavedSession && err && (err.code === 'HOME_BOOTSTRAP_RETRY' || err.retryable === true || isBootNoise(err))) {
+                global.__hf9RetryExhausted = true;
+                global.__hf9HoldSession = true;
+              }
+              throw err;
+            }
+            try { paintShell(); } catch (ignore) {}
+            return wait(plan[index]).then(function () { return attempt(index + 1); });
+          });
+        }
+        return attempt(0);
       };
       call.__hf9Round = true;
+      global.__hf9CallWrapped = true;
     }
 
     if (typeof login === 'function' && !login.__hf9Round) {
@@ -10097,6 +10238,8 @@ try {
 
     if (typeof logout === 'function' && !logout.__hf9Round) {
       logout = async function () {
+        global.__hf9HoldSession = false;
+        global.__hf9RetryExhausted = false;
         var token = typeof sessionToken !== 'undefined' ? sessionToken : '';
         clearStores(global.localStorage, global.sessionStorage);
         if (typeof sessionToken !== 'undefined') sessionToken = '';
@@ -10135,13 +10278,55 @@ try {
       logout.__hf9Round = true;
     }
 
-    if (typeof boot === 'function' && !boot.__hf9Round) {
-      var baseBoot = boot;
-      boot = async function () {
-        if (typeof sessionToken !== 'undefined' && sessionToken && (typeof homeData === 'undefined' || !homeData)) paintShell();
-        return baseBoot();
-      };
-      boot.__hf9Round = true;
+    if (!global.__hf9BootTrap) {
+      global.__hf9BootTrap = true;
+      var bootSlot = typeof boot === 'function' ? boot : null;
+      function guardBoot(fn) {
+        if (!fn) return fn;
+        if (fn.__hf9BootGuard) return fn;
+        var wrapped = async function () {
+          var saved = global.__hf9SavedSession || '';
+          try {
+            if (!saved && typeof sessionToken !== 'undefined' && sessionToken) saved = sessionToken;
+            if (!saved && global.localStorage) saved = global.localStorage.getItem('abis_session') || '';
+          } catch (ignore) {}
+          if (saved) global.__hf9SavedSession = saved;
+          global.__hf9HoldSession = false;
+          global.__hf9RetryExhausted = false;
+          if (saved && (typeof homeData === 'undefined' || !homeData || !homeData.employee)) {
+            try { paintShell(); } catch (ignore) {}
+          }
+          var result;
+          try {
+            result = await fn.apply(this, arguments);
+          } finally {
+            if (global.__hf9RetryExhausted || global.__hf9HoldSession) {
+              if (saved) {
+                try { sessionToken = saved; } catch (ignore) {}
+                try { if (global.localStorage) global.localStorage.setItem('abis_session', saved); } catch (ignore) {}
+              }
+              try { showBootRetry(); } catch (ignore) {}
+            }
+          }
+          return result;
+        };
+        wrapped.__hf9BootGuard = true;
+        wrapped.__hf9Round = true;
+        return wrapped;
+      }
+      try {
+        Object.defineProperty(global, 'boot', {
+          configurable: true,
+          enumerable: true,
+          get: function () { return guardBoot(bootSlot); },
+          set: function (fn) {
+            if (fn && fn.__hf9BootGuard) return;
+            bootSlot = fn;
+          }
+        });
+      } catch (ignore) {
+        try { boot = guardBoot(bootSlot); } catch (ignore2) {}
+      }
     }
 
     if (typeof prefetchSecondaryData === 'function' && !prefetchSecondaryData.__hf9Round) {
@@ -10171,12 +10356,43 @@ try {
     }
     if (typeof p5a1Rc2GeneralUnreadCount_ === 'function' && !p5a1Rc2GeneralUnreadCount_.__hf9Round) {
       p5a1Rc2GeneralUnreadCount_ = function () {
-        if (typeof notificationCache !== 'undefined' && notificationCache && Array.isArray(notificationCache.items) && typeof p5a1Rc2GeneralNotifications_ === 'function') {
-          return p5a1Rc2GeneralNotifications_().filter(function (item) { return item && item.unread && !item.isActionable; }).length;
+        var fromItems = 0;
+        var hadItems = false;
+        if (typeof notificationCache !== 'undefined' && notificationCache && Array.isArray(notificationCache.items) && notificationCache.items.length && typeof p5a1Rc2GeneralNotifications_ === 'function') {
+          hadItems = true;
+          fromItems = p5a1Rc2GeneralNotifications_().filter(function (item) { return item && item.unread && !item.isActionable; }).length;
         }
-        return Number(notificationCache && notificationCache.summary && notificationCache.summary.generalUnread || 0);
+        var summary = global.__hf9NotificationSummary || (typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary) || null;
+        var fromSummary = summary ? Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0) : 0;
+        if (hadItems) return Math.max(fromItems, fromSummary);
+        return fromSummary || Number(notificationCache && notificationCache.summary && notificationCache.summary.generalUnread || 0);
       };
       p5a1Rc2GeneralUnreadCount_.__hf9Round = true;
+    }
+    if (typeof fhNoticesHtml_ === 'function' && !fhNoticesHtml_.__hf9Round) {
+      var baseNoticeHtml = fhNoticesHtml_;
+      fhNoticesHtml_ = function (limit) {
+        var html = baseNoticeHtml(limit);
+        var summary = global.__hf9NotificationSummary;
+        var pending = summary ? Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0) : 0;
+        var bell = 0;
+        try { if (typeof p5a1Rc2GeneralUnreadCount_ === 'function') bell = Number(p5a1Rc2GeneralUnreadCount_() || 0); } catch (ignore) {}
+        var unread = Math.max(pending, bell);
+        if (unread <= 0) return html;
+        var empty = typeof fht_ === 'function' ? fht_('noNotice') : '目前沒有新通知';
+        if (String(html).indexOf(empty) < 0 && String(html).indexOf('fh-empty') < 0) return html;
+        var items = typeof fhNoticeItems_ === 'function' ? fhNoticeItems_() : [];
+        if (items && items.length) {
+          var slice = typeof limit === 'number' ? items.slice(0, limit) : items;
+          return slice.map(function (n) {
+            var text = typeof escapeHtml === 'function' ? escapeHtml(n.text || '') : String(n.text || '');
+            return '<div class="fh-notice-row"><span class="fh-notice-dot"></span><span class="fh-notice-text">' + text + '</span></div>';
+          }).join('');
+        }
+        return '<div class="fh-notice-row"><span class="fh-notice-dot"></span><span class="fh-notice-text">' +
+          t('unread').replace('{n}', String(unread)) + '</span></div>';
+      };
+      fhNoticesHtml_.__hf9Round = true;
     }
 
     if (typeof renderHome === 'function' && !renderHome.__hf9Round) {
@@ -10203,19 +10419,56 @@ try {
     if (typeof renderMyAttendance_ === 'function' && !renderMyAttendance_.__hf9Round) {
       var baseAttendance = renderMyAttendance_;
       renderMyAttendance_ = function (data) {
-        baseAttendance(data);
+        var view = mapAttendanceDays(data);
+        baseAttendance(view);
         var box = $('attendanceContent');
         if (!box || !data) return;
-        var month = data.month || (typeof currentMonthKey === 'function' ? currentMonthKey() : '');
-        box.querySelectorAll('.tiny, .att-warning, .att-detail').forEach(function (node) {
-          if (node.childElementCount) return;
-          var next = expandRange(humanize(node.textContent), month);
-          if (next !== node.textContent) node.textContent = next;
-        });
-        box.innerHTML = expandRange(box.innerHTML, month);
+        var period = data.attendanceMonth && data.attendanceMonth.period;
+        if (period && period.start && period.end && !box.querySelector('.hf9-month-summary')) {
+          var summary = box.querySelector('h3, .att-summary');
+          var label = document.createElement('div');
+          label.className = 'tiny hf9-month-summary';
+          label.setAttribute('data-hf9-field', 'monthSummary');
+          label.textContent = expandRange(
+            String(period.start).slice(0, 10) + ' ~ ' + String(period.end).slice(0, 10),
+            data.month,
+            { monthSummary: true, period: period }
+          );
+          if (summary && summary.parentNode) summary.parentNode.insertBefore(label, summary);
+          else box.insertBefore(label, box.firstChild);
+        }
         polish(box);
       };
       renderMyAttendance_.__hf9Round = true;
+    }
+    if (typeof fhTodayAttendance_ === 'function' && !fhTodayAttendance_.__hf9Shift) {
+      var baseToday = fhTodayAttendance_;
+      fhTodayAttendance_ = function () {
+        var day = baseToday();
+        if (!day) return day;
+        var shift = shiftLabel(day);
+        var recent = recentLabel(day);
+        if (!shift && !recent) return day;
+        var copy = {};
+        var key;
+        for (key in day) if (Object.prototype.hasOwnProperty.call(day, key)) copy[key] = day[key];
+        if (shift) copy.shiftName = shift;
+        if (recent && !copy.anomalyDescription) copy.anomalyDescription = recent;
+        return copy;
+      };
+      fhTodayAttendance_.__hf9Shift = true;
+    }
+    if (typeof fhRecentItems_ === 'function' && !fhRecentItems_.__hf9Shift) {
+      var baseRecent = fhRecentItems_;
+      fhRecentItems_ = function (limit) {
+        var saved = typeof attendanceCache === 'undefined' ? null : attendanceCache;
+        if (saved && Array.isArray(saved.days)) {
+          try { attendanceCache = mapAttendanceDays(saved); } catch (ignore) {}
+        }
+        try { return baseRecent(limit); }
+        finally { if (saved) attendanceCache = saved; }
+      };
+      fhRecentItems_.__hf9Shift = true;
     }
 
     if (typeof p5a2rc1AttendanceInboxHtml_ === 'function' && !p5a2rc1AttendanceInboxHtml_.__hf9Shadow) {
@@ -10286,32 +10539,89 @@ try {
       if (loginEl) loginEl.classList.add('hide');
       if (app) app.classList.remove('hide');
       document.body.classList.add('home-view');
-      if (home && !home.innerHTML) {
+      document.body.classList.remove('inner-view');
+      if (home && !home.querySelector('.hf9-skel') && !home.querySelector('.fh-card')) {
         home.innerHTML = '<div class="home-dashboard-title"><strong>' + t('opening') + '</strong></div>' +
           '<div class="fh-card"><div class="hf9-skel hf9-skel-block"></div><div class="hf9-skel hf9-skel-line"></div></div>' +
           '<div class="fh-card"><div class="fh-task-grid"><b class="hf9-skel"></b><b class="hf9-skel"></b><b class="hf9-skel"></b><b class="hf9-skel"></b></div></div>';
       }
     }
 
+    function showBootRetry() {
+      paintShell();
+      var home = $('home');
+      if (!home || home.querySelector('#hf9BootRetry')) return;
+      var note = document.createElement('p');
+      note.className = 'notice warning';
+      note.id = 'hf9BootRetryNote';
+      note.textContent = friendlyBoot();
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.id = 'hf9BootRetry';
+      btn.className = 'hf9-primary-action';
+      btn.textContent = t('retry');
+      btn.addEventListener('click', function () {
+        global.__hf9HoldSession = false;
+        global.__hf9RetryExhausted = false;
+        if (note.parentNode) note.parentNode.removeChild(note);
+        if (btn.parentNode) btn.parentNode.removeChild(btn);
+        if (typeof boot === 'function') boot();
+      });
+      home.appendChild(note);
+      home.appendChild(btn);
+    }
+
+    if (global.localStorage && !global.localStorage.__hf9Hold) {
+      var rawRemove = global.localStorage.removeItem.bind(global.localStorage);
+      global.localStorage.removeItem = function (key) {
+        if (key === 'abis_session' && global.__hf9HoldSession) return;
+        return rawRemove(key);
+      };
+      global.localStorage.__hf9Hold = true;
+    }
+
+    if (typeof showLogin === 'function' && !showLogin.__hf9Round) {
+      var baseShowLogin = showLogin;
+      showLogin = function () {
+        if (global.__hf9HoldSession || global.__hf9RetryExhausted) {
+          if (global.__hf9SavedSession) {
+            try { if (typeof sessionToken !== 'undefined') sessionToken = global.__hf9SavedSession; } catch (ignore) {}
+            try { global.localStorage.setItem('abis_session', global.__hf9SavedSession); } catch (ignore) {}
+          }
+          showBootRetry();
+          return;
+        }
+        return baseShowLogin.apply(this, arguments);
+      };
+      showLogin.__hf9Round = true;
+    }
+
     function stampInputs(root) {
       if (!root || !root.querySelectorAll) return;
       var tag = localeTag();
       root.querySelectorAll('input[type="date"], input[type="month"], input[type="time"], input[type="datetime-local"]').forEach(function (el) {
-        el.lang = tag;
-        if (el.type === 'month' && el.value && /^\d{4}-\d{2}$/.test(el.value)) {
-          var label = el.parentNode && el.parentNode.querySelector('.hf9-month-label');
-          if (!label && el.parentNode) {
-            label = document.createElement('div');
-            label.className = 'hf9-month-label';
-            el.parentNode.appendChild(label);
-          }
-          if (label) {
-            try {
-              var parts = el.value.split('-');
-              label.textContent = new Intl.DateTimeFormat(tag, { year: 'numeric', month: 'long' }).format(new Date(Number(parts[0]), Number(parts[1]) - 1, 1));
-            } catch (ignore) {}
+        if (el.lang !== tag) el.lang = tag;
+        if (el.type !== 'month' || !el.value || !/^\d{4}-\d{2}$/.test(el.value)) return;
+        var label = null;
+        if (el.parentNode) {
+          var kids = el.parentNode.children || [];
+          var i;
+          for (i = 0; i < kids.length; i++) {
+            if (kids[i].classList && kids[i].classList.contains('hf9-month-label')) { label = kids[i]; break; }
           }
         }
+        var text = '';
+        try {
+          var parts = el.value.split('-');
+          text = new Intl.DateTimeFormat(tag, { year: 'numeric', month: 'long' }).format(new Date(Number(parts[0]), Number(parts[1]) - 1, 1));
+        } catch (ignore) { return; }
+        if (!label && el.parentNode) {
+          label = document.createElement('div');
+          label.className = 'hf9-month-label';
+          label.setAttribute('data-hf9-owned', '1');
+          el.parentNode.appendChild(label);
+        }
+        if (label && label.textContent !== text) label.textContent = text;
       });
     }
 
@@ -10320,41 +10630,93 @@ try {
       root.querySelectorAll('button').forEach(function (btn) {
         var label = (btn.textContent || '').replace(/\s+/g, '');
         if (!label) return;
-        if (/不採認|退回修改|退回/.test(label) && !/補登並核准/.test(label)) {
+        if (btn.classList.contains('scc-edit') || btn.classList.contains('scc-return') || btn.classList.contains('scc-return-send') || btn.classList.contains('scc-quiet')) {
           btn.classList.add('hf9-secondary-action');
           btn.classList.remove('hf9-primary-action');
           return;
         }
-        if (/採認|核准申請|補登並核准|送出補正申請/.test(label)) {
+        if (btn.classList.contains('scc-agree') || btn.classList.contains('scc-batch')) {
+          btn.classList.add('hf9-primary-action');
+          btn.classList.remove('hf9-secondary-action');
+          return;
+        }
+        if (/不採認|退回|修改/.test(label) && !/補登並核准|全部同意/.test(label)) {
+          btn.classList.add('hf9-secondary-action');
+          btn.classList.remove('hf9-primary-action');
+          return;
+        }
+        if (/全部同意|同意|採認|核准申請|補登並核准|送出補正申請/.test(label)) {
           btn.classList.add('hf9-primary-action');
           btn.classList.remove('hf9-secondary-action');
         }
       });
     }
 
-    function polish(root) {
-      if (!root) return;
-      stampInputs(root);
-      classifyButtons(root);
-      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-      var nodes = [];
-      while (walker.nextNode()) nodes.push(walker.currentNode);
-      nodes.forEach(function (node) {
-        if (!node.parentElement || node.parentElement.closest('script, style, input, textarea')) return;
-        var next = humanize(node.nodeValue);
-        if (next !== node.nodeValue) node.nodeValue = next;
-      });
+    var observer = null;
+    var polishing = false;
+    function ownedMutation(record) {
+      function owned(node) {
+        if (!node) return false;
+        if (node.nodeType === 3) node = node.parentElement;
+        if (!node || !node.closest) return false;
+        return !!node.closest('.hf9-month-label,.hf9-month-summary');
+      }
+      if (owned(record.target)) return true;
+      var added = record.addedNodes || [];
+      if (!added.length) return false;
+      var i;
+      for (i = 0; i < added.length; i++) {
+        var node = added[i];
+        if (node.nodeType === 1 && node.classList && (node.classList.contains('hf9-month-label') || node.classList.contains('hf9-month-summary'))) continue;
+        if (owned(node)) continue;
+        return false;
+      }
+      return true;
     }
 
-    if (typeof MutationObserver === 'function') {
-      var observer = new MutationObserver(function () { polish(document.body); });
+    function polish(root) {
+      if (!root || polishing) return;
+      polishing = true;
+      if (observer) observer.disconnect();
+      try {
+        stampInputs(root);
+        classifyButtons(root);
+        if (typeof document.createTreeWalker === 'function') {
+          var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+          var nodes = [];
+          while (walker.nextNode()) nodes.push(walker.currentNode);
+          nodes.forEach(function (node) {
+            if (!node.parentElement || node.parentElement.closest('script, style, input, textarea, .hf9-month-label')) return;
+            var next = humanize(node.nodeValue);
+            if (next !== node.nodeValue) node.nodeValue = next;
+          });
+        }
+      } finally {
+        polishing = false;
+        if (observer && document.body) observer.observe(document.body, { childList: true, subtree: true });
+      }
+    }
+
+    if (typeof MutationObserver === 'function' && document.body) {
+      var queued = 0;
+      observer = new MutationObserver(function (records) {
+        if (polishing) return;
+        if (records && records.length && records.every(ownedMutation)) return;
+        queued += 1;
+        if (queued > 12) return;
+        setTimeout(function () {
+          queued = Math.max(0, queued - 1);
+          polish(document.body);
+        }, 16);
+      });
       observer.observe(document.body, { childList: true, subtree: true });
     }
     polish(document.body);
   }
 
   if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
+    if (document.body) install();
+    else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
     else install();
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);
