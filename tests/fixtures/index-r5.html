@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="stylesheet" href="../../assets/ess-20261118-p1-hf9/abis-ess.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="company-banner frozen-company-banner" role="banner">
+    <div class="frozen-topline">
+      <div id="entrySource" class="frozen-entry-source"><span class="frozen-line-mark">LINE</span><span id="entrySourceText">由 LINE 進入</span><span aria-hidden="true">›</span></div>
+      <div class="frozen-head-actions">
+        <button id="homeBellBtn" class="frozen-icon-btn" type="button" aria-label="通知中心">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+          <span id="homeBellDot" class="frozen-bell-dot hide"></span>
+        </button>
+        <button id="homeUserBtn" class="frozen-user-chip" type="button" aria-label="我的帳號">
+          <span id="headerAvatar" class="frozen-avatar">A</span><span id="headerUserName">ABIS</span><span aria-hidden="true">⌄</span>
+        </button>
+      </div>
+    </div>
+    <div class="frozen-brand-row">
+      <img class="company-logo" alt="ABIS" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+      <div class="frozen-brand-copy">
+        <div class="company-title">ABIS 員工服務</div>
+        <div class="company-subtitle" data-home-i18n="tagline">更簡單的工作．更好的每一天</div>
+      </div>
+    </div>
+    <button id="themeToggle" class="theme-toggle frozen-theme-toggle" type="button" aria-label="切換深色模式"><span id="themeToggleIcon">☾</span></button>
+  </div>
+  <div class="lang-switch"><button id="langZH" type="button">中文</button><button id="langVI" type="button">Tiếng Việt</button><button id="langTH" type="button">ไทย</button></div>
+  <div id="msg"></div>
+  <div id="opStatus" class="op-status hide" role="status"></div>
+  <section id="lineBoot" class="card line-boot-card hide" role="status"></section>
+  <section id="login" class="card"><h2>登入</h2><label>員工編號</label><input id="loginId"><label><input id="rememberId" type="checkbox"> 記住員工編號</label><label>6 位 PIN</label><input id="loginPin" type="password"><button id="loginBtn" type="button">登入</button><button class="secondary" type="button">忘記 PIN？</button></section>
+  <section id="forgotPin" class="card hide"><h2>忘記 PIN？</h2><input id="forgotEmployeeId"><button id="forgotSendBtn" type="button">發送驗證碼</button></section>
+  <section id="resetPin" class="card hide"><input id="resetEmployeeId" disabled><input id="resetCode"><input id="resetNewPin" type="password"><input id="resetNewPin2" type="password"><button id="resetPinBtn" type="button">重設並登入</button></section>
+  <section id="setPin" class="card hide"><input id="setupId" disabled><input id="setupPin" type="password"><input id="setupPin2" type="password"><button id="setupPinBtn" type="button">設定並登入</button></section>
+  <main id="app" class="hide">
+    <div id="rc2InnerTopbar" class="rc2-inner-topbar hide"><button id="rc2InnerBackBtn" type="button" class="rc2-inner-back">‹</button><div id="rc2InnerTitle" class="rc2-inner-title">ABIS</div></div>
+    <div class="card nav-shell"><div class="nav">
+      <button data-nav-key="home" type="button"><span class="nav-label">首頁</span></button>
+      <button id="leaveNav" data-nav-key="leave" type="button"><span class="nav-label">我要請假</span></button>
+      <button data-nav-key="leaves" type="button"><span class="nav-label">我的假單</span></button>
+      <button id="attendanceNav" type="button"><span class="nav-label">我的出勤</span></button>
+      <button data-nav-key="inbox" type="button"><span id="inboxCount" class="badge-count hide">0</span><span class="nav-label">待我處理</span></button>
+    </div></div>
+    <section id="home" class="home-dashboard"></section>
+    <section id="account" class="card hide"><div id="accountContent"></div></section>
+    <section id="recentRecords" class="card hide"><h2 id="recentRecordsTitle">近期紀錄</h2><div id="recentRecordsList"></div></section>
+    <section id="leaveForm" class="card hide"><h2>我要請假</h2><select id="leaveType"></select><select id="applicationType"></select><input id="startDate" type="date"><input id="endDate" type="date"><input id="startTime" type="time"><input id="endTime" type="time"><select id="proxyId"></select><textarea id="handover"></textarea><textarea id="reason"></textarea><button id="submitLeaveBtn" type="button">送出假單</button></section>
+    <section id="attendance" class="card hide"><h2>我的出勤</h2><div class="month-row"><div><label>月份</label><input id="attendanceMonth" type="month" value="2026-11"></div><button id="attendanceQueryBtn" type="button">查詢</button></div><div id="attendanceContent"></div></section>
+    <section id="leaves" class="card hide"><h2>我的假單</h2><div id="leaveList"></div></section>
+    <section id="inbox" class="card hide"><h2>待我處理</h2><div id="inboxList"></div></section>
+    <section id="notifications" class="card hide"><h2 id="notificationCenterTitle">通知中心</h2><button id="notificationMarkAllBtn" type="button" class="secondary">全部標為已讀</button><div id="notificationTabs"></div><div id="notificationCenterList"></div></section>
+    <section id="dashboard" class="card hide"><h2 id="dashboardTitle">部門請假總表</h2><div class="month-row"><div><label>月份</label><input id="dashboardMonth" type="month" value="2026-11"></div><button type="button">查詢</button></div><div id="dashboardContent"></div></section>
+    <section id="hrCredentialAdmin" class="card hide"><h2>帳號管理</h2><input id="hrEmployeeQuery"><div id="hrCredentialResults"></div><div id="hrCredentialDetail"></div></section>
+  </main>
+</div>
+<script>
+(function () {
+  document.getElementById('attendanceMonth').value = '2026-11';
+  document.getElementById('dashboardMonth').value = '2026-11';
+  try {
+    if (window.__hf9Seed && window.__hf9Seed.session) localStorage.setItem('abis_session', window.__hf9Seed.session);
+    if (window.__hf9Seed && window.__hf9Seed.lang) localStorage.setItem('abis_lang', window.__hf9Seed.lang);
+  } catch (ignore) {}
+  window.__hf9ObserverCalls = 0;
+  window.__hf9ObserverLoop = false;
+  var Native = window.MutationObserver;
+  if (typeof Native === 'function') {
+    var Wrapped = function (cb) {
+      return new Native(function (records, obs) {
+        window.__hf9ObserverCalls += 1;
+        if (window.__hf9ObserverCalls > 40) {
+          try { obs.disconnect(); } catch (ignore) {}
+          window.__hf9ObserverLoop = true;
+          return;
+        }
+        return cb.call(this, records, obs);
+      });
+    };
+    Wrapped.prototype = Native.prototype;
+    window.MutationObserver = Wrapped;
+  }
+  window.google = { script: { run: {
+    withSuccessHandler: function (ok) {
+      return { withFailureHandler: function () {
+        return { api: function (action, payload) {
+          var handle = window.__hf9Handle || function () { return { ok: true, data: {} }; };
+          try { ok(handle(action, payload)); }
+          catch (err) { ok({ ok: false, error: String(err && err.message || err) }); }
+        } };
+      } };
+    }
+  } } };
+  window.ABIS_SERVER_BOOT = window.ABIS_SERVER_BOOT || { sessionToken: '', employeeId: '', source: 'WEB', route: '', routeContext: null, home: null };
+  window.ABIS_STATIC_ASSET_BOOT = { version: 'HF9_INDEX_HARNESS', startedAt: performance.now(), assetLoadMs: null };
+})();
+</script>
+<script src="../../assets/ess-20261118-p1-hf9/abis-ess.bundle.js"></script>
+<script src="../../assets/ess-20261027-leave-approval-label-rc1/leave-approval-label.js"></script>
+<script src="../../assets/ess-20261007-rc13-hf81/attendance-hold-hf81.js"></script>
+<script src="../../assets/ess-20261007-rc13-hf2/leave-submit-hf2.js"></script>
+<script src="../../assets/ess-20261118-p1-hf9/leave-submit-hf3r1.js"></script>
+<script src="../../assets/ess-20261118-p1-hf9/ess-dialog-hf4.js"></script>
+<script src="../../assets/ess-20261118-p1-hf9/punch-exempt-admin.js"></script>
+<script src="../../assets/ess-20261106-hrlb-v1-1-2-ui-recovery/abis-hrlb-ui-recovery.js"></script>
+<script src="../../assets/ess-20261118-supervisor-correction-confirm/supervisor-correction-confirm.js"></script>
+<script src="../../assets/ess-20261118-employee-correction-return/employee-correction-return.js"></script>
+<script>
+/* Synthetic stand-in for backend PERF3 boot. It clears the session on HOME_BOOTSTRAP_RETRY unless hf9 holds it. */
+boot = async function () {
+  if (!sessionToken) { if (typeof showLogin === 'function') showLogin(); return; }
+  try {
+    var data = await call('homeBootstrap', { sessionToken: sessionToken });
+    if (!data || !data.home || data.code === 'HOME_BOOTSTRAP_RETRY' || data.status === 'PENDING') {
+      var pending = new Error('登入還沒完成，請稍後再試（HOME_BOOTSTRAP_RETRY）');
+      pending.code = 'HOME_BOOTSTRAP_RETRY';
+      pending.retryable = true;
+      throw pending;
+    }
+    homeData = data.home;
+    try { if (typeof enterApp === 'function') enterApp(); }
+    catch (enterErr) { window.__hf9EnterError = String(enterErr && enterErr.stack || enterErr); }
+  } catch (err) {
+    try { localStorage.removeItem('abis_session'); } catch (ignore) {}
+    sessionToken = '';
+    if (typeof showLogin === 'function') showLogin();
+    if (typeof message === 'function') message(err && err.message ? err.message : String(err));
+  }
+};
+boot();
+</script>
+</body>
+</html>
