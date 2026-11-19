@@ -69,7 +69,7 @@ function abisHf4EnsureDom_(){
   if($('abisHf4Dialog'))return true;
   try{
     const root=document.createElement('div');root.id='abisHf4Dialog';root.className='abis-hf4-backdrop hide';root.setAttribute('aria-hidden','true');
-    root.innerHTML='<div class="abis-hf4-dialog" role="dialog" aria-modal="true" aria-labelledby="abisHf4Title" aria-describedby="abisHf4Body"><div class="abis-hf4-head"><h2 id="abisHf4Title"></h2></div><div id="abisHf4Body" class="abis-hf4-scroll"><div id="abisHf4Message" class="abis-hf4-message"></div><label id="abisHf4InputWrap" class="abis-hf4-input-wrap hide"><span id="abisHf4InputLabel"></span><textarea id="abisHf4Input" rows="4" maxlength="500"></textarea><span id="abisHf4InputError" class="abis-hf4-input-error hide" role="alert"></span></label></div><div class="abis-hf4-actions"><button id="abisHf4Cancel" type="button" class="secondary"></button><button id="abisHf4Ok" type="button"></button></div></div>';
+    root.innerHTML='<div class="abis-hf4-dialog" role="dialog" aria-modal="true" aria-labelledby="abisHf4Title" aria-describedby="abisHf4Body"><div class="abis-hf4-head"><h2 id="abisHf4Title"></h2></div><div id="abisHf4Body" class="abis-hf4-scroll"><div id="abisHf4Message" class="abis-hf4-message"></div><label id="abisHf4InputWrap" class="abis-hf4-input-wrap hide"><span id="abisHf4InputLabel"></span><textarea id="abisHf4Input" rows="4" maxlength="500"></textarea><span id="abisHf4InputError" class="abis-hf4-input-error hide" role="alert"></span></label></div><div class="abis-hf4-actions"><button id="abisHf4Cancel" type="button" class="secondary"></button><button id="abisHf4Ok" type="button" class="hf9-primary-action"></button></div></div>';
     root.addEventListener('click',e=>{if(e.target===root){e.preventDefault();e.stopPropagation()}});
     document.body.appendChild(root);
     $('abisHf4Cancel').addEventListener('click',()=>abisHf4Resolve_(false));
@@ -97,7 +97,7 @@ function abisHf4Open_(o){
     const wrap=$('abisHf4InputWrap'),input=$('abisHf4Input'),label=$('abisHf4InputLabel'),err=$('abisHf4InputError');
     const hasInput=!!(o&&o.input);wrap.classList.toggle('hide',!hasInput);if(err){err.textContent='';err.classList.add('hide')}
     if(hasInput){label.textContent=String(o.input.label||'');input.value=String(o.input.value||'');input.placeholder=String(o.input.placeholder||'');input.maxLength=Number(o.input.maxLength||500)}
-    const cancel=$('abisHf4Cancel'),ok=$('abisHf4Ok');cancel.textContent=String(o&&o.cancelText||abisHf4Text_('cancel'));ok.textContent=String(o&&o.okText||abisHf4Text_('confirm'));ok.classList.toggle('danger',!!(o&&o.danger));
+    const cancel=$('abisHf4Cancel'),ok=$('abisHf4Ok');cancel.textContent=String(o&&o.cancelText||abisHf4Text_('cancel'));ok.textContent=String(o&&o.okText||abisHf4Text_('confirm'));ok.classList.toggle('danger',!!(o&&o.danger));ok.classList.toggle('hf9-primary-action',!(o&&o.danger));
     const root=$('abisHf4Dialog');root.classList.remove('hide');root.setAttribute('aria-hidden','false');abisHf4Lock_();setTimeout(()=>{try{(hasInput?input:ok).focus()}catch(e){}},0);
   })
 }
