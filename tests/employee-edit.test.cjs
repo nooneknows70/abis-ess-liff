@@ -1166,6 +1166,11 @@ test('textareas grow again after a rerender', () => {
   page.reset({ active: true, mode: 'LIVE', screen: 'edit', form: { '姓名': '阮氏金鳳凰 Nguyễn Thị Kim Phượng' }, baseline: { '姓名': '阮氏金鳳凰 Nguyễn Thị Kim Phượng' } });
   page.rerender();
   assert.equal(box.style.height, '80px');
+  box.scrollHeight = 80;
+  box.offsetHeight = 52;
+  box.clientHeight = 50;
+  page.rerender();
+  assert.equal(box.style.height, '82px');
 });
 
 test('logout keeps the host account containers for HR and non-HR', () => {
@@ -1321,4 +1326,102 @@ test('category defaults follow the backend lists and only replace system-filled 
   assert.match(html, /value="FACTORY" selected/);
   assert.match(html, /value="夜班"/);
   assert.doesNotMatch(html, /value="日班" selected|value="日班">/);
+  page.onInput({
+    target: {
+      value: '外部顧問',
+      tagName: 'SELECT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? '人員類別' : null; }
+    }
+  });
+  const externalHtml = page.renderCurrent();
+  assert.match(externalHtml, /value="EXTERNAL" selected/);
+  assert.match(externalHtml, /value="彰濱廠" selected/);
+  const officeOnly = ui();
+  officeOnly.reset({ active: true, screen: 'add', operation: 'CREATE', form: {} });
+  officeOnly.onInput({
+    target: {
+      value: '辦公室',
+      tagName: 'SELECT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? '人員類別' : null; }
+    }
+  });
+  officeOnly.onInput({
+    target: {
+      value: '外部顧問',
+      tagName: 'SELECT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? '人員類別' : null; }
+    }
+  });
+  const cleared = officeOnly.renderCurrent();
+  assert.doesNotMatch(cleared, /value="辦公室" selected/);
+  assert.match(cleared, /value="EXTERNAL" selected/);
+  assert.match(cleared, /value="Y" selected/);
+});
+
+test('punch suggestion is not written for an external consultant or punch-exempt person', async () => {
+  const page = ui();
+  page.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    form: page.suggestDefaults({
+      '人員類別': '外部顧問',
+      '姓名': '顧問',
+      'V2員工ID': 'C11501',
+      '到職日': '2026-12-01',
+      '部門': '顧問',
+      '工作地點': '辦公室',
+      '正式班別': '日班'
+    })
+  });
+  await page.handleAction('review', {}, {
+    sessionToken: 'sess',
+    call: async function () {
+      return { ok: true, mode: 'LIVE', confirmToken: 'tok', punch: { suggestion: '11538' }, diff: [], writesPerformed: 0 };
+    }
+  });
+  assert.doesNotMatch(page.renderCurrent(), /value="11538"|11538/);
+  page.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    form: page.suggestDefaults({
+      '人員類別': '廠務',
+      '姓名': '王小明',
+      'V2員工ID': 'B11521',
+      '到職日': '2026-12-01',
+      '部門': '廠務部',
+      '直屬主管ID': 'A09700',
+      '免打卡': 'Y',
+      '出勤管理類型': 'EXEMPT'
+    })
+  });
+  await page.handleAction('letter', { value: 'B' }, {
+    sessionToken: 'sess',
+    call: async function () {
+      return { ok: true, employeeId: 'B11521', punch: { suggestion: '11521' } };
+    }
+  });
+  assert.doesNotMatch(page.renderCurrent(), /value="11521"/);
+});
+
+test('collapsed system defaults show a one-line summary', () => {
+  const page = ui();
+  const html = page.renderScreen('diff', {
+    operation: 'CREATE',
+    name: '王小明',
+    employeeId: 'B11521',
+    systemFilled: { '簽核路由群組': true, '出勤管理類型': true, '工作地點': true, '免打卡': true },
+    diff: [
+      { field: '姓名', before: '', after: '王小明' },
+      { field: '簽核路由群組', before: '', after: 'FACTORY' },
+      { field: '出勤管理類型', before: '', after: 'NORMAL' },
+      { field: '工作地點', before: '', after: '新店廠' },
+      { field: '免打卡', before: '', after: 'N' }
+    ],
+    reason: { code: 'NEW_HIRE', note: '' },
+    rows: []
+  });
+  assert.match(html, /系統預設 · 4 · 廠務路線、一般出勤、新店廠/);
+  assert.match(html, /<details class="ee-card"><summary>/);
 });

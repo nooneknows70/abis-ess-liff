@@ -830,11 +830,22 @@
     return out;
   }
 
+  function allowPunchAutofill() {
+    var form = state.form || {};
+    if (form['人員類別'] === '外部顧問') return false;
+    if (form['免打卡'] === 'Y') return false;
+    return true;
+  }
+
   function suggestDefaults(values, options) {
     var next = Object.assign({}, values || {});
     var refresh = !!(options && options.refreshSystem);
+    var applied = {};
+    var person = next['人員類別'];
+    var shift = shiftList()[0] || '';
     function put(key, value) {
       if (value == null || String(value).trim() === '') return;
+      applied[key] = true;
       var empty = next[key] == null || String(next[key]).trim() === '';
       if (!empty && !(refresh && systemFilled[key])) return;
       next[key] = value;
@@ -850,8 +861,6 @@
     put('是否主管', 'N');
     put('班別確認', '待確認');
     put('特休制度', '週年制');
-    var person = next['人員類別'];
-    var shift = shiftList()[0] || '';
     if (person === '外部顧問') {
       put('出勤管理類型', 'EXTERNAL');
       put('免打卡', 'Y');
@@ -866,13 +875,21 @@
       put('正式班別', shift);
     } else if (person === '辦公室' || next['工作地點'] === '辦公室') {
       put('出勤管理類型', 'NORMAL');
-      put('簽核路由群組', person === '廠務' ? 'FACTORY' : 'OFFICE');
+      put('簽核路由群組', 'OFFICE');
       put('代理人指定方式', 'SUPERVISOR_ASSIGN');
       if (person === '辦公室') put('工作地點', '辦公室');
       put('免打卡', 'N');
       put('正式班別', shift);
     } else {
       put('免打卡', 'N');
+    }
+    if (refresh) {
+      ['出勤管理類型', '免打卡', '簽核路由群組', '代理人指定方式', '工作地點', '正式班別'].forEach(function (key) {
+        if (systemFilled[key] && !applied[key]) {
+          next[key] = '';
+          delete systemFilled[key];
+        }
+      });
     }
     return next;
   }
@@ -1420,6 +1437,7 @@
     repeated[t('hrConfirmImpact')] = 1;
     var primaryRows = [];
     var defaults = [];
+    var defaultValues = [];
     rows.forEach(function (row) {
       var extra = '';
       var changed = String(row.before == null ? '' : row.before) !== String(row.after == null ? '' : row.after);
@@ -1430,12 +1448,18 @@
       var card = creating
         ? '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div class="ee-diff-after">' + esc(human(row.after)) + '</div>' + extra + '</article>'
         : '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div>' + esc(t('before')) + ' ' + esc(human(row.before)) + '</div><div class="ee-diff-after">' + esc(t('after')) + ' ' + esc(human(row.after)) + '</div>' + extra + '</article>';
-      if (creating && view.systemFilled && view.systemFilled[row.field]) defaults.push(card);
-      else primaryRows.push(card);
+      if (creating && view.systemFilled && view.systemFilled[row.field]) {
+        defaults.push(card);
+        var shown = human(row.after);
+        if (shown) defaultValues.push(shown);
+      } else primaryRows.push(card);
     });
     var body = primaryRows.join('');
     if (defaults.length) {
-      body += '<details class="ee-card"><summary>' + esc(t('systemDefaults')) + '</summary>' + defaults.join('') + '</details>';
+      var preview = defaultValues.slice(0, 3).join('、');
+      var summary = t('systemDefaults') + ' · ' + String(defaults.length);
+      if (preview) summary += ' · ' + preview;
+      body += '<details class="ee-card"><summary>' + esc(summary) + '</summary>' + defaults.join('') + '</details>';
     }
     var warns = (view.warnings || []).filter(function (item) {
       var text = typeof item === 'string' ? item : '';
@@ -1932,7 +1956,7 @@
         state.punchSuggestion = res.newSuggestion || res.punch.suggestion;
       }
       if (res && res.punch && res.punch.suggestion) state.punchSuggestion = res.punch.suggestion;
-      if (state.operation === 'CREATE' && state.punchSuggestion && (!state.form['打卡號'] || systemFilled['打卡號'])) {
+      if (state.operation === 'CREATE' && allowPunchAutofill() && state.punchSuggestion && (!state.form['打卡號'] || systemFilled['打卡號'])) {
         state.form['打卡號'] = state.punchSuggestion;
         systemFilled['打卡號'] = true;
       }
@@ -2207,7 +2231,7 @@
           if (nextId && !state.idTouched) state.form['V2員工ID'] = nextId;
           state.punchSuggestion = suggested && (suggested.punch || suggested.punchNumber || (suggested.punch && suggested.punch.suggestion)) || state.punchSuggestion;
           if (suggested && suggested.punch && suggested.punch.suggestion) state.punchSuggestion = suggested.punch.suggestion;
-          if (state.punchSuggestion && (!state.form['打卡號'] || systemFilled['打卡號'])) {
+          if (allowPunchAutofill() && state.punchSuggestion && (!state.form['打卡號'] || systemFilled['打卡號'])) {
             state.form['打卡號'] = state.punchSuggestion;
             systemFilled['打卡號'] = true;
           }
@@ -2255,7 +2279,13 @@
   function growField(node) {
     if (!node || node.tagName !== 'TEXTAREA' || !node.style) return;
     node.style.height = 'auto';
-    var next = node.scrollHeight || 48;
+    var scroll = typeof node.scrollHeight === 'number' ? node.scrollHeight : 0;
+    var extra = 0;
+    if (typeof node.offsetHeight === 'number' && typeof node.clientHeight === 'number') {
+      extra = node.offsetHeight - node.clientHeight;
+    }
+    if (!(extra > 0)) extra = 0;
+    var next = scroll + extra;
     if (next < 48) next = 48;
     node.style.height = next + 'px';
   }
