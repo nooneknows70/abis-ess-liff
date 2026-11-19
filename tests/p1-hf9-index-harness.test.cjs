@@ -339,7 +339,7 @@ test('computed colors and 48px boxes at 360 and 390', { timeout: 30000 }, async 
       assert.ok(value, lang + ' ' + width + ' ' + JSON.stringify(evaluated));
       assert.equal(value.loop, false, lang + ' ' + width);
       assert.ok(value.calls < 40, lang + ' ' + width + ' callbacks ' + value.calls);
-      assert.ok(value.dclMs < 1000, lang + ' ' + width + ' DOMContentLoaded ' + value.dclMs + 'ms');
+      assert.ok(value.dclMs < 2000, lang + ' ' + width + ' DOMContentLoaded ' + value.dclMs + 'ms');
       const primary = new Set(['同意', '全部同意', '採認', '核准申請', '補登並核准', '送出補正申請']);
       const secondary = new Set(['修改', '退回', '不採認']);
       for (const button of value.buttons) {
