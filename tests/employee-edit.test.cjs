@@ -97,14 +97,19 @@ test('a failed options probe does not install', async () => {
   assert.equal(page.snapshot().active, false);
 });
 
-test('360px layout uses one column, 48px targets, and a green primary', () => {
+test('360px layout uses one column, 48px targets, and a blue primary', () => {
   const page = ui();
   const css = page.styles();
   assert.match(css, /@media \(max-width:767px\)/);
   assert.match(css, /width:100%/);
   assert.match(css, /padding:12px 16px/);
   assert.match(css, /min-height:48px !important/);
-  assert.match(css, /\.ee-primary\{[^}]*background:#2E7D32/);
+  assert.match(css, /\.ee-primary\{[^}]*background:#1565C0/);
+  assert.match(css, /min-width:0/);
+  assert.match(css, /max-width:100%/);
+  assert.match(css, /flex-wrap:wrap/);
+  assert.match(css, /@media \(max-width:360px\)/);
+  assert.match(css, /font-size:clamp\(16px,4\.8vw,22px\)/);
   assert.match(css, /\.ee-pin\{[^}]*white-space:nowrap/);
   assert.match(css, /@media \(min-width:768px\)/);
   assert.match(css, /grid-template-columns:minmax\(280px,380px\)/);
@@ -621,4 +626,397 @@ test('create defaults do not wipe typed values and hire-date warnings stay human
   assert.equal(changes.tempPin, undefined);
   assert.equal(changes['例外備註'], undefined);
   assert.equal(changes['姓名'], '阮氏清梅');
+});
+
+test('add form splits basic and collapsed advanced, and detail separates label from value', () => {
+  const page = ui();
+  const html = page.renderScreen('add', {
+    mode: 'LIVE',
+    form: page.suggestDefaults({ '姓名': '阮氏清梅很長的姓名不會被切掉', '人員類別': '廠務', '到職日': '2026-12-01', '部門': '創新法人部門名稱很長' }),
+    rows: [],
+    today: '2026-11-19'
+  });
+  assert.match(html, /基本/);
+  assert.match(html, /進階/);
+  assert.match(html, /data-ee-field="姓名"/);
+  assert.match(html, /data-ee-field="到職日"/);
+  assert.match(html, /data-ee-field="直屬主管ID"/);
+  assert.match(html, /<textarea class="ee-grow"[^>]*data-ee-field="姓名"/);
+  assert.match(html, /<textarea class="ee-grow"[^>]*data-ee-field="部門"/);
+  assert.doesNotMatch(html, /data-ee-field="正式班別"/);
+  const open = page.renderScreen('add', {
+    mode: 'LIVE',
+    advancedOpen: true,
+    form: page.suggestDefaults({}),
+    rows: []
+  });
+  assert.match(open, /data-ee-field="正式班別"/);
+  const detail = page.renderScreen('detail', {
+    employeeId: 'B11520',
+    fields: {
+      '姓名': '新人',
+      'V2員工ID': 'B11520',
+      '在職狀態': '在職',
+      '到職日': '2026-11-16',
+      'HR確認': '待確認',
+      '部門': '廠務部'
+    },
+    audit: [{
+      field: 'LINE綁定狀態',
+      before: false,
+      after: 'LINE false',
+      reason: 'NEW_EMPLOYEE',
+      action: 'NEW_EMPLOYEE'
+    }, {
+      field: '部門',
+      before: '廠務部',
+      after: '管理部',
+      reason: 'REORG'
+    }, {
+      field: '帳號',
+      before: '',
+      after: 'CREDENTIAL_INSERT_FAILED',
+      reason: 'CREDENTIAL_INSERT_FAILED'
+    }, {
+      field: '原因',
+      before: '',
+      after: 'NEW_HIRE',
+      reason: 'NEW_HIRE'
+    }],
+    rows: []
+  });
+  assert.match(detail, /class="ee-label"/);
+  assert.match(detail, /class="ee-value"/);
+  assert.match(detail, /HR確認/);
+  assert.match(detail, /待確認/);
+  assert.match(detail, /ee-status/);
+  assert.match(detail, /否/);
+  assert.match(detail, /新增員工/);
+  assert.match(detail, /組織調整/);
+  assert.match(detail, /帳號建立未完成/);
+  assert.doesNotMatch(detail, /NEW_EMPLOYEE|NEW_HIRE|CREDENTIAL_INSERT_FAILED|REORG|LINE false/);
+});
+
+test('search chips use real row fields and drop filters the rows do not carry', () => {
+  const page = ui();
+  const real = [
+    { employeeId: 'A09700', name: '甲一', company: 'ABIS', location: '新店廠', department: '廠務部', employmentStatus: '在職', personType: '廠務' },
+    { employeeId: 'B11520', name: '新人', company: 'ABIS', location: '新店廠', department: '廠務部', employmentStatus: '在職', personType: '廠務', hireDate: '2026-11-16' }
+  ];
+  const plain = page.renderScreen('list', { rows: real.slice(0, 1), chip: 'manager', limit: 20 });
+  assert.doesNotMatch(plain, /新進人員|主管/);
+  assert.match(plain, /甲一/);
+  const withHire = page.renderScreen('list', { rows: real, chip: 'new', limit: 20, today: '2026-11-19' });
+  assert.match(withHire, /新進人員/);
+  assert.match(withHire, /新人/);
+  assert.doesNotMatch(withHire, />主管</);
+  const managers = page.renderScreen('list', {
+    rows: [
+      { employeeId: 'A09700', name: '主管甲', isManager: 'Y', employmentStatus: '在職' },
+      { employeeId: 'B09905', name: '員工乙', isManager: 'N', employmentStatus: '在職' }
+    ],
+    chip: 'manager',
+    limit: 20
+  });
+  assert.match(managers, /主管/);
+  assert.match(managers, /主管甲/);
+  assert.doesNotMatch(managers, /員工乙/);
+});
+
+test('typing enables the review button without waiting for a host redraw', () => {
+  const root = { innerHTML: '' };
+  const ctx = load({
+    document: {
+      readyState: 'complete',
+      __eeBound: true,
+      addEventListener: function () {},
+      getElementById: function () { return { textContent: '' }; },
+      createElement: function () { return {}; },
+      querySelector: function (sel) { return sel === '[data-ee-root]' ? root : null; },
+      head: { appendChild: function () {} },
+      activeElement: null
+    }
+  });
+  const page = ctx.ABIS_EMPLOYEE_EDIT;
+  page.reset({
+    active: true,
+    mode: 'LIVE',
+    screen: 'edit',
+    operation: 'UPDATE',
+    actorId: 'A00001',
+    employeeId: 'B11401',
+    baseline: { '部門': '廠務部', '姓名': '王小明' },
+    form: { '部門': '廠務部', '姓名': '王小明' }
+  });
+  page.renderCurrent();
+  const before = page.renderScreen('edit', {
+    actorId: 'A00001',
+    employeeId: 'B11401',
+    form: { '部門': '廠務部', '姓名': '王小明' },
+    baseline: { '部門': '廠務部', '姓名': '王小明' },
+    rows: []
+  });
+  assert.match(before, /data-ee-action="review"[^>]*disabled/);
+  ctx.document.querySelector = function (sel) {
+    if (sel === '[data-ee-root]') return root;
+    return null;
+  };
+  page.onInput({
+    target: {
+      value: '業務部',
+      tagName: 'INPUT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? '部門' : null; }
+    }
+  });
+  assert.match(root.innerHTML || page.renderCurrent(), /data-ee-action="review"/);
+  assert.doesNotMatch(page.renderCurrent(), /data-ee-action="review"[^>]*disabled/);
+});
+
+test('opening add clears the previous employee, and an unchanged hire date drops hire warnings', async () => {
+  const page = ui();
+  page.reset({
+    active: true,
+    mode: 'LIVE',
+    screen: 'detail',
+    employeeId: 'B11401',
+    errorKey: 'required',
+    fieldCatalog: [{ field: 'V2員工ID', editable: false }],
+    form: { 'V2員工ID': 'B11401', '姓名': '舊人' },
+    baseline: { 'V2員工ID': 'B11401', '姓名': '舊人' }
+  });
+  await page.handleAction('add', {}, {});
+  assert.equal(page.snapshot().employeeId, '');
+  const html = page.renderCurrent();
+  assert.match(html, /新增員工/);
+  assert.doesNotMatch(html, /data-ee-field="V2員工ID"[^>]*disabled/);
+  assert.doesNotMatch(html, /舊人/);
+
+  page.reset({
+    active: true,
+    mode: 'LIVE',
+    screen: 'edit',
+    operation: 'UPDATE',
+    actorId: 'A00001',
+    employeeId: 'B11401',
+    rowVersion: 'v1',
+    baseline: { '部門': '廠務部', '到職日': '2026-11-01', '姓名': '王小明' },
+    form: { '部門': '業務部', '到職日': '2026-11-01', '姓名': '王小明' },
+    reason: { code: 'REORG', note: '' }
+  });
+  await page.handleAction('review', {}, {
+    sessionToken: 'sess',
+    call: async function () {
+      return {
+        ok: true,
+        mode: 'LIVE',
+        confirmToken: 'tok',
+        diff: [{ field: '部門', before: '廠務部', after: '業務部' }],
+        warnings: [
+          { code: 'HIRE_DATE_BEFORE_TODAY' },
+          { code: 'HIRE_DATE_AFFECTS_ATTENDANCE' }
+        ],
+        requires: { hrConfirmStep: false }
+      };
+    }
+  });
+  const diff = page.renderCurrent();
+  assert.match(diff, /業務部/);
+  assert.doesNotMatch(diff, /到職日早於今天/);
+  assert.doesNotMatch(diff, /已經算過的出勤不會自動重算/);
+  assert.doesNotMatch(diff, /role="dialog"/);
+  assert.doesNotMatch(diff, /data-ee-impact/);
+});
+
+test('the diff page submits directly and still sends the confirm token', async () => {
+  const page = ui();
+  page.reset({
+    mode: 'LIVE',
+    screen: 'diff',
+    operation: 'UPDATE',
+    actorId: 'A00001',
+    employeeId: 'B11401',
+    rowVersion: 'version-1',
+    baseline: { '部門': '廠務部', '到職日': '2026-11-09' },
+    form: { '部門': '業務部', '到職日': '2026-11-10' },
+    reason: { code: 'CORRECTION', note: '' },
+    requires: { hrConfirmStep: true }
+  });
+  const preview = page.renderCurrent();
+  assert.match(preview, /data-ee-action="save"/);
+  assert.doesNotMatch(preview, /data-ee-action="save"[^>]*disabled/);
+  assert.doesNotMatch(preview, /role="dialog"/);
+  assert.match(preview, /此員工已有出勤、特休或薪資資料/);
+  const seen = [];
+  const saved = await page.submitUpdate({
+    sessionToken: 'sess',
+    call: async function (name, payload) {
+      seen.push({ name: name, payload: payload });
+      if (name === 'hrEmployeeValidate') return { ok: true, confirmToken: 'diff-tok', mode: 'LIVE', diff: [] };
+      return { ok: true, rowVersion: 'version-2' };
+    }
+  });
+  assert.equal(saved.ok, true);
+  assert.equal(seen[1].payload.confirmToken, 'diff-tok');
+  assert.equal(seen[1].payload.hrConfirmedImpact, true);
+  assert.equal(seen[1].payload.reason.code, 'CORRECTION');
+  assert.match(page.renderCurrent(), /已儲存/);
+});
+
+test('manager, shift, and edit transport errors use specific wording', () => {
+  const page = ui();
+  assert.equal(page.publicError({ ok: false, code: 'MANAGER_NOT_FOUND' }), '找不到這位主管，或主管目前不是在職');
+  assert.equal(page.publicError({ ok: false, code: 'MANAGER_SELF' }), '主管不可為本人');
+  assert.equal(page.publicError({ ok: false, code: 'MANAGER_CYCLE' }), '主管設定會互相循環，請改選別人');
+  assert.equal(page.publicError({ ok: false, code: 'SHIFT_INVALID' }), '正式班別須為有效且已確認的班別');
+  assert.match(page.publicError({ ok: false, code: 'PUNCH_SUGGESTION_CHANGED' }), /建議打卡號已變更/);
+  assert.doesNotMatch(page.publicError({ ok: false, code: 'MANAGER_NOT_FOUND' }), /這是必填欄位|MANAGER_NOT_FOUND/);
+  page.reset({
+    mode: 'LIVE',
+    screen: 'diff',
+    operation: 'UPDATE',
+    employeeId: 'B11401',
+    baseline: { '部門': '廠務部' },
+    form: { '部門': '業務部' },
+    reason: { code: 'CORRECTION', note: '' },
+    rowVersion: 'v1'
+  });
+  return page.submitUpdate({
+    sessionToken: 'sess',
+    call: async function () { throw new Error('transport'); }
+  }).then(function () {
+    const html = page.renderCurrent();
+    assert.match(html, /結果不明。請重新載入這位員工後再試/);
+    assert.doesNotMatch(html, /若已建立但沒看到 PIN/);
+  });
+});
+
+test('detail reads work, workflow, and organization confirmation from the backend shape', async () => {
+  const page = ui();
+  page.reset({ active: true, mode: 'LIVE', screen: 'list' });
+  const result = await page.handleAction('open', { id: 'B11520' }, {
+    sessionToken: 'sess',
+    call: async function (name) {
+      if (name === 'hrEmployeeDetail') {
+        return {
+          ok: true,
+          employee: {
+            employeeId: 'B11520',
+            name: '新人',
+            employment: { employmentStatus: '在職', hireDate: '2026-11-16', department: '廠務部' },
+            work: { location: '新店廠', personType: '廠務', shiftConfirmed: '待確認', formalShift: '日班' },
+            organization: { organizationConfirmed: '待確認', manager1: 'A09700', isManager: 'N' },
+            workflow: { hrConfirm: '待確認' },
+            system: { lineBound: false, credentialState: 'TEMP_PIN_REQUIRED' }
+          }
+        };
+      }
+      if (name === 'hrEmployeeAuditList') return { ok: true, rows: [] };
+      if (name === 'hrEmployeeValidate') return { ok: true, mode: 'LIVE', fields: [], rowVersion: 'rv' };
+      return { ok: true };
+    }
+  });
+  assert.equal(result.ok, true);
+  const html = page.renderCurrent();
+  assert.match(html, /新店廠/);
+  assert.match(html, /廠務/);
+  assert.match(html, /待確認/);
+  assert.match(html, /HR確認/);
+  assert.match(html, /否/);
+  assert.doesNotMatch(html, /TEMP_PIN_REQUIRED|false/);
+});
+
+test('host reads lexical session data and installs only after login', async () => {
+  const calls = [];
+  let entered = 0;
+  const ctx = load({
+    document: {
+      readyState: 'complete',
+      addEventListener: function () {},
+      getElementById: function () { return null; },
+      createElement: function () { return {}; },
+      querySelector: function () { return null; },
+      head: { appendChild: function () {} }
+    },
+    google: {
+      script: {
+        run: {
+          withSuccessHandler: function (fn) { this._ok = fn; return this; },
+          withFailureHandler: function () { return this; },
+          api: function (action) {
+            calls.push(action);
+            this._ok({ ok: false, code: 'FEATURE_OFF' });
+          }
+        }
+      }
+    },
+    enterApp: function () { entered += 1; }
+  });
+  assert.deepEqual(calls, []);
+  ctx.sessionToken = 'sess';
+  ctx.homeData = { employee: { id: 'A09701', approvalPermission: 'HR' } };
+  ctx.enterApp();
+  await new Promise(function (resolve) { setTimeout(resolve, 0); });
+  assert.equal(entered, 1);
+  assert.deepEqual(calls, ['hrEmployeeValidate']);
+  assert.equal(ctx.ABIS_EMPLOYEE_EDIT.snapshot().active, false);
+});
+
+test('in-app navigation, back, and logout go through the PIN leave guard', async () => {
+  let loggedOut = 0;
+  let wentHome = 0;
+  let backed = 0;
+  const pops = [];
+  const ctx = load({
+    document: {
+      readyState: 'complete',
+      addEventListener: function () {},
+      getElementById: function () { return null; },
+      createElement: function () { return {}; },
+      querySelector: function () { return null; },
+      head: { appendChild: function () {} }
+    },
+    logout: function () { loggedOut += 1; },
+    showHome: function () { wentHome += 1; },
+    history: {
+      pushState: function () {},
+      back: function () { backed += 1; }
+    },
+    addEventListener: function (name, fn) { if (name === 'popstate') pops.push(fn); }
+  });
+  const page = ctx.ABIS_EMPLOYEE_EDIT;
+  page.holdPin(PIN, { employeeId: 'B11513', tempPinEventId: 'TPIN-1' });
+  ctx.showHome();
+  assert.equal(wentHome, 0);
+  assert.equal(page.snapshot().leaveGuard, true);
+  assert.match(page.renderCurrent(), /role="dialog"/);
+  assert.match(page.renderCurrent(), /回去抄寫/);
+  await page.handleAction('stay', {}, {});
+  assert.equal(page.snapshot().leaveGuard, false);
+  assert.equal(page.pinValue(), PIN);
+  assert.equal(wentHome, 0);
+  ctx.history.back();
+  assert.equal(backed, 0);
+  assert.equal(page.snapshot().leaveGuard, true);
+  await page.handleAction('stay', {}, {});
+  if (pops[0]) pops[0]();
+  assert.equal(page.snapshot().pinHeld, true);
+  assert.equal(page.snapshot().leaveGuard, true);
+  await page.handleAction('stay', {}, {});
+  ctx.logout();
+  assert.equal(loggedOut, 0);
+  assert.equal(page.snapshot().pinHeld, true);
+  await page.confirmWritten({
+    sessionToken: 'sess',
+    call: async function () { return { ok: true }; }
+  });
+  assert.equal(page.snapshot().pinHeld, false);
+  assert.equal(page.pinValue(), '');
+  assert.equal(loggedOut, 1);
+  ctx.logout();
+  assert.equal(loggedOut, 2);
+  assert.equal(page.snapshot().pinHeld, false);
+  assert.match(source, /typeof homeData !== 'undefined'/);
+  assert.match(source, /typeof sessionToken !== 'undefined'/);
+  assert.match(source, /typeof currentLang !== 'undefined'/);
+  assert.match(source, /typeof accountPanel_ !== 'undefined'/);
 });

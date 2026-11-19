@@ -19,7 +19,7 @@
 
   var CONTRACT = {
     gate: 'A hrEmployeeValidate call that returns code FEATURE_OFF means the feature is off. Validation errors mean it is on. There is no separate options action.',
-    search: 'hrEmployeeSearch returns {ok:true, rows:[{employeeId,name,department,location,employmentStatus,isManager,newHire}]}. limit 200.',
+    search: 'hrEmployeeSearch rows include employeeId, name, company, location, department, employmentStatus, and personType. A filter chip is shown only when its field is actually on those rows.',
     detail: 'Read uses existing hrEmployeeDetail only. rowVersion, diff, confirmToken, and the field catalog come from hrEmployeeValidate.',
     validate: 'hrEmployeeValidate {sessionToken,mode,employeeId,expectedRowVersion,changes,reason,hrConfirmedPunch,hrConfirmedImpact} returns {ok,writesPerformed:0,mode,diff,requires,warnings,punch,rowVersion,confirmToken,fields}.',
     create: 'hrEmployeeCreate sends the same body plus requestId and confirmToken. credential.tempPin exists only on the first LIVE success. SHADOW returns mode SHADOW, writesPerformed 0, and no PIN.',
@@ -223,7 +223,20 @@
     ['auditPrivilege', '權限變更', 'Đổi quyền', 'เปลี่ยนสิทธิ์', 'Permission change', true],
     ['auditShadow', '預演', 'Diễn tập', 'ซ้อม', 'Rehearsal', true],
     ['auditFailed', '沒有完成', 'Chưa hoàn tất', 'ยังไม่สำเร็จ', 'Not completed', true],
-    ['auditPin', '已建立首次登入', 'Đã tạo đăng nhập lần đầu', 'สร้างการเข้าครั้งแรกแล้ว', 'First sign-in was created', true]
+    ['auditPin', '已建立首次登入', 'Đã tạo đăng nhập lần đầu', 'สร้างการเข้าครั้งแรกแล้ว', 'First sign-in was created', true],
+    ['managerNotFound', '找不到這位主管，或主管目前不是在職', 'Không tìm thấy quản lý, hoặc quản lý không còn làm việc', 'ไม่พบหัวหน้า หรือหัวหน้าไม่ได้ทำงานอยู่', 'That manager was not found, or is not currently employed', true],
+    ['managerSelf', '主管不可為本人', 'Quản lý không thể là chính mình', 'หัวหน้าต้องไม่ใช่ตัวเอง', 'The manager cannot be the same person', true],
+    ['managerCycle', '主管設定會互相循環，請改選別人', 'Cách đặt quản lý bị vòng lặp, hãy chọn người khác', 'การตั้งหัวหน้าวนกัน โปรดเลือกคนอื่น', 'The manager setup loops. Choose someone else.', true],
+    ['shiftInvalid', '正式班別須為有效且已確認的班別', 'Ca chính thức phải là ca hợp lệ và đã xác nhận', 'กะอย่างเป็นทางการต้องเป็นกะที่ใช้ได้และยืนยันแล้ว', 'The shift must be an active, confirmed shift', true],
+    ['valueNotAllowed', '這個選項不在允許清單', 'Giá trị này không nằm trong danh sách cho phép', 'ตัวเลือกนี้ไม่อยู่ในรายการที่อนุญาต', 'This value is not allowed', true],
+    ['punchChanged', '建議打卡號已變更。請確認畫面上的新建議號碼，再按一次。', 'Mã chấm công đề xuất đã đổi. Hãy kiểm tra số mới trên màn hình rồi bấm lại.', 'รหัสลงเวลาที่แนะนำเปลี่ยนแล้ว โปรดตรวจเลขใหม่บนหน้าจอ แล้วกดอีกครั้ง', 'The suggested punch number changed. Check the new number on screen, then press again.', true],
+    ['unknownResultEdit', '結果不明。請重新載入這位員工後再試。沒有看到「已儲存」前，不要假設已經儲存。', 'Chưa rõ kết quả. Hãy tải lại nhân viên này rồi thử lại. Chưa thấy "Đã lưu" thì đừng coi là đã lưu.', 'ยังไม่ทราบผล โปรดโหลดพนักงานคนนี้ใหม่แล้วลองอีกครั้ง หากยังไม่เห็น "บันทึกแล้ว" อย่าคิดว่าบันทึกแล้ว', 'The result is unknown. Reload this employee and try again. Until you see Saved, do not assume it was saved.', true],
+    ['hrConfirmLabel', 'HR確認', 'Xác nhận nhân sự', 'การยืนยันฝ่ายบุคคล', 'HR confirmation', true],
+    ['basicShort', '基本', 'Cơ bản', 'พื้นฐาน', 'Basic', true],
+    ['advanced', '進階', 'Nâng cao', 'ขั้นสูง', 'Advanced', true],
+    ['advancedHint', '其餘欄位使用預設值，需要時再打開。', 'Các mục còn lại dùng giá trị mặc định. Mở ra khi cần.', 'ช่องที่เหลือใช้ค่าเริ่มต้น เปิดเมื่อต้องการ', 'The other fields use defaults. Open them when you need to change them.', true],
+    ['auditCredentialFailed', '帳號建立未完成', 'Chưa tạo được tài khoản', 'ยังสร้างบัญชีไม่สำเร็จ', 'The account was not created', true],
+    ['auditNewEmployee', '新增員工', 'Thêm nhân viên', 'เพิ่มพนักงาน', 'New employee', true]
   ];
 
   var packs = { ZH: {}, VI: {}, TH: {}, EN: {} };
@@ -269,7 +282,7 @@
     'LINE綁定狀態': 'lineBound',
     '系統啟用': 'systemEnabled',
     '登入帳號狀態': 'credentialState',
-    'HR確認': 'orgConfirm',
+    'HR確認': 'hrConfirmLabel',
     '組織設定確認': 'orgConfirm'
   };
 
@@ -387,7 +400,7 @@
     CONFIRM_TOKEN_REQUIRED: 'confirmFirst',
     CONFIRM_TOKEN_MISMATCH: 'confirmExpired',
     HR_CONFIRM_REQUIRED: 'hrConfirmImpact',
-    PUNCH_SUGGESTION_CHANGED: 'punchSuggested',
+    PUNCH_SUGGESTION_CHANGED: 'punchChanged',
     AUDIT_WRITE_FAILED: 'genericFail',
     CREDENTIAL_ALREADY_EXISTS: 'credentialExists',
     CREDENTIAL_INSERT_FAILED: 'credentialInsert',
@@ -411,14 +424,14 @@
     FIELD_UNKNOWN: 'genericFail',
     DATE_FORMAT: 'dateInvalid',
     DATE_ORDER: 'dateInvalid',
-    VALUE_NOT_ALLOWED: 'required',
-    SHIFT_INVALID: 'required',
+    VALUE_NOT_ALLOWED: 'valueNotAllowed',
+    SHIFT_INVALID: 'shiftInvalid',
     DEPT_UNKNOWN: 'newDeptHint',
     HIRE_DATE_LOCKED_PERIOD: 'hireRecalcNote',
     ATTENDANCE_FLAGS_INCONSISTENT: 'flagMismatch',
-    MANAGER_NOT_FOUND: 'required',
-    MANAGER_SELF: 'required',
-    MANAGER_CYCLE: 'required',
+    MANAGER_NOT_FOUND: 'managerNotFound',
+    MANAGER_SELF: 'managerSelf',
+    MANAGER_CYCLE: 'managerCycle',
     READBACK_MISMATCH: 'genericFail',
     REQUEST_ID_REQUIRED: 'genericFail'
   };
@@ -442,6 +455,9 @@
   var pinMemory = '';
   var pinEmployeeId = '';
   var pinEventId = '';
+  var pinHistory = false;
+  var pendingLeave = null;
+  var loginInstall = null;
   var installed = false;
   var state = blankState();
 
@@ -489,12 +505,16 @@
       confirmToken: '',
       requires: {},
       impactConfirmed: false,
-      fieldCatalog: []
+      fieldCatalog: [],
+      advancedOpen: false
     };
   }
 
   function readLang() {
-    var lang = typeof global.currentLang === 'string' ? global.currentLang.toUpperCase() : 'ZH';
+    var lang = '';
+    if (typeof currentLang !== 'undefined' && currentLang != null) lang = String(currentLang);
+    else if (global && typeof global.currentLang === 'string') lang = global.currentLang;
+    lang = String(lang || 'ZH').toUpperCase();
     if (lang === 'VI' || lang === 'TH') return lang;
     return 'ZH';
   }
@@ -537,29 +557,66 @@
     return 'OFF';
   }
 
+  function readHome() {
+    if (typeof homeData !== 'undefined') return homeData || null;
+    if (global && global.homeData) return global.homeData;
+    return null;
+  }
+
+  function readAccountPanel() {
+    if (typeof accountPanel_ !== 'undefined') return String(accountPanel_ || '');
+    if (global && typeof global.accountPanel_ === 'string') return global.accountPanel_;
+    return '';
+  }
+
+  function hostFn(name) {
+    if (global && typeof global[name] === 'function') return global[name];
+    try {
+      if (name === 'renderMyAccount_' && typeof renderMyAccount_ === 'function') return renderMyAccount_;
+      if (name === 'enterApp' && typeof enterApp === 'function') return enterApp;
+      if (name === 'logout' && typeof logout === 'function') return logout;
+      if (name === 'showHome' && typeof showHome === 'function') return showHome;
+      if (name === 'showPage' && typeof showPage === 'function') return showPage;
+      if (name === 'showMyAccount_' && typeof showMyAccount_ === 'function') return showMyAccount_;
+      if (name === 'rc2OpenAccountPanel_' && typeof rc2OpenAccountPanel_ === 'function') return rc2OpenAccountPanel_;
+      if (name === 'rc2InnerBack_' && typeof rc2InnerBack_ === 'function') return rc2InnerBack_;
+      if (name === 'openHrCredentialAdmin' && typeof openHrCredentialAdmin === 'function') return openHrCredentialAdmin;
+      if (name === 'rc2AccountPanelHtml_' && typeof rc2AccountPanelHtml_ === 'function') return rc2AccountPanelHtml_;
+    } catch (ignore) {}
+    return null;
+  }
+
   function readPermission() {
-    var home = global.homeData;
+    var home = readHome();
     if (home && home.employee && home.employee.approvalPermission) {
       return String(home.employee.approvalPermission);
     }
-    if (typeof global.canManageCredentials_ === 'function') {
+    var can = hostFn('canManageCredentials_');
+    if (typeof canManageCredentials_ === 'function') can = canManageCredentials_;
+    if (can) {
       try {
-        if (global.canManageCredentials_()) return 'HR';
+        if (can()) return 'HR';
       } catch (ignore) {}
     }
     return '';
   }
 
   function readActor() {
-    var home = global.homeData;
+    var home = readHome();
     if (home && home.employee && home.employee.id) return String(home.employee.id);
     return state.actorId || '';
   }
 
   function readSession(deps) {
     if (deps && typeof deps.sessionToken === 'string') return deps.sessionToken;
-    if (typeof global.sessionToken === 'string') return global.sessionToken;
+    if (typeof sessionToken !== 'undefined' && typeof sessionToken === 'string') return sessionToken;
+    if (global && typeof global.sessionToken === 'string') return global.sessionToken;
     return '';
+  }
+
+  function loggedIn() {
+    var home = readHome();
+    return !!(readSession({}) && home && home.employee);
   }
 
   function canInstall(opts) {
@@ -581,9 +638,16 @@
   }
 
   function human(value) {
+    if (value === true) return t('yes');
+    if (value === false) return t('no');
     if (value == null) return '';
     var raw = String(value).trim();
     if (!raw) return '';
+    var lower = raw.toLowerCase();
+    if (lower === 'true') return t('yes');
+    if (lower === 'false') return t('no');
+    if (/^line\s+false$/i.test(raw)) return t('no');
+    if (/^line\s+true$/i.test(raw)) return t('yes');
     if (VALUE_KEYS[raw]) return t(VALUE_KEYS[raw]);
     if (VALUE_KEYS[raw.toUpperCase()] && raw.toUpperCase() === raw) return t(VALUE_KEYS[raw.toUpperCase()]);
     if (/^[ABC]\d{5}$/.test(raw)) return raw;
@@ -761,11 +825,15 @@
     return next;
   }
 
-  function errorKey(res) {
+  function errorKey(res, operation) {
     var code = '';
     if (res && res.code) code = res.code;
     else if (res && res.errors && res.errors[0]) code = res.errors[0].code || '';
-    return ERROR_KEYS[code] || 'genericFail';
+    var key = ERROR_KEYS[code] || 'genericFail';
+    if (operation === 'UPDATE' && (key === 'unknownResult' || key === 'credentialInsert' || key === 'credentialExists' || key === 'pinGone')) {
+      return 'unknownResultEdit';
+    }
+    return key;
   }
 
   function mapFieldErrors(res) {
@@ -782,7 +850,7 @@
     return t(errorKey(res));
   }
 
-  function mapWarnings(list) {
+  function mapWarnings(list, changes) {
     var keys = {
       NEW_DEPARTMENT: 'newDeptHint',
       HIRE_DATE_BEFORE_TODAY: 'hireDatePast',
@@ -790,9 +858,11 @@
       NAME_PUNCH_REMAP: 'namePunchHint',
       TEMP_PIN_EXPIRES_BEFORE_HIRE: 'pinBeforeHire'
     };
+    var hireChanged = !changes || Object.prototype.hasOwnProperty.call(changes, '到職日');
     var out = [];
     (list || []).forEach(function (item) {
       var code = item && (item.code || item);
+      if (!hireChanged && String(code || '').indexOf('HIRE_DATE') === 0) return;
       var key = keys[code];
       if (!key) return;
       var text = t(key);
@@ -871,6 +941,28 @@
     return /pin|hash|token|pepper|secret|密碼/i.test(String(name || ''));
   }
 
+  function reasonText(value) {
+    var raw = String(value == null ? '' : value).trim();
+    if (!raw) return '';
+    var mapped = {
+      NEW_EMPLOYEE: 'auditNewEmployee',
+      NEW_HIRE: 'reasonNewHire',
+      CREDENTIAL_INSERT_FAILED: 'auditCredentialFailed',
+      REORG: 'reasonReorg',
+      CORRECTION: 'reasonCorrection',
+      HIRE_DATE_CORRECTION: 'reasonHire',
+      PERMISSION_CHANGE: 'reasonPermission',
+      OTHER: 'reasonOther'
+    }[raw] || {
+      NEW_EMPLOYEE: 'auditNewEmployee',
+      NEW_HIRE: 'reasonNewHire',
+      CREDENTIAL_INSERT_FAILED: 'auditCredentialFailed',
+      REORG: 'reasonReorg'
+    }[raw.toUpperCase()];
+    if (mapped) return t(mapped);
+    return human(raw);
+  }
+
   function auditRow(row) {
     row = row || {};
     var field = row.field || row['欄位'] || '';
@@ -890,20 +982,54 @@
       actor: row.actorName || row.actor || row.actorId || row['操作者ID'] || row.ActorEmployeeID || '',
       action: row.action || '',
       field: field,
-      before: human(before) || String(before || ''),
-      after: human(after) || String(after || ''),
-      reason: row.reason || row['原因'] || ''
+      before: human(before) || String(before == null ? '' : before),
+      after: human(after) || String(after == null ? '' : after),
+      reason: reasonText(row.reason || row.ReasonCode || row['原因'] || '')
     };
   }
 
+  function columnPresent(rows, keys) {
+    return (rows || []).some(function (row) {
+      if (!row) return false;
+      return keys.some(function (key) {
+        if (!Object.prototype.hasOwnProperty.call(row, key)) return false;
+        var value = row[key];
+        return value != null && String(value).trim() !== '';
+      });
+    });
+  }
+
+  function isNewHireRow(row) {
+    if (!row) return false;
+    if (row.newHire === true || row.isNewHire === true || row['新進人員'] === true || row['新進人員'] === 'Y' || row['新進人員'] === '是') return true;
+    if (row.newHire === false || row.isNewHire === false) return false;
+    var hire = String(row.hireDate || row['到職日'] || '').trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(hire)) return false;
+    var status = String(row.employmentStatus || row['在職狀態'] || '').trim();
+    if (status && status !== '在職') return false;
+    var person = String(row.personType || row['人員類別'] || '');
+    if (person === '外部顧問') return false;
+    var today = todayTaipei();
+    if (!today || hire >= today) return true;
+    var start = new Date(hire + 'T00:00:00Z');
+    var end = new Date(today + 'T00:00:00Z');
+    var days = Math.round((end - start) / 86400000);
+    return days >= 0 && days <= 30;
+  }
+
+  function isManagerRow(row) {
+    var manager = row && (row.isManager != null ? row.isManager : row['是否主管']);
+    return manager === true || manager === 'Y' || manager === '是' || String(manager).toLowerCase() === 'true';
+  }
+
   function filterRows(rows, query, chip) {
+    var list = rows || [];
     var text = String(query || '').trim().toLowerCase();
-    return (rows || []).filter(function (row) {
-      if (chip === 'new' && !(row && (row.newHire || row.isNewHire))) return false;
-      if (chip === 'manager') {
-        var manager = row && (row.isManager || row['是否主管']);
-        if (!(manager === true || manager === 'Y' || manager === '是')) return false;
-      }
+    var useNew = chip === 'new' && columnPresent(list, ['newHire', 'isNewHire', '新進人員', 'hireDate', '到職日']);
+    var useManager = chip === 'manager' && columnPresent(list, ['isManager', '是否主管']);
+    return list.filter(function (row) {
+      if (useNew && !isNewHireRow(row)) return false;
+      if (useManager && !isManagerRow(row)) return false;
       if (!text) return true;
       var name = String(row && (row.name || row['姓名']) || '').toLowerCase();
       var id = String(row && (row.employeeId || row['V2員工ID']) || '').toLowerCase();
@@ -913,18 +1039,20 @@
 
   function styles() {
     return [
-      '.ee{--ee-primary:#2E7D32;--ee-primary-press:#1B5E20;--ee-blue:#1565C0;--ee-ink:#0D47A1;--ee-orange:#E65100;--ee-orange-bg:#FFF3E0;--ee-red:#C62828;--ee-page:#E8EEF4;--ee-border:#D4DEE8;--ee-text:#1A2433;--ee-muted:#5C6B7A;--ee-disabled:#A8B2BD;--ee-card:#FFFFFF;box-sizing:border-box;width:100%;max-width:100%;min-height:100dvh;padding:12px 16px calc(96px + env(safe-area-inset-bottom));background:var(--ee-page);color:var(--ee-text);font-family:system-ui,-apple-system,"Noto Sans TC","Noto Sans Thai",sans-serif}',
+      '.ee{--ee-primary:#1565C0;--ee-primary-press:#0D47A1;--ee-blue:#1565C0;--ee-ink:#0D47A1;--ee-orange:#E65100;--ee-orange-bg:#FFF3E0;--ee-red:#C62828;--ee-page:#E8EEF4;--ee-border:#D4DEE8;--ee-text:#1A2433;--ee-muted:#5C6B7A;--ee-disabled:#A8B2BD;--ee-card:#FFFFFF;box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:100dvh;padding:12px 16px calc(96px + env(safe-area-inset-bottom));background:var(--ee-page);color:var(--ee-text);font-family:system-ui,-apple-system,"Noto Sans TC","Noto Sans Thai",sans-serif}',
       '.ee *,.ee *::before,.ee *::after{box-sizing:border-box}',
       '.ee button,.ee input,.ee select,.ee textarea{font:inherit;touch-action:manipulation}',
       '.ee button{min-height:48px !important;min-width:48px;white-space:normal;line-height:1.25}',
-      '.ee-chip{white-space:nowrap}',
+      '.ee-chip{white-space:normal;max-width:100%;overflow-wrap:anywhere}',
       '.ee h1,.ee h2{margin:0;font-size:22px;line-height:1.3;font-weight:800}',
       '.ee-top{display:flex;align-items:center;gap:8px;margin-bottom:12px}',
       '.ee-back{width:48px;background:transparent;color:var(--ee-ink);border:0;font-size:28px}',
-      '.ee-search input,.ee input,.ee select,.ee textarea{width:100%;min-height:48px;padding:12px 14px;border:1px solid var(--ee-border);border-radius:12px;background:#fff;color:var(--ee-text);font-size:16px}',
-      '.ee textarea{min-height:96px}',
-      '.ee-chips{display:flex;gap:8px;overflow-x:auto;position:sticky;top:0;z-index:2;padding:8px 0;background:var(--ee-page)}',
-      '.ee-chip{width:auto !important;flex:0 0 auto;min-height:48px;padding:0 14px;border-radius:999px;border:1px solid var(--ee-border);background:#fff;color:var(--ee-text)}',
+      '.ee-search input,.ee input,.ee select,.ee textarea{width:100%;max-width:100%;min-width:0;min-height:48px;padding:12px 14px;border:1px solid var(--ee-border);border-radius:12px;background:#fff;color:var(--ee-text);font-size:16px}',
+      '.ee textarea{min-height:48px;resize:none;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}',
+      '.ee textarea.ee-note{min-height:96px}',
+      '.ee-chips,.ee-letters{display:flex;flex-wrap:wrap;gap:8px;overflow:visible;max-width:100%;min-width:0;position:sticky;top:0;z-index:2;padding:8px 0;background:var(--ee-page)}',
+      '.ee-letters{position:static}',
+      '.ee-chip{width:auto !important;flex:1 1 auto;min-height:48px;padding:8px 14px;border-radius:999px;border:1px solid var(--ee-border);background:#fff;color:var(--ee-text)}',
       '.ee-chip.is-on{background:var(--ee-blue);color:#fff;border-color:var(--ee-blue)}',
       '.ee-list{display:flex;flex-direction:column;gap:12px}',
       '.ee-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;width:100%;min-height:64px;padding:16px;text-align:left;background:var(--ee-card);border:1px solid var(--ee-border);border-radius:16px;color:var(--ee-text)}',
@@ -943,20 +1071,26 @@
       '.ee-lock{color:var(--ee-disabled)}',
       '.ee-warn{background:var(--ee-orange-bg);color:var(--ee-orange);border-radius:12px;padding:12px;margin:0 0 12px;line-height:1.5}',
       '.ee-bar{position:sticky;bottom:0;z-index:3;margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--ee-page)}',
-      '.ee-primary{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border:0;border-radius:12px;background:#2E7D32;color:#fff;font-weight:800}',
+      '.ee-pair{display:flex;flex-direction:column;gap:2px;margin:0 0 12px;min-width:0}',
+      '.ee-label{color:var(--ee-muted);font-size:13px;font-weight:700}',
+      '.ee-value{font-size:16px;font-weight:800;overflow-wrap:anywhere}',
+      '.ee-status{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;background:#E3F2FD;color:var(--ee-ink);border-radius:12px;padding:12px;margin:0 0 12px}',
+      '.ee-success{background:#E8F5E9;color:#1B5E20;border-radius:12px;padding:12px;margin:0 0 12px;font-weight:800}',
+      '.ee-primary{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border:0;border-radius:12px;background:#1565C0;color:#fff;font-weight:800}',
       '.ee-primary:active{background:var(--ee-primary-press)}',
       '.ee-primary:disabled{background:var(--ee-disabled);color:#fff}',
       '.ee-secondary{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin-top:8px;border:0;background:transparent;color:var(--ee-ink);font-weight:700}',
-      '.ee-modal{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding:16px;background:rgba(26,36,51,.48)}',
-      '.ee-dialog{width:100%;max-width:420px;background:#fff;border-radius:16px;padding:16px}',
+      '.ee-modal{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding:16px;background:rgba(26,36,51,.48);min-width:0;max-width:100%}',
+      '.ee-dialog{width:100%;max-width:min(420px,100%);min-width:0;background:#fff;border-radius:16px;padding:16px}',
       '.ee-modal button{font-size:28px;min-height:48px}',
       '.ee-diff-after{color:var(--ee-ink);font-weight:800}',
-      '.ee-pin{margin:12px 0;font-family:ui-monospace,monospace;font-size:28px;font-weight:800;letter-spacing:.28em;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}',
+      '.ee-pin{margin:12px 0;max-width:100%;min-width:0;font-family:ui-monospace,monospace;font-size:28px;font-weight:800;letter-spacing:.28em;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}',
       '.ee-skel{height:64px;border-radius:16px;margin:0 0 12px;background:#d4dee8}',
       '.ee-spin{width:18px;height:18px;margin-right:8px;border:2px solid #fff;border-right-color:transparent;border-radius:50%;display:inline-block;animation:ee-spin .8s linear infinite}',
       '@keyframes ee-spin{to{transform:rotate(360deg)}}',
       '.ee [hidden]{display:none !important}',
-      '@media (max-width:767px){.ee{width:100%;max-width:100%}.ee-fields{display:block}.ee-side{display:none}.ee[data-ee-screen="list"] .ee-side{display:block}.ee-main{width:100%}}',
+      '@media (max-width:767px){.ee{width:100%;max-width:100%;min-width:0}.ee-fields{display:block}.ee-side{display:none}.ee[data-ee-screen="list"] .ee-side{display:block}.ee-main{width:100%;min-width:0;max-width:100%}}',
+      '@media (max-width:360px){.ee-pin{font-size:clamp(16px,4.8vw,22px);letter-spacing:.08em}.ee-modal{padding:8px}.ee-dialog,.ee-card,.ee-main{max-width:100%;min-width:0}}',
       '@media (min-width:768px){.ee[data-ee-screen="detail"],.ee[data-ee-screen="edit"],.ee[data-ee-screen="add"]{display:grid;grid-template-columns:minmax(280px,380px) minmax(0,1fr);column-gap:16px;align-items:start}.ee-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}.ee-wide{grid-column:1 / -1}.ee-modal{align-items:center}}',
       '@media (prefers-reduced-motion:reduce){.ee-spin{animation:none}}'
     ].join('');
@@ -974,10 +1108,17 @@
 
   function banner(view) {
     var html = '';
-    if (view.notice) html += '<p class="ee-warn" role="status">' + esc(view.notice) + '</p>';
+    if (view.notice) html += '<p class="ee-success" role="status">' + esc(view.notice) + '</p>';
     if (view.error) html += '<p class="ee-error" role="alert">' + esc(view.error) + '</p>';
     if (view.stale) html += '<p class="ee-hint">' + esc(t('stale')) + '</p>';
     return html;
+  }
+
+  function chipChoices(rows) {
+    var items = [['all', 'filterAll']];
+    if (columnPresent(rows, ['newHire', 'isNewHire', '新進人員', 'hireDate', '到職日'])) items.push(['new', 'filterNew']);
+    if (columnPresent(rows, ['isManager', '是否主管'])) items.push(['manager', 'filterManager']);
+    return items;
   }
 
   function renderList(view) {
@@ -985,13 +1126,13 @@
     var chip = view.chip || 'all';
     var filtered = filterRows(view.rows, query, chip);
     var shown = filtered.slice(0, view.limit || 20);
-    var chips = [
-      ['all', 'filterAll'],
-      ['new', 'filterNew'],
-      ['manager', 'filterManager']
-    ].map(function (item) {
+    var choices = chipChoices(view.rows);
+    var allowed = {};
+    choices.forEach(function (item) { allowed[item[0]] = true; });
+    if (!allowed[chip]) chip = 'all';
+    var chips = choices.length > 1 ? choices.map(function (item) {
       return button('ee-chip' + (chip === item[0] ? ' is-on' : ''), 'chip', t(item[1]), { value: item[0], pressed: chip === item[0] });
-    }).join('');
+    }).join('') : '';
     var body = '';
     if (view.loading && !shown.length) {
       body = '<div class="ee-skel"></div><div class="ee-skel"></div><div class="ee-skel"></div><p class="ee-hint">' + esc(t('loading')) + '</p>';
@@ -1009,7 +1150,7 @@
     var bar = view.embedded ? '' : '<div class="ee-bar">' + button('ee-primary', 'add', '＋ ' + t('addEmployee'), { busy: view.busy && view.screen === 'list' }) + '</div>';
     return '<header class="ee-top"><h1>' + esc(t('employeeManagement')) + '</h1></header>' +
       '<div class="ee-search"><input data-ee-query type="search" autocomplete="off" placeholder="' + esc(t('searchPlaceholder')) + '" value="' + esc(query) + '" aria-label="' + esc(t('search')) + '"></div>' +
-      '<div class="ee-chips" role="tablist">' + chips + '</div>' +
+      (chips ? '<div class="ee-chips" role="tablist">' + chips + '</div>' : '') +
       banner(view) + body + bar;
   }
 
@@ -1027,7 +1168,7 @@
         var value = fields[key];
         if (value == null || String(value).trim() === '') return '';
         var shown = key === '手機' ? maskPhone(value) : human(value);
-        return '<div class="ee-meta"><span>' + esc(label(key)) + '</span><b class="ee-name">' + esc(shown) + '</b></div>';
+        return '<div class="ee-pair"><span class="ee-label">' + esc(label(key)) + '</span><b class="ee-value">' + esc(shown) + '</b></div>';
       }).join('');
       if (!rows) return '';
       return '<section class="ee-card"><h2>' + esc(t(group[0])) + '</h2>' + rows + '</section>';
@@ -1066,8 +1207,16 @@
         if (days > 0) hireNote = fill('daysSince', { n: String(days) });
       }
     }
+    var hr = fields['HR確認'];
+    var hrText = hr != null && String(hr).trim() !== '' ? human(hr) : '';
+    var status = '';
+    if (hrText || fields['在職狀態']) {
+      status = '<p class="ee-status" role="status"><span class="ee-label">' + esc(t('employmentStatus')) + '</span><b>' + esc(human(fields['在職狀態'] || '')) + '</b>' +
+        (hrText ? '<span class="ee-label">' + esc(t('hrConfirmLabel')) + '</span><b>' + esc(hrText) + '</b>' : '') + '</p>';
+    }
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(t('employeeDetail')) + '</h1></header>' +
-      '<section class="ee-card"><h2 class="ee-name">' + esc(name) + '</h2><p class="ee-id">' + esc(id) + '</p><p>' + esc(human(fields['在職狀態'] || '')) + '</p><p>' + esc(t('hireDate')) + ' ' + esc(hire) + (hireNote ? '｜' + esc(hireNote) : '') + '</p><p>' + esc(t('credentialState')) + ' ' + esc(human(fields['登入帳號狀態'] || '') || t('statusUnknown')) + '</p><p>' + esc(t('lineBound')) + ' ' + esc(human(fields['LINE綁定狀態'] || '') || t('unbound')) + '</p><p class="ee-hint">' + esc(t('attendanceSyncNote')) + '</p></section>' +
+      '<section class="ee-card"><h2 class="ee-name">' + esc(name) + '</h2><p class="ee-id">' + esc(id) + '</p>' + status + '<p class="ee-pair"><span class="ee-label">' + esc(t('hireDate')) + '</span><b class="ee-value">' + esc(hire) + (hireNote ? '｜' + esc(hireNote) : '') + '</b></p><p class="ee-pair"><span class="ee-label">' + esc(t('credentialState')) + '</span><b class="ee-value">' + esc(human(fields['登入帳號狀態'] || '') || t('statusUnknown')) + '</b></p><p class="ee-pair"><span class="ee-label">' + esc(t('lineBound')) + '</span><b class="ee-value">' + esc(human(fields['LINE綁定狀態'] || '') || t('unbound')) + '</b></p><p class="ee-hint">' + esc(t('attendanceSyncNote')) + '</p></section>' +
+      banner(view) +
       detailPairs(view) +
       renderAudit(view.audit) +
       '<div class="ee-bar">' + button('ee-primary', 'edit', t('edit')) + button('ee-secondary', 'account', t('goAccount')) + '</div>';
@@ -1094,13 +1243,15 @@
             var selected = String(item.value) === String(value) ? ' selected' : '';
             return '<option value="' + esc(item.value) + '"' + selected + '>' + esc(item.label || human(item.value)) + '</option>';
           }).join('') + '</select>';
+      } else if (field.key === '姓名' || field.key === '部門') {
+        html += '<textarea class="ee-grow" id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" rows="1" disabled aria-disabled="true" aria-describedby="' + described + '">' + esc(human(value)) + '</textarea>';
       } else {
         html += '<input id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" disabled aria-disabled="true" value="' + esc(human(value)) + '" aria-describedby="' + described + '">';
       }
       html += '<p class="ee-hint" id="' + described + '">' + esc(t('fieldLocked')) + ' ' + esc(t(reason)) + '</p>';
     } else if (field.key === 'V2員工ID' && view.formMode === 'CREATE') {
       var chosenLetter = view.form && view.form.idLetter || '';
-      html += '<div class="ee-chips">' + ['A', 'B', 'C'].map(function (letter) {
+      html += '<div class="ee-letters">' + ['A', 'B', 'C'].map(function (letter) {
         var name = letter === 'A' ? 'letterOffice' : letter === 'B' ? 'letterFactory' : 'letterCorp';
         return button('ee-chip' + (chosenLetter === letter ? ' is-on' : ''), 'letter', letter + ' ' + t(name), { value: letter, pressed: chosenLetter === letter });
       }).join('') + '</div>';
@@ -1117,7 +1268,11 @@
           }).join('') + '</select>';
       } else {
         var type = field.type === 'date' ? 'date' : 'text';
-        html += '<input id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" type="' + type + '" autocomplete="off" value="' + esc(value) + '" aria-describedby="' + described + '">';
+        if (field.key === '姓名' || field.key === '部門') {
+          html += '<textarea class="ee-grow" id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" rows="1" autocomplete="off" aria-describedby="' + described + '">' + esc(value) + '</textarea>';
+        } else {
+          html += '<input id="ee-' + esc(field.key) + '" data-ee-field="' + esc(field.key) + '" type="' + type + '" autocomplete="off" value="' + esc(value) + '" aria-describedby="' + described + '">';
+        }
       }
       if (error) html += '<p class="ee-error" id="' + described + '">' + esc(t(error)) + '</p>';
       else html += '<p class="ee-hint" id="' + described + '">';
@@ -1146,19 +1301,35 @@
     }
     var notes = '';
     if (mode === 'CREATE') {
-      notes += '<p class="ee-warn">' + esc(view.mode === 'SHADOW' ? t('shadowNote') : t('createPinNote')) + '</p>';
+      if (!view.error) notes += '<p class="ee-warn">' + esc(view.mode === 'SHADOW' ? t('shadowNote') : t('createPinNote')) + '</p>';
       notes += '<p class="ee-hint">' + esc(t('newHireStatus')) + '</p>';
       if (pinExpiresBeforeHire(view.form && view.form['到職日'], view.tempPinDays || 7, view.today || todayTaipei())) {
         notes += '<p class="ee-hint">' + esc(t('pinBeforeHire')) + '</p>';
       }
       if (createNeedsReason(view.form, view.today || todayTaipei())) notes += '<p class="ee-hint">' + esc(t('hireDatePast')) + '</p>';
     }
-    var fields = SECTIONS.map(function (section) {
-      var inner = FIELDS.filter(function (field) { return field.section === section[0]; }).map(function (field) {
-        return fieldControl(field, view);
+    var basicCreate = { 'V2員工ID': 1, '姓名': 1, '人員類別': 1, '到職日': 1, '部門': 1, '直屬主管ID': 1, '打卡號': 1 };
+    var fields = '';
+    if (mode === 'CREATE') {
+      var basic = '';
+      var advanced = '';
+      FIELDS.forEach(function (field) {
+        var html = fieldControl(field, view);
+        if (basicCreate[field.key]) basic += html;
+        else advanced += html;
+      });
+      fields = '<h2 class="ee-section ee-wide">' + esc(t('basicShort')) + '</h2>' + basic +
+        '<div class="ee-wide">' + button('ee-secondary', 'advanced', t('advanced'), { pressed: !!view.advancedOpen }) +
+        '<p class="ee-hint">' + esc(t('advancedHint')) + '</p></div>' +
+        (view.advancedOpen ? '<div class="ee-advanced">' + advanced + '</div>' : '');
+    } else {
+      fields = SECTIONS.map(function (section) {
+        var inner = FIELDS.filter(function (field) { return field.section === section[0]; }).map(function (field) {
+          return fieldControl(field, view);
+        }).join('');
+        return '<h2 class="ee-section ee-wide">' + esc(t(section[1])) + '</h2>' + inner;
       }).join('');
-      return '<h2 class="ee-section ee-wide">' + esc(t(section[1])) + '</h2>' + inner;
-    }).join('');
+    }
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(title) + '</h1></header>' +
       banner(view) + notes + '<div class="ee-fields">' + fields + '</div>' +
       '<div class="ee-bar">' + button('ee-primary', action, primary, { disabled: disabled, busy: view.busy }) + button('ee-secondary', 'cancel', t('cancel')) + '</div>';
@@ -1171,10 +1342,11 @@
     });
     var required = Object.keys(changes).length > 0 || !!(view.diff && view.diff.length) || view.operation === 'CREATE';
     var needsImpact = !!(view.requires && view.requires.hrConfirmStep);
-    var ready = reasonOk(view.reason, required) && (!needsImpact || view.impactConfirmed) && !view.busy;
+    var ready = reasonOk(view.reason, required) && !view.busy;
     var body = rows.map(function (row) {
       var extra = '';
-      if (row.field === '到職日') extra = '<p class="ee-warn">' + esc(t('firstDayNote')) + '</p><p class="ee-warn">' + esc(t('hireRecalcNote')) + '</p>';
+      var changed = String(row.before == null ? '' : row.before) !== String(row.after == null ? '' : row.after);
+      if (row.field === '到職日' && changed) extra = '<p class="ee-warn">' + esc(t('firstDayNote')) + '</p><p class="ee-warn">' + esc(t('hireRecalcNote')) + '</p>';
       return '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div>' + esc(t('before')) + ' ' + esc(human(row.before)) + '</div><div class="ee-diff-after">' + esc(t('after')) + ' ' + esc(human(row.after)) + '</div>' + extra + '</article>';
     }).join('');
     var warns = (view.warnings || []).map(function (item) {
@@ -1188,9 +1360,9 @@
       '<p class="ee-name">' + esc(view.name || '') + '（' + esc(view.employeeId || '') + '）</p>' +
       body + warns +
       '<div class="ee-field"><label for="ee-reason">' + esc(t('changeReason')) + '<span class="ee-req">*</span></label><select id="ee-reason" data-ee-reason="code">' + options + '</select>' +
-      (reason.code === 'OTHER' ? '<textarea data-ee-reason="note" aria-label="' + esc(t('reasonNote')) + '">' + esc(reason.note || '') + '</textarea>' : '') +
-      (needsImpact ? '<label class="ee-hint"><input data-ee-impact type="checkbox"' + (view.impactConfirmed ? ' checked' : '') + '> ' + esc(t('impactCheck')) + '</label><p class="ee-warn">' + esc(t('hrConfirmImpact')) + '</p>' : '') +
-      (ready ? '' : '<p class="ee-error">' + esc(needsImpact && !view.impactConfirmed ? t('hrConfirmImpact') : t('reasonRequired')) + '</p>') + '</div>' +
+      (reason.code === 'OTHER' ? '<textarea class="ee-note" data-ee-reason="note" aria-label="' + esc(t('reasonNote')) + '">' + esc(reason.note || '') + '</textarea>' : '') +
+      (needsImpact ? '<p class="ee-warn">' + esc(t('hrConfirmImpact')) + '</p>' : '') +
+      (ready ? '' : '<p class="ee-error">' + esc(t('reasonRequired')) + '</p>') + '</div>' +
       banner(view) +
       '<div class="ee-bar">' + button('ee-secondary', 'cancel', t('cancel')) + button('ee-primary', 'save', view.operation === 'CREATE' ? t('confirmAdd') : t('confirmSave'), { disabled: !ready, busy: view.busy }) + '</div>';
   }
@@ -1296,7 +1468,8 @@
       operation: state.operation,
       tempPinDays: state.tempPinDays,
       today: todayTaipei(),
-      newDept: false
+      newDept: false,
+      advancedOpen: state.advancedOpen
     };
   }
 
@@ -1355,24 +1528,58 @@
 
   function flatDetail(res) {
     if (!res) return { fields: {}, rowVersion: '' };
-    if (res.fields && typeof res.fields === 'object') {
+    if (res.fields && typeof res.fields === 'object' && !res.employee && !res.work && !res.workflow) {
       return { fields: Object.assign({}, res.fields), rowVersion: res.rowVersion || '' };
     }
     var employee = res.employee || res;
-    var fields = {};
-    if (employee.employeeId) fields['V2員工ID'] = employee.employeeId;
-    if (employee.name) fields['姓名'] = employee.name;
-    function take(group, map) {
-      var source = employee[group] || {};
-      Object.keys(map).forEach(function (from) {
-        if (source[from] != null && source[from] !== '') fields[map[from]] = source[from];
-      });
+    function group(name) {
+      var outer = res[name] && typeof res[name] === 'object' ? res[name] : {};
+      var inner = employee[name] && typeof employee[name] === 'object' ? employee[name] : {};
+      return Object.assign({}, outer, inner);
     }
-    take('basic', { mobile: '手機', email: 'Email' });
-    take('employment', { hireDate: '到職日', terminationDate: '離職日', employmentStatus: '在職狀態', personType: '人員類別' });
-    take('organization', { department: '部門', location: '工作地點', manager1: '直屬主管ID', manager2: '第二主管ID', isManager: '是否主管', approvalPermission: '簽核權限' });
-    take('work', { formalShift: '正式班別', attendanceType: '出勤管理類型', punchExempt: '免打卡', leaveExempt: '免請假', punchNumber: '打卡號' });
-    take('system', { preferredLanguage: 'PreferredLanguage', systemEnabled: '系統啟用', credentialState: '登入帳號狀態', lineBound: 'LINE綁定狀態' });
+    var basic = group('basic');
+    var employment = group('employment');
+    var organization = group('organization');
+    var work = group('work');
+    var workflow = group('workflow');
+    var system = group('system');
+    var fields = {};
+    function put(key, value) {
+      if (value == null || String(value).trim() === '') return;
+      if (!Object.prototype.hasOwnProperty.call(fields, key)) fields[key] = value;
+    }
+    put('V2員工ID', employee.employeeId || employee['V2員工ID']);
+    put('姓名', employee.name || employee['姓名'] || basic.name);
+    put('手機', basic.mobile || basic['手機']);
+    put('到職日', work.hireDate || employment.hireDate || workflow.hireDate);
+    put('離職日', employment.terminationDate || work.terminationDate);
+    put('在職狀態', employment.employmentStatus || workflow.employmentStatus || work.employmentStatus);
+    put('人員類別', work.personType || employment.personType || workflow.personType);
+    put('部門', work.department || employment.department || organization.department);
+    put('工作地點', work.location || employment.location || organization.location);
+    put('直屬主管ID', organization.manager1 || work.manager1 || workflow.manager1);
+    put('第二主管ID', organization.manager2 || work.manager2 || workflow.manager2);
+    put('是否主管', organization.isManager != null ? organization.isManager : (work.isManager != null ? work.isManager : workflow.isManager));
+    put('簽核權限', organization.approvalPermission || workflow.approvalPermission);
+    put('正式班別', work.formalShift || work.shift);
+    put('班別確認', work.shiftConfirmed || work.shiftConfirm || workflow.shiftConfirmed);
+    put('出勤管理類型', work.attendanceType || workflow.attendanceType);
+    put('打卡號', work.punchNumber);
+    put('免打卡', work.punchExempt);
+    put('免請假', work.leaveExempt);
+    put('啟用出勤異常檢查', work.attendanceExceptionEnabled != null ? work.attendanceExceptionEnabled : work.anomalyCheck);
+    put('PreferredLanguage', system.preferredLanguage || workflow.preferredLanguage || employment.preferredLanguage);
+    put('系統啟用', system.systemEnabled);
+    put('登入帳號狀態', system.credentialState || workflow.credentialState);
+    put('LINE綁定狀態', system.lineBound != null ? system.lineBound : workflow.lineBound);
+    put('HR確認', workflow.hrConfirm || workflow.HR確認 || workflow['HR確認'] || workflow.identityConfirm || organization.hrConfirm || organization.HR確認 || organization['HR確認'] || system.hrConfirm || employment.hrConfirm || employee['HR確認']);
+    put('組織設定確認', organization.organizationConfirmed || organization.orgConfirmed || workflow.organizationConfirmed || workflow.orgConfirmed);
+    put('特休制度', employment.annualPolicy || work.annualPolicy || employment['特休制度']);
+    put('簽核路由群組', organization.routeGroup || workflow.routeGroup || work.routeGroup);
+    put('最終需代理人', organization.needsProxy != null ? organization.needsProxy : workflow.needsProxy);
+    put('代理候選優先規則', organization.proxyPriority || workflow.proxyPriority);
+    put('代理人指定方式', organization.proxyMode || workflow.proxyMode);
+    put('主管指派代理', organization.managerAssignProxy || workflow.managerAssignProxy);
     return { fields: fields, rowVersion: res.rowVersion || employee.rowVersion || '' };
   }
 
@@ -1513,7 +1720,9 @@
       return { ok: false };
     }
     state.busy = true;
+    state.impactConfirmed = true;
     state.operation = 'CREATE';
+    rerender();
     var changes = createChanges(state.form);
     var expected = '';
     try {
@@ -1524,7 +1733,7 @@
       if (validated && (validated.mode === 'SHADOW' || validated.mode === 'LIVE')) state.mode = validated.mode;
       if (!validated || validated.ok === false) {
         pinMemory = '';
-        state.errorKey = errorKey(validated);
+        state.errorKey = errorKey(validated, 'CREATE');
         state.fieldErrors = mapFieldErrors(validated);
         state.screen = 'add';
         return { ok: false };
@@ -1542,7 +1751,7 @@
       }, deps);
       if (!res || res.ok === false) {
         pinMemory = '';
-        state.errorKey = errorKey(res);
+        state.errorKey = errorKey(res, 'CREATE');
         state.fieldErrors = mapFieldErrors(res);
         state.screen = 'add';
         state.keepRequest = !!(res && (res.code === 'SYSTEM_BUSY' || res.code === 'CREDENTIAL_INSERT_FAILED'));
@@ -1578,6 +1787,7 @@
       state.expiresAt = cred.expiresAt || '';
       state.screen = 'pin';
       state.leaveGuard = false;
+      markPinHistory();
       state.requestId = '';
       if (cred) cred.tempPin = '';
       return { ok: true };
@@ -1610,11 +1820,15 @@
       return { ok: false };
     }
     state.busy = true;
+    rerender();
     try {
       var res = await rpc('hrEmployeeValidate', validateBody(operation, changes, deps, state.rowVersion || ''), deps);
       state.diff = res && res.diff || [];
-      state.warnings = mapWarnings(res && res.warnings);
+      state.warnings = mapWarnings(res && res.warnings, changes);
       state.requires = res && res.requires || {};
+      if (res && (res.newSuggestion || (res.punch && res.punch.suggestion))) {
+        state.punchSuggestion = res.newSuggestion || res.punch.suggestion;
+      }
       if (res && res.punch && res.punch.suggestion) state.punchSuggestion = res.punch.suggestion;
       if (res && (res.mode === 'SHADOW' || res.mode === 'LIVE')) state.mode = res.mode;
       if (res && res.fields) state.fieldCatalog = res.fields;
@@ -1623,18 +1837,19 @@
         return { ok: false };
       }
       var blocking = (res.errors || []).filter(function (item) {
-        return item.code !== 'REASON_REQUIRED' && item.code !== 'HR_CONFIRM_REQUIRED';
+        return item && item.code !== 'REASON_REQUIRED' && item.code !== 'HR_CONFIRM_REQUIRED';
       });
-      if (res.ok === false && blocking.length) {
-        state.errorKey = errorKey({ code: blocking[0].code });
+      var softOnly = res.ok !== true && (res.errors || []).length > 0 && !blocking.length;
+      if (res.ok !== true && !softOnly) {
+        state.errorKey = errorKey(blocking.length ? { code: blocking[0].code } : res, operation);
         state.fieldErrors = mapFieldErrors(res);
         return { ok: false };
       }
       state.confirmToken = res.ok ? (res.confirmToken || '') : '';
       state.screen = 'diff';
-      state.errorKey = res.ok ? '' : errorKey(res);
-      state.fieldErrors = res.ok ? {} : mapFieldErrors(res);
-      return { ok: !!res.ok };
+      state.errorKey = '';
+      state.fieldErrors = {};
+      return { ok: true };
     } catch (ignore) {
       state.errorKey = 'genericFail';
       return { ok: false };
@@ -1656,17 +1871,19 @@
       return { ok: false };
     }
     state.busy = true;
+    state.impactConfirmed = true;
     state.operation = 'UPDATE';
+    rerender();
     var expected = state.rowVersion || '';
     try {
       var validated = await rpc('hrEmployeeValidate', validateBody('UPDATE', changes, deps, expected), deps);
       state.diff = validated && validated.diff || state.diff;
-      state.warnings = mapWarnings(validated && validated.warnings);
+      state.warnings = mapWarnings(validated && validated.warnings, changes);
       state.requires = validated && validated.requires || state.requires;
       if (!validated || validated.ok === false) {
-        state.errorKey = errorKey(validated);
+        state.errorKey = errorKey(validated, 'UPDATE');
         state.fieldErrors = mapFieldErrors(validated);
-        state.conflict = !!(validated && validated.code === 'ROW_VERSION_MISMATCH');
+        state.conflict = !!(validated && (validated.code === 'ROW_VERSION_MISMATCH' || (validated.errors && validated.errors[0] && validated.errors[0].code === 'ROW_VERSION_MISMATCH')));
         return { ok: false };
       }
       var requestId = ensureRequest();
@@ -1682,7 +1899,7 @@
         confirmToken: validated.confirmToken || ''
       }, deps);
       if (!res || res.ok === false) {
-        state.errorKey = errorKey(res);
+        state.errorKey = errorKey(res, 'UPDATE');
         state.conflict = !!(res && res.code === 'ROW_VERSION_MISMATCH');
         state.keepRequest = !!(res && (res.code === 'SYSTEM_BUSY' || res.code === 'CREDENTIAL_INSERT_FAILED'));
         if (!state.keepRequest) state.requestId = '';
@@ -1699,7 +1916,7 @@
       state.confirmToken = '';
       return { ok: true };
     } catch (ignore) {
-      state.errorKey = 'unknownResult';
+      state.errorKey = 'unknownResultEdit';
       state.keepRequest = true;
       return { ok: false, unknown: true };
     } finally {
@@ -1729,6 +1946,11 @@
       state.ackFailed = failed;
       state.screen = failed ? 'ack-hint' : 'list';
       state.notice = failed ? '' : 'saved';
+      var run = pendingLeave;
+      pendingLeave = null;
+      if (typeof run === 'function') {
+        try { run(); } catch (ignoreRun) {}
+      }
     }
     return { ok: !failed, cleared: pinMemory === '' };
   }
@@ -1747,13 +1969,26 @@
   function clearPin() {
     pinMemory = '';
     pinEventId = '';
+    pinHistory = false;
+  }
+
+  function markPinHistory() {
+    if (!pinMemory || pinHistory) return;
+    if (!global.history || typeof global.history.pushState !== 'function') return;
+    try {
+      global.history.pushState({ eePinGuard: 1 }, '');
+      pinHistory = true;
+    } catch (ignore) {}
   }
 
   function holdPin(pin, meta) {
     pinMemory = /^\d{6}$/.test(pin || '') ? String(pin) : '';
     pinEmployeeId = meta && meta.employeeId || pinEmployeeId;
     pinEventId = meta && meta.tempPinEventId || pinEventId;
-    if (pinMemory) state.screen = 'pin';
+    if (pinMemory) {
+      state.screen = 'pin';
+      markPinHistory();
+    }
   }
 
   async function handleAction(action, dataset, deps) {
@@ -1762,22 +1997,40 @@
     if (action === 'written' || action === 'written-close' || action === 'retry-ack') return confirmWritten(deps);
     if (action === 'stay') {
       state.leaveGuard = false;
+      pendingLeave = null;
       return { ok: true };
     }
     if (action === 'close-pin' || (action === 'back' && state.screen === 'pin')) return requestClosePin();
     if (action === 'add') {
       state.screen = 'add';
       state.operation = 'CREATE';
+      state.employeeId = '';
+      state.detail = null;
       state.form = suggestDefaults({ idLetter: '' });
       state.baseline = {};
+      state.fieldCatalog = [];
+      state.catalog = {};
       state.fieldErrors = {};
       state.errorKey = '';
+      state.notice = '';
+      state.diff = [];
+      state.warnings = [];
+      state.rowVersion = '';
+      state.confirmToken = '';
       state.requestId = '';
       state.keepRequest = false;
       state.reason = { code: 'NEW_HIRE', note: '' };
       state.punchConfirmed = false;
+      state.punchSuggestion = '';
       state.impactConfirmed = false;
       state.idTouched = false;
+      state.requires = {};
+      state.advancedOpen = false;
+      state.audit = [];
+      return { ok: true };
+    }
+    if (action === 'advanced') {
+      state.advancedOpen = !state.advancedOpen;
       return { ok: true };
     }
     if (action === 'edit') {
@@ -1826,8 +2079,9 @@
       return { ok: true };
     }
     if (action === 'account') {
-      if (typeof global.openHrCredentialAdmin === 'function') {
-        try { global.openHrCredentialAdmin(); } catch (ignore) {}
+      var openAccount = hostFn('openHrCredentialAdmin');
+      if (openAccount) {
+        try { openAccount(); } catch (ignore) {}
       }
       return { ok: true };
     }
@@ -1850,6 +2104,68 @@
     }, {}).then(function () { rerender(); });
   }
 
+  function growField(node) {
+    if (!node || node.tagName !== 'TEXTAREA' || !node.style) return;
+    node.style.height = 'auto';
+    var next = node.scrollHeight || 48;
+    if (next < 48) next = 48;
+    node.style.height = next + 'px';
+  }
+
+  function captureFocus() {
+    var doc = global.document;
+    var active = doc && doc.activeElement;
+    if (!active || !active.getAttribute) return null;
+    if (active.closest && !active.closest('.ee')) return null;
+    return {
+      field: active.getAttribute('data-ee-field') || '',
+      query: active.getAttribute('data-ee-query') != null,
+      reason: active.getAttribute('data-ee-reason') || '',
+      start: typeof active.selectionStart === 'number' ? active.selectionStart : null,
+      end: typeof active.selectionEnd === 'number' ? active.selectionEnd : null
+    };
+  }
+
+  function restoreFocus(saved) {
+    if (!saved || !global.document || !global.document.querySelector) return;
+    var sel = '';
+    if (saved.field) sel = '[data-ee-field="' + saved.field + '"]';
+    else if (saved.query) sel = '[data-ee-query]';
+    else if (saved.reason) sel = '[data-ee-reason="' + saved.reason + '"]';
+    if (!sel) return;
+    var node = global.document.querySelector(sel);
+    if (!node || !node.focus) return;
+    try { node.focus(); } catch (ignore) {}
+    if (saved.start != null && node.setSelectionRange) {
+      try { node.setSelectionRange(saved.start, saved.end); } catch (ignore) {}
+    }
+    growField(node);
+  }
+
+  function syncPrimary() {
+    var doc = global.document;
+    if (!doc || !doc.querySelector) return;
+    var node = doc.querySelector('.ee-main [data-ee-action="review"], .ee-main [data-ee-action="save"]');
+    if (!node) node = doc.querySelector('[data-ee-action="review"], [data-ee-action="save"]');
+    if (!node) return;
+    var view = viewFromState();
+    var disabled = false;
+    if (state.screen === 'add' || state.screen === 'edit') {
+      var mode = state.screen === 'add' ? 'CREATE' : 'UPDATE';
+      var errors = validateClient(state.form, mode, { actorId: view.actorId, employeeId: state.employeeId, baseline: state.baseline });
+      var changes = mode === 'UPDATE' ? buildChanges(state.baseline, state.form, { actorId: view.actorId, employeeId: state.employeeId, mode: 'UPDATE' }) : {};
+      disabled = !!(state.busy || state.acking || errors.length || (mode === 'UPDATE' && !Object.keys(changes).length));
+      if (mode === 'CREATE' && String((state.form || {})['打卡號'] || '').trim() && !state.punchConfirmed && state.form['免打卡'] !== 'Y' && state.form['出勤管理類型'] !== 'EXTERNAL') disabled = true;
+    } else if (state.screen === 'diff') {
+      var diffChanges = state.operation === 'CREATE' ? createChanges(state.form) : buildChanges(state.baseline, state.form, { actorId: view.actorId, employeeId: state.employeeId, mode: 'UPDATE' });
+      var required = Object.keys(diffChanges).length > 0 || (state.diff && state.diff.length) || state.operation === 'CREATE';
+      disabled = !(reasonOk(state.reason, required) && !state.busy && !state.acking);
+    }
+    node.disabled = disabled;
+    if (disabled) node.setAttribute('disabled', 'disabled');
+    else node.removeAttribute('disabled');
+  }
+
   function onInput(event) {
     var node = event.target;
     if (!node || !node.getAttribute || !state.active) return;
@@ -1864,7 +2180,12 @@
     if (node.getAttribute('data-ee-reason') === 'code') state.reason.code = node.value;
     if (node.getAttribute('data-ee-reason') === 'note') state.reason.note = node.value;
     if (node.getAttribute('data-ee-punch-confirm') != null) state.punchConfirmed = !!node.checked;
-    if (node.getAttribute('data-ee-impact') != null) state.impactConfirmed = !!node.checked;
+    if (node.getAttribute('data-ee-reason') === 'code' || node.getAttribute('data-ee-query') != null) {
+      rerender(true);
+      return;
+    }
+    if (field) growField(node);
+    syncPrimary();
   }
 
   function onBeforeUnload(event) {
@@ -1916,22 +2237,32 @@
     (doc.head || doc.documentElement).appendChild(node);
   }
 
-  function rerender() {
+  function rerender(keepFocus) {
     if (!state.active) return;
+    var saved = keepFocus ? captureFocus() : null;
     ensureStyles();
-    if (typeof global.renderMyAccount_ === 'function' && global.accountPanel_ === 'employeeManagement') {
-      try { global.renderMyAccount_(); } catch (ignore) {}
+    var painted = false;
+    var hostRender = hostFn('renderMyAccount_');
+    if (hostRender && readAccountPanel() === 'employeeManagement') {
+      try { hostRender(); painted = true; } catch (ignore) {}
     }
-    var root = global.document && global.document.querySelector('[data-ee-root]');
-    if (root) root.innerHTML = renderCurrent();
-    var dialog = global.document && global.document.querySelector('.ee-modal button');
-    if (dialog && dialog.focus) {
-      try { dialog.focus(); } catch (ignore) {}
+    var root = global.document && global.document.querySelector && global.document.querySelector('[data-ee-root]');
+    if (root) {
+      root.innerHTML = renderCurrent();
+      painted = true;
+    }
+    if (!painted) syncPrimary();
+    if (saved) restoreFocus(saved);
+    else {
+      var dialog = global.document && global.document.querySelector && global.document.querySelector('.ee-modal button');
+      if (dialog && dialog.focus) {
+        try { dialog.focus(); } catch (ignore) {}
+      }
     }
   }
 
   function activate(mode) {
-    var host = global.rc2AccountPanelHtml_;
+    var host = hostFn('rc2AccountPanelHtml_');
     if (typeof host !== 'function' || host.__ee) {
       if (host && host.__ee) {
         state.active = true;
@@ -1949,6 +2280,14 @@
     if (typeof global.rc2OpenAccountPanel_ === 'function' && !global.rc2OpenAccountPanel_.__ee) {
       var openHost = global.rc2OpenAccountPanel_;
       function openWrapped(panel) {
+        if (pinMemory) {
+          var self = this;
+          var args = arguments;
+          pendingLeave = function () { return openHost.apply(self, args); };
+          requestClosePin();
+          rerender();
+          return { blocked: true };
+        }
         var out = openHost.apply(this, arguments);
         if (String(panel || '') === 'employeeManagement' && state.active) refreshList({}).then(rerender);
         return out;
@@ -1994,6 +2333,8 @@
     pinMemory = '';
     pinEmployeeId = '';
     pinEventId = '';
+    pinHistory = false;
+    pendingLeave = null;
     var active = state.active;
     var mode = state.mode;
     state = blankState();
@@ -2017,11 +2358,110 @@
     };
   }
 
+  function wrapHost(name, decorate) {
+    var current = global && typeof global[name] === 'function' ? global[name] : null;
+    if (!current || current.__eeGuard) return;
+    function wrapped() {
+      return decorate(current, this, arguments);
+    }
+    wrapped.__eeGuard = true;
+    global[name] = wrapped;
+  }
+
+  function hookNavigation() {
+    ['showPage', 'showHome', 'showMyAccount_', 'rc2InnerBack_', 'openHrCredentialAdmin'].forEach(function (name) {
+      wrapHost(name, function (host, self, args) {
+        if (!pinMemory) return host.apply(self, args);
+        pendingLeave = function () { return host.apply(self, args); };
+        requestClosePin();
+        rerender();
+        return { blocked: true };
+      });
+    });
+    wrapHost('logout', function (host, self, args) {
+      if (pinMemory) {
+        pendingLeave = function () {
+          clearPin();
+          return host.apply(self, args);
+        };
+        requestClosePin();
+        rerender();
+        return { blocked: true };
+      }
+      clearPin();
+      return host.apply(self, args);
+    });
+    if (global.history && typeof global.history.back === 'function' && !global.history.back.__eeGuard) {
+      var back = global.history.back;
+      function guardedBack() {
+        if (pinMemory) {
+          pendingLeave = function () { return back.apply(global.history, []); };
+          requestClosePin();
+          rerender();
+          return { blocked: true };
+        }
+        return back.apply(global.history, arguments);
+      }
+      guardedBack.__eeGuard = true;
+      try { global.history.back = guardedBack; } catch (ignore) {}
+    }
+    if (global.addEventListener && !global.__eePop) {
+      global.addEventListener('popstate', function () {
+        if (!pinMemory) return;
+        if (!pendingLeave) {
+          pendingLeave = function () {
+            try { if (global.history && global.history.back) global.history.back(); } catch (ignore) {}
+          };
+        }
+        requestClosePin();
+        try {
+          if (global.history && global.history.pushState) global.history.pushState({ eePinGuard: 1 }, '');
+        } catch (ignore) {}
+        rerender();
+      });
+      global.__eePop = true;
+    }
+  }
+
+  function afterLogin() {
+    if (state.active || !loggedIn()) return loginInstall;
+    if (loginInstall) return loginInstall;
+    loginInstall = Promise.resolve().then(function () {
+      return install({});
+    }).then(function (ok) {
+      loginInstall = null;
+      if (ok && readAccountPanel() === 'employeeManagement') rerender();
+      return ok;
+    }, function () {
+      loginInstall = null;
+      return false;
+    });
+    return loginInstall;
+  }
+
+  function hookSessionStart() {
+    wrapHost('enterApp', function (host, self, args) {
+      var out = host.apply(self, args);
+      afterLogin();
+      return out;
+    });
+  }
+
   function boot() {
-    if (!global.document) return;
-    var start = function () { install({}); };
-    if (global.document.readyState === 'loading') global.document.addEventListener('DOMContentLoaded', start);
-    else start();
+    hookNavigation();
+    hookSessionStart();
+    var start = function () {
+      hookNavigation();
+      hookSessionStart();
+      if (loggedIn()) afterLogin();
+    };
+    if (!global.document) {
+      if (loggedIn()) afterLogin();
+      return;
+    }
+    if (global.document.readyState === 'loading' && global.document.addEventListener) {
+      global.document.addEventListener('DOMContentLoaded', start);
+    } else start();
   }
 
   global.ABIS_EMPLOYEE_EDIT = {
@@ -2055,6 +2495,7 @@
     spacedPin: spacedPin,
     formatTaipei: formatTaipei,
     handleAction: handleAction,
+    onInput: onInput,
     submitCreate: submitCreate,
     submitUpdate: submitUpdate,
     confirmWritten: confirmWritten,
