@@ -629,16 +629,16 @@ body.home-view #home{margin:0!important;padding:0!important;border:0!important;b
 .frozen-company-banner{position:relative!important;margin:0 -14px 12px!important;padding:calc(12px + env(safe-area-inset-top)) 18px 22px!important;background:linear-gradient(145deg,#f7fdff 0%,#edf9f5 58%,#eaf5ff 100%)!important;color:var(--fh-ink)!important;border-radius:0 0 28px 28px!important;box-shadow:0 2px 18px rgba(30,75,112,.06)!important;text-align:left!important;display:block!important;overflow:hidden}
 .frozen-company-banner:after{content:"";position:absolute;right:-48px;bottom:-80px;width:270px;height:190px;border-radius:48% 52% 0 0;background:radial-gradient(circle at 40% 30%,rgba(82,194,154,.16),transparent 60%),linear-gradient(145deg,rgba(33,120,196,.06),rgba(26,169,104,.09));transform:rotate(-7deg);pointer-events:none}
 .frozen-topline{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:42px}
-.frozen-entry-source{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#183652;white-space:nowrap}
+.frozen-entry-source{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 auto;overflow:hidden;font-size:13px;font-weight:800;color:#183652;white-space:nowrap}
 .frozen-line-mark{display:grid;place-items:center;width:31px;height:31px;border-radius:9px;background:#16c45b;color:#fff;font-size:9px;font-weight:950;letter-spacing:-.04em;box-shadow:0 3px 8px rgba(22,196,91,.18)}
-.frozen-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0;max-width:58%}
+.frozen-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0;flex:0 1 auto;max-width:78%}
 .frozen-icon-btn,.frozen-user-chip{width:auto!important;min-width:48px!important;min-height:48px!important;margin:0!important;padding:0!important;background:transparent!important;color:var(--fh-ink)!important;border:0!important;box-shadow:none!important}
 .frozen-icon-btn{position:relative;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;display:grid!important;place-items:center!important;border-radius:50%!important}
 .frozen-icon-btn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .frozen-bell-dot{position:absolute;right:6px;top:5px;width:8px;height:8px;border-radius:50%;background:#ef4444;border:2px solid #fff}
 .frozen-user-chip{display:flex!important;align-items:center!important;gap:7px!important;font-size:13px!important;font-weight:850!important;min-width:0!important;max-width:100%!important;overflow:hidden!important}
-button.frozen-user-chip#homeUserBtn{min-width:48px!important;max-width:100%!important}
-#headerUserName{display:block;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+button.frozen-user-chip#homeUserBtn{flex:0 0 auto!important;width:max-content!important;min-width:48px!important;max-width:min(100%,14em)!important;overflow:hidden!important}
+#headerUserName{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;flex:0 1 auto;width:max-content;max-width:8em;min-width:0;overflow:hidden;white-space:normal;overflow-wrap:anywhere;line-height:1.15}
 .frozen-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#dcecff,#cce8e0);color:#164b77;border:2px solid #fff;box-shadow:0 2px 8px rgba(20,57,90,.10);font-weight:900}
 .frozen-brand-row{position:relative;z-index:1;display:flex;align-items:center;gap:13px;margin-top:9px}
 .frozen-company-banner .company-logo{width:64px!important;height:64px!important;min-width:64px!important;margin:0!important;border:0!important;border-radius:50%!important;box-shadow:0 6px 18px rgba(14,71,143,.14)!important;background:#fff!important}
@@ -3150,8 +3150,9 @@ body.home-view .fh-quick-copy span{
   }
   #headerUserName,
   body.home-view #headerUserName{
-    font-size:12px!important;
-    max-width:6.5em!important;
+    font-size:13px!important;
+    max-width:none!important;
+    white-space:normal!important;
   }
   .frozen-entry-source{font-size:12px}
 }

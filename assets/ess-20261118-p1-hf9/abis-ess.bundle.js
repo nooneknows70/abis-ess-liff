@@ -9848,6 +9848,7 @@ try {
       missingOut: '缺下班卡',
       missingIn: '缺上班卡',
       noPunch: '未打卡',
+      noPunchYet: '尚未打卡',
       coverage: '這段期間的出勤資料還不完整',
       officeDay: '辦公室日班',
       factoryNight: '廠務夜班 20:00–04:00',
@@ -9870,6 +9871,7 @@ try {
       missingOut: 'Missing clock-out',
       missingIn: 'Missing clock-in',
       noPunch: 'No punches',
+      noPunchYet: 'Not clocked',
       coverage: 'Attendance data does not cover this whole period yet',
       officeDay: 'Office day',
       factoryNight: 'Factory night 20:00–04:00',
@@ -9892,6 +9894,7 @@ try {
       missingOut: 'Thiếu giờ ra',
       missingIn: 'Thiếu giờ vào',
       noPunch: 'Chưa chấm công',
+      noPunchYet: 'Chưa chấm công',
       coverage: 'Dữ liệu chấm công chưa đủ cho cả giai đoạn này',
       officeDay: 'Ca văn phòng ban ngày',
       factoryNight: 'Ca nhà máy đêm 20:00–04:00',
@@ -9914,6 +9917,7 @@ try {
       missingOut: 'ขาดเวลาออก',
       missingIn: 'ขาดเวลาเข้า',
       noPunch: 'ไม่มีการลงเวลา',
+      noPunchYet: 'ยังไม่ลงเวลา',
       coverage: 'ข้อมูลเวลายังไม่ครบช่วงนี้',
       officeDay: 'กะออฟฟิศกลางวัน',
       factoryNight: 'กะโรงงานกลางคืน 20:00–04:00',
@@ -10013,6 +10017,37 @@ try {
     return { start: start, end: end };
   }
 
+  function attendancePeriod(data) {
+    var period = (data && data.attendanceMonth && data.attendanceMonth.period) || (data && data.period) || null;
+    if (!period || !period.start || !period.end) return null;
+    return { start: String(period.start).slice(0, 10), end: String(period.end).slice(0, 10) };
+  }
+
+  function monthLabelText(value) {
+    var text = String(value || '');
+    if (!/^\d{4}-\d{2}$/.test(text)) return '';
+    var parts = text.split('-');
+    try {
+      return new Intl.DateTimeFormat(localeTag(), { year: 'numeric', month: 'long' }).format(new Date(Number(parts[0]), Number(parts[1]) - 1, 1));
+    } catch (ignore) {
+      return text;
+    }
+  }
+
+  function homeClockText(loading, value) {
+    if (loading) return '';
+    if (value == null || value === '' || value === '—' || value === '-' || value === '–') return t('noPunchYet');
+    return String(value);
+  }
+
+  function buttonRole(text) {
+    var label = String(text || '').replace(/\s+/g, '');
+    if (!label) return '';
+    if (/不採認|退回|修改/.test(label) && !/補登並核准|全部同意/.test(label)) return 'secondary';
+    if (/^(確認|正式重新送出|確認送出|確認重新送出)$/.test(label) || /全部同意|同意|採認|核准申請|補登並核准|送出補正申請/.test(label)) return 'primary';
+    return '';
+  }
+
   function expandRange(text, month, field) {
     var source = String(text || '');
     var summary = field === 'monthSummary' || !!(field && field.monthSummary === true);
@@ -10098,6 +10133,10 @@ try {
     isRetryPayload: isRetryPayload,
     friendlyBoot: friendlyBoot,
     monthBounds: monthBounds,
+    attendancePeriod: attendancePeriod,
+    monthLabelText: monthLabelText,
+    homeClockText: homeClockText,
+    buttonRole: buttonRole,
     expandRange: expandRange,
     shiftLabel: shiftLabel,
     recentLabel: recentLabel,
@@ -10126,6 +10165,7 @@ try {
           raw = friendlyBoot();
           type = type || 'warning';
         }
+        if ((global.__hf9RetryExhausted || global.__hf9HoldSession) && /HF9_LOGIN_BOOT/.test(raw)) return;
         return baseMessage(humanize(raw), type);
       };
       message.__hf9Round = true;
@@ -10134,7 +10174,14 @@ try {
     if (typeof renderOperationStatus_ === 'function' && !renderOperationStatus_.__hf9Round) {
       var baseStatus = renderOperationStatus_;
       renderOperationStatus_ = function (kind, title, detail, withRetry) {
-        return baseStatus(kind, humanize(title), detail ? humanize(detail) : detail, withRetry);
+        var nextTitle = humanize(title);
+        var nextDetail = detail ? humanize(detail) : detail;
+        if ((global.__hf9RetryExhausted || global.__hf9HoldSession) && /HF9_LOGIN_BOOT/.test(String(nextTitle || '') + String(nextDetail || ''))) {
+          var op = $('opStatus');
+          if (op) op.classList.add('hide');
+          return;
+        }
+        return baseStatus(kind, nextTitle, nextDetail, withRetry);
       };
       renderOperationStatus_.__hf9Round = true;
     }
@@ -10165,8 +10212,19 @@ try {
       }
       call = function (action, payload) {
         function once() { return Promise.resolve().then(function () { return baseCall(action, payload); }); }
+        var attendanceCall = action === 'myAttendance';
+        if (attendanceCall) global.__hf9AttendanceLoading = true;
+        function finishAttendance() { if (attendanceCall) global.__hf9AttendanceLoading = false; }
         var watched = action === 'login' || action === 'home' || action === 'homeBootstrap';
-        if (!watched) return once();
+        if (!watched) {
+          return once().then(function (data) {
+            finishAttendance();
+            return data;
+          }, function (err) {
+            finishAttendance();
+            throw err;
+          });
+        }
         if ((action === 'home' || action === 'homeBootstrap') && typeof sessionToken !== 'undefined' && sessionToken) {
           global.__hf9SavedSession = sessionToken;
           try { paintShell(); } catch (ignore) {}
@@ -10406,11 +10464,22 @@ try {
             if (node.textContent === '—' || node.textContent === '-') node.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
           });
         }
-        if (typeof attendanceCache === 'undefined' || attendanceCache == null) {
-          home.querySelectorAll('.fh-status-value, .fh-status-pill').forEach(function (node) {
-            if (node.textContent === '—' || node.textContent === '-') node.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
-          });
-        }
+        var loadingAttendance = !!global.__hf9AttendanceLoading;
+        home.querySelectorAll('.fh-status-row').forEach(function (row) {
+          var label = row.querySelector('.fh-status-label');
+          var value = row.querySelector('.fh-status-value');
+          if (!value) return;
+          var clock = label && /上班時間|下班時間|Giờ vào|Giờ ra|เวลาเข้า|เวลาออก|^In$|^Out$/.test(String(label.textContent || '').trim());
+          if (!clock) return;
+          if (loadingAttendance && (value.textContent === '—' || value.textContent === '-' || value.textContent === '–')) {
+            value.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
+            return;
+          }
+          if (!loadingAttendance) {
+            var shown = homeClockText(false, value.querySelector('.hf9-skel') ? '—' : value.textContent);
+            if (value.textContent !== shown) value.textContent = shown;
+          }
+        });
         polish(home);
       };
       renderHome.__hf9Round = true;
@@ -10423,8 +10492,8 @@ try {
         baseAttendance(view);
         var box = $('attendanceContent');
         if (!box || !data) return;
-        var period = data.attendanceMonth && data.attendanceMonth.period;
-        if (period && period.start && period.end && !box.querySelector('.hf9-month-summary')) {
+        var period = attendancePeriod(data);
+        if (period && !box.querySelector('.hf9-month-summary')) {
           var summary = box.querySelector('h3, .att-summary');
           var label = document.createElement('div');
           label.className = 'tiny hf9-month-summary';
@@ -10548,9 +10617,23 @@ try {
     }
 
     function showBootRetry() {
-      paintShell();
+      var loginEl = $('login');
+      if (loginEl) loginEl.classList.add('hide');
+      var app = $('app');
+      if (app) app.classList.remove('hide');
+      document.body.classList.add('home-view');
+      document.body.classList.remove('inner-view');
       var home = $('home');
-      if (!home || home.querySelector('#hf9BootRetry')) return;
+      if (!home) return;
+      var op = $('opStatus');
+      if (op) { op.classList.add('hide'); op.textContent = ''; }
+      var msg = $('msg');
+      if (msg) msg.textContent = '';
+      home.querySelectorAll('.hf9-skel, .hf9BootRetryNote, #hf9BootRetryNote, #hf9BootRetry').forEach(function (node) {
+        if (node.parentNode) node.parentNode.removeChild(node);
+      });
+      if (home.querySelector('#hf9BootRetry')) return;
+      home.innerHTML = '';
       var note = document.createElement('p');
       note.className = 'notice warning';
       note.id = 'hf9BootRetryNote';
@@ -10563,8 +10646,7 @@ try {
       btn.addEventListener('click', function () {
         global.__hf9HoldSession = false;
         global.__hf9RetryExhausted = false;
-        if (note.parentNode) note.parentNode.removeChild(note);
-        if (btn.parentNode) btn.parentNode.removeChild(btn);
+        home.innerHTML = '';
         if (typeof boot === 'function') boot();
       });
       home.appendChild(note);
@@ -10610,11 +10692,7 @@ try {
             if (kids[i].classList && kids[i].classList.contains('hf9-month-label')) { label = kids[i]; break; }
           }
         }
-        var text = '';
-        try {
-          var parts = el.value.split('-');
-          text = new Intl.DateTimeFormat(tag, { year: 'numeric', month: 'long' }).format(new Date(Number(parts[0]), Number(parts[1]) - 1, 1));
-        } catch (ignore) { return; }
+        var text = monthLabelText(el.value);
         if (!label && el.parentNode) {
           label = document.createElement('div');
           label.className = 'hf9-month-label';
@@ -10640,12 +10718,13 @@ try {
           btn.classList.remove('hf9-secondary-action');
           return;
         }
-        if (/不採認|退回|修改/.test(label) && !/補登並核准|全部同意/.test(label)) {
+        var role = buttonRole(label);
+        if (role === 'secondary') {
           btn.classList.add('hf9-secondary-action');
           btn.classList.remove('hf9-primary-action');
           return;
         }
-        if (/全部同意|同意|採認|核准申請|補登並核准|送出補正申請/.test(label)) {
+        if (role === 'primary') {
           btn.classList.add('hf9-primary-action');
           btn.classList.remove('hf9-secondary-action');
         }
@@ -10711,6 +10790,13 @@ try {
       });
       observer.observe(document.body, { childList: true, subtree: true });
     }
+    function onMonthPick(event) {
+      var el = event.target;
+      if (!el || !el.matches || !el.matches('input[type="month"]')) return;
+      stampInputs(el.parentNode || document.body);
+    }
+    document.addEventListener('input', onMonthPick, true);
+    document.addEventListener('change', onMonthPick, true);
     polish(document.body);
   }
 

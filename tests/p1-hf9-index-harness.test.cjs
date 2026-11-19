@@ -128,9 +128,11 @@ test('exhausted HOME_BOOTSTRAP_RETRY shows HF9_LOGIN_BOOT and a retry button', {
   assert.equal(window.localStorage.getItem('abis_session'), 'synthetic-session');
   assert.equal(window.HF9_UI_ROUND.sessionToken(), 'synthetic-session');
   assert.equal(window.document.getElementById('login').classList.contains('hide'), true);
-  assert.ok(home.querySelector('.hf9-skel'), 'skeleton missing on the retry path');
+  assert.equal(home.querySelector('.hf9-skel'), null);
+  assert.equal(home.querySelectorAll('#hf9BootRetryNote').length, 1);
+  assert.equal((home.textContent.match(/HF9_LOGIN_BOOT/g) || []).length, 1);
+  assert.equal((window.document.body.textContent.match(/HF9_LOGIN_BOOT/g) || []).length, 1);
   assert.ok(window.document.getElementById('hf9BootRetry'));
-  assert.match(home.textContent, /HF9_LOGIN_BOOT/);
   assert.equal(/HOME_BOOTSTRAP_RETRY/.test(home.textContent), false);
   dom.window.close();
 });
@@ -263,7 +265,7 @@ async function withChrome(run) {
 }
 
 function layoutScript(lang, name) {
-  return `(() => {
+  return `(async () => {
     document.documentElement.lang = ${JSON.stringify(lang)};
     try { localStorage.setItem('abis_lang', ${JSON.stringify(lang)}); } catch (e) {}
     if (typeof currentLang !== 'undefined') currentLang = ${JSON.stringify(lang)};
@@ -300,8 +302,18 @@ function layoutScript(lang, name) {
       '<button type="button" class="hf9-primary-action">補登並核准</button>',
       '<button type="button" class="hf9-primary-action">送出補正申請</button>',
       '<button type="button" class="hf9-secondary-action">不採認</button>',
+      '<button type="button" class="hf9-primary-action">確認</button>',
+      '<button type="button" class="hf9-primary-action">正式重新送出</button>',
       '<button type="button" class="fh-head-action">查看全部</button>'
     ].join('');
+    if (window.HF9_UI_ROUND && typeof window.HF9_UI_ROUND.buttonRole === 'function') {
+      host.querySelectorAll('button').forEach((btn) => {
+        const role = window.HF9_UI_ROUND.buttonRole(btn.textContent);
+        if (role === 'primary') btn.classList.add('hf9-primary-action');
+        if (role === 'secondary') btn.classList.add('hf9-secondary-action');
+      });
+    }
+    await new Promise((resolve) => setTimeout(resolve, 40));
     const buttons = headerButtons.concat(Array.from(host.querySelectorAll('button')).map(box));
     const nav = performance.getEntriesByType('navigation')[0];
     return {
@@ -313,6 +325,7 @@ function layoutScript(lang, name) {
       buttons,
       userClient,
       userScroll,
+      nameText: user.textContent,
       viewport: window.innerWidth
     };
   })()`;
@@ -321,7 +334,7 @@ function layoutScript(lang, name) {
 test('computed colors and 48px boxes at 360 and 390', { timeout: 30000 }, async () => {
   await withChrome(async ({ send, origin }) => {
     const cases = [
-      [360, 'ZH', '王小明'],
+      [360, 'ZH', '范氏青千'],
       [390, 'ZH', '王小明'],
       [360, 'VI', 'Nguyễn Thị Minh Châu'],
       [390, 'VI', 'Nguyễn Thị Minh Châu'],
@@ -341,6 +354,7 @@ test('computed colors and 48px boxes at 360 and 390', { timeout: 30000 }, async 
       assert.ok(ready);
       const evaluated = await send('Runtime.evaluate', {
         expression: layoutScript(lang, name),
+        awaitPromise: true,
         returnByValue: true
       });
       const value = evaluated.result && evaluated.result.value;
@@ -348,18 +362,22 @@ test('computed colors and 48px boxes at 360 and 390', { timeout: 30000 }, async 
       assert.equal(value.loop, false, lang + ' ' + width);
       assert.ok(value.calls < 40, lang + ' ' + width + ' callbacks ' + value.calls);
       assert.ok(value.dclMs < 2000, lang + ' ' + width + ' DOMContentLoaded ' + value.dclMs + 'ms');
-      const primary = new Set(['同意', '全部同意', '採認', '核准申請', '補登並核准', '送出補正申請']);
+      const primary = new Set(['同意', '全部同意', '採認', '核准申請', '補登並核准', '送出補正申請', '確認', '正式重新送出']);
       const secondary = new Set(['修改', '退回', '不採認']);
       for (const button of value.buttons) {
         if (button.display === 'none') continue;
         assert.ok(button.h >= 48 && button.w >= 48, lang + ' ' + width + ' ' + JSON.stringify(button));
         if (button.text === '查看全部' || button.text === '') continue;
-        if (primary.has(button.text)) assert.match(button.bg, /rgb\(11,\s*143,\s*90\)/, button.text + ' ' + button.bg);
+        if (primary.has(button.text)) assert.match(button.bg, /rgb\(11,\s*143,\s*90\)/, button.text + ' ' + button.bg + ' ' + button.cls);
         if (secondary.has(button.text)) assert.match(button.bg, /rgb\(255,\s*255,\s*255\)/, button.text + ' ' + button.bg);
       }
       const user = value.buttons.find((button) => String(button.cls).indexOf('frozen-user-chip') >= 0);
       assert.ok(user, lang + ' missing user chip');
       assert.ok(user.right <= width + 1, lang + ' ' + width + ' user button ends at ' + user.right);
+      if (name === '范氏青千') {
+        assert.equal(value.nameText, name);
+        assert.ok(value.userClient >= 48, 'short name was squeezed to ' + value.userClient + 'px');
+      }
     }
   });
 });

@@ -59,6 +59,62 @@ test('internal codes and developer text become friendly labels', () => {
   assert.equal(/GMT/.test(ui.humanize(jsDate)), false);
 });
 
+test('myAttendance period is top-level, and a one-day gap stays a day', () => {
+  const backend208 = {
+    month: '2026-11',
+    period: { start: '2026-11-01', end: '2026-11-30', type: 'MONTH' },
+    days: [{ date: '2026-11-05', shiftName: '辦公室日班' }],
+    summary: { attendanceDays: 1 },
+    coverageWarnings: [{ firstAffectedDate: '2026-11-05', lastAffectedDate: '2026-11-05' }]
+  };
+  assert.equal(backend208.attendanceMonth, undefined);
+  const top = ui.attendancePeriod(backend208);
+  assert.equal(top.start, '2026-11-01');
+  assert.equal(top.end, '2026-11-30');
+  const nested = ui.attendancePeriod({
+    attendanceMonth: { period: { start: '2026-11-01', end: '2026-11-30' } }
+  });
+  assert.equal(nested.start, '2026-11-01');
+  assert.equal(nested.end, '2026-11-30');
+  assert.equal(ui.expandRange('2026-11-05 ~ 2026-11-05', '2026-11'), '2026-11-05 ~ 2026-11-05');
+  assert.equal(ui.expandRange('2026-11-01 ~ 2026-11-01', '2026-11', {
+    monthSummary: true,
+    period: backend208.period
+  }), '2026-11-01 ~ 2026-11-30');
+});
+
+test('the month label follows the value in the month input', () => {
+  context.currentLang = 'ZH';
+  const october = ui.monthLabelText('2026-10');
+  const november = ui.monthLabelText('2026-11');
+  assert.notEqual(october, november);
+  assert.match(october, /10|十月/);
+  assert.match(november, /11|十一月/);
+  assert.equal(ui.monthLabelText(''), '');
+});
+
+test('home clock cells skeleton only while attendance is loading', () => {
+  context.currentLang = 'ZH';
+  assert.equal(ui.homeClockText(true, '—'), '');
+  assert.equal(ui.homeClockText(false, '—'), '尚未打卡');
+  assert.equal(ui.homeClockText(false, '18:02'), '18:02');
+  context.currentLang = 'EN';
+  assert.equal(ui.homeClockText(false, '—'), 'Not clocked');
+  context.currentLang = 'VI';
+  assert.equal(ui.homeClockText(false, '-'), 'Chưa chấm công');
+  context.currentLang = 'TH';
+  assert.equal(ui.homeClockText(false, ''), 'ยังไม่ลงเวลา');
+  context.currentLang = 'ZH';
+});
+
+test('HR confirm and formal resubmit are primary, not the blue default', () => {
+  assert.equal(ui.buttonRole('確認'), 'primary');
+  assert.equal(ui.buttonRole('正式重新送出'), 'primary');
+  assert.equal(ui.buttonRole('確認送出'), 'primary');
+  assert.equal(ui.buttonRole('退回'), 'secondary');
+  assert.equal(ui.buttonRole('確認撤回'), '');
+});
+
 test('a one-day gap stays a day, and only the month summary uses the period', () => {
   const bounds = ui.monthBounds('2026-11');
   assert.equal(bounds.start, '2026-11-01');
