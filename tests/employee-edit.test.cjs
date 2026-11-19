@@ -1088,7 +1088,8 @@ test('logout restores a fresh install, and the host back button is guarded again
     sessionToken: 'sess',
     call: async function () { return { ok: true }; }
   });
-  assert.equal(account.innerHTML, '');
+  assert.notEqual(account.innerHTML, '');
+  assert.match(account.innerHTML, /ee-pin/);
   assert.equal(page.snapshot().active, false);
   assert.equal(page.snapshot().pinHeld, false);
   ctx.enterApp();
@@ -1137,6 +1138,8 @@ test('diff labels are localized, create diff is compact, and hire warnings are n
   });
   assert.match(detail, /HR確認|Xác nhận nhân sự/);
   assert.match(detail, /Chờ xác nhận|待確認/);
+  assert.match(detail, /ee-status-warn/);
+  assert.doesNotMatch(html, /không tự tính lại|不會自動重算/);
 });
 
 test('textareas grow again after a rerender', () => {
@@ -1163,4 +1166,159 @@ test('textareas grow again after a rerender', () => {
   page.reset({ active: true, mode: 'LIVE', screen: 'edit', form: { '姓名': '阮氏金鳳凰 Nguyễn Thị Kim Phượng' }, baseline: { '姓名': '阮氏金鳳凰 Nguyễn Thị Kim Phượng' } });
   page.rerender();
   assert.equal(box.style.height, '80px');
+});
+
+test('logout keeps the host account containers for HR and non-HR', () => {
+  function world() {
+    var content = { id: 'accountContent', innerHTML: '<div id="accountPanel">host-panel</div>' };
+    var account = { id: 'account', innerHTML: '<div id="accountContent"></div>' };
+    var ctx = load({
+      document: {
+        readyState: 'complete',
+        body: { appendChild: function () {} },
+        head: { appendChild: function () {} },
+        addEventListener: function () {},
+        getElementById: function (id) {
+          if (id === 'account') return account;
+          if (id === 'accountContent') return content;
+          return null;
+        },
+        createElement: function () { return { style: {} }; },
+        querySelector: function () { return null; },
+        querySelectorAll: function () { return []; }
+      },
+      logout: function () {}
+    });
+    return { ctx: ctx, account: account, content: content };
+  }
+  const employee = world();
+  employee.ctx.logout();
+  assert.equal(employee.ctx.document.getElementById('accountContent'), employee.content);
+  assert.equal(employee.ctx.document.getElementById('account'), employee.account);
+  assert.equal(employee.account.innerHTML, '<div id="accountContent"></div>');
+  assert.equal(employee.content.innerHTML, '<div id="accountPanel">host-panel</div>');
+
+  const hr = world();
+  hr.ctx.ABIS_EMPLOYEE_EDIT.holdPin(PIN, { employeeId: 'B11513', tempPinEventId: 'TPIN-1' });
+  hr.ctx.logout();
+  assert.equal(hr.ctx.ABIS_EMPLOYEE_EDIT.snapshot().leaveGuard, true);
+  return hr.ctx.ABIS_EMPLOYEE_EDIT.confirmWritten({
+    sessionToken: 'sess',
+    call: async function () { return { ok: true }; }
+  }).then(function () {
+    assert.equal(hr.ctx.document.getElementById('account'), hr.account);
+    assert.equal(hr.ctx.document.getElementById('accountContent'), hr.content);
+    assert.equal(hr.account.innerHTML, '<div id="accountContent"></div>');
+    assert.equal(hr.content.innerHTML, '');
+  });
+});
+
+test('screen changes scroll to the top and the missing-field hint follows typing', async () => {
+  let top = 507;
+  let created = null;
+  const hint = { textContent: '', parentNode: null };
+  const button = {
+    disabled: true,
+    parentNode: null,
+    setAttribute: function () {},
+    removeAttribute: function () { this.disabled = false; }
+  };
+  const bar = {
+    insertBefore: function (node) { node.parentNode = bar; },
+    removeChild: function () { hint.textContent = ''; }
+  };
+  button.parentNode = bar;
+  hint.parentNode = bar;
+  const ctx = load({
+    scrollTo: function (_x, y) { top = y; },
+    document: {
+      readyState: 'complete',
+      head: { appendChild: function () {} },
+      addEventListener: function () {},
+      getElementById: function () { return null; },
+      createElement: function () {
+        created = { className: '', textContent: '', setAttribute: function () {}, parentNode: null };
+        return created;
+      },
+      querySelector: function (sel) {
+        if (String(sel).indexOf('review') >= 0) return button;
+        if (sel === '[data-ee-missing]') return created;
+        return null;
+      },
+      querySelectorAll: function () { return []; }
+    }
+  });
+  const page = ctx.ABIS_EMPLOYEE_EDIT;
+  page.reset({ active: true, screen: 'edit', operation: 'UPDATE', form: { '部門': '廠務部' }, baseline: { '部門': '廠務部' } });
+  page.rerender();
+  top = 507;
+  await page.handleAction('add', {}, {});
+  page.rerender();
+  assert.equal(top, 0);
+
+  page.reset({
+    active: true,
+    screen: 'add',
+    operation: 'CREATE',
+    form: page.suggestDefaults({
+      '人員類別': '辦公室',
+      '姓名': '王小明',
+      '到職日': '2026-12-01',
+      '部門': '管理部',
+      '直屬主管ID': 'A09700',
+      'V2員工ID': 'A11521'
+    })
+  });
+  page.onInput({
+    target: {
+      value: '11521',
+      tagName: 'INPUT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? '打卡號' : null; }
+    }
+  });
+  assert.ok(created);
+  assert.doesNotMatch(created.textContent, /打卡號/);
+});
+
+test('category defaults follow the backend lists and only replace system-filled fields', () => {
+  const fresh = ui();
+  const external = fresh.suggestDefaults({ '人員類別': '外部顧問' });
+  assert.equal(external['出勤管理類型'], 'EXTERNAL');
+  assert.equal(external['免打卡'], 'Y');
+  assert.equal(external['簽核路由群組'], 'DEFAULT');
+  assert.equal(external['代理人指定方式'], 'SUPERVISOR_ASSIGN');
+  assert.equal(external['正式班別'] || '', '');
+  const shown = fresh.renderScreen('add', { form: external, rows: [] });
+  assert.match(shown, /data-ee-field="免打卡"/);
+  assert.doesNotMatch(source, /FACTORY_XINDIAN/);
+
+  const ctx = load({ SHIFT_RULES: ['夜班', '日班'] });
+  const page = ctx.ABIS_EMPLOYEE_EDIT;
+  page.reset({ active: true, screen: 'add', operation: 'CREATE', form: {} });
+  page.onInput({
+    target: {
+      value: '辦公室',
+      tagName: 'SELECT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? '人員類別' : null; }
+    }
+  });
+  page.onInput({
+    target: {
+      value: '彰濱廠',
+      tagName: 'SELECT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? '工作地點' : null; }
+    }
+  });
+  page.onInput({
+    target: {
+      value: '廠務',
+      tagName: 'SELECT',
+      getAttribute: function (name) { return name === 'data-ee-field' ? '人員類別' : null; }
+    }
+  });
+  const html = page.renderCurrent();
+  assert.match(html, /value="彰濱廠" selected/);
+  assert.match(html, /value="FACTORY" selected/);
+  assert.match(html, /value="夜班"/);
+  assert.doesNotMatch(html, /value="日班" selected|value="日班">/);
 });

@@ -236,6 +236,7 @@
     ['advanced', '進階', 'Nâng cao', 'ขั้นสูง', 'Advanced', true],
     ['advancedHint', '其餘欄位使用預設值，需要時再打開。', 'Các mục còn lại dùng giá trị mặc định. Mở ra khi cần.', 'ช่องที่เหลือใช้ค่าเริ่มต้น เปิดเมื่อต้องการ', 'The other fields use defaults. Open them when you need to change them.', true],
     ['missingFields', '還差', 'Còn thiếu', 'ยังขาด', 'Still needed', true],
+    ['systemDefaults', '系統預設', 'Giá trị hệ thống', 'ค่าเริ่มต้นของระบบ', 'System defaults', true],
     ['auditCredentialFailed', '帳號建立未完成', 'Chưa tạo được tài khoản', 'ยังสร้างบัญชีไม่สำเร็จ', 'The account was not created', true],
     ['auditNewEmployee', '新增員工', 'Thêm nhân viên', 'เพิ่มพนักงาน', 'New employee', true]
   ];
@@ -459,6 +460,10 @@
   var pinHistory = false;
   var pendingLeave = null;
   var loginInstall = null;
+  var systemFilled = {};
+  var eeTouched = false;
+  var pinWasHeld = false;
+  var lastScreen = '';
   var installed = false;
   var state = blankState();
 
@@ -806,26 +811,69 @@
     return String(pin).split('').join(' ');
   }
 
-  function suggestDefaults(values) {
+  function shiftList() {
+    var rules = null;
+    if (typeof SHIFT_RULES !== 'undefined') rules = SHIFT_RULES;
+    else if (global && global.SHIFT_RULES) rules = global.SHIFT_RULES;
+    if ((!rules || !rules.length) && state.catalog && state.catalog['正式班別']) rules = state.catalog['正式班別'];
+    if (!rules || !rules.length) return [];
+    var out = [];
+    for (var i = 0; i < rules.length; i += 1) {
+      var item = rules[i];
+      if (item && typeof item === 'object') {
+        if (item['有效'] === 'N' || item.valid === 'N' || item.valid === false) continue;
+        if (item['班別確認'] && item['班別確認'] !== '已確認') continue;
+        var name = item.value || item.name || item['班別名稱'] || item['班別代碼'] || '';
+        if (name) out.push(String(name));
+      } else if (item) out.push(String(item));
+    }
+    return out;
+  }
+
+  function suggestDefaults(values, options) {
     var next = Object.assign({}, values || {});
-    if (!next['簽核權限']) next['簽核權限'] = 'NONE';
-    if (!next.PreferredLanguage) next.PreferredLanguage = 'zh-TW';
-    if (!next['出勤管理類型'] && (next['人員類別'] === '廠務' || next['人員類別'] === '辦公室')) next['出勤管理類型'] = 'NORMAL';
-    if (!next['簽核路由群組'] && next['人員類別'] === '廠務') next['簽核路由群組'] = 'FACTORY';
-    if (!next['簽核路由群組'] && (next['人員類別'] === '辦公室' || next['工作地點'] === '辦公室')) next['簽核路由群組'] = 'OFFICE';
-    if (!next['組織設定確認']) next['組織設定確認'] = '待確認';
-    if (!next['代理人指定方式'] && (next['人員類別'] === '廠務' || next['人員類別'] === '辦公室')) next['代理人指定方式'] = 'SUPERVISOR_ASSIGN';
-    if (!next['工作地點'] && next['人員類別'] === '辦公室') next['工作地點'] = '辦公室';
-    if (!next['工作地點'] && next['人員類別'] === '廠務') next['工作地點'] = '新店廠';
-    if (!next['正式班別'] && next['人員類別'] && next['人員類別'] !== '外部顧問') next['正式班別'] = '日班';
-    if (!next['代理候選優先規則']) next['代理候選優先規則'] = 'N/A';
-    if (!next['最終需代理人']) next['最終需代理人'] = 'Y';
-    if (!next['免打卡']) next['免打卡'] = 'N';
-    if (!next['免請假']) next['免請假'] = 'N';
-    if (!next['啟用出勤異常檢查']) next['啟用出勤異常檢查'] = 'Y';
-    if (!next['是否主管']) next['是否主管'] = 'N';
-    if (!next['班別確認']) next['班別確認'] = '待確認';
-    if (!next['特休制度']) next['特休制度'] = '週年制';
+    var refresh = !!(options && options.refreshSystem);
+    function put(key, value) {
+      if (value == null || String(value).trim() === '') return;
+      var empty = next[key] == null || String(next[key]).trim() === '';
+      if (!empty && !(refresh && systemFilled[key])) return;
+      next[key] = value;
+      systemFilled[key] = true;
+    }
+    put('簽核權限', 'NONE');
+    put('PreferredLanguage', 'zh-TW');
+    put('組織設定確認', '待確認');
+    put('代理候選優先規則', 'N/A');
+    put('最終需代理人', 'Y');
+    put('免請假', 'N');
+    put('啟用出勤異常檢查', 'Y');
+    put('是否主管', 'N');
+    put('班別確認', '待確認');
+    put('特休制度', '週年制');
+    var person = next['人員類別'];
+    var shift = shiftList()[0] || '';
+    if (person === '外部顧問') {
+      put('出勤管理類型', 'EXTERNAL');
+      put('免打卡', 'Y');
+      put('簽核路由群組', 'DEFAULT');
+      put('代理人指定方式', 'SUPERVISOR_ASSIGN');
+    } else if (person === '廠務') {
+      put('出勤管理類型', 'NORMAL');
+      put('簽核路由群組', 'FACTORY');
+      put('代理人指定方式', 'SUPERVISOR_ASSIGN');
+      put('工作地點', '新店廠');
+      put('免打卡', 'N');
+      put('正式班別', shift);
+    } else if (person === '辦公室' || next['工作地點'] === '辦公室') {
+      put('出勤管理類型', 'NORMAL');
+      put('簽核路由群組', person === '廠務' ? 'FACTORY' : 'OFFICE');
+      put('代理人指定方式', 'SUPERVISOR_ASSIGN');
+      if (person === '辦公室') put('工作地點', '辦公室');
+      put('免打卡', 'N');
+      put('正式班別', shift);
+    } else {
+      put('免打卡', 'N');
+    }
     return next;
   }
 
@@ -1083,6 +1131,7 @@
       '.ee-label{color:var(--ee-muted);font-size:13px;font-weight:700}',
       '.ee-value{font-size:16px;font-weight:800;overflow-wrap:anywhere}',
       '.ee-status{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;background:#E3F2FD;color:var(--ee-ink);border-radius:12px;padding:12px;margin:0 0 12px}',
+      '.ee-status-warn{background:var(--ee-orange-bg);color:var(--ee-orange);font-weight:800;border:2px solid var(--ee-orange)}',
       '.ee-success{background:#E8F5E9;color:#1B5E20;border-radius:12px;padding:12px;margin:0 0 12px;font-weight:800}',
       '.ee-primary{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border:0;border-radius:12px;background:#1565C0;color:#fff;font-weight:800}',
       '.ee-primary:active{background:var(--ee-primary-press)}',
@@ -1219,8 +1268,9 @@
     var hrText = hr != null && String(hr).trim() !== '' ? human(hr) : '';
     if (!hrText && String(fields['組織設定確認'] || '') === '待確認') hrText = t('pendingConfirm');
     var status = '';
+    var statusClass = 'ee-status' + (hrText && hrText === t('pendingConfirm') ? ' ee-status-warn' : '');
     if (hrText || fields['在職狀態']) {
-      status = '<p class="ee-status" role="status"><span class="ee-label">' + esc(t('employmentStatus')) + '</span><b>' + esc(human(fields['在職狀態'] || '')) + '</b>' +
+      status = '<p class="' + statusClass + '" role="status"><span class="ee-label">' + esc(t('employmentStatus')) + '</span><b>' + esc(human(fields['在職狀態'] || '')) + '</b>' +
         (hrText ? '<span class="ee-label">' + esc(t('hrConfirmLabel')) + '</span><b>' + esc(hrText) + '</b>' : '') + '</p>';
     }
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(t('employeeDetail')) + '</h1></header>' +
@@ -1316,9 +1366,10 @@
     if (mode === 'CREATE') {
       var basic = '';
       var advanced = '';
+      var showPunchExempt = (view.form && (view.form['人員類別'] === '外部顧問' || view.form['出勤管理類型'] === 'EXTERNAL' || view.form['出勤管理類型'] === 'EXEMPT'));
       FIELDS.forEach(function (field) {
         var html = fieldControl(field, view);
-        if (basicCreate[field.key]) basic += html;
+        if (basicCreate[field.key] || (field.key === '免打卡' && showPunchExempt)) basic += html;
         else advanced += html;
       });
       fields = '<h2 class="ee-section ee-wide">' + esc(t('basicShort')) + '</h2>' + basic +
@@ -1342,7 +1393,7 @@
         seen[item.field] = 1;
         names.push(label(item.field));
       });
-      if (names.length) missing = '<p class="ee-error">' + esc(t('missingFields')) + '：' + esc(names.join('、')) + '</p>';
+      if (names.length) missing = '<p class="ee-error" data-ee-missing>' + esc(t('missingFields')) + '：' + esc(names.join('、')) + '</p>';
     }
     return '<header class="ee-top">' + button('ee-back', 'back', '‹') + '<h1>' + esc(title) + '</h1></header>' +
       banner(view) + notes + '<div class="ee-fields">' + fields + '</div>' +
@@ -1367,17 +1418,25 @@
     repeated[t('firstDayNote')] = 1;
     repeated[t('hireRecalcNote')] = 1;
     repeated[t('hrConfirmImpact')] = 1;
-    var body = rows.map(function (row) {
+    var primaryRows = [];
+    var defaults = [];
+    rows.forEach(function (row) {
       var extra = '';
       var changed = String(row.before == null ? '' : row.before) !== String(row.after == null ? '' : row.after);
       if (row.field === '到職日' && (creating || changed)) {
-        extra = '<p class="ee-warn"><strong>⚠ ' + esc(t('firstDayNote')) + '</strong></p><p class="ee-warn"><strong>⚠ ' + esc(t('hireRecalcNote')) + '</strong></p>';
+        extra = '<p class="ee-warn"><strong>⚠ ' + esc(t('firstDayNote')) + '</strong></p>';
+        if (!creating) extra += '<p class="ee-warn"><strong>⚠ ' + esc(t('hireRecalcNote')) + '</strong></p>';
       }
-      if (creating) {
-        return '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div class="ee-diff-after">' + esc(human(row.after)) + '</div>' + extra + '</article>';
-      }
-      return '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div>' + esc(t('before')) + ' ' + esc(human(row.before)) + '</div><div class="ee-diff-after">' + esc(t('after')) + ' ' + esc(human(row.after)) + '</div>' + extra + '</article>';
-    }).join('');
+      var card = creating
+        ? '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div class="ee-diff-after">' + esc(human(row.after)) + '</div>' + extra + '</article>'
+        : '<article class="ee-card"><h2>' + esc(diffLabel(row)) + '</h2><div>' + esc(t('before')) + ' ' + esc(human(row.before)) + '</div><div class="ee-diff-after">' + esc(t('after')) + ' ' + esc(human(row.after)) + '</div>' + extra + '</article>';
+      if (creating && view.systemFilled && view.systemFilled[row.field]) defaults.push(card);
+      else primaryRows.push(card);
+    });
+    var body = primaryRows.join('');
+    if (defaults.length) {
+      body += '<details class="ee-card"><summary>' + esc(t('systemDefaults')) + '</summary>' + defaults.join('') + '</details>';
+    }
     var warns = (view.warnings || []).filter(function (item) {
       var text = typeof item === 'string' ? item : '';
       return text && !repeated[text];
@@ -1508,7 +1567,8 @@
       tempPinDays: state.tempPinDays,
       today: todayTaipei(),
       newDept: false,
-      advancedOpen: state.advancedOpen
+      advancedOpen: state.advancedOpen,
+      systemFilled: systemFilled
     };
   }
 
@@ -1872,6 +1932,10 @@
         state.punchSuggestion = res.newSuggestion || res.punch.suggestion;
       }
       if (res && res.punch && res.punch.suggestion) state.punchSuggestion = res.punch.suggestion;
+      if (state.operation === 'CREATE' && state.punchSuggestion && (!state.form['打卡號'] || systemFilled['打卡號'])) {
+        state.form['打卡號'] = state.punchSuggestion;
+        systemFilled['打卡號'] = true;
+      }
       if (res && (res.mode === 'SHADOW' || res.mode === 'LIVE')) state.mode = res.mode;
       if (res && res.fields) state.fieldCatalog = res.fields;
       if (!res || res.code === 'FEATURE_OFF') {
@@ -1983,6 +2047,7 @@
     } catch (ignore) {
       failed = true;
     } finally {
+      if (pinMemory) pinWasHeld = true;
       pinMemory = '';
       wipePinDom();
       state.acking = false;
@@ -2023,20 +2088,22 @@
 
   function scrubAccount() {
     wipePinDom();
+    if (!eeTouched && !pinWasHeld) return;
     var doc = global.document;
     if (!doc || !doc.getElementById) return;
-    ['account', 'accountContent', 'accountPanel'].forEach(function (id) {
-      var node = doc.getElementById(id);
-      if (node) node.innerHTML = '';
-    });
+    var content = doc.getElementById('accountContent');
+    if (content) content.innerHTML = '';
+    eeTouched = false;
+    pinWasHeld = false;
   }
 
   function clearPin() {
+    if (pinMemory) pinWasHeld = true;
     pinMemory = '';
     pinEventId = '';
     pinHistory = false;
     state.leaveGuard = false;
-    scrubAccount();
+    if (pinWasHeld || eeTouched) scrubAccount();
   }
 
   function dropSession() {
@@ -2057,6 +2124,7 @@
 
   function holdPin(pin, meta) {
     pinMemory = /^\d{6}$/.test(pin || '') ? String(pin) : '';
+    if (pinMemory) pinWasHeld = true;
     pinEmployeeId = meta && meta.employeeId || pinEmployeeId;
     pinEventId = meta && meta.tempPinEventId || pinEventId;
     if (pinMemory) {
@@ -2081,6 +2149,7 @@
       state.operation = 'CREATE';
       state.employeeId = '';
       state.detail = null;
+      systemFilled = {};
       state.form = suggestDefaults({ idLetter: '' });
       state.baseline = {};
       state.fieldCatalog = [];
@@ -2138,6 +2207,10 @@
           if (nextId && !state.idTouched) state.form['V2員工ID'] = nextId;
           state.punchSuggestion = suggested && (suggested.punch || suggested.punchNumber || (suggested.punch && suggested.punch.suggestion)) || state.punchSuggestion;
           if (suggested && suggested.punch && suggested.punch.suggestion) state.punchSuggestion = suggested.punch.suggestion;
+          if (state.punchSuggestion && (!state.form['打卡號'] || systemFilled['打卡號'])) {
+            state.form['打卡號'] = state.punchSuggestion;
+            systemFilled['打卡號'] = true;
+          }
         } catch (ignore) {}
       }
       return { ok: true };
@@ -2245,6 +2318,27 @@
     node.disabled = disabled;
     if (disabled) node.setAttribute('disabled', 'disabled');
     else node.removeAttribute('disabled');
+    var hintText = '';
+    if (state.screen === 'add' && disabled && errors && errors.length) {
+      var names = [];
+      var seen = {};
+      errors.forEach(function (item) {
+        if (!item || !item.field || seen[item.field]) return;
+        seen[item.field] = 1;
+        names.push(label(item.field));
+      });
+      if (names.length) hintText = t('missingFields') + '：' + names.join('、');
+    }
+    var hint = doc.querySelector ? doc.querySelector('[data-ee-missing]') : null;
+    if (hintText) {
+      if (!hint && doc.createElement && node.parentNode && node.parentNode.insertBefore) {
+        hint = doc.createElement('p');
+        hint.className = 'ee-error';
+        if (hint.setAttribute) hint.setAttribute('data-ee-missing', '');
+        node.parentNode.insertBefore(hint, node);
+      }
+      if (hint) hint.textContent = hintText;
+    } else if (hint && hint.parentNode) hint.parentNode.removeChild(hint);
   }
 
   function onInput(event) {
@@ -2256,11 +2350,13 @@
       if (FORBIDDEN[field]) return;
       state.form[field] = node.value;
       if (field === 'V2員工ID') state.idTouched = true;
+      if (field !== '人員類別') systemFilled[field] = false;
     }
     if (node.getAttribute('data-ee-query') != null) state.query = node.value;
     if (node.getAttribute('data-ee-reason') === 'code') state.reason.code = node.value;
     if (node.getAttribute('data-ee-reason') === 'note') state.reason.note = node.value;
-    if (field === '人員類別' || field === '工作地點') state.form = suggestDefaults(state.form);
+    if (field === '人員類別') state.form = suggestDefaults(state.form, { refreshSystem: true });
+    else if (field === '工作地點') state.form = suggestDefaults(state.form);
     if (node.getAttribute('data-ee-reason') === 'code' || node.getAttribute('data-ee-query') != null || field === '人員類別' || field === '工作地點') {
       rerender(true);
       return;
@@ -2301,6 +2397,10 @@
   function bind() {
     var doc = global.document;
     if (!doc || doc.__eeBound) return;
+    if (global.addEventListener && !global.__eeResize) {
+      global.addEventListener('resize', function () { growAll(); });
+      global.__eeResize = true;
+    }
     doc.addEventListener('click', onClick);
     doc.addEventListener('input', onInput);
     doc.addEventListener('change', onInput);
@@ -2318,8 +2418,29 @@
     (doc.head || doc.documentElement).appendChild(node);
   }
 
+  function scrollTopIfScreenChanged() {
+    if (!lastScreen || lastScreen === state.screen) {
+      lastScreen = state.screen;
+      return;
+    }
+    lastScreen = state.screen;
+    try {
+      if (typeof global.scrollTo === 'function') global.scrollTo(0, 0);
+    } catch (ignore) {}
+  }
+
+  function scheduleGrow() {
+    var run = function () { try { growAll(); } catch (ignore) {} };
+    if (typeof global.requestAnimationFrame === 'function') {
+      try { global.requestAnimationFrame(run); return; } catch (ignore) {}
+    }
+    if (typeof global.setTimeout === 'function') global.setTimeout(run, 0);
+    else run();
+  }
+
   function rerender(keepFocus) {
     if (!state.active) return;
+    scrollTopIfScreenChanged();
     var saved = keepFocus ? captureFocus() : null;
     ensureStyles();
     var painted = false;
@@ -2376,7 +2497,12 @@
       return false;
     }
     function wrapped(panel) {
-      if (String(panel || '') === 'employeeManagement' && state.active) return renderCurrent();
+      if (String(panel || '') === 'employeeManagement' && state.active) {
+        eeTouched = true;
+        var html = renderCurrent();
+        scheduleGrow();
+        return html;
+      }
       return host.apply(this, arguments);
     }
     wrapped.__ee = true;
@@ -2443,6 +2569,10 @@
     pinEventId = '';
     pinHistory = false;
     pendingLeave = null;
+    systemFilled = {};
+    eeTouched = false;
+    pinWasHeld = false;
+    lastScreen = '';
     var active = state.active;
     var mode = state.mode;
     state = blankState();
@@ -2557,6 +2687,10 @@
   }
 
   function boot() {
+    if (global.addEventListener && !global.__eeResize) {
+      global.addEventListener('resize', function () { growAll(); });
+      global.__eeResize = true;
+    }
     hookNavigation();
     hookSessionStart();
     var start = function () {
