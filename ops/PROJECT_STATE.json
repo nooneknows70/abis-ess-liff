@@ -2370,5 +2370,41 @@
     "forbiddenBusinessAndAuthorityWrites": 0,
     "rollbackPerformed": false,
     "evidence": "ops/evidence/HRLB_V1_1_2_PRODUCTION_RELEASE_HOLD_ACTOR_SESSION_EXPIRED_20261106.json"
+  },
+  "attendanceExportV1Candidate": {
+    "gate": "ABIS_ESS_ATTENDANCE_EXPORT_V1_CANDIDATE_QA_PENDING",
+    "engineeringComplete": false,
+    "integrationAcceptance": "HOLD",
+    "offlineTests": {
+      "pass": 46,
+      "fail": 0,
+      "skip": 0,
+      "command": "node --test tests/attendance-export/*.test.cjs plus paired LIFF tests"
+    },
+    "independentXlsx": "PASS_ZIP_XML_ONLY",
+    "productionMutations": 0,
+    "triggerMutations": 0,
+    "triggerEnabled": false,
+    "runtimeMode": "DISABLED",
+    "scheduler": "HOLD",
+    "liveProductionReadback": {
+      "version": 187,
+      "deploymentCount": 4,
+      "backendMain": "bc18df75d0e5751e4ec28c81ae3cb60fc94734ce",
+      "immutableAndHeadToMain": "PASS_100_100_SHA256"
+    },
+    "holds": [
+      "SOURCE_NORMALIZER_AND_FORMAL_EQUIVALENCE_WITNESS_INCOMPLETE",
+      "VERIFIED_SNAPSHOT_STORAGE_RUNTIME_BINDING_REQUIRED",
+      "FULL_TEMPLATE_FONT_GEOMETRY_PARITY_NOT_VERIFIED",
+      "LIVE_TRIGGER_COLLECTOR_INVENTORY_INCOMPLETE",
+      "SCHEDULER_PRECISION_DECISION_REQUIRED",
+      "EFFECTIVE_OAUTH_EXECUTION_IDENTITY_NOT_VERIFIED",
+      "PRODUCTION_END_TO_END_NOT_RUN",
+      "REAL_BROWSER_MOBILE_VIEWPORT_NOT_VERIFIED",
+      "CHATGPT_INDEPENDENT_QA_PENDING"
+    ],
+    "nextAction": "Independent QA must retain engineering HOLD; finish source/storage/template binding before integration acceptance. No RELEASE/GO-LIVE/FINAL VERIFY.",
+    "observedAt": "2026-11-20T12:06:41.771002+08:00"
   }
 }

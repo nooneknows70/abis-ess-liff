@@ -1,3 +1,11 @@
+## 2026-11-20｜出勤匯出 V1 不完整工程候選／整合 HOLD
+
+- Gate `ABIS_ESS_ATTENDANCE_EXPORT_V1_CANDIDATE_QA_PENDING`；46 offline PASS，0 FAIL／SKIP；不是工程完成或正式上線。
+- 已完成純模型、編排器、durable store contract、API 與 versioned LIFF 候選；正式 source normalizer／storage binding／full template parity 尚未完成；API fail-closed，daily sync DISABLED，Scheduler HOLD。
+- 本次實際讀回 Production @187、4 deployments；immutable @187／HEAD／Backend main 100/100 SHA-256相同。舊 @175／@176 摘要落後，不改歷史驗證範圍。
+- Production mutations／Trigger changes／Sheet writes／external sends 全0。下一步獨立 QA 必須保留整合 HOLD；不得 RELEASE／GO-LIVE／FINAL VERIFY。
+- Evidence `ops/evidence/ATTENDANCE_EXPORT_V1_CANDIDATE_20261120.json`。
+
 ## 2026-11-07｜HRLB V1.1.2 B10601 recovery operator PASS
 
 - Gate: `HRLB_V1_1_2_UI_RECOVERY_FINAL_VERIFY_PASS`; ChatGPT independent acceptance pending, issues remain open.
