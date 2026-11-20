@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-20T12:06:41.771002+08:00",
+  "bases": {
+    "abis-ess-backend": "bc18df75d0e5751e4ec28c81ae3cb60fc94734ce",
+    "abis-release-control": "95e9cd81db7d2ce199a94b40d63149234ff665e3",
+    "abis-attendance-collector": "5c3560ff81724860645f460ac5f6e2f3d1fc633a",
+    "abis-payroll": "af3aa0fa4cede0e2d5f281ad0f7177adf72633d8",
+    "abis-ess-liff": "4c77821a94fb9f8f00140e26ffe0f54854f4e7ca"
+  },
+  "liveRuntime": {
+    "version": 187,
+    "deploymentCount": 4,
+    "backendMain": "bc18df75d0e5751e4ec28c81ae3cb60fc94734ce",
+    "immutableAndHeadToMain": "PASS_100_100_SHA256"
+  },
+  "runtimeParity": {
+    "v187": {
+      "files": 100,
+      "mainFiles": 100,
+      "matching": 100,
+      "missing": [],
+      "extra": [],
+      "mismatch": [],
+      "manifest": "f71b2e84094ca36f6173eea2df9be908dbacbc08d513b43c1a53b744d940d4b6"
+    },
+    "head": {
+      "files": 100,
+      "mainFiles": 100,
+      "matching": 100,
+      "missing": [],
+      "extra": [],
+      "mismatch": [],
+      "manifest": "f71b2e84094ca36f6173eea2df9be908dbacbc08d513b43c1a53b744d940d4b6"
+    }
+  },
+  "authorityDrift": [
+    {
+      "kind": "CENTRAL_SUMMARY_STALE",
+      "recorded": 175,
+      "live": 187
+    },
+    {
+      "kind": "BACKEND_LIFF_HRLB_SUMMARY_STALE",
+      "recorded": 176,
+      "live": 187
+    },
+    {
+      "kind": "SCOPED_VS_WHOLE_SYSTEM_CERTIFICATION",
+      "note": "Preserve @170 / LIFF @153 historical PROD_CURRENT; no implicit promotion"
+    }
+  ],
+  "readOnlySheets": {
+    "account": "EXISTING_OSCAR_CONNECTION",
+    "metadata": "3/3_READABLE",
+    "headerSentinels": "PASS",
+    "aclMetadata": "3/3 owner-only entries, shared=false; not proof of Apps Script effective grant",
+    "exportColumns": [
+      129,
+      133,
+      129
+    ],
+    "frozenRows": 3,
+    "frozenColumns": 2,
+    "fullBusinessDataValidation": "NOT_RUN"
+  },
+  "scheduleEvidence": {
+    "source": "R2174 canonical five-minute dispatcher; 08:40/20:40 batch notification source",
+    "currentLiveTriggerInventory": "HOLD_NOT_READ_BACK",
+    "newExportTriggerInstalled": false,
+    "nearMinuteToleranceMinutes": 15,
+    "officialReference": "https://developers.google.com/apps-script/reference/script/clock-trigger-builder#nearMinute(Integer)"
+  },
+  "carryForward": {
+    "unrelatedAcceptedHistoricalTests": "CARRY_FORWARD_PASS_WHERE_SOURCE_UNCHANGED",
+    "closedBackfillRerun": false,
+    "historicalStageOrReleaseRerun": false
+  },
+  "safety": {
+    "productionMutations": 0,
+    "sheetsWrites": 0,
+    "appsScriptExecutions": 0,
+    "sourcePush": 0,
+    "versionsCreated": 0,
+    "deploymentChanges": 0,
+    "triggersChanged": 0,
+    "scopeAclChanges": 0,
+    "externalSends": 0
+  },
+  "limitations": [
+    "SOURCE_NORMALIZER_AND_FORMAL_EQUIVALENCE_WITNESS_INCOMPLETE",
+    "VERIFIED_SNAPSHOT_STORAGE_RUNTIME_BINDING_REQUIRED",
+    "FULL_TEMPLATE_FONT_GEOMETRY_PARITY_NOT_VERIFIED",
+    "LIVE_TRIGGER_COLLECTOR_INVENTORY_INCOMPLETE",
+    "SCHEDULER_PRECISION_DECISION_REQUIRED",
+    "EFFECTIVE_OAUTH_EXECUTION_IDENTITY_NOT_VERIFIED",
+    "PRODUCTION_END_TO_END_NOT_RUN",
+    "REAL_BROWSER_MOBILE_VIEWPORT_NOT_VERIFIED",
+    "CHATGPT_INDEPENDENT_QA_PENDING"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "base": "4c77821a94fb9f8f00140e26ffe0f54854f4e7ca",
+  "files": [
+    {
+      "path": "assets/ess-20261120-attendance-export-v1/CONTRACT.md",
+      "sha256": "636c812e885058042939b93883568186ef8dd157e7830c336ff6b8d2014df25e",
+      "bytes": 10755
+    },
+    {
+      "path": "assets/ess-20261120-attendance-export-v1/attendance-export.js",
+      "sha256": "3387ba9c83810e8aec4b1b8aaa4201275547bbf1cd60b589186569df4f3e8052",
+      "bytes": 8013
+    },
+    {
+      "path": "docs/attendance-export/QA.md",
+      "sha256": "e8f82e96aa131dcb09fab123a1a5a2296c72f27e4d98f53a820db4fdb471ef65",
+      "bytes": 2668
+    },
+    {
+      "path": "tests/attendance-export/ui.test.cjs",
+      "sha256": "49d19eb84fb1595f866c93c1fc84f1a0be11e346a64c6dea9b5ede03ae793850",
+      "bytes": 4612
+    }
+  ]
+}
