@@ -41,7 +41,7 @@ test('internal codes and developer text become friendly labels', () => {
   assert.equal(ui.humanize('缺卡 N'), '無缺卡');
   assert.equal(ui.humanize('缺卡 Y'), '有缺卡');
   assert.match(ui.humanize('來源已失效｜原 Punch/Leave/排班'), /最新結果/);
-  assert.equal(ui.humanize('OFFICE_DAY'), '辦公室日班');
+  assert.equal(ui.humanize('OFFICE_DAY'), '辦公室固定日班');
   assert.match(ui.humanize('FACTORY_NIGHT_2000_0400'), /20:00/);
   assert.equal(ui.humanize('R2180D'), '出勤規則');
   assert.equal(ui.humanize('Restore First Login'), '恢復首次登入');
@@ -167,7 +167,8 @@ test('shift and recent labels follow the active language', () => {
   context.currentLang = 'TH';
   assert.equal(ui.shiftLabel(day), 'กะออฟฟิศ');
   context.currentLang = 'ZH';
-  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '辦公室日班');
+  // V154-P2A: matches SHIFT_RULE master name for OFFICE_DAY.
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '辦公室固定日班');
 });
 
 test('logout clears the session keys the bundle stores', () => {
