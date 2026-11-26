@@ -10059,7 +10059,7 @@ try {
     var low = label.toLowerCase();
     if (/不採認|退回|修改/.test(label) && !/補登並核准|全部同意/.test(label)) return 'secondary';
     if (roleListHit(low, ROLE_SECONDARY_EXACT, ROLE_SECONDARY_PART)) return 'secondary';
-    if (/^(確認|正式重新送出|確認送出|確認重新送出)$/.test(label) || /全部同意|同意|採認|核准申請|補登並核准|送出補正申請/.test(label)) return 'primary';
+    if (/^(確認|正式重新送出|確認送出|確認重新送出)$/.test(label) || /全部同意|同意|採認|核准申請|主管核准|補登並核准|送出補正申請|送出假單/.test(label)) return 'primary';
     if (roleListHit(low, ROLE_PRIMARY_EXACT, ROLE_PRIMARY_PART)) return 'primary';
     return '';
   }

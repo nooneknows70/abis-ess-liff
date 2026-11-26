@@ -117,7 +117,7 @@ test('HR confirm and formal resubmit are primary, not the blue default', () => {
 
 test('vi and th primary and secondary buttons match the zh roles (R7 N2)', () => {
   const primary = {
-    ZH: ['採認', '確認', '正式重新送出', '核准申請', '全部同意'],
+    ZH: ['採認', '確認', '正式重新送出', '核准申請', '全部同意', '主管核准', '送出假單'],
     VI: ['Chấp nhận', 'Chấp nhận và gửi', 'Xác nhận', 'Gửi lại chính thức', 'Quản lý phê duyệt', 'Gửi đơn', 'Đồng ý'],
     TH: ['รับรอง', 'ยอมรับและส่ง', 'ยืนยัน', 'ส่งใหม่อย่างเป็นทางการ', 'ผู้บังคับบัญชาอนุมัติ', 'ส่งคำขอลา']
   };
