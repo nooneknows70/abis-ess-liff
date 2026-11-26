@@ -33,6 +33,9 @@ async function openHarness(handle, extra) {
   virtualConsole.on('jsdomError', (error) => errors.push(String(error && error.message || error)));
   const started = Date.now();
   const dom = await JSDOM.fromFile(fixture, {
+    // GAS serves Index.html as UTF-8; the fixture has no <meta charset>, so tests
+    // that compare zh text inside the bundle ask jsdom for UTF-8 explicitly.
+    ...(extra && extra.utf8 ? { contentType: 'text/html; charset=utf-8' } : {}),
     runScripts: 'dangerously',
     resources: 'usable',
     pretendToBeVisual: true,
@@ -377,6 +380,272 @@ test('computed colors and 48px boxes at 360 and 390', { timeout: 30000 }, async 
       if (name === '范氏青千') {
         assert.equal(value.nameText, name);
         assert.ok(value.userClient >= 48, 'short name was squeezed to ' + value.userClient + 'px');
+      }
+    }
+  });
+});
+
+function headerScript(lang, name, sourceText) {
+  return `(async () => {
+    document.documentElement.lang = ${JSON.stringify(lang)};
+    if (typeof currentLang !== 'undefined') currentLang = ${JSON.stringify(lang)};
+    document.body.classList.add('home-view');
+    document.body.classList.remove('inner-view');
+    document.getElementById('headerUserName').textContent = ${JSON.stringify(name)};
+    const source = document.getElementById('entrySourceText');
+    source.textContent = ${JSON.stringify(sourceText)};
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    const r = (el) => el.getBoundingClientRect();
+    const box = r(document.getElementById('entrySource'));
+    const text = r(source);
+    const bell = r(document.getElementById('homeBellBtn'));
+    const user = r(document.getElementById('homeUserBtn'));
+    const style = getComputedStyle(source);
+    return {
+      boxRight: box.right, textRight: text.right, textWidth: text.width, bellLeft: bell.left,
+      userRight: user.right, overflow: style.overflow, ellipsis: style.textOverflow,
+      truncated: source.scrollWidth > source.clientWidth + 1,
+      scrollX: document.documentElement.scrollWidth - document.documentElement.clientWidth
+    };
+  })()`;
+}
+
+test('entry source text never runs under the bell at 360 and 390 (R7 N3)', { timeout: 30000 }, async () => {
+  await withChrome(async ({ send, origin }) => {
+    const cases = [
+      ['ZH', '范氏青千', 'WEB 登入'],
+      ['ZH', '由 LINE 進入很長的入口名稱', 'WEB 登入'],
+      ['VI', 'Nguyễn Thị Minh Châu', 'Đăng nhập WEB'],
+      ['TH', 'สมชาย ใจดีมาก', 'เข้าสู่ระบบ WEB']
+    ];
+    for (const width of [360, 390]) {
+      for (const [lang, name, sourceText] of cases) {
+        await send('Page.navigate', { url: origin + '/tests/fixtures/index-r5.html' });
+        await send('Emulation.setDeviceMetricsOverride', { width, height: 780, deviceScaleFactor: 1, mobile: true });
+        await send('Runtime.evaluate', {
+          expression: 'new Promise(function(resolve){var n=0;var t=setInterval(function(){n++;var bell=document.getElementById("homeBellBtn");var h=bell?getComputedStyle(bell).height:"";if((document.querySelector(".hf9-month-label")&&h&&h!=="auto"&&h!=="0px")||n>40){clearInterval(t);resolve(h||document.readyState)}},50)})',
+          awaitPromise: true,
+          returnByValue: true
+        });
+        const evaluated = await send('Runtime.evaluate', { expression: headerScript(lang, name, sourceText), awaitPromise: true, returnByValue: true });
+        const v = evaluated.result && evaluated.result.value;
+        const label = lang + ' ' + width + ' ' + JSON.stringify(v);
+        assert.ok(v, label);
+        assert.ok(v.textRight <= v.bellLeft + 0.5, 'entry text overlaps bell: ' + label);
+        assert.ok(v.boxRight <= v.bellLeft + 0.5, 'entry box overlaps bell: ' + label);
+        assert.ok(v.userRight <= width + 1, 'user chip overflows: ' + label);
+        assert.ok(v.scrollX <= 0, 'horizontal scroll: ' + label);
+        if (v.truncated) assert.equal(v.ellipsis, 'ellipsis', 'clipped entry text needs an ellipsis: ' + label);
+      }
+    }
+  });
+});
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function delayAttendance(window, ms, outcome) {
+  const base = window.__hf9Handle;
+  window.google.script.run = {
+    withSuccessHandler(ok) {
+      return { withFailureHandler(fail) {
+        return { api(action, payload) {
+          if (action !== 'myAttendance') {
+            try { ok(base(action, payload)); } catch (err) { ok({ ok: false, error: String(err && err.message || err) }); }
+            return;
+          }
+          setTimeout(() => {
+            if (outcome === 'fail') ok({ ok: false, error: 'synthetic attendance failure' });
+            else ok({ ok: true, data: { month: payload.month, days: [{ date: todayKey(), firstIn: '08:55', lastOut: '' }], summary: {} } });
+          }, ms);
+        } };
+      } };
+    }
+  };
+}
+
+function clockRows(window) {
+  return Array.from(window.document.querySelectorAll('#home .fh-status-row')).filter((row) => {
+    const label = row.querySelector('.fh-status-label');
+    return label && /上班時間|下班時間/.test(label.textContent);
+  }).map((row) => ({
+    skel: !!row.querySelector('.hf9-skel'),
+    text: (row.querySelector('.fh-status-value') || {}).textContent || ''
+  }));
+}
+
+function errorCodes(window) {
+  const text = window.document.body.textContent || '';
+  return (text.match(/HF9_039|HF9_OP_002/g) || []).length;
+}
+
+// The fixture has no backend-inlined I18N, so the real renderHome cannot draw here.
+// This stand-in draws the same two clock rows from attendanceCache and then runs the
+// hf9 clock pass, which is what the wrapped renderHome does in production.
+function stubHome(window) {
+  const state = { draws: 0 };
+  window.renderHome = function () {
+    state.draws += 1;
+    const cache = window.eval('typeof attendanceCache === "undefined" ? null : attendanceCache');
+    const days = cache && Array.isArray(cache.days) ? cache.days : [];
+    const today = days.find((day) => day.date === todayKey()) || null;
+    const cell = (value) => (value ? value : '—');
+    window.document.getElementById('home').innerHTML =
+      '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value">' + cell(today && today.firstIn) + '</span></div>' +
+      '<div class="fh-status-row"><span class="fh-status-label">下班時間</span><span class="fh-status-value">' + cell(today && today.lastOut) + '</span></div>';
+    window.__hf9RefreshHomeClock(window.document.getElementById('home'));
+  };
+  window.showHome = function () {
+    window.document.querySelectorAll('#app > section, #app > div').forEach(() => {});
+    const attendance = window.document.getElementById('attendance');
+    if (attendance) attendance.classList.add('hide');
+    window.document.getElementById('home').classList.remove('hide');
+    window.renderHome();
+  };
+  return state;
+}
+
+for (const outcome of ['ok', 'fail']) {
+  test('home clock rows refresh when myAttendance settles while home is shown (' + outcome + ', R7 N1)', { timeout: 20000 }, async () => {
+    const { dom } = await openHarness((action) => {
+      if (action === 'homeBootstrap' || action === 'home') return readyHome();
+      return { ok: true, data: {} };
+    }, { utf8: true });
+    await afterLoad(dom, 300);
+    const window = dom.window;
+    window.eval('attendanceCache = null');
+    // a2t is inlined by the backend (PERF1_JS_CORE_PRE) and is not part of the fixture.
+    if (typeof window.a2t !== 'function') window.a2t = (key) => ({ loadingAttendance: '出勤資料載入中', loadDone: '出勤資料載入完成' })[key] || key;
+    assert.equal(typeof window.__hf9RefreshHomeClock, 'function');
+    const state = stubHome(window);
+    delayAttendance(window, 250, outcome);
+    const pending = window.refreshMyAttendance();
+    await settle(20);
+    window.showHome();
+    await settle(20);
+    assert.equal(window.__hf9AttendanceLoading, true);
+    const during = clockRows(window);
+    assert.equal(during.length, 2, JSON.stringify(during));
+    assert.deepEqual(during.map((row) => row.skel), [true, true], 'expected loading skeletons ' + JSON.stringify(during));
+    const drawsBefore = state.draws;
+    await pending;
+    await settle(60);
+    assert.equal(window.__hf9AttendanceLoading, false);
+    assert.ok(state.draws > drawsBefore, 'home was not redrawn after myAttendance settled');
+    const after = clockRows(window);
+    assert.equal(after.filter((row) => row.skel).length, 0, 'skeleton left after ' + outcome + ' ' + JSON.stringify(after));
+    if (outcome === 'ok') {
+      assert.deepEqual(after.map((row) => row.text), ['08:55', '尚未打卡']);
+    } else {
+      assert.deepEqual(after.map((row) => row.text), ['尚未打卡', '尚未打卡']);
+      assert.ok(errorCodes(window) <= 1, 'more than one error shown: ' + errorCodes(window));
+    }
+    dom.window.close();
+  });
+}
+
+test('the clock pass also clears a skeleton when home cannot be redrawn (R7 N1)', { timeout: 20000 }, async () => {
+  const { dom } = await openHarness((action) => {
+    if (action === 'homeBootstrap' || action === 'home') return readyHome();
+    return { ok: true, data: {} };
+  }, { utf8: true });
+  await afterLoad(dom, 300);
+  const window = dom.window;
+  if (typeof window.a2t !== 'function') window.a2t = (key) => ({ loadingAttendance: '出勤資料載入中', loadDone: '出勤資料載入完成' })[key] || key;
+  window.renderHome = function () { throw new Error('synthetic redraw failure'); };
+  const home = window.document.getElementById('home');
+  home.classList.remove('hide');
+  home.innerHTML = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value"><span class="hf9-skel"></span></span></div>';
+  delayAttendance(window, 30, 'fail');
+  await window.refreshMyAttendance().catch(() => null);
+  window.document.getElementById('home').classList.remove('hide');
+  home.innerHTML = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value"><span class="hf9-skel"></span></span></div>';
+  window.__hf9AttendanceLoading = false;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.hf9-skel').length, 0);
+  assert.equal(clockRows(window)[0].text, '尚未打卡');
+  dom.window.close();
+});
+
+test('a failed myAttendance load shows one error, not HF9_039 and HF9_OP_002 together (R7 N1)', { timeout: 20000 }, async () => {
+  const { dom } = await openHarness((action) => {
+    if (action === 'homeBootstrap' || action === 'home') return readyHome();
+    return { ok: true, data: {} };
+  }, { utf8: true });
+  await afterLoad(dom, 300);
+  const window = dom.window;
+  window.eval('attendanceCache = null');
+  if (typeof window.a2t !== 'function') window.a2t = (key) => ({ loadingAttendance: '出勤資料載入中', loadDone: '出勤資料載入完成' })[key] || key;
+  delayAttendance(window, 30, 'fail');
+  await window.refreshMyAttendance();
+  await settle(60);
+  const text = window.document.body.textContent || '';
+  assert.equal(errorCodes(window), 1, 'error codes on screen: ' + (text.match(/HF9_039|HF9_OP_002/g) || []).join(','));
+  assert.match(text, /HF9_039/);
+  dom.window.close();
+});
+
+function hf9RoundBlock() {
+  const bundle = fs.readFileSync(path.join(root, 'assets/ess-20261118-p1-hf9/abis-ess.bundle.js'), 'utf8');
+  const start = bundle.lastIndexOf('/* HF9_UI_ROUND_START');
+  const endMark = '/* HF9_UI_ROUND_END */';
+  const end = bundle.indexOf(endMark, start);
+  return bundle.slice(start, end + endMark.length);
+}
+
+function buttonColorScript(lang, labels) {
+  return `(async () => {
+    document.documentElement.lang = ${JSON.stringify(lang)};
+    if (typeof currentLang !== 'undefined') currentLang = ${JSON.stringify(lang)};
+    document.body.classList.add('inner-view');
+    document.body.classList.remove('home-view');
+    const app = document.getElementById('app');
+    const inbox = document.getElementById('inbox');
+    if (app) app.classList.remove('hide');
+    if (inbox) inbox.classList.remove('hide');
+    const host = document.getElementById('inboxList');
+    const labels = ${JSON.stringify(labels)};
+    host.innerHTML = labels.primary.map((t) => '<button type="button">' + t + '</button>').join('') +
+      labels.secondary.map((t) => '<button type="button">' + t + '</button>').join('') +
+      '<button type="button" data-role="primary">x-declared</button>';
+    window.HF9_UI_ROUND.classifyButtons(host);
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    return Array.from(host.querySelectorAll('button')).map((btn) => ({
+      text: btn.textContent.trim(), bg: getComputedStyle(btn).backgroundColor, cls: btn.className
+    }));
+  })()`;
+}
+
+test('vi and th primary buttons are green and secondary are white (R7 N2)', { timeout: 30000 }, async () => {
+  await withChrome(async ({ send, origin }) => {
+    const sets = {
+      ZH: { primary: ['採認', '確認', '正式重新送出'], secondary: ['不採認', '退回'] },
+      VI: { primary: ['Chấp nhận', 'Xác nhận', 'Gửi lại chính thức', 'Quản lý phê duyệt', 'Gửi đơn'], secondary: ['Không chấp nhận', 'Trả lại'] },
+      TH: { primary: ['รับรอง', 'ยืนยัน', 'ส่งใหม่อย่างเป็นทางการ', 'ผู้บังคับบัญชาอนุมัติ', 'ส่งคำขอลา'], secondary: ['ไม่รับรอง', 'ส่งคืน'] }
+    };
+    for (const lang of ['ZH', 'VI', 'TH']) {
+      await send('Page.navigate', { url: origin + '/tests/fixtures/index-r5.html' });
+      await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 780, deviceScaleFactor: 1, mobile: true });
+      await send('Runtime.evaluate', {
+        expression: 'new Promise(function(resolve){var n=0;var t=setInterval(function(){n++;var bell=document.getElementById("homeBellBtn");var h=bell?getComputedStyle(bell).height:"";if((document.querySelector(".hf9-month-label")&&h&&h!=="auto"&&h!=="0px")||n>40){clearInterval(t);resolve(h||document.readyState)}},50)})',
+        awaitPromise: true,
+        returnByValue: true
+      });
+      // The fixture has no backend-inlined core, so the bundle stops before the hf9
+      // round block in Chrome. Load just that block, as p1-hf9-round.test.cjs does.
+      const loaded = await send('Runtime.evaluate', { expression: 'try{' + hf9RoundBlock() + '}catch(e){};typeof window.HF9_UI_ROUND', returnByValue: true });
+      assert.equal(loaded.result && loaded.result.value, 'object', lang + ' ' + JSON.stringify(loaded));
+      const evaluated = await send('Runtime.evaluate', { expression: buttonColorScript(lang, sets[lang]), awaitPromise: true, returnByValue: true });
+      const buttons = evaluated.result && evaluated.result.value;
+      assert.ok(Array.isArray(buttons), lang + ' ' + JSON.stringify(evaluated));
+      for (const button of buttons) {
+        if (sets[lang].primary.includes(button.text) || button.text === 'x-declared') {
+          assert.match(button.bg, /rgb\(11,\s*143,\s*90\)/, lang + ' primary ' + JSON.stringify(button));
+        } else if (sets[lang].secondary.includes(button.text)) {
+          assert.match(button.bg, /rgb\(255,\s*255,\s*255\)/, lang + ' secondary ' + JSON.stringify(button));
+        }
       }
     }
   });

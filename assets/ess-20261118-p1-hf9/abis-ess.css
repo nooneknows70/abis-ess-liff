@@ -3178,3 +3178,9 @@ body.home-view .fh-task span.fh-task-label{white-space:nowrap!important}
 body.inner-view #opStatus{top:64px}
 .hf9-leave-more{margin-top:8px;font-size:13px;line-height:1.5}
 .hf9-month-label{font-size:13px;color:#53657d;margin-top:4px}
+
+/* R7 N3: the bell and name chip keep their content width, and the entry source text shrinks with an ellipsis instead of running under the bell. */
+.frozen-topline .frozen-head-actions{flex:0 1 auto!important;min-width:min-content!important}
+.frozen-topline .frozen-entry-source{flex:1 1 auto!important;min-width:0!important;overflow:hidden!important}
+.frozen-topline .frozen-entry-source>.frozen-line-mark,.frozen-topline .frozen-entry-source>span[aria-hidden="true"]{flex:0 0 auto}
+.frozen-topline #entrySourceText{display:block;flex:0 1 auto!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}

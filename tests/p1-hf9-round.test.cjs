@@ -115,6 +115,32 @@ test('HR confirm and formal resubmit are primary, not the blue default', () => {
   assert.equal(ui.buttonRole('確認撤回'), '');
 });
 
+test('vi and th primary and secondary buttons match the zh roles (R7 N2)', () => {
+  const primary = {
+    ZH: ['採認', '確認', '正式重新送出', '核准申請', '全部同意'],
+    VI: ['Chấp nhận', 'Chấp nhận và gửi', 'Xác nhận', 'Gửi lại chính thức', 'Quản lý phê duyệt', 'Gửi đơn', 'Đồng ý'],
+    TH: ['รับรอง', 'ยอมรับและส่ง', 'ยืนยัน', 'ส่งใหม่อย่างเป็นทางการ', 'ผู้บังคับบัญชาอนุมัติ', 'ส่งคำขอลา']
+  };
+  const secondary = {
+    ZH: ['不採認', '退回', '修改'],
+    VI: ['Không chấp nhận', 'Trả lại', 'Từ chối', 'Sửa', 'Không đồng ý'],
+    TH: ['ไม่รับรอง', 'ไม่ยอมรับ', 'ส่งคืน', 'ปฏิเสธ', 'แก้ไข']
+  };
+  const neutral = {
+    ZH: ['確認撤回', '查看全部'],
+    VI: ['Xác nhận rút', 'Xác nhận đặt lại', 'Xem tất cả', 'Gửi đơn nghỉ Xin nghỉ'],
+    TH: ['ยืนยันการถอน', 'ดูทั้งหมด']
+  };
+  for (const lang of ['ZH', 'VI', 'TH']) {
+    context.currentLang = lang;
+    for (const label of primary[lang]) assert.equal(ui.buttonRole(label), 'primary', lang + ' ' + label);
+    for (const label of secondary[lang]) assert.equal(ui.buttonRole(label), 'secondary', lang + ' ' + label);
+    for (const label of neutral[lang]) assert.equal(ui.buttonRole(label), '', lang + ' ' + label);
+    assert.equal(ui.buttonRole('  ' + primary[lang][0].split('').join('') + '  '), 'primary', lang + ' padded');
+  }
+  context.currentLang = 'ZH';
+});
+
 test('a one-day gap stays a day, and only the month summary uses the period', () => {
   const bounds = ui.monthBounds('2026-11');
   assert.equal(bounds.start, '2026-11-01');
