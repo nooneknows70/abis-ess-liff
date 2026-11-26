@@ -1,0 +1,31 @@
+name: ABIS ESS V154 candidate release set (synthetic only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/candidate-v154-release-ci.yml'
+      - 'ABIS_ESS_RELEASE_MANIFEST.json'
+      - 'tests/candidate-v154-release.test.cjs'
+  push:
+    branches:
+      - 'cursor/v154-candidate-release-3d74'
+    paths:
+      - '.github/workflows/candidate-v154-release-ci.yml'
+      - 'ABIS_ESS_RELEASE_MANIFEST.json'
+      - 'tests/candidate-v154-release.test.cjs'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic:
+    name: V154 candidate contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout candidate without persisting credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Run the candidate release-set test
+        run: node --test tests/candidate-v154-release.test.cjs
