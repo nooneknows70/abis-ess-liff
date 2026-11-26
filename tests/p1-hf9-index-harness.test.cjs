@@ -539,7 +539,9 @@ for (const outcome of ['ok', 'fail']) {
     if (outcome === 'ok') {
       assert.deepEqual(after.map((row) => row.text), ['08:55', '尚未打卡']);
     } else {
-      assert.deepEqual(after.map((row) => row.text), ['尚未打卡', '尚未打卡']);
+      // V154-P2A: a failed load leaves today unknown, so the rows keep "—"
+      // instead of claiming 尚未打卡.
+      assert.deepEqual(after.map((row) => row.text), ['—', '—']);
       assert.ok(errorCodes(window) <= 1, 'more than one error shown: ' + errorCodes(window));
     }
     dom.window.close();
@@ -563,6 +565,13 @@ test('the clock pass also clears a skeleton when home cannot be redrawn (R7 N1)'
   window.document.getElementById('home').classList.remove('hide');
   home.innerHTML = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value"><span class="hf9-skel"></span></span></div>';
   window.__hf9AttendanceLoading = false;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.hf9-skel').length, 0);
+  // V154-P2A: today is still unknown (no attendance, home not from homeBootstrap).
+  assert.equal(clockRows(window)[0].text, '—');
+  // Once homeBootstrap has delivered today's state, an empty clock is a fact.
+  window.eval('attendanceCache = null; homeData = Object.assign({}, homeData || {}, { __perf3: true })');
+  home.innerHTML = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value"><span class="hf9-skel"></span></span></div>';
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.hf9-skel').length, 0);
   assert.equal(clockRows(window)[0].text, '尚未打卡');

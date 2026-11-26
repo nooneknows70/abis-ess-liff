@@ -745,7 +745,7 @@ async function hrRestoreSelectedCredential(triggerBtn){
     setAreaBusy_('hrCredentialAdmin',false)
   }
 }
-async function hrReissueSelectedCredential(triggerBtn){const d=hrCredentialSelected;if(!d||!d.employeeId)return;const confirmText=currentLang==='VI'?'Tạo Temporary PIN mới? PIN cũ sẽ mất hiệu lực.':currentLang==='TH'?'สร้าง Temporary PIN ใหม่หรือไม่? PIN เดิมจะใช้ไม่ได้ทันที':'確定重新產生 Temporary PIN？舊的 Temporary PIN 將立即失效。';if(!(await p4a14Confirm_(hf9DialogText_('confirmTitle'),confirmText,hf9DialogText_('confirmWithdraw'))))return;mutationBusy=true;setAreaBusy_('hrCredentialAdmin',true);const op=beginOperation_(nt('processing'),nt('doNotRepeat'),triggerBtn);try{const r=await call('hrReissueTemporaryPin',{sessionToken,employeeId:d.employeeId,requestId:'HR-REISSUE-'+Date.now()+'-'+p4a13Uuid_()});const fresh=await call('hrCredentialDetail',{sessionToken,employeeId:d.employeeId});hrCredentialSelected=fresh;renderHrCredentialDetail_(fresh);finishOperationSuccess_(op,tr('hrResetDone'),'');if(r.displayOnce&&r.temporaryPin)hrShowOneTimePin_(r);else message(r.deliveryStatus==='LINE_SENT'?tr('hrLineSent'):tr('hrResetDone'),'success')}catch(e){finishOperationFailure_(op,e);message(hf9PublicError_(e,'HF9_024'))}finally{mutationBusy=false;setAreaBusy_('hrCredentialAdmin',false)}}
+async function hrReissueSelectedCredential(triggerBtn){const d=hrCredentialSelected;if(!d||!d.employeeId)return;const confirmText=currentLang==='VI'?'Tạo PIN tạm thời mới? PIN cũ sẽ mất hiệu lực.':currentLang==='TH'?'สร้าง PIN ชั่วคราวใหม่หรือไม่? PIN เดิมจะใช้ไม่ได้ทันที':'確定重新產生臨時 PIN？舊的臨時 PIN 將立即失效。';if(!(await p4a14Confirm_(hf9DialogText_('confirmTitle'),confirmText,hf9DialogText_('confirmWithdraw'))))return;mutationBusy=true;setAreaBusy_('hrCredentialAdmin',true);const op=beginOperation_(nt('processing'),nt('doNotRepeat'),triggerBtn);try{const r=await call('hrReissueTemporaryPin',{sessionToken,employeeId:d.employeeId,requestId:'HR-REISSUE-'+Date.now()+'-'+p4a13Uuid_()});const fresh=await call('hrCredentialDetail',{sessionToken,employeeId:d.employeeId});hrCredentialSelected=fresh;renderHrCredentialDetail_(fresh);finishOperationSuccess_(op,tr('hrResetDone'),'');if(r.displayOnce&&r.temporaryPin)hrShowOneTimePin_(r);else message(r.deliveryStatus==='LINE_SENT'?tr('hrLineSent'):tr('hrResetDone'),'success')}catch(e){finishOperationFailure_(op,e);message(hf9PublicError_(e,'HF9_024'))}finally{mutationBusy=false;setAreaBusy_('hrCredentialAdmin',false)}}
 async function hrUnbindSelectedLine(triggerBtn){
   const d=hrCredentialSelected;
   if(!d||!d.employeeId||!d.lineBound)return;
@@ -821,9 +821,9 @@ async function openLeaveDetail_(encodedLeaveId){const leaveId=decodeURIComponent
 
 const FROZEN_HOME_I18N={
 EN:{requestLeave:'Request leave',requestLeaveSub:'Choose a leave type',myLeaves:'My requests',myLeavesSub:'Check status',myAttendance:'My attendance',myAttendanceSub:'Punches and records',inbox:'Waiting for me',inboxSub:'Approvals and tasks',quick:'Shortcuts',today:'Today',tasks:'To do',recent:'Recent records',notices:'Notices',viewAll:'View all',dashboard:'Dashboard',tagline:'Simpler work. Better days.',viaLine:'From LINE',viaWeb:'Web sign-in',todayShift:'Shift',clockIn:'In',clockOut:'Out',todayState:'Status',safe:'A safe day\nis a good start',returned:'Returned',attendanceException:'Exceptions',pendingApproval:'To approve',supplement:'More info',noNotice:'No new notices',noRecent:'No recent records',notificationCenter:'Notifications'},
-ZH:{tagline:'更簡單的工作．更好的每一天',viaLine:'由 LINE 進入',viaWeb:'WEB 登入',dashboard:'Dashboard',today:'今日狀態',todayShift:'今日班別',clockIn:'上班時間',clockOut:'下班時間',todayState:'今日狀態',normal:'正常',notYet:'尚未到班',waiting:'等待打卡',inProgress:'出勤中',leaveDay:'請假',restDay:'排休',missingIn:'缺上班卡',missingOut:'缺下班卡',late:'遲到',early:'早退',correctionPending:'補正處理中',anomaly:'出勤異常',safe:'平安出勤\n是最好的開始！',tasks:'待處理事項',viewAll:'查看全部',returned:'請假退回',attendanceException:'出勤異常',pendingApproval:'待簽核',supplement:'補件',recent:'近期紀錄',quick:'快捷入口',requestLeave:'我要請假',requestLeaveSub:'申請各類假別',myLeaves:'我的假單',myLeavesSub:'查詢申請進度',myAttendance:'我的出勤',myAttendanceSub:'查看打卡與出勤紀錄',inbox:'待我處理',inboxSub:'審核與待辦事項',notices:'通知摘要',noNotice:'目前沒有新通知',noRecent:'目前沒有近期紀錄',leaveReturnedNotice:'有 {n} 筆假單被退回，請確認內容',attendanceNotice:'有 {n} 筆出勤異常待確認',approvalNotice:'有 {n} 筆待處理事項',justNow:'目前',loading:'載入中',notificationCenter:'通知中心'},
-VI:{tagline:'Công việc đơn giản hơn · Mỗi ngày tốt hơn',viaLine:'Mở từ LINE',viaWeb:'Đăng nhập WEB',dashboard:'Dashboard',today:'Hôm nay',todayShift:'Ca hôm nay',clockIn:'Giờ vào',clockOut:'Giờ ra',todayState:'Trạng thái',normal:'Bình thường',notYet:'Chưa đến ca',waiting:'Chờ chấm công',inProgress:'Đang làm việc',leaveDay:'Nghỉ phép',restDay:'Ngày nghỉ',missingIn:'Thiếu giờ vào',missingOut:'Thiếu giờ ra',late:'Đi muộn',early:'Về sớm',correctionPending:'Đang xử lý điều chỉnh',anomaly:'Bất thường',safe:'Đi làm an toàn\nKhởi đầu ngày tốt đẹp!',tasks:'Việc cần xử lý',viewAll:'Xem tất cả',returned:'Đơn bị trả',attendanceException:'Bất thường',pendingApproval:'Chờ duyệt',supplement:'Bổ sung',recent:'Gần đây',quick:'Truy cập nhanh',requestLeave:'Xin nghỉ',requestLeaveSub:'Gửi đơn nghỉ',myLeaves:'Đơn của tôi',myLeavesSub:'Xem tiến độ',myAttendance:'Chấm công',myAttendanceSub:'Xem chấm công',inbox:'Chờ tôi xử lý',inboxSub:'Duyệt và xử lý',notices:'Thông báo',noNotice:'Hiện không có thông báo mới',noRecent:'Hiện không có bản ghi gần đây',leaveReturnedNotice:'Có {n} đơn bị trả lại',attendanceNotice:'Có {n} bất thường chấm công cần xác nhận',approvalNotice:'Có {n} việc đang chờ xử lý',justNow:'Hiện tại',loading:'Đang tải',notificationCenter:'Trung tâm thông báo'},
-TH:{tagline:'ทำงานง่ายขึ้น · ทุกวันดีขึ้น',viaLine:'เข้าจาก LINE',viaWeb:'เข้าสู่ระบบ WEB',dashboard:'Dashboard',today:'สถานะวันนี้',todayShift:'กะวันนี้',clockIn:'เวลาเข้า',clockOut:'เวลาออก',todayState:'สถานะวันนี้',normal:'ปกติ',notYet:'ยังไม่ถึงเวลาเข้างาน',waiting:'รอลงเวลาเข้างาน',inProgress:'กำลังทำงาน',leaveDay:'ลา',restDay:'วันหยุด',missingIn:'ขาดเวลาเข้า',missingOut:'ขาดเวลาออก',late:'มาสาย',early:'ออกก่อนเวลา',correctionPending:'กำลังดำเนินการแก้ไข',anomaly:'เวลาผิดปกติ',safe:'เข้างานอย่างปลอดภัย\nเริ่มต้นวันที่ดี!',tasks:'งานที่ต้องจัดการ',viewAll:'ดูทั้งหมด',returned:'ใบลาถูกส่งกลับ',attendanceException:'เวลาผิดปกติ',pendingApproval:'รออนุมัติ',supplement:'เอกสารเพิ่ม',recent:'รายการล่าสุด',quick:'ทางลัด',requestLeave:'ขอลา',requestLeaveSub:'ยื่นคำขอลา',myLeaves:'ใบลาของฉัน',myLeavesSub:'ดูความคืบหน้า',myAttendance:'เวลาทำงาน',myAttendanceSub:'ดูบันทึกเวลา',inbox:'รอฉันจัดการ',inboxSub:'อนุมัติและงานค้าง',notices:'สรุปการแจ้งเตือน',noNotice:'ไม่มีการแจ้งเตือนใหม่',noRecent:'ไม่มีรายการล่าสุด',leaveReturnedNotice:'มีใบลาถูกส่งกลับ {n} รายการ',attendanceNotice:'มีข้อมูลเวลาผิดปกติ {n} รายการ',approvalNotice:'มีงานรอดำเนินการ {n} รายการ',justNow:'ขณะนี้',loading:'กำลังโหลด',notificationCenter:'ศูนย์แจ้งเตือน'}
+ZH:{tagline:'更簡單的工作．更好的每一天',viaLine:'由 LINE 進入',viaWeb:'WEB 登入',dashboard:'總覽',today:'今日狀態',todayShift:'今日班別',clockIn:'上班時間',clockOut:'下班時間',todayState:'今日狀態',normal:'正常',notYet:'尚未到班',waiting:'等待打卡',inProgress:'出勤中',leaveDay:'請假',restDay:'排休',missingIn:'缺上班卡',missingOut:'缺下班卡',late:'遲到',early:'早退',correctionPending:'補正處理中',anomaly:'出勤異常',safe:'平安出勤\n是最好的開始！',tasks:'待處理事項',viewAll:'查看全部',returned:'請假退回',attendanceException:'出勤異常',pendingApproval:'待簽核',supplement:'補件',recent:'近期紀錄',quick:'快捷入口',requestLeave:'我要請假',requestLeaveSub:'申請各類假別',myLeaves:'我的假單',myLeavesSub:'查詢申請進度',myAttendance:'我的出勤',myAttendanceSub:'查看打卡與出勤紀錄',inbox:'待我處理',inboxSub:'審核與待辦事項',notices:'通知摘要',noNotice:'目前沒有新通知',noRecent:'目前沒有近期紀錄',leaveReturnedNotice:'有 {n} 筆假單被退回，請確認內容',attendanceNotice:'有 {n} 筆出勤異常待確認',approvalNotice:'有 {n} 筆待處理事項',justNow:'目前',loading:'載入中',notificationCenter:'通知中心'},
+VI:{tagline:'Công việc đơn giản hơn · Mỗi ngày tốt hơn',viaLine:'Mở từ LINE',viaWeb:'Đăng nhập WEB',dashboard:'Tổng quan',today:'Hôm nay',todayShift:'Ca hôm nay',clockIn:'Giờ vào',clockOut:'Giờ ra',todayState:'Trạng thái',normal:'Bình thường',notYet:'Chưa đến ca',waiting:'Chờ chấm công',inProgress:'Đang làm việc',leaveDay:'Nghỉ phép',restDay:'Ngày nghỉ',missingIn:'Thiếu giờ vào',missingOut:'Thiếu giờ ra',late:'Đi muộn',early:'Về sớm',correctionPending:'Đang xử lý điều chỉnh',anomaly:'Bất thường',safe:'Đi làm an toàn\nKhởi đầu ngày tốt đẹp!',tasks:'Việc cần xử lý',viewAll:'Xem tất cả',returned:'Đơn bị trả',attendanceException:'Bất thường',pendingApproval:'Chờ duyệt',supplement:'Bổ sung',recent:'Gần đây',quick:'Truy cập nhanh',requestLeave:'Xin nghỉ',requestLeaveSub:'Gửi đơn nghỉ',myLeaves:'Đơn của tôi',myLeavesSub:'Xem tiến độ',myAttendance:'Chấm công',myAttendanceSub:'Xem chấm công',inbox:'Chờ tôi xử lý',inboxSub:'Duyệt và xử lý',notices:'Thông báo',noNotice:'Hiện không có thông báo mới',noRecent:'Hiện không có bản ghi gần đây',leaveReturnedNotice:'Có {n} đơn bị trả lại',attendanceNotice:'Có {n} bất thường chấm công cần xác nhận',approvalNotice:'Có {n} việc đang chờ xử lý',justNow:'Hiện tại',loading:'Đang tải',notificationCenter:'Trung tâm thông báo'},
+TH:{tagline:'ทำงานง่ายขึ้น · ทุกวันดีขึ้น',viaLine:'เข้าจาก LINE',viaWeb:'เข้าสู่ระบบ WEB',dashboard:'ภาพรวม',today:'สถานะวันนี้',todayShift:'กะวันนี้',clockIn:'เวลาเข้า',clockOut:'เวลาออก',todayState:'สถานะวันนี้',normal:'ปกติ',notYet:'ยังไม่ถึงเวลาเข้างาน',waiting:'รอลงเวลาเข้างาน',inProgress:'กำลังทำงาน',leaveDay:'ลา',restDay:'วันหยุด',missingIn:'ขาดเวลาเข้า',missingOut:'ขาดเวลาออก',late:'มาสาย',early:'ออกก่อนเวลา',correctionPending:'กำลังดำเนินการแก้ไข',anomaly:'เวลาผิดปกติ',safe:'เข้างานอย่างปลอดภัย\nเริ่มต้นวันที่ดี!',tasks:'งานที่ต้องจัดการ',viewAll:'ดูทั้งหมด',returned:'ใบลาถูกส่งกลับ',attendanceException:'เวลาผิดปกติ',pendingApproval:'รออนุมัติ',supplement:'เอกสารเพิ่ม',recent:'รายการล่าสุด',quick:'ทางลัด',requestLeave:'ขอลา',requestLeaveSub:'ยื่นคำขอลา',myLeaves:'ใบลาของฉัน',myLeavesSub:'ดูความคืบหน้า',myAttendance:'เวลาทำงาน',myAttendanceSub:'ดูบันทึกเวลา',inbox:'รอฉันจัดการ',inboxSub:'อนุมัติและงานค้าง',notices:'สรุปการแจ้งเตือน',noNotice:'ไม่มีการแจ้งเตือนใหม่',noRecent:'ไม่มีรายการล่าสุด',leaveReturnedNotice:'มีใบลาถูกส่งกลับ {n} รายการ',attendanceNotice:'มีข้อมูลเวลาผิดปกติ {n} รายการ',approvalNotice:'มีงานรอดำเนินการ {n} รายการ',justNow:'ขณะนี้',loading:'กำลังโหลด',notificationCenter:'ศูนย์แจ้งเตือน'}
 };
 function fht_(k){return (FROZEN_HOME_I18N[currentLang]&&FROZEN_HOME_I18N[currentLang][k])||FROZEN_HOME_I18N.ZH[k]||k}
 function fhFmt_(s,n){return String(s||'').replace('{n}',String(n))}
@@ -9850,7 +9850,7 @@ try {
       noPunch: '未打卡',
       noPunchYet: '尚未打卡',
       coverage: '這段期間的出勤資料還不完整',
-      officeDay: '辦公室日班',
+      officeDay: '辦公室固定日班',
       factoryNight: '廠務夜班 20:00–04:00',
       restore: '恢復首次登入',
       noMissing: '無缺卡',
@@ -9859,7 +9859,14 @@ try {
       sourceFormal: '正式出勤資料',
       hours: '小時',
       leaveRef: '假單',
-      rule: '出勤規則'
+      rule: '出勤規則',
+      importBatch: '打卡匯入批次',
+      coveragePending: '打卡來源待確認',
+      coverageProof: '打卡來源證明',
+      overtimeFact: '加班紀錄',
+      payroll: '薪資',
+      punch: '打卡',
+      company: 'ABIS 員工服務'
     },
     EN: {
       opening: 'Opening…',
@@ -9882,7 +9889,14 @@ try {
       sourceFormal: 'Official attendance data',
       hours: 'hours',
       leaveRef: 'Leave',
-      rule: 'Attendance rule'
+      rule: 'Attendance rule',
+      importBatch: 'Punch Import Batch',
+      coveragePending: 'device coverage pending',
+      coverageProof: 'COVERAGE_PROOF',
+      overtimeFact: 'OVERTIME_FACT',
+      payroll: 'Payroll',
+      punch: 'Punch',
+      company: 'ABIS Employee Services'
     },
     VI: {
       opening: 'Đang mở…',
@@ -9905,7 +9919,14 @@ try {
       sourceFormal: 'Dữ liệu chấm công chính thức',
       hours: 'giờ',
       leaveRef: 'Đơn nghỉ',
-      rule: 'Quy tắc chấm công'
+      rule: 'Quy tắc chấm công',
+      importBatch: 'đợt nhập dữ liệu chấm công',
+      coveragePending: 'nguồn chấm công đang chờ xác nhận',
+      coverageProof: 'bằng chứng nguồn chấm công',
+      overtimeFact: 'dữ liệu tăng ca',
+      payroll: 'bảng lương',
+      punch: 'chấm công',
+      company: 'ABIS Dịch vụ nhân viên'
     },
     TH: {
       opening: 'กำลังเปิด…',
@@ -9928,7 +9949,14 @@ try {
       sourceFormal: 'ข้อมูลเวลาอย่างเป็นทางการ',
       hours: 'ชั่วโมง',
       leaveRef: 'ใบลา',
-      rule: 'กติกาเวลาทำงาน'
+      rule: 'กติกาเวลาทำงาน',
+      importBatch: 'ชุดนำเข้าข้อมูลลงเวลา',
+      coveragePending: 'แหล่งข้อมูลลงเวลารอการยืนยัน',
+      coverageProof: 'หลักฐานแหล่งข้อมูลลงเวลา',
+      overtimeFact: 'ข้อมูลการทำงานล่วงเวลา',
+      payroll: 'เงินเดือน',
+      punch: 'ลงเวลา',
+      company: 'ABIS บริการพนักงาน'
     }
   };
 
@@ -9986,6 +10014,9 @@ try {
     text = text.replace(/Restore First Login/gi, t('restore'));
     text = text.replace(/SOURCE_COVERAGE_GAP/g, t('coverage'));
     text = text.replace(/OTHER_TEXT/g, t('other'));
+    // V154-P2C: in zh the code sits right after a CJK word ("員工 NO_PUNCH");
+    // drop that gap so the result reads 員工未打卡, not 員工 未打卡.
+    if (lang() === 'ZH') text = text.replace(/([\u3400-\u9fff])[ \t]+(?=(?:NO_PUNCH|MISSING_OUT|MISSING_IN)\b)/g, '$1');
     text = text.replace(/\bMISSING_OUT\b/g, t('missingOut'));
     text = text.replace(/\bMISSING_IN\b/g, t('missingIn'));
     text = text.replace(/\bNO_PUNCH\b/g, t('noPunch'));
@@ -9997,6 +10028,15 @@ try {
     text = text.replace(/缺卡\s*Y/g, t('hasMissing'));
     text = text.replace(/來源已失效｜原 Punch\/Leave\/排班/g, t('sourceStale'));
     text = text.replace(/ABIS_出勤薪資_正式母表_V1/g, t('sourceFormal'));
+    // V154-P2C: engineering terms that reach approval pages (zh/vi/th only).
+    if (lang() !== 'EN') {
+      text = text.replace(/Punch Import Batch/gi, t('importBatch'));
+      text = text.replace(/device coverage pending/gi, t('coveragePending'));
+      text = text.replace(/\bCOVERAGE_PROOF\b/g, t('coverageProof'));
+      text = text.replace(/\bOVERTIME_FACT\b/g, t('overtimeFact'));
+      text = text.replace(/\bPayroll\b/g, t('payroll'));
+      text = text.replace(/原\s*Punch\b/g, '原' + t('punch'));
+    }
     text = text.replace(/\bLV-[A-Za-z0-9_-]{4,}\b/g, function (id) {
       return t('leaveRef') + ' · ' + id.slice(-4);
     });
@@ -10223,7 +10263,7 @@ try {
         };
         try {
           if (typeof notificationCache === 'undefined' || !notificationCache) notificationCache = { items: [], summary: global.__hf9NotificationSummary };
-          else notificationCache.summary = Object.assign({}, notificationCache.summary || {}, global.__hf9NotificationSummary);
+          else if (!(notificationCache.summary && notificationCache.summary.__hf9FromList)) notificationCache.summary = Object.assign({}, notificationCache.summary || {}, global.__hf9NotificationSummary);
         } catch (ignore) {}
       }
       call = function (action, payload) {
@@ -10235,6 +10275,9 @@ try {
         if (!watched) {
           return once().then(function (data) {
             finishAttendance();
+            if (action === 'notifications' && data && data.summary && typeof data.summary === 'object') {
+              try { data.summary.__hf9FromList = true; } catch (ignore) {}
+            }
             return data;
           }, function (err) {
             finishAttendance();
@@ -10438,7 +10481,13 @@ try {
         }
         var summary = global.__hf9NotificationSummary || (typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary) || null;
         var fromSummary = summary ? Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0) : 0;
-        if (hadItems) return Math.max(fromItems, fromSummary);
+        // V154-P3: the loaded list is capped (limit 100), so counting its items
+        // saturates at 100. The server summary counts every row; use it whenever
+        // one exists, and the newest one (list load) wins over the bootstrap copy.
+        var listSummary = typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary && notificationCache.summary.__hf9FromList ? notificationCache.summary : null;
+        if (listSummary) return Number(listSummary.generalUnread != null ? listSummary.generalUnread : listSummary.unread || 0);
+        if (summary) return fromSummary;
+        if (hadItems) return fromItems;
         return fromSummary || Number(notificationCache && notificationCache.summary && notificationCache.summary.generalUnread || 0);
       };
       p5a1Rc2GeneralUnreadCount_.__hf9Round = true;
@@ -10451,7 +10500,7 @@ try {
         var pending = summary ? Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0) : 0;
         var bell = 0;
         try { if (typeof p5a1Rc2GeneralUnreadCount_ === 'function') bell = Number(p5a1Rc2GeneralUnreadCount_() || 0); } catch (ignore) {}
-        var unread = Math.max(pending, bell);
+        var unread = bell || pending;
         if (unread <= 0) return html;
         var empty = typeof fht_ === 'function' ? fht_('noNotice') : '目前沒有新通知';
         if (String(html).indexOf(empty) < 0 && String(html).indexOf('fh-empty') < 0) return html;
@@ -10472,10 +10521,22 @@ try {
     // Clock rows on an already drawn home: skeleton while myAttendance is loading,
     // otherwise the punch time or "no punch yet". Shared by renderHome and the
     // myAttendance completion path (R7 N1).
+    // V154-P2A: "no punch yet" is a fact only once today's attendance is known
+    // (month attendance loaded, or a home that carries today / came from
+    // homeBootstrap). Before that the row keeps "—" instead of claiming 尚未打卡.
+    function todayAttendanceKnown() {
+      try { if (typeof attendanceCache !== 'undefined' && attendanceCache) return true; } catch (ignore) {}
+      try {
+        if (typeof homeData !== 'undefined' && homeData && (homeData.__perf3 || homeData.todayAttendance || homeData.today)) return true;
+      } catch (ignore) {}
+      return false;
+    }
+
     function refreshHomeClock(home) {
       home = home || $('home');
       if (!home || !home.querySelectorAll) return;
       var loadingAttendance = !!global.__hf9AttendanceLoading;
+      var known = todayAttendanceKnown();
       home.querySelectorAll('.fh-status-row').forEach(function (row) {
         var label = row.querySelector('.fh-status-label');
         var value = row.querySelector('.fh-status-value');
@@ -10484,6 +10545,10 @@ try {
         if (!clock) return;
         if (loadingAttendance && (value.textContent === '—' || value.textContent === '-' || value.textContent === '–')) {
           value.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
+          return;
+        }
+        if (!loadingAttendance && !known) {
+          if (value.querySelector('.hf9-skel') || value.textContent === '' ) value.textContent = '—';
           return;
         }
         if (!loadingAttendance) {
@@ -10512,6 +10577,7 @@ try {
       }, 0);
     }
     global.__hf9RefreshHomeClock = refreshHomeClock;
+    api.todayAttendanceKnown = todayAttendanceKnown;
     api.classifyButtons = function (root) { classifyButtons(root); };
 
     if (typeof renderHome === 'function' && !renderHome.__hf9Round) {
@@ -10586,6 +10652,30 @@ try {
       fhRecentItems_.__hf9Shift = true;
     }
 
+    // V154-P3: the same affected range can come back from several sources/sites;
+    // show each range once.
+    if (typeof p5a2AttendanceWarningsHtml_ === 'function' && !p5a2AttendanceWarningsHtml_.__hf9Dedupe) {
+      var baseWarnings = p5a2AttendanceWarningsHtml_;
+      p5a2AttendanceWarningsHtml_ = function (data) {
+        var list = data && Array.isArray(data.coverageWarnings) ? data.coverageWarnings : null;
+        if (!list || list.length < 2) return baseWarnings(data);
+        var seen = {};
+        var unique = list.filter(function (x) {
+          var k = String(x && x.firstAffectedDate || '').slice(0, 10) + '~' + String(x && x.lastAffectedDate || '').slice(0, 10);
+          if (seen[k]) return false;
+          seen[k] = true;
+          return true;
+        });
+        if (unique.length === list.length) return baseWarnings(data);
+        var copy = {};
+        var key;
+        for (key in data) if (Object.prototype.hasOwnProperty.call(data, key)) copy[key] = data[key];
+        copy.coverageWarnings = unique;
+        return baseWarnings(copy);
+      };
+      p5a2AttendanceWarningsHtml_.__hf9Dedupe = true;
+    }
+
     if (typeof p5a2rc1AttendanceInboxHtml_ === 'function' && !p5a2rc1AttendanceInboxHtml_.__hf9Shadow) {
       var baseInbox = p5a2rc1AttendanceInboxHtml_;
       p5a2rc1AttendanceInboxHtml_ = function (data) {
@@ -10637,11 +10727,35 @@ try {
       rc2ManagementToolsHtml_.__hf9Hrlb = true;
     }
 
+    // V154-P3: the header (company title, tagline, entry source) was only redrawn by
+    // fhUpdateHeader_ after sign-in, so the login page kept Chinese after vi/th.
+    function refreshHeaderLanguage() {
+      if (typeof document === 'undefined' || !document.querySelectorAll) return;
+      var title = document.querySelector('.company-title');
+      if (title) title.textContent = t('company');
+      if (typeof fht_ === 'function') {
+        document.querySelectorAll('[data-home-i18n]').forEach(function (el) {
+          var key = el.getAttribute('data-home-i18n');
+          var text = fht_(key);
+          if (text && text !== key) el.textContent = text;
+        });
+        var source = $('entrySourceText');
+        if (source) {
+          var line = false;
+          try { line = typeof p5a1IsLineBoot_ === 'function' && !!p5a1IsLineBoot_(); } catch (ignore) {}
+          source.textContent = fht_(line ? 'viaLine' : 'viaWeb');
+        }
+      }
+    }
+    api.refreshHeaderLanguage = refreshHeaderLanguage;
+    try { refreshHeaderLanguage(); } catch (ignore) {}
+
     if (typeof setLanguage === 'function' && !setLanguage.__hf9Round) {
       var baseLang = setLanguage;
       setLanguage = function (code, persist) {
         var result = baseLang(code, persist);
         stampInputs(document);
+        try { refreshHeaderLanguage(); } catch (ignore) {}
         return result;
       };
       setLanguage.__hf9Round = true;

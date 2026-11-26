@@ -84,7 +84,8 @@
       typeWrongOut: '下班時間不正確',
       typeShift: '班別不正確',
       typeMulti: '多項補正',
-      typeOther: '其他'
+      typeOther: '其他',
+      anomalyGeneric: '出勤異常，請看當日打卡與班表'
     },
     VI: {
       title: 'Xác nhận điều chỉnh chấm công',
@@ -147,7 +148,8 @@
       typeWrongOut: 'Giờ ra không đúng',
       typeShift: 'Ca không đúng',
       typeMulti: 'Nhiều mục',
-      typeOther: 'Khác'
+      typeOther: 'Khác',
+      anomalyGeneric: 'Chấm công bất thường, hãy xem giờ chấm công và ca của ngày này'
     },
     TH: {
       title: 'ยืนยันการแก้ไขเวลาทำงาน',
@@ -210,7 +212,8 @@
       typeWrongOut: 'เวลาออกไม่ถูกต้อง',
       typeShift: 'กะไม่ถูกต้อง',
       typeMulti: 'หลายรายการ',
-      typeOther: 'อื่นๆ'
+      typeOther: 'อื่นๆ',
+      anomalyGeneric: 'การลงเวลาผิดปกติ โปรดดูเวลาลงเวลาและกะของวันนั้น'
     },
     EN: {
       title: 'Confirm attendance correction',
@@ -273,7 +276,8 @@
       typeWrongOut: 'Out time is wrong',
       typeShift: 'Shift is wrong',
       typeMulti: 'Several items',
-      typeOther: 'Other'
+      typeOther: 'Other',
+      anomalyGeneric: 'Attendance issue. Check the punches and shift for this day.'
     }
   };
 
@@ -432,16 +436,61 @@ function rawPunchLines(row) {
     return name;
   }
 
+  // V154-P2C: the backend anomaly note (異常說明) is written for HR/engineering
+  // (e.g. "Punch Import Batch", "首筆/末筆", raw codes) and is zh-only. Show a
+  // plain label from the anomaly code instead; stored data is not changed.
+  var ANOMALY_LABEL = {
+    NO_PUNCH: { ZH: '已排班但全日無打卡', VI: 'Có ca nhưng cả ngày không chấm công', TH: 'มีกะแต่ไม่มีการลงเวลาทั้งวัน', EN: 'Scheduled but no punches all day' },
+    PARTIAL_LEAVE_NO_PUNCH: { ZH: '部分請假後無打卡', VI: 'Nghỉ một phần nhưng thời gian còn lại không chấm công', TH: 'ลาบางส่วนแต่ช่วงที่เหลือไม่มีการลงเวลา', EN: 'Partial leave, no punches for the rest' },
+    SINGLE_PUNCH: { ZH: '只有一筆打卡', VI: 'Chỉ có một lần chấm công', TH: 'มีการลงเวลาเพียงครั้งเดียว', EN: 'Only one punch' },
+    LATE: { ZH: '遲到', VI: 'Đi muộn', TH: 'มาสาย', EN: 'Late' },
+    EARLY_LEAVE: { ZH: '早退', VI: 'Về sớm', TH: 'กลับก่อนเวลา', EN: 'Left early' },
+    SOURCE_COVERAGE_PENDING: { ZH: '打卡來源待確認', VI: 'Nguồn chấm công đang chờ xác nhận', TH: 'แหล่งข้อมูลลงเวลารอการยืนยัน', EN: 'Punch source not confirmed yet' },
+    SOURCE_COVERAGE_GAP: { ZH: '打卡來源尚未完整', VI: 'Nguồn chấm công chưa đầy đủ', TH: 'แหล่งข้อมูลลงเวลายังไม่ครบ', EN: 'Punch source incomplete' },
+    SITE_COVERAGE_UNMAPPED: { ZH: '據點打卡設備未對應', VI: 'Thiết bị chấm công tại địa điểm chưa được gán', TH: 'อุปกรณ์ลงเวลาของสถานที่ยังไม่ได้จับคู่', EN: 'Site punch device not mapped' },
+    OT_EXCEEDS_APPROVED: { ZH: '加班超過核准時數', VI: 'Tăng ca vượt số giờ đã duyệt', TH: 'ทำงานล่วงเวลาเกินชั่วโมงที่อนุมัติ', EN: 'Overtime over approved hours' },
+    PUNCH_ON_REST_DAY: { ZH: '休息日有打卡', VI: 'Có chấm công vào ngày nghỉ', TH: 'มีการลงเวลาในวันหยุด', EN: 'Punch on a rest day' },
+    PUNCH_ON_NONWORKDAY: { ZH: '非工作日有打卡', VI: 'Có chấm công vào ngày không làm việc', TH: 'มีการลงเวลาในวันที่ไม่ใช่วันทำงาน', EN: 'Punch on a non-working day' },
+    PUNCH_ON_FULL_LEAVE: { ZH: '全日請假仍有打卡', VI: 'Nghỉ cả ngày nhưng vẫn có chấm công', TH: 'ลาทั้งวันแต่ยังมีการลงเวลา', EN: 'Punch on a full leave day' },
+    LEAVE_PUNCH_CONFLICT_REVIEW: { ZH: '請假與打卡時間重疊，待確認', VI: 'Giờ nghỉ và giờ chấm công trùng nhau, cần xác nhận', TH: 'เวลาลาและเวลาลงเวลาทับซ้อนกัน รอการยืนยัน', EN: 'Leave and punches overlap, needs review' },
+    LEAVE_ON_NONWORKDAY: { ZH: '非工作日請假', VI: 'Nghỉ phép vào ngày không làm việc', TH: 'ลาในวันที่ไม่ใช่วันทำงาน', EN: 'Leave on a non-working day' },
+    LEAVE_HOURS_EXCEED_SCHEDULE: { ZH: '請假時數超過排班時數', VI: 'Số giờ nghỉ vượt số giờ theo ca', TH: 'ชั่วโมงลาเกินชั่วโมงตามกะ', EN: 'Leave hours over the shift' },
+    ADJUSTMENT_CALENDAR_PENDING: { ZH: '調整上班日待確認', VI: 'Lịch đổi ngày làm việc đang chờ xác nhận', TH: 'วันทำงานที่ปรับเปลี่ยนรอการยืนยัน', EN: 'Adjusted working day not confirmed yet' }
+  };
+
+  function anomalyCodes(snap) {
+    return String(snap && (snap.anomalyCode || snap.anomalyCodes) || '').toUpperCase().split(/[^A-Z0-9_]+/).filter(Boolean);
+  }
+
+  function anomalyCodeLabel(code) {
+    if (TYPE_KEY[code]) return sccT(TYPE_KEY[code]);
+    var entry = ANOMALY_LABEL[code];
+    return entry ? (entry[langCode()] || entry.ZH) : '';
+  }
+
+  // Notes meant for HR/engineering: English words or codes, several notes joined
+  // with "；", or internal calculation wording.
+  function internalAnomalyText(text) {
+    return /[A-Za-z]{3,}|[A-Z0-9]+_[A-Z0-9]|；|出勤事件|首筆|末筆|覆蓋證明|母表|來源列/.test(String(text || ''));
+  }
+
   function anomalyText(row) {
     var snap = snapshotOf(row);
     if (!snap) return '';
-    if (snap.anomalyDescription) return String(snap.anomalyDescription);
+    var desc = String(snap.anomalyDescription || '').trim();
+    if (desc && langCode() === 'ZH' && !internalAnomalyText(desc)) return desc;
+    var seen = {};
+    var labels = anomalyCodes(snap).map(anomalyCodeLabel).filter(function (label) {
+      if (!label || seen[label]) return false;
+      seen[label] = true;
+      return true;
+    });
+    if (labels.length) return labels.join(langCode() === 'ZH' ? '、' : ', ');
     if (snap.missingIn && snap.missingOut) return sccT('typeMissingBoth');
     if (snap.missingOut) return sccT('typeMissingOut');
     if (snap.missingIn) return sccT('typeMissingIn');
-    var code = String(snap.anomalyCode || '');
-    var key = TYPE_KEY[code];
-    return key ? sccT(key) : code;
+    if (desc || anomalyCodes(snap).length) return sccT('anomalyGeneric');
+    return '';
   }
 
   function requestClockText(row) {
@@ -1156,6 +1205,7 @@ function rawPunchLines(row) {
     rawPunchLines: rawPunchLines,
     scheduleText: scheduleText,
     anomalyText: anomalyText,
+    anomalyLabels: ANOMALY_LABEL,
     suggestionSentence: suggestionSentence,
     batchIds: batchIds,
     buildPayload: buildPayload,
