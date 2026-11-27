@@ -10132,11 +10132,38 @@ try {
     });
   }
 
+  // Bootstrap sends {zh-TW, vi, th}. myAttendance sends {ZH, VI, TH}.
+  function shiftLabelsText_(labels, code) {
+    if (!labels || typeof labels !== 'object') return '';
+    var upper = String(code || '').toUpperCase();
+    var keys = upper === 'ZH'
+      ? ['zh-TW', 'ZH-TW', 'zh-tw', 'zh_TW', 'ZH_TW', 'ZH', 'zh', 'zh-CN', 'ZH-CN']
+      : upper === 'VI'
+        ? ['vi', 'VI', 'vi-VN', 'VI-VN']
+        : upper === 'TH'
+          ? ['th', 'TH', 'th-TH', 'TH-TH']
+          : upper === 'EN'
+            ? ['en', 'EN', 'en-US', 'EN-US']
+            : [code];
+    var i;
+    for (i = 0; i < keys.length; i++) {
+      if (labels[keys[i]]) return String(labels[keys[i]]);
+    }
+    var name;
+    for (name in labels) {
+      if (!Object.prototype.hasOwnProperty.call(labels, name) || !labels[name]) continue;
+      var folded = String(name).toUpperCase();
+      if (folded === upper || (upper === 'ZH' && folded.indexOf('ZH') === 0)) return String(labels[name]);
+    }
+    return '';
+  }
+
   function shiftLabel(day, language) {
     var code = String(language || lang()).toUpperCase();
     if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
     var labels = day && day.shiftLabels;
-    if (labels && typeof labels === 'object' && labels[code]) return String(labels[code]);
+    var named = shiftLabelsText_(labels, code);
+    if (named) return named;
     // Slim bootstrap days carry only the zh shiftName. vi/th wait for
     // shiftLabels[lang] or use the glossary, and do not flash the zh name.
     if (code !== 'ZH') return authoritativeShiftName(day, code) || '';
@@ -10263,8 +10290,8 @@ try {
     if (!day) return '';
     var code = String(language || lang()).toUpperCase();
     if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
-    var labels = day.shiftLabels;
-    if (labels && typeof labels === 'object' && labels[code]) return String(labels[code]);
+    var named = shiftLabelsText_(day.shiftLabels, code);
+    if (named) return named;
     var shiftCode = String(day.shiftCode || '').toUpperCase();
     var pack = PACK[code] || PACK.ZH;
     // A slim day often has only the zh shiftName. vi/th must not show that
@@ -10489,12 +10516,13 @@ try {
         } catch (ignore) {}
       }
       var COUNT_FRESH_MS = 20000;
+      // Session token only. The employee id is unknown until homeBootstrap
+      // returns, and putting it in the key made the second pendingCounts look
+      // like a new request. Stored pill counts are still matched by employee id.
       function countKey_() {
-        var id = '';
         var token = '';
-        try { id = currentEmployeeId_(); } catch (ignore) {}
-        try { token = String(typeof sessionToken === 'undefined' ? '' : (sessionToken || '')); } catch (ignore2) {}
-        return id + '\n' + token;
+        try { token = String(typeof sessionToken === 'undefined' ? '' : (sessionToken || '')); } catch (ignore) {}
+        return token;
       }
       function rememberFlight_(summary) {
         global.__hf9CountFlight = { key: countKey_(), summary: summary, at: Date.now() };
@@ -10544,8 +10572,9 @@ try {
         wrappedApply.__hf9Zero = true;
         perf3ApplyTaskSummary_ = wrappedApply;
       }
-      // One count RPC per session. pendingCounts and taskSummary share it, and
-      // a result under 20s old is reused for the same employee.
+      // One count RPC per session token. pendingCounts and taskSummary share it,
+      // including a call that starts before the employee id is known. A result
+      // under 20s old is reused for that same session.
       function singleFlightCounts_() {
         installCountZeroGuard_();
         var fresh = freshCount_();
@@ -11030,8 +11059,7 @@ try {
         var recent = recentLabel(day);
         var code = String(typeof currentLang === 'string' ? currentLang : 'ZH').toUpperCase();
         if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
-        var labels = day.shiftLabels;
-        var missingLang = code !== 'ZH' && !(labels && typeof labels === 'object' && labels[code]);
+        var missingLang = code !== 'ZH' && !shiftLabelsText_(day.shiftLabels, code);
         if (!shift && !recent && !missingLang) return day;
         var copy = {};
         var key;

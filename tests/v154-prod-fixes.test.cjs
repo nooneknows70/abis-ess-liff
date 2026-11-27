@@ -134,6 +134,21 @@ test('P2-A: home shift uses the attendance name, not the OFFICE_DAY placeholder'
   assert.equal(ui.shiftLabel({ shiftName: '辦公室日班', firstIn: '08:12' }, 'TH'), '');
   hf9Context.currentLang = 'TH';
   assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }, 'TH'), 'กะออฟฟิศกลางวัน');
+  const factoryD1 = {
+    shiftCode: 'D1',
+    shiftName: '工廠日班D1',
+    shiftLabels: { 'zh-TW': '工廠日班D1', vi: 'Ca nhà máy D1', th: 'กะโรงงาน D1' }
+  };
+  assert.equal(ui.authoritativeShiftName(factoryD1, 'VI'), 'Ca nhà máy D1');
+  assert.equal(ui.shiftLabel(factoryD1, 'VI'), 'Ca nhà máy D1');
+  assert.equal(ui.authoritativeShiftName(factoryD1, 'TH'), 'กะโรงงาน D1');
+  assert.equal(ui.shiftLabel(factoryD1, 'TH'), 'กะโรงงาน D1');
+  assert.equal(ui.authoritativeShiftName(factoryD1, 'ZH'), '工廠日班D1');
+  assert.equal(ui.shiftLabel({
+    shiftCode: 'D1',
+    shiftName: '工廠日班D1',
+    shiftLabels: { ZH: '工廠日班D1', VI: 'Ca nhà máy D1', TH: 'กะโรงงาน D1' }
+  }, 'VI'), 'Ca nhà máy D1');
   hf9Context.currentLang = 'ZH';
 });
 
@@ -429,6 +444,105 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   await new Promise((resolve) => setTimeout(resolve, 30));
   assert.equal(early[0], 'pendingCounts', early.join(','));
   assert.equal(early.includes('homeBootstrap'), false, early.join(','));
+
+  function resetCountState() {
+    window.__hf9CountsInflight = null;
+    window.__hf9CountsFinal = false;
+    window.__hf9CountsSnapshot = null;
+    window.__hf9CountFlight = null;
+    window.__hf9CountsFailed = null;
+    window.__hf9CountsKicked = false;
+    window.__hf9CountsKey = '';
+  }
+  async function countWhileIdArrives(start, respond) {
+    const seen = [];
+    let release = null;
+    const gate = new Promise((resolve) => { release = resolve; });
+    resetCountState();
+    window.google.script.run = {
+      withSuccessHandler(ok) {
+        return { withFailureHandler() {
+          return { api(action, payload) {
+            seen.push(action);
+            const finish = () => respond(action, payload, ok);
+            if (action === 'pendingCounts' || action === 'taskSummary') gate.then(finish);
+            else finish();
+          } };
+        } };
+      }
+    };
+    window.eval('sessionToken = "synthetic-session"; rememberedEmployeeId = ""; homeData = null; taskSummaryCache = null;');
+    const started = start();
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    window.eval('homeData = { employee: { id: "A09906" } };');
+    const again = Promise.all([
+      window.call('pendingCounts', { sessionToken: 'synthetic-session' }),
+      window.call('taskSummary', { sessionToken: 'synthetic-session' }),
+      window.call('homeBootstrap', { sessionToken: 'synthetic-session' })
+    ]);
+    release();
+    await Promise.all([started, again]);
+    return seen;
+  }
+  const countOk = (action, payload, ok) => {
+    if (action === 'pendingCounts') {
+      ok({ ok: true, data: { pendingCounts: counts, taskSummary: counts, fastMode: false, source: 'LEGACY', cached: false } });
+      return;
+    }
+    ok({ ok: true, data: { code: 'HOME_BOOTSTRAP_OK', status: 'READY', home: { employee: { id: 'A09906' } }, deferTaskSummary: !!(payload && payload.deferTaskSummary) } });
+  };
+  const loginNoHome = await countWhileIdArrives(
+    () => window.call('home', { sessionToken: 'synthetic-session' }),
+    countOk
+  );
+  assert.equal(loginNoHome.filter((action) => action === 'pendingCounts').length, 1, loginNoHome.join(','));
+  assert.equal(loginNoHome.filter((action) => action === 'taskSummary').length, 0, loginNoHome.join(','));
+  storage.setItem('abis_hf9_task_counts_v1', window.HF9_UI_ROUND.serializeCounts('B09701', {
+    total: 9, returnedLeave: 9, attendanceException: 0, approval: 0, supplement: 0
+  }));
+  const reopen = await countWhileIdArrives(
+    () => window.call('homeBootstrap', { sessionToken: 'synthetic-session' }),
+    countOk
+  );
+  assert.equal(reopen.filter((action) => action === 'pendingCounts').length, 1, reopen.join(','));
+  assert.equal(reopen.filter((action) => action === 'taskSummary').length, 0, reopen.join(','));
+  assert.equal(Number(window.eval('taskSummaryCache.returnedLeave')), 1);
+  const fallbackSeen = [];
+  let releaseFallback = null;
+  const fallbackGate = new Promise((resolve) => { releaseFallback = resolve; });
+  resetCountState();
+  window.google.script.run = {
+    withSuccessHandler(ok) {
+      return { withFailureHandler() {
+        return { api(action) {
+          fallbackSeen.push(action);
+          if (action === 'pendingCounts') {
+            ok({ ok: false, error: '不支援的操作' });
+            return;
+          }
+          if (action === 'taskSummary') {
+            fallbackGate.then(() => ok({ ok: true, data: { taskSummary: counts } }));
+            return;
+          }
+          ok({ ok: true, data: { code: 'HOME_BOOTSTRAP_OK', status: 'READY', home: { employee: { id: 'A09906' } } } });
+        } };
+      } };
+    }
+  };
+  window.eval('sessionToken = "synthetic-session"; rememberedEmployeeId = ""; homeData = null; taskSummaryCache = null;');
+  const fallbackFirst = window.call('pendingCounts', { sessionToken: 'synthetic-session' });
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  window.eval('homeData = { employee: { id: "A09906" } };');
+  const fallbackAgain = Promise.all([
+    window.call('pendingCounts', { sessionToken: 'synthetic-session' }),
+    window.call('taskSummary', { sessionToken: 'synthetic-session' }),
+    window.call('homeBootstrap', { sessionToken: 'synthetic-session' })
+  ]);
+  releaseFallback();
+  await fallbackFirst;
+  await fallbackAgain;
+  assert.equal(fallbackSeen.filter((action) => action === 'pendingCounts').length, 1, fallbackSeen.join(','));
+  assert.equal(fallbackSeen.filter((action) => action === 'taskSummary').length, 1, fallbackSeen.join(','));
 
   window.__hf9NotificationSummary = null;
   window.eval('notificationCache = null');
