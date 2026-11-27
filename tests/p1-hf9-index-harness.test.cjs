@@ -144,14 +144,21 @@ test('home summary uses notificationSummary and does not claim there are no noti
   const { dom } = await openHarness((action) => {
     if (action === 'homeBootstrap' || action === 'home') return readyHome();
     return { ok: true, data: {} };
-  });
+  }, { utf8: true });
   await afterLoad(dom);
   const window = dom.window;
   window.__hf9NotificationSummary = { unread: 2, generalUnread: 1 };
   if (typeof window.fhNoticesHtml_ === 'function') {
     const html = window.fhNoticesHtml_(2);
+    // Bootstrap summary is not the final count: no digit yet, and not "no notices".
     assert.equal(html.includes('目前沒有新通知'), false);
-    assert.match(html, /1/);
+    assert.equal(/\d/.test(html), false);
+    assert.match(html, /—/);
+    window.eval('notificationCache = { items: [], summary: { unread: 1, generalUnread: 1, __hf9FromList: true } }');
+    const ready = window.fhNoticesHtml_(2);
+    assert.match(ready, /1/);
+    window.eval('notificationCache = { items: [], summary: { unread: 130, generalUnread: 130, __hf9FromList: true } }');
+    assert.match(window.fhNoticesHtml_(2), /130/);
   }
   assert.ok(window.p5a1Rc2GeneralUnreadCount_() >= 1);
   dom.window.close();
@@ -528,7 +535,7 @@ for (const outcome of ['ok', 'fail']) {
     assert.equal(window.__hf9AttendanceLoading, true);
     const during = clockRows(window);
     assert.equal(during.length, 2, JSON.stringify(during));
-    assert.deepEqual(during.map((row) => row.skel), [true, true], 'expected loading skeletons ' + JSON.stringify(during));
+    assert.deepEqual(during.map((row) => row.text), ['載入中', '載入中'], 'expected loading text ' + JSON.stringify(during));
     const drawsBefore = state.draws;
     await pending;
     await settle(60);
@@ -567,13 +574,16 @@ test('the clock pass also clears a skeleton when home cannot be redrawn (R7 N1)'
   window.__hf9AttendanceLoading = false;
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.hf9-skel').length, 0);
-  // V154-P2A: today is still unknown (no attendance, home not from homeBootstrap).
+  // Bootstrap __perf3 is not confirmation, so an empty clock stays "—".
   assert.equal(clockRows(window)[0].text, '—');
-  // Once homeBootstrap has delivered today's state, an empty clock is a fact.
-  window.eval('attendanceCache = null; homeData = Object.assign({}, homeData || {}, { __perf3: true })');
+  window.eval('attendanceCache = null; homeData = Object.assign({}, homeData || {}, { __perf3: true, today: { shiftCode: "OFFICE_DAY" } })');
   home.innerHTML = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value"><span class="hf9-skel"></span></span></div>';
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.hf9-skel').length, 0);
+  assert.equal(clockRows(window)[0].text, '—');
+  window.eval('attendanceCache = { days: [{ date: ' + JSON.stringify(todayKey()) + ', firstIn: "", lastOut: "" }] }');
+  home.innerHTML = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value">—</span></div>';
+  window.__hf9RefreshHomeClock(home);
   assert.equal(clockRows(window)[0].text, '尚未打卡');
   dom.window.close();
 });

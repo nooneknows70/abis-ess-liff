@@ -3160,6 +3160,8 @@ body.home-view .fh-quick-copy span{
 
 /* HF9 round: tap size, primary actions, overflow, skeletons, correction submit */
 .hf9-skel{display:inline-block;width:28px;height:16px;border-radius:6px;background:linear-gradient(90deg,#e5e7eb,#f3f4f6,#e5e7eb);background-size:200% 100%;animation:hf9shimmer 1.1s linear infinite;vertical-align:middle}
+.hf9-count-stale{opacity:.72}
+.hf9-count-stale b{font-weight:800}
 .hf9-skel-block{display:block;width:46%;height:22px;margin-bottom:10px}
 .hf9-skel-line{display:block;width:72%;height:14px}
 @keyframes hf9shimmer{to{background-position:-200% 0}}

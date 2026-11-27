@@ -30,7 +30,7 @@ function abisHf4Text_(key){
     latestTitle:'找到較新的草稿',latestBody:'其他裝置或視窗已有較新的草稿版本。載入後，目前畫面會改為最新版本。',
     inactiveTitle:'草稿狀態已變更',inactiveBody:'此草稿已在其他視窗完成、放棄或失效。是否同步最新狀態並清除此畫面的舊草稿？',
     resubmitTitle:'重新送出假單？',resubmitBody:'重新送出後，這張假單將再次進入簽核流程。',
-    reissueTitle:'重新產生 Temporary PIN？',reissueBody:'系統將產生新的 Temporary PIN，舊的 Temporary PIN 會立即失效。',
+    reissueTitle:'重新產生臨時 PIN？',reissueBody:'系統將產生新的臨時 PIN，舊的臨時 PIN 會立即失效。',
     appealTitle:'提出出勤申覆',appealBody:'請說明需要重新確認的出勤情況。',appealLabel:'申覆原因',appealPlaceholder:'請輸入申覆原因',appealRequired:'請填寫申覆原因。',
     actionUnavailable:'目前無法開啟確認視窗，請重新整理頁面後再試。'
   };
@@ -43,7 +43,7 @@ function abisHf4Text_(key){
     latestTitle:'Có bản nháp mới hơn',latestBody:'Thiết bị hoặc cửa sổ khác có bản nháp mới hơn. Sau khi tải, màn hình hiện tại sẽ được thay bằng phiên bản mới nhất.',
     inactiveTitle:'Trạng thái bản nháp đã thay đổi',inactiveBody:'Bản nháp này đã được hoàn tất, bỏ hoặc mất hiệu lực ở cửa sổ khác. Đồng bộ trạng thái mới nhất và xóa bản nháp cũ trên màn hình này?',
     resubmitTitle:'Gửi lại đơn nghỉ?',resubmitBody:'Sau khi gửi lại, đơn này sẽ vào lại quy trình phê duyệt.',
-    reissueTitle:'Tạo lại Temporary PIN?',reissueBody:'Hệ thống sẽ tạo Temporary PIN mới và PIN cũ sẽ mất hiệu lực ngay.',
+    reissueTitle:'Tạo lại PIN tạm thời?',reissueBody:'Hệ thống sẽ tạo PIN tạm thời mới và PIN cũ sẽ mất hiệu lực ngay.',
     appealTitle:'Khiếu nại chấm công',appealBody:'Vui lòng mô tả tình trạng chấm công cần được kiểm tra lại.',appealLabel:'Lý do khiếu nại',appealPlaceholder:'Nhập lý do khiếu nại',appealRequired:'Vui lòng nhập lý do khiếu nại.',
     actionUnavailable:'Hiện không thể mở hộp xác nhận. Vui lòng tải lại trang rồi thử lại.'
   };
@@ -56,7 +56,7 @@ function abisHf4Text_(key){
     latestTitle:'พบร่างที่ใหม่กว่า',latestBody:'อุปกรณ์หรือหน้าต่างอื่นมีร่างเวอร์ชันใหม่กว่า เมื่อโหลด หน้าปัจจุบันจะเปลี่ยนเป็นเวอร์ชันล่าสุด',
     inactiveTitle:'สถานะร่างมีการเปลี่ยนแปลง',inactiveBody:'ร่างนี้ถูกดำเนินการเสร็จ ยกเลิก หรือหมดอายุในหน้าต่างอื่นแล้ว ต้องการซิงก์สถานะล่าสุดและล้างร่างเก่าบนหน้าจอนี้หรือไม่?',
     resubmitTitle:'ส่งใบลาอีกครั้ง?',resubmitBody:'เมื่อส่งอีกครั้ง ใบลานี้จะเข้าสู่กระบวนการอนุมัติอีกครั้ง',
-    reissueTitle:'สร้าง Temporary PIN ใหม่?',reissueBody:'ระบบจะสร้าง Temporary PIN ใหม่ และ PIN เดิมจะใช้ไม่ได้ทันที',
+    reissueTitle:'สร้าง PIN ชั่วคราวใหม่?',reissueBody:'ระบบจะสร้าง PIN ชั่วคราวใหม่ และ PIN เดิมจะใช้ไม่ได้ทันที',
     appealTitle:'ยื่นอุทธรณ์เวลาทำงาน',appealBody:'โปรดอธิบายข้อมูลเวลาทำงานที่ต้องการให้ตรวจสอบอีกครั้ง',appealLabel:'เหตุผลการอุทธรณ์',appealPlaceholder:'กรอกเหตุผลการอุทธรณ์',appealRequired:'กรุณากรอกเหตุผลการอุทธรณ์',
     actionUnavailable:'ขณะนี้ไม่สามารถเปิดหน้าต่างยืนยันได้ โปรดรีเฟรชหน้าแล้วลองอีกครั้ง'
   };

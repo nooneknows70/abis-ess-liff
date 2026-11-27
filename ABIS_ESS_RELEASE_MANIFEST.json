@@ -407,13 +407,13 @@
         "order": 0,
         "role": "STYLESHEET",
         "path": "assets/ess-20261118-p1-hf9/abis-ess.css",
-        "sha256": "eae2f40fad42c56e5793f28a18f1feab09d8342e267fe95ccda16054c7e33c4c"
+        "sha256": "5819ee6e16e6e961eebfe5cdeaad627a5d53c566bb58c00c9af9cfa1bda6b58b"
       },
       {
         "order": 1,
         "role": "MAIN_BUNDLE",
         "path": "assets/ess-20261118-p1-hf9/abis-ess.bundle.js",
-        "sha256": "9c91c6658cdaf495fc8c4a0f7b5820084b6d3b130c05dd8aa9092de901863e8d"
+        "sha256": "210148aa18fb66f7cbbbac6bbefeff54738ebd709bad57cffc4eda467d4de63c"
       },
       {
         "order": 2,
@@ -443,7 +443,7 @@
         "order": 6,
         "role": "PATCH",
         "path": "assets/ess-20261118-p1-hf9/ess-dialog-hf4.js",
-        "sha256": "11f4ffd1ca6208d8eee9198bbfe61acf0dae2b49220dae1612fec1cb953a99fe"
+        "sha256": "e48cfb0566500334ed7df64e1b967d11b7ab9220c2d7b8dc43b56ab889463be8"
       },
       {
         "order": 7,
@@ -466,7 +466,7 @@
         "path": "assets/ess-20261118-supervisor-correction-confirm/supervisor-correction-confirm.js",
         "wraps": "p5a2rc1AttendanceInboxHtml_",
         "install": "install() wraps p5a2rc1AttendanceInboxHtml_ and must load after the hf9 bundle",
-        "sha256": "a0992063c1fcd0490945cfd4b4e2010a863909ea56dc9a3e8bbdf228eaa62d8d"
+        "sha256": "621b56c84b027da1756544a9d3475aba042a1875326766957090fd2e4cf10ad9"
       },
       {
         "order": 10,
