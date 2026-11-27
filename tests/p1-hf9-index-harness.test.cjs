@@ -206,6 +206,59 @@ async function cdp(ws, method, params, sessionId) {
   });
 }
 
+function chromeEnv() {
+  const env = Object.assign({}, process.env);
+  // A bus address Chrome cannot parse ("Unknown address type") keeps the
+  // debug port from opening. Drop it and retry the process instead.
+  delete env.DBUS_SESSION_BUS_ADDRESS;
+  return env;
+}
+
+async function launchChrome(bin) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const profile = fs.mkdtempSync(path.join('/tmp', 'hf9-chrome-'));
+    const chrome = spawn(bin, [
+      '--headless=new',
+      '--remote-debugging-port=0',
+      '--user-data-dir=' + profile,
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--disable-gpu',
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
+      'about:blank'
+    ], { stdio: ['ignore', 'pipe', 'pipe'], env: chromeEnv() });
+    let chromeLog = '';
+    try {
+      const debugPort = await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('chrome did not open a debug port: ' + chromeLog.slice(-500))), 20000);
+        function look(buf) {
+          chromeLog += String(buf);
+          const match = chromeLog.match(/DevTools listening on ws:\/\/127\.0\.0\.1:(\d+)\//);
+          if (match) {
+            clearTimeout(timer);
+            resolve(Number(match[1]));
+          }
+        }
+        chrome.stderr.on('data', look);
+        chrome.stdout.on('data', look);
+        chrome.on('exit', (code) => {
+          clearTimeout(timer);
+          reject(new Error('chrome exited ' + code + ': ' + chromeLog.slice(-500)));
+        });
+      });
+      return { chrome, profile, debugPort };
+    } catch (err) {
+      lastError = err;
+      try { chrome.kill('SIGKILL'); } catch (ignore) {}
+      try { fs.rmSync(profile, { recursive: true, force: true }); } catch (ignore) {}
+      if (attempt < 3) await settle(400);
+    }
+  }
+  throw lastError;
+}
+
 async function withChrome(run) {
   const bin = chromeBin();
   if (!bin) {
@@ -215,38 +268,17 @@ async function withChrome(run) {
   const server = serveRoot();
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   const port = server.address().port;
-  const profile = fs.mkdtempSync(path.join('/tmp', 'hf9-chrome-'));
-  const chrome = spawn(bin, [
-    '--headless=new',
-    '--remote-debugging-port=0',
-    '--user-data-dir=' + profile,
-    '--no-first-run',
-    '--no-default-browser-check',
-    '--disable-gpu',
-    '--no-sandbox',
-    '--disable-dev-shm-usage',
-    'about:blank'
-  ], { stdio: ['ignore', 'pipe', 'pipe'] });
-  let debugPort = 0;
-  let chromeLog = '';
+  let launched;
   try {
-    debugPort = await new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('chrome did not open a debug port: ' + chromeLog.slice(-500))), 20000);
-      function look(buf) {
-        chromeLog += String(buf);
-        const match = chromeLog.match(/DevTools listening on ws:\/\/127\.0\.0\.1:(\d+)\//);
-        if (match) {
-          clearTimeout(timer);
-          resolve(Number(match[1]));
-        }
-      }
-      chrome.stderr.on('data', look);
-      chrome.stdout.on('data', look);
-      chrome.on('exit', (code) => {
-        clearTimeout(timer);
-        reject(new Error('chrome exited ' + code + ': ' + chromeLog.slice(-500)));
-      });
-    });
+    launched = await launchChrome(bin);
+  } catch (err) {
+    server.close();
+    throw err;
+  }
+  const chrome = launched.chrome;
+  const profile = launched.profile;
+  const debugPort = launched.debugPort;
+  try {
     const version = await fetch('http://127.0.0.1:' + debugPort + '/json/version').then((res) => res.json());
     const browser = new WebSocket(version.webSocketDebuggerUrl);
     await new Promise((resolve, reject) => {
