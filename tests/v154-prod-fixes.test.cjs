@@ -66,11 +66,11 @@ test('P2-C: zh code after a CJK word has no gap (員工未打卡, not 員工 未
 test('P2-C: approval card anomaly uses a plain label instead of the internal note', () => {
   const snap = { anomalyCode: 'NO_PUNCH', anomalyDescription: INTERNAL_NOTE, missingIn: true, missingOut: true };
   const zh = scc('ZH');
-  assert.equal(zh.anomalyText({ systemSnapshot: snap }), '打卡紀錄匯入、已排班但全日無打卡');
+  assert.equal(zh.anomalyText({ systemSnapshot: snap }), '已排班但全日無打卡');
   const vi = scc('VI');
-  assert.equal(vi.anomalyText({ systemSnapshot: snap }), 'Bản ghi chấm công được nhập, Có ca nhưng cả ngày không chấm công');
+  assert.equal(vi.anomalyText({ systemSnapshot: snap }), 'Có ca nhưng cả ngày không chấm công');
   const th = scc('TH');
-  assert.equal(th.anomalyText({ systemSnapshot: snap }), 'บันทึกเวลาที่นำเข้า, มีกะแต่ไม่มีการลงเวลาทั้งวัน');
+  assert.equal(th.anomalyText({ systemSnapshot: snap }), 'มีกะแต่ไม่มีการลงเวลาทั้งวัน');
   for (const ui2 of [zh, vi, th]) {
     const html = ui2.cardHtml({ correctionRequestId: 'C1', date: '2026-11-02', employeeId: 'B1', requestType: 'MISSING_IN', systemSnapshot: snap }, {});
     assert.doesNotMatch(html, /Punch Import Batch|首筆\/末筆|出勤事件|NO_PUNCH|員工 未打卡/);
@@ -79,11 +79,15 @@ test('P2-C: approval card anomaly uses a plain label instead of the internal not
 
 test('P2-C: several codes, plain zh notes, and fallbacks', () => {
   const zh = scc('ZH');
-  assert.equal(zh.anomalyText({ systemSnapshot: { anomalyCode: 'NO_PUNCH;SOURCE_COVERAGE_PENDING', anomalyDescription: INTERNAL_NOTE } }), '打卡紀錄匯入、已排班但全日無打卡、打卡來源待確認');
+  assert.equal(zh.anomalyText({ systemSnapshot: { anomalyCode: 'NO_PUNCH;SOURCE_COVERAGE_PENDING', anomalyDescription: INTERNAL_NOTE } }), '已排班但全日無打卡、打卡來源待確認');
   assert.equal(zh.anomalyText({ systemSnapshot: { anomalyDescription: '員工 未打卡' } }), '未打卡');
-  assert.equal(zh.anomalyText({ systemSnapshot: { anomalyCode: 'PUNCH_IMPORT_BATCH', anomalyDescription: INTERNAL_NOTE } }), '打卡紀錄匯入');
-  assert.equal(zh.anomalyText({ systemSnapshot: { reasonCodes: ['PUNCH_IMPORT_BATCH'], anomalyDescription: INTERNAL_NOTE, attendanceStatus: '無打卡', anomalyCode: 'NO_PUNCH' } }), '打卡紀錄匯入');
-  assert.equal(zh.anomalyText({ systemSnapshot: { anomalyDescription: '該日期已有有效 Punch Import Batch', attendanceStatus: '無打卡' } }), '打卡紀錄匯入');
+  assert.equal(zh.anomalyText({ systemSnapshot: { anomalyCode: 'PUNCH_IMPORT_BATCH', anomalyDescription: INTERNAL_NOTE } }), zh.texts.ZH.anomalyGeneric);
+  assert.equal(zh.anomalyText({ systemSnapshot: { reasonCodes: ['PUNCH_IMPORT_BATCH'], anomalyCode: 'NO_PUNCH', anomalyDescription: INTERNAL_NOTE, attendanceStatus: '無打卡' } }), '已排班但全日無打卡');
+  assert.equal(zh.anomalyText({ systemSnapshot: { reasonCodes: ['PUNCH_IMPORT_BATCH'], anomalyCode: 'SOURCE_COVERAGE_GAP', anomalyDescription: '該日期未落在任何有效 Punch Import Batch 涵蓋期間；屬來源資料缺口，不判定員工 NO_PUNCH' } }), '打卡來源有缺口，不判定員工未打卡');
+  assert.equal(zh.anomalyText({ systemSnapshot: { anomalyDescription: '該日期已有有效 Punch Import Batch', attendanceStatus: '無打卡' } }), '無打卡');
+  const gapHtml = zh.cardHtml({ correctionRequestId: 'C8', date: '2026-11-01', employeeId: 'B1', requestType: 'OTHER', systemSnapshot: { reasonCodes: ['PUNCH_IMPORT_BATCH'], anomalyCode: 'SOURCE_COVERAGE_GAP', anomalyDescription: INTERNAL_NOTE } }, {});
+  assert.match(gapHtml, /打卡來源有缺口，不判定員工未打卡/);
+  assert.doesNotMatch(gapHtml, /打卡紀錄匯入|Punch Import Batch/);
   const spaced = zh.cardHtml({ correctionRequestId: 'C9', date: '2026-11-02', employeeId: 'B1', employeeName: '員工', requestType: 'MISSING_IN', systemSnapshot: { attendanceStatus: '無打卡', anomalyCode: 'NO_PUNCH', missingIn: true, missingOut: true } }, {});
   assert.doesNotMatch(spaced, /員工 未打卡|員工 無打卡/);
   // a short plain zh note stays as written
@@ -91,9 +95,8 @@ test('P2-C: several codes, plain zh notes, and fallbacks', () => {
   // vi never shows the zh-only note
   const vi = scc('VI');
   assert.equal(vi.anomalyText({ systemSnapshot: { anomalyCode: 'EARLY_LEAVE', anomalyDescription: '實際早退 298 分鐘' } }), 'Về sớm');
-  // the stored note still names Punch Import Batch, so the label comes from that phrase
-  assert.equal(zh.anomalyText({ systemSnapshot: { anomalyCode: 'SOMETHING_NEW', anomalyDescription: INTERNAL_NOTE } }), '打卡紀錄匯入');
-  assert.equal(vi.anomalyText({ systemSnapshot: { anomalyDescription: INTERNAL_NOTE } }), vi.anomalyLabels.PUNCH_IMPORT_BATCH.VI);
+  assert.equal(zh.anomalyText({ systemSnapshot: { anomalyCode: 'SOMETHING_NEW', anomalyDescription: INTERNAL_NOTE } }), zh.texts.ZH.anomalyGeneric);
+  assert.equal(vi.anomalyText({ systemSnapshot: { anomalyDescription: INTERNAL_NOTE } }), vi.texts.VI.anomalyGeneric);
   // an internal note with no known phrase stays generic
   assert.equal(zh.anomalyText({ systemSnapshot: { anomalyCode: 'SOMETHING_NEW', anomalyDescription: '目前以首筆/末筆計算' } }), zh.texts.ZH.anomalyGeneric);
   // missing flags still work without code or note
@@ -115,6 +118,13 @@ test('P2-A: home shift uses the attendance name, not the OFFICE_DAY placeholder'
     shiftLabels: { ZH: '辦公室日班', VI: 'Ca văn phòng', TH: 'กะออฟฟิศ' }
   }, 'ZH'), '辦公室日班');
   assert.equal(ui.humanize('OFFICE_DAY'), '辦公室固定日班');
+  const key = new Date();
+  const today = key.getFullYear() + '-' + String(key.getMonth() + 1).padStart(2, '0') + '-' + String(key.getDate()).padStart(2, '0');
+  const row = { date: today, shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班', firstIn: '', lastOut: '' };
+  assert.equal(ui.confirmedHomeToday({ __perf3: true, todayAttendance: row }).shiftName, '辦公室日班');
+  assert.equal(ui.confirmedHomeToday({ __fast4Partial: true, todayAttendance: row }), null);
+  assert.equal(ui.confirmedHomeToday({ __perf3: true, today: { shiftCode: 'OFFICE_DAY' } }), null);
+  assert.equal(ui.confirmedHomeToday({ __perf3: true }), null);
 });
 
 test('P2-B: pending counts depend on taskSummary and ignore another employee cache', () => {
@@ -166,6 +176,7 @@ test('P3: home title and Temporary PIN no longer mix languages', () => {
   assert.match(bundle, /homeTitle:'หน้าแรก'/);
   assert.match(bundle, /home-dashboard-title"><strong>\$\{escapeHtml\(fht_\('homeTitle'\)\)\}<\/strong><\/div>/);
   assert.doesNotMatch(bundle, /home-dashboard-title"><strong>\$\{escapeHtml\(tr\('home'\)\)\}<\/strong><span>/);
+  assert.doesNotMatch(bundle, /function noteRpc_/);
   assert.match(bundle, /dashboard:'Tổng quan'/);
   assert.match(bundle, /dashboard:'ภาพรวม'/);
   const dialog = fs.readFileSync(path.join(root, 'assets/ess-20261118-p1-hf9/ess-dialog-hf4.js'), 'utf8');
@@ -226,6 +237,16 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.fh-status-value')[0].textContent, '尚未打卡');
   assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '辦公室日班');
+  window.eval('attendanceCache = null; homeData = { __fast4Partial: true, todayAttendance: { date: ' + JSON.stringify(key) + ', shiftName: "辦公室日班", shiftCode: "OFFICE_DAY", firstIn: "", lastOut: "" } }');
+  home.innerHTML = row;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.fh-status-value')[0].textContent, '—');
+  assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '—');
+  window.eval('homeData = { __perf3: true, todayAttendance: { date: ' + JSON.stringify(key) + ', shiftName: "辦公室日班", shiftCode: "OFFICE_DAY", firstIn: "", lastOut: "" } }');
+  home.innerHTML = row;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.fh-status-value')[0].textContent, '尚未打卡');
+  assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '辦公室日班');
 
   // P2-B: same-employee cached counts are applied immediately and marked stale.
   const memory = new Map();
@@ -250,8 +271,9 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   window.google.script.run = {
     withSuccessHandler(ok) {
       return { withFailureHandler() {
-        return { api(action) {
+        return { api(action, payload) {
           order.push(action);
+          if (action === 'homeBootstrap') order.deferred = !!(payload && payload.deferTaskSummary);
           const counts = { total: 1, returnedLeave: 1, attendanceException: 0, approval: 0, supplement: 0 };
           const data = action === 'pendingCounts'
             ? { pendingCounts: counts, taskSummary: counts, fastMode: false, source: 'LEGACY', cached: false }
@@ -269,6 +291,23 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   assert.ok(order.indexOf('homeBootstrap') >= 0, order.join(','));
   assert.ok(order.indexOf('pendingCounts') < order.indexOf('homeBootstrap'), order.join(' then '));
   assert.equal(order.indexOf('taskSummary'), -1, 'taskSummary ran even though pendingCounts succeeded: ' + order.join(','));
+  assert.equal(order.deferred, true);
+  window.__hf9CountsInflight = null;
+  window.google.script.run = {
+    withSuccessHandler(ok) {
+      return { withFailureHandler() {
+        return { api(action) {
+          order.push('fail:' + action);
+          ok({ ok: false, error: '系統忙碌' });
+        } };
+      } };
+    }
+  };
+  const kept = await window.call('taskSummary', { sessionToken: 'synthetic-session' });
+  assert.equal(kept.taskSummary.returnedLeave, 1);
+  assert.equal(kept.taskSummary.total, 1);
+  assert.equal(Number(window.eval('taskSummaryCache.returnedLeave')), 1);
+  assert.equal(Number(window.eval('taskSummaryCache.total')), 1);
 
   // P3: one line per affected range. (a2t is inlined by the backend, not the fixture.)
   if (typeof window.a2t !== 'function') window.a2t = (key) => key;

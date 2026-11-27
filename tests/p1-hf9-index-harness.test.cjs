@@ -147,18 +147,15 @@ test('home summary uses notificationSummary and does not claim there are no noti
   }, { utf8: true });
   await afterLoad(dom);
   const window = dom.window;
-  window.__hf9NotificationSummary = { unread: 2, generalUnread: 1 };
+  window.__hf9NotificationSummary = { unread: 137, generalUnread: 137, __hf9FromHome: true };
   if (typeof window.fhNoticesHtml_ === 'function') {
     const html = window.fhNoticesHtml_(2);
-    // Bootstrap summary is not the final count: no digit yet, and not "no notices".
+    assert.match(html, /137/);
     assert.equal(html.includes('目前沒有新通知'), false);
-    assert.equal(/\d/.test(html), false);
-    assert.match(html, /—/);
-    window.eval('notificationCache = { items: [], summary: { unread: 1, generalUnread: 1, __hf9FromList: true } }');
-    const ready = window.fhNoticesHtml_(2);
-    assert.match(ready, /1/);
-    window.eval('notificationCache = { items: [], summary: { unread: 130, generalUnread: 130, __hf9FromList: true } }');
-    assert.match(window.fhNoticesHtml_(2), /130/);
+    const capped = Array.from({ length: 100 }, () => ({ unread: true, isActionable: false, title: 'n' }));
+    window.eval('notificationCache = ' + JSON.stringify({ items: capped, summary: { unread: 100, generalUnread: 100 } }));
+    assert.equal(window.p5a1Rc2GeneralUnreadCount_(), 137);
+    assert.doesNotMatch(String(window.p5a1Rc2GeneralUnreadCount_()), /^100$/);
   }
   assert.ok(window.p5a1Rc2GeneralUnreadCount_() >= 1);
   dom.window.close();

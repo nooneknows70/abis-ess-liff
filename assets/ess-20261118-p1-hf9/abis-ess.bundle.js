@@ -10275,8 +10275,7 @@ try {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   }
 
-  // Only the myAttendance payload confirms today's punches. homeBootstrap's
-  // today stub and __perf3 do not: they painted 尚未打卡 before the punches arrived.
+  // myAttendance's today row. A fast4 partial home is not this.
   function attendanceTodayRow() {
     var days = null;
     try {
@@ -10289,6 +10288,23 @@ try {
       if (days[i] && String(days[i].date || '').slice(0, 10) === key) return days[i];
     }
     return null;
+  }
+
+  // A finished home/homeBootstrap today row is the same daily record as
+  // myAttendance. The login fast4 partial and a bare __perf3 flag are not.
+  function confirmedHomeToday(home) {
+    if (!home || home.__fast4Partial || home.__fast4Resume) return null;
+    var cards = home.cards;
+    var row = home.todayAttendance || home.today || (cards && cards.today) || null;
+    if (!row || typeof row !== 'object') return null;
+    var date = String(row.date || '').slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+    if (date !== attendanceTodayKey()) return null;
+    return row;
+  }
+
+  function confirmedTodayRow() {
+    return attendanceTodayRow() || confirmedHomeToday(typeof homeData !== 'undefined' ? homeData : null);
   }
 
   function clearStores(localStore, sessionStore) {
@@ -10316,6 +10332,7 @@ try {
     recentLabel: recentLabel,
     authoritativeShiftName: authoritativeShiftName,
     attendanceTodayRow: attendanceTodayRow,
+    confirmedHomeToday: confirmedHomeToday,
     parseStoredCounts: parseStoredCounts,
     serializeCounts: serializeCounts,
     normalizePendingCounts: normalizePendingCounts,
@@ -10359,20 +10376,6 @@ try {
       } catch (ignore2) {}
       return '';
     }
-    function noteRpc_(action, payload, started, ok) {
-      var now = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
-      var keys = [];
-      if (payload && typeof payload === 'object') {
-        keys = Object.keys(payload).filter(function (key) {
-          return key !== 'sessionToken' && key !== 'pin' && key !== 'newPin' && key !== 'temporaryPin';
-        });
-      }
-      var row = { action: String(action || ''), payloadKeys: keys, ms: Math.max(0, Math.round(now - started)), ok: !!ok };
-      if (!global.__hf9RpcTrace) global.__hf9RpcTrace = [];
-      global.__hf9RpcTrace.push(row);
-      if (global.__hf9RpcTrace.length > 40) global.__hf9RpcTrace.shift();
-      try { ABIS_PERF2_TIMING_[row.action] = { ms: row.ms, ok: row.ok, at: Date.now() }; } catch (ignore) {}
-    }
     function applyStaleCounts_() {
       var id = currentEmployeeId_();
       if (!id || typeof taskSummaryCache !== 'undefined' && taskSummaryCache && !taskSummaryCache.__hf9Stale) return;
@@ -10388,8 +10391,23 @@ try {
       if (!raw) return;
       try { if (global.sessionStorage) global.sessionStorage.setItem('abis_hf9_task_counts_v1', raw); } catch (ignore) {}
     }
+    function plainCounts_(summary) {
+      return {
+        total: Number(summary && summary.total || 0),
+        returnedLeave: Number(summary && summary.returnedLeave || 0),
+        attendanceException: Number(summary && summary.attendanceException || 0),
+        approval: Number(summary && summary.approval || 0),
+        supplement: Number(summary && summary.supplement || 0)
+      };
+    }
+    function rememberCounts_(summary) {
+      if (!summary) return;
+      global.__hf9CountsSnapshot = plainCounts_(summary);
+      global.__hf9CountsFinal = true;
+    }
     function paintPendingCounts_(summary) {
       if (!summary) return;
+      rememberCounts_(summary);
       try { taskSummaryCache = summary; } catch (ignore) {}
       try { if (typeof abisPerf2Mark_ === 'function') abisPerf2Mark_('taskSummary'); } catch (ignore2) {}
       storeFreshCounts_(summary);
@@ -10399,42 +10417,7 @@ try {
         if (home && !home.classList.contains('hide') && typeof renderHome === 'function') renderHome();
       } catch (ignore4) {}
     }
-    function requestPendingCounts_(action) {
-      return call(action, { sessionToken: sessionToken }).then(function (data) {
-        var summary = normalizePendingCounts(data);
-        if (!summary) {
-          var missing = new Error(action + ' returned no counts');
-          missing.code = 'PENDING_COUNTS_MISSING';
-          throw missing;
-        }
-        return summary;
-      });
-    }
-    // pendingCounts in the same turn as home/homeBootstrap. taskSummary is only
-    // the fallback when that action is missing or fails (flag OFF still returns
-    // the same numbers from pendingCounts; an old backend has no such action).
-    function startTaskSummaryNow_() {
-      if (global.__hf9CountsKicked) return;
-      if (typeof sessionToken === 'undefined' || !sessionToken) return;
-      if (typeof call !== 'function') return;
-      applyStaleCounts_();
-      global.__hf9CountsKicked = true;
-      var pending = requestPendingCounts_('pendingCounts').then(paintPendingCounts_, function () {
-        return requestPendingCounts_('taskSummary').then(paintPendingCounts_);
-      }).then(undefined, function (err) {
-        global.__hf9CountsKicked = false;
-        try { console.error(err); } catch (ignore) {}
-      });
-      try {
-        if (typeof ABIS_PERF2_INFLIGHT_ !== 'undefined') {
-          ABIS_PERF2_INFLIGHT_.pendingCounts = pending;
-          pending.finally(function () {
-            if (ABIS_PERF2_INFLIGHT_.pendingCounts === pending) delete ABIS_PERF2_INFLIGHT_.pendingCounts;
-          });
-        }
-      } catch (ignore4) {}
-    }
-    api.startTaskSummaryNow = startTaskSummaryNow_;
+    api.startTaskSummaryNow = function () {};
 
     if (typeof message === 'function' && !message.__hf9Round) {
       var baseMessage = message;
@@ -10485,26 +10468,85 @@ try {
         if (!summary) return;
         global.__hf9NotificationSummary = {
           unread: Number(summary.unread || 0),
-          generalUnread: Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0)
+          generalUnread: Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0),
+          __hf9FromHome: true
         };
         try {
           if (typeof notificationCache === 'undefined' || !notificationCache) notificationCache = { items: [], summary: global.__hf9NotificationSummary };
           else if (!(notificationCache.summary && notificationCache.summary.__hf9FromList)) notificationCache.summary = Object.assign({}, notificationCache.summary || {}, global.__hf9NotificationSummary);
         } catch (ignore) {}
       }
-      call = function (action, payload) {
-        function once() {
-          var started = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
-          return Promise.resolve().then(function () { return baseCall(action, payload); }).then(function (data) {
-            noteRpc_(action, payload, started, true);
-            return data;
+      var allowTaskSummaryNetwork = false;
+      function requestCounts_(action) {
+        return call(action, { sessionToken: sessionToken }).then(function (data) {
+          var summary = normalizePendingCounts(data);
+          if (!summary) {
+            var missing = new Error(action + ' returned no counts');
+            missing.code = 'PENDING_COUNTS_MISSING';
+            throw missing;
+          }
+          return summary;
+        });
+      }
+      function startOrJoinPendingCounts_() {
+        if (global.__hf9CountsInflight) return global.__hf9CountsInflight;
+        if (typeof sessionToken === 'undefined' || !sessionToken) return Promise.reject(new Error('no session'));
+        applyStaleCounts_();
+        global.__hf9CountsKicked = true;
+        var pending = requestCounts_('pendingCounts').then(function (summary) {
+          paintPendingCounts_(summary);
+          return summary;
+        }, function () {
+          allowTaskSummaryNetwork = true;
+          return requestCounts_('taskSummary').then(function (summary) {
+            allowTaskSummaryNetwork = false;
+            paintPendingCounts_(summary);
+            return summary;
           }, function (err) {
-            noteRpc_(action, payload, started, false);
+            allowTaskSummaryNetwork = false;
+            global.__hf9CountsKicked = false;
             throw err;
           });
+        });
+        global.__hf9CountsInflight = pending.then(function (summary) {
+          global.__hf9CountsInflight = null;
+          return summary;
+        }, function (err) {
+          global.__hf9CountsInflight = null;
+          throw err;
+        });
+        return global.__hf9CountsInflight;
+      }
+      api.startTaskSummaryNow = function () {
+        startOrJoinPendingCounts_().catch(function () {});
+      };
+      call = function (action, payload) {
+        if (action === 'homeBootstrap') {
+          payload = Object.assign({}, payload || {}, { deferTaskSummary: true });
+        }
+        // PERF3 still calls taskSummary beside homeBootstrap. The pills use
+        // pendingCounts only. A failed taskSummary must not replace numbers
+        // that are already on screen with zeros.
+        if (action === 'taskSummary' && !allowTaskSummaryNetwork) {
+          return startOrJoinPendingCounts_().then(function (summary) {
+            return { taskSummary: plainCounts_(summary) };
+          }, function () {
+            if (global.__hf9CountsSnapshot) return { taskSummary: plainCounts_(global.__hf9CountsSnapshot) };
+            return Promise.reject(new Error('taskSummary failed'));
+          });
+        }
+        if (action === 'taskInbox') {
+          return Promise.resolve().then(function () { return baseCall(action, payload); }).then(function (data) {
+            var summary = normalizePendingCounts(data);
+            if (summary) rememberCounts_(summary);
+            return data || {};
+          });
+        }
+        function once() {
+          return Promise.resolve().then(function () { return baseCall(action, payload); });
         }
         if (action === 'home' || action === 'homeBootstrap') {
-          try { startTaskSummaryNow_(); } catch (ignore) {}
+          try { startOrJoinPendingCounts_().catch(function () {}); } catch (ignore) {}
         }
         var attendanceCall = action === 'myAttendance';
         if (attendanceCall) global.__hf9AttendanceLoading = true;
@@ -10606,6 +10648,9 @@ try {
         global.__hf9HoldSession = false;
         global.__hf9RetryExhausted = false;
         global.__hf9CountsKicked = false;
+        global.__hf9CountsFinal = false;
+        global.__hf9CountsSnapshot = null;
+        global.__hf9CountsInflight = null;
         var token = typeof sessionToken !== 'undefined' ? sessionToken : '';
         clearStores(global.localStorage, global.sessionStorage);
         if (typeof sessionToken !== 'undefined') sessionToken = '';
@@ -10747,19 +10792,12 @@ try {
       var baseNoticeHtml = fhNoticesHtml_;
       fhNoticesHtml_ = function (limit) {
         var html = baseNoticeHtml(limit);
-        var ready = typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary && notificationCache.summary.__hf9FromList;
-        var badge = '';
-        try {
-          badge = unreadBadgeText(ready && typeof p5a1Rc2GeneralUnreadCount_ === 'function' ? p5a1Rc2GeneralUnreadCount_() : 0, !!ready);
-        } catch (ignore) {}
-        var pending = 0;
-        if (!badge) {
-          try {
-            var early = global.__hf9NotificationSummary || (typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary) || null;
-            pending = early ? Number(early.generalUnread != null ? early.generalUnread : early.unread || 0) : 0;
-          } catch (ignore2) {}
-        }
-        if (!badge && !(pending > 0)) return html;
+        var fromList = typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary && notificationCache.summary.__hf9FromList ? notificationCache.summary : null;
+        var fromHome = global.__hf9NotificationSummary || null;
+        var summary = fromList || fromHome;
+        var ready = !!(summary && (summary.generalUnread != null || summary.unread != null));
+        var badge = unreadBadgeText(ready ? Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0) : 0, ready);
+        if (!badge) return html;
         var empty = typeof fht_ === 'function' ? fht_('noNotice') : '目前沒有新通知';
         if (String(html).indexOf(empty) < 0 && String(html).indexOf('fh-empty') < 0) return html;
         var items = typeof fhNoticeItems_ === 'function' ? fhNoticeItems_() : [];
@@ -10771,16 +10809,15 @@ try {
           }).join('');
         }
         return '<div class="fh-notice-row"><span class="fh-notice-dot"></span><span class="fh-notice-text">' +
-          (badge ? t('unread').replace('{n}', badge) : '—') + '</span></div>';
+          t('unread').replace('{n}', badge) + '</span></div>';
       };
       fhNoticesHtml_.__hf9Round = true;
     }
 
-    // Clock and shift rows. "尚未打卡" only after myAttendance includes today and
-    // that punch is empty. Bootstrap today / __perf3 / employee.shift are not
-    // confirmation: they showed 尚未打卡 and 辦公室固定日班 before the payload.
+    // A finished homeBootstrap today row counts. The fast4 login partial and a
+    // bare __perf3 flag do not. 尚未打卡 only when that row has no punch.
     function todayAttendanceKnown() {
-      return !!attendanceTodayRow();
+      return !!confirmedTodayRow();
     }
 
     function clockBlank(text) {
@@ -10791,8 +10828,8 @@ try {
     function refreshHomeClock(home) {
       home = home || $('home');
       if (!home || !home.querySelectorAll) return;
-      var loadingAttendance = !!global.__hf9AttendanceLoading;
-      var todayRow = attendanceTodayRow();
+      var loadingAttendance = !!global.__hf9AttendanceLoading && !confirmedTodayRow();
+      var todayRow = confirmedTodayRow();
       var shiftText = loadingAttendance ? t('loading') : (authoritativeShiftName(todayRow) || '—');
       home.querySelectorAll('.fh-status-row').forEach(function (row) {
         var label = row.querySelector('.fh-status-label');

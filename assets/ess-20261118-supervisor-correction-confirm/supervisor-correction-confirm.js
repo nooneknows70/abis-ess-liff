@@ -446,7 +446,7 @@ function rawPunchLines(row) {
     LATE: { ZH: '遲到', VI: 'Đi muộn', TH: 'มาสาย', EN: 'Late' },
     EARLY_LEAVE: { ZH: '早退', VI: 'Về sớm', TH: 'กลับก่อนเวลา', EN: 'Left early' },
     SOURCE_COVERAGE_PENDING: { ZH: '打卡來源待確認', VI: 'Nguồn chấm công đang chờ xác nhận', TH: 'แหล่งข้อมูลลงเวลารอการยืนยัน', EN: 'Punch source not confirmed yet' },
-    SOURCE_COVERAGE_GAP: { ZH: '打卡來源尚未完整', VI: 'Nguồn chấm công chưa đầy đủ', TH: 'แหล่งข้อมูลลงเวลายังไม่ครบ', EN: 'Punch source incomplete' },
+    SOURCE_COVERAGE_GAP: { ZH: '打卡來源有缺口，不判定員工未打卡', VI: 'Nguồn chấm công còn thiếu, không coi là nhân viên chưa chấm công', TH: 'แหล่งข้อมูลลงเวลายังขาด ไม่ถือว่าพนักงานไม่ได้ลงเวลา', EN: 'Punch source is missing; this is not a no-punch day' },
     SITE_COVERAGE_UNMAPPED: { ZH: '據點打卡設備未對應', VI: 'Thiết bị chấm công tại địa điểm chưa được gán', TH: 'อุปกรณ์ลงเวลาของสถานที่ยังไม่ได้จับคู่', EN: 'Site punch device not mapped' },
     OT_EXCEEDS_APPROVED: { ZH: '加班超過核准時數', VI: 'Tăng ca vượt số giờ đã duyệt', TH: 'ทำงานล่วงเวลาเกินชั่วโมงที่อนุมัติ', EN: 'Overtime over approved hours' },
     PUNCH_ON_REST_DAY: { ZH: '休息日有打卡', VI: 'Có chấm công vào ngày nghỉ', TH: 'มีการลงเวลาในวันหยุด', EN: 'Punch on a rest day' },
@@ -507,29 +507,33 @@ function rawPunchLines(row) {
     return /[A-Za-z]{3,}|[A-Z0-9]+_[A-Z0-9]|；|出勤事件|首筆|末筆|覆蓋證明|母表|來源列/.test(String(text || ''));
   }
 
+  function primaryAnomalyCodes(snap) {
+    var fromReason = reasonCodes(snap);
+    var codes = anomalyCodes(snap).concat(fromReason);
+    var seen = {};
+    return codes.filter(function (code) {
+      if (!code || code === 'PUNCH_IMPORT_BATCH' || seen[code]) return false;
+      seen[code] = true;
+      return true;
+    });
+  }
+
   function anomalyText(row) {
     var snap = snapshotOf(row);
     if (!snap) return '';
-    var fromReason = reasonCodes(snap);
-    if (fromReason.length) {
-      var reasonText = joinLabels(fromReason);
-      if (reasonText) return dropEmployeePunchPrefix(reasonText);
-    }
+    // The anomaly is the code or the plain description. PUNCH_IMPORT_BATCH is
+    // only a source note, and a negative sentence ("未落在任何匯入期間") must
+    // not be shown as "the record was imported".
+    var labels = joinLabels(primaryAnomalyCodes(snap));
     var desc = dropEmployeePunchPrefix(String(snap.anomalyDescription || '').trim().replace(/([\u3400-\u9fff])[ \t]+(未打卡|缺下班卡|缺上班卡)/g, '$1$2'));
-    if (/punch import batch/i.test(desc)) {
-      var inferred = anomalyCodes(snap).slice();
-      if (inferred.indexOf('PUNCH_IMPORT_BATCH') < 0) inferred.unshift('PUNCH_IMPORT_BATCH');
-      var imported = joinLabels(inferred);
-      if (imported) return imported;
-    }
+    if (labels && (!desc || internalAnomalyText(desc) || langCode() !== 'ZH')) return labels;
     if (desc && langCode() === 'ZH' && !internalAnomalyText(desc)) return desc;
-    var labels = joinLabels(anomalyCodes(snap));
     if (labels) return labels;
     if (String(snap.attendanceStatus || '').trim() === '無打卡' && langCode() === 'ZH') return '無打卡';
     if (snap.missingIn && snap.missingOut) return sccT('typeMissingBoth');
     if (snap.missingOut) return sccT('typeMissingOut');
     if (snap.missingIn) return sccT('typeMissingIn');
-    if (desc || anomalyCodes(snap).length || fromReason.length) return sccT('anomalyGeneric');
+    if (desc || anomalyCodes(snap).length) return sccT('anomalyGeneric');
     return '';
   }
 

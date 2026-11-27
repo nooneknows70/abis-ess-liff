@@ -413,7 +413,7 @@
         "order": 1,
         "role": "MAIN_BUNDLE",
         "path": "assets/ess-20261118-p1-hf9/abis-ess.bundle.js",
-        "sha256": "210148aa18fb66f7cbbbac6bbefeff54738ebd709bad57cffc4eda467d4de63c"
+        "sha256": "f93d597e7792488a39c71a8ad577ed5cfc82b014889637bfc40ffd23202a2299"
       },
       {
         "order": 2,
@@ -466,7 +466,7 @@
         "path": "assets/ess-20261118-supervisor-correction-confirm/supervisor-correction-confirm.js",
         "wraps": "p5a2rc1AttendanceInboxHtml_",
         "install": "install() wraps p5a2rc1AttendanceInboxHtml_ and must load after the hf9 bundle",
-        "sha256": "621b56c84b027da1756544a9d3475aba042a1875326766957090fd2e4cf10ad9"
+        "sha256": "eae9216d1be19d373bf4fae90d95dafb8f91dfaa1aeddace879af74a9ef39319"
       },
       {
         "order": 10,
