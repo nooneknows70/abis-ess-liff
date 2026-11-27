@@ -125,6 +125,16 @@ test('P2-A: home shift uses the attendance name, not the OFFICE_DAY placeholder'
   assert.equal(ui.confirmedHomeToday({ __fast4Partial: true, todayAttendance: row }), null);
   assert.equal(ui.confirmedHomeToday({ __perf3: true, today: { shiftCode: 'OFFICE_DAY' } }), null);
   assert.equal(ui.confirmedHomeToday({ __perf3: true }), null);
+  assert.equal(ui.confirmedHomeToday({ todayAttendance: { date: '2020-01-01', shiftName: '辦公室日班', firstIn: '08:12', lastOut: '18:17' } }), null);
+  assert.equal(ui.confirmedHomeToday({ todayAttendance: { shiftName: '辦公室日班', firstIn: '08:12', lastOut: '18:17' } }), null);
+  hf9Context.currentLang = 'VI';
+  assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }, 'VI'), 'Ca văn phòng ban ngày');
+  assert.equal(ui.authoritativeShiftName({ shiftName: '辦公室日班', firstIn: '08:12' }, 'VI'), '');
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }, 'VI'), 'Ca văn phòng ban ngày');
+  assert.equal(ui.shiftLabel({ shiftName: '辦公室日班', firstIn: '08:12' }, 'TH'), '');
+  hf9Context.currentLang = 'TH';
+  assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }, 'TH'), 'กะออฟฟิศกลางวัน');
+  hf9Context.currentLang = 'ZH';
 });
 
 test('P2-B: pending counts depend on taskSummary and ignore another employee cache', () => {
@@ -148,7 +158,8 @@ test('P2-B: pending counts depend on taskSummary and ignore another employee cac
   assert.equal(ui.normalizePendingCounts({ pendingCounts: { total: 1 } }), null);
   assert.match(contract.alsoOverwritesFrom, /taskInbox/);
   assert.match(bundle, /action === 'home' \|\| action === 'homeBootstrap'/);
-  assert.match(bundle, /startTaskSummaryNow_/);
+  assert.match(bundle, /singleFlightCounts_/);
+  assert.match(bundle, /api\.startTaskSummaryNow/);
   const same = ui.parseStoredCounts(ui.serializeCounts('A09906', {
     total: 4, returnedLeave: 1, attendanceException: 2, approval: 3, supplement: 0
   }), 'a09906');
@@ -237,6 +248,15 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.fh-status-value')[0].textContent, '尚未打卡');
   assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '辦公室日班');
+  const staleRow = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value">08:12</span></div>' +
+    '<div class="fh-status-row"><span class="fh-status-label">今日班別</span><span class="fh-status-value">辦公室日班</span></div>' +
+    '<div class="fh-status-row"><span class="fh-status-label">今日狀態</span><span class="fh-status-pill">正常</span></div>';
+  window.eval('attendanceCache = null; homeData = { __perf3: true, todayAttendance: { shiftName: "辦公室日班", firstIn: "08:12", lastOut: "18:17" } }');
+  home.innerHTML = staleRow;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.fh-status-value')[0].textContent, '—');
+  assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '—');
+  assert.equal(home.querySelector('.fh-status-pill').textContent, '—');
   window.eval('attendanceCache = null; homeData = { __fast4Partial: true, todayAttendance: { date: ' + JSON.stringify(key) + ', shiftName: "辦公室日班", shiftCode: "OFFICE_DAY", firstIn: "", lastOut: "" } }');
   home.innerHTML = row;
   window.__hf9RefreshHomeClock(home);
@@ -308,6 +328,113 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   assert.equal(kept.taskSummary.total, 1);
   assert.equal(Number(window.eval('taskSummaryCache.returnedLeave')), 1);
   assert.equal(Number(window.eval('taskSummaryCache.total')), 1);
+
+  async function countLogin(handler) {
+    const seen = [];
+    window.__hf9CountsInflight = null;
+    window.__hf9CountsFinal = false;
+    window.__hf9CountsSnapshot = null;
+    window.__hf9CountFlight = null;
+    window.__hf9CountsFailed = null;
+    window.__hf9CountsKicked = false;
+    window.google.script.run = {
+      withSuccessHandler(ok) {
+        return { withFailureHandler() {
+          return { api(action, payload) {
+            seen.push(action);
+            handler(action, payload, ok);
+          } };
+        } };
+      }
+    };
+    window.eval('sessionToken = "synthetic-session"; homeData = { employee: { id: "A09906" } }; taskSummaryCache = null;');
+    window.HF9_UI_ROUND.startTaskSummaryNow();
+    await window.call('pendingCounts', { sessionToken: 'synthetic-session' });
+    await window.call('homeBootstrap', { sessionToken: 'synthetic-session' });
+    await window.call('taskSummary', { sessionToken: 'synthetic-session' });
+    return seen;
+  }
+  const counts = { total: 4, returnedLeave: 1, attendanceException: 2, approval: 4, supplement: 0 };
+  const okPath = await countLogin((action, payload, ok) => {
+    if (action === 'pendingCounts') {
+      ok({ ok: true, data: { pendingCounts: counts, taskSummary: counts, fastMode: false, source: 'LEGACY', cached: false } });
+      return;
+    }
+    ok({ ok: true, data: { code: 'HOME_BOOTSTRAP_OK', status: 'READY', home: { employee: { id: 'A09906' } }, deferTaskSummary: !!(payload && payload.deferTaskSummary) } });
+  });
+  assert.equal(okPath.filter((action) => action === 'pendingCounts').length, 1, okPath.join(','));
+  assert.equal(okPath.filter((action) => action === 'taskSummary').length, 0, okPath.join(','));
+  const missingPath = await countLogin((action, payload, ok) => {
+    if (action === 'pendingCounts') {
+      ok({ ok: false, error: '不支援的操作' });
+      return;
+    }
+    if (action === 'taskSummary') {
+      ok({ ok: true, data: { taskSummary: counts } });
+      return;
+    }
+    ok({ ok: true, data: { code: 'HOME_BOOTSTRAP_OK', status: 'READY', home: { employee: { id: 'A09906' } } } });
+  });
+  assert.equal(missingPath.filter((action) => action === 'pendingCounts').length, 1, missingPath.join(','));
+  assert.equal(missingPath.filter((action) => action === 'taskSummary').length, 1, missingPath.join(','));
+  const flagOff = await countLogin((action, payload, ok) => {
+    if (action === 'pendingCounts') {
+      ok({ ok: true, data: { pendingCounts: counts, taskSummary: counts, fastMode: false, source: 'LEGACY', cached: false } });
+      return;
+    }
+    ok({ ok: true, data: {} });
+  });
+  assert.equal(flagOff.filter((action) => action === 'pendingCounts').length, 1, flagOff.join(','));
+  assert.equal(flagOff.filter((action) => action === 'taskSummary').length, 0, flagOff.join(','));
+  window.__hf9CountsInflight = null;
+  window.__hf9CountsFinal = false;
+  window.__hf9CountsSnapshot = null;
+  window.__hf9CountFlight = null;
+  window.__hf9CountsFailed = null;
+  window.__hf9CountsKicked = false;
+  window.eval('taskSummaryCache = null');
+  window.google.script.run = {
+    withSuccessHandler(ok) {
+      return { withFailureHandler() {
+        return { api() { ok({ ok: false, error: '系統忙碌' }); } };
+      } };
+    }
+  };
+  await window.call('pendingCounts', { sessionToken: 'synthetic-session' }).catch(() => null);
+  assert.equal(window.eval('taskSummaryCache'), null);
+
+  const early = [];
+  window.__hf9CountsInflight = null;
+  window.__hf9CountsFinal = false;
+  window.__hf9CountsSnapshot = null;
+  window.__hf9CountFlight = null;
+  window.__hf9CountsFailed = null;
+  window.__hf9CountsKicked = false;
+  window.google.script.run = {
+    withSuccessHandler(ok) {
+      return { withFailureHandler() {
+        return { api(action) {
+          early.push(action);
+          if (action === 'pendingCounts') {
+            ok({ ok: true, data: { pendingCounts: counts, taskSummary: counts, fastMode: false, source: 'LEGACY', cached: false } });
+            return;
+          }
+          ok({ ok: true, data: {} });
+        } };
+      } };
+    }
+  };
+  window.eval('sessionToken = "synthetic-session"; homeData = { employee: { id: "A09906", preferredLanguage: "zh-TW" }, __fast4Partial: true, todayAttendance: { shiftName: "辦公室日班", firstIn: "08:12" } }; taskSummaryCache = null;');
+  window.enterApp();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  assert.equal(early[0], 'pendingCounts', early.join(','));
+  assert.equal(early.includes('homeBootstrap'), false, early.join(','));
+
+  window.__hf9NotificationSummary = null;
+  window.eval('notificationCache = null');
+  const loadingNotices = window.fhNoticesHtml_(2);
+  assert.equal(loadingNotices.includes('目前沒有新通知'), false);
+  assert.match(loadingNotices, /載入中|hf9-skel/);
 
   // P3: one line per affected range. (a2t is inlined by the backend, not the fixture.)
   if (typeof window.a2t !== 'function') window.a2t = (key) => key;

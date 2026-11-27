@@ -10137,6 +10137,9 @@ try {
     if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
     var labels = day && day.shiftLabels;
     if (labels && typeof labels === 'object' && labels[code]) return String(labels[code]);
+    // Slim bootstrap days carry only the zh shiftName. vi/th wait for
+    // shiftLabels[lang] or use the glossary, and do not flash the zh name.
+    if (code !== 'ZH') return authoritativeShiftName(day, code) || '';
     var previous = typeof currentLang === 'string' ? currentLang : 'ZH';
     if (typeof currentLang !== 'undefined') currentLang = code;
     var raw = humanize(day && (day.shiftName || day.shiftCode) || '');
@@ -10262,10 +10265,18 @@ try {
     if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
     var labels = day.shiftLabels;
     if (labels && typeof labels === 'object' && labels[code]) return String(labels[code]);
+    var shiftCode = String(day.shiftCode || '').toUpperCase();
+    var pack = PACK[code] || PACK.ZH;
+    // A slim day often has only the zh shiftName. vi/th must not show that
+    // Chinese name while shiftLabels[lang] is still missing.
+    if (code !== 'ZH') {
+      if (shiftCode === 'OFFICE_DAY') return pack.officeDay || '';
+      if (shiftCode === 'FACTORY_NIGHT_2000_0400') return pack.factoryNight || '';
+      return '';
+    }
     var name = String(day.shiftName || '').trim();
-    var shiftCode = String(day.shiftCode || '').trim();
     if (!name) return '';
-    if (shiftCode && name.toUpperCase() === shiftCode.toUpperCase()) return '';
+    if (shiftCode && name.toUpperCase() === shiftCode) return '';
     if (/^[A-Z][A-Z0-9_]{2,}$/.test(name)) return '';
     return name;
   }
@@ -10298,6 +10309,7 @@ try {
     var row = home.todayAttendance || home.today || (cards && cards.today) || null;
     if (!row || typeof row !== 'object') return null;
     var date = String(row.date || '').slice(0, 10);
+    // Yesterday, or punch times with no date, is not today's row.
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
     if (date !== attendanceTodayKey()) return null;
     return row;
@@ -10476,9 +10488,27 @@ try {
           else if (!(notificationCache.summary && notificationCache.summary.__hf9FromList)) notificationCache.summary = Object.assign({}, notificationCache.summary || {}, global.__hf9NotificationSummary);
         } catch (ignore) {}
       }
-      var allowTaskSummaryNetwork = false;
-      function requestCounts_(action) {
-        return call(action, { sessionToken: sessionToken }).then(function (data) {
+      var COUNT_FRESH_MS = 20000;
+      function countKey_() {
+        var id = '';
+        var token = '';
+        try { id = currentEmployeeId_(); } catch (ignore) {}
+        try { token = String(typeof sessionToken === 'undefined' ? '' : (sessionToken || '')); } catch (ignore2) {}
+        return id + '\n' + token;
+      }
+      function rememberFlight_(summary) {
+        global.__hf9CountFlight = { key: countKey_(), summary: summary, at: Date.now() };
+      }
+      function freshCount_() {
+        var hit = global.__hf9CountFlight;
+        if (!hit || !hit.summary || hit.key !== countKey_()) return null;
+        if (Date.now() - Number(hit.at || 0) >= COUNT_FRESH_MS) return null;
+        return hit.summary;
+      }
+      function networkCounts_(action) {
+        return Promise.resolve().then(function () {
+          return baseCall(action, { sessionToken: sessionToken });
+        }).then(function (data) {
           var summary = normalizePendingCounts(data);
           if (!summary) {
             var missing = new Error(action + ' returned no counts');
@@ -10488,24 +10518,54 @@ try {
           return summary;
         });
       }
-      function startOrJoinPendingCounts_() {
-        if (global.__hf9CountsInflight) return global.__hf9CountsInflight;
-        if (typeof sessionToken === 'undefined' || !sessionToken) return Promise.reject(new Error('no session'));
+      function showCountDash_() {
+        if (global.__hf9CountsFinal && global.__hf9CountsSnapshot) return;
+        try { taskSummaryCache = null; } catch (ignore) {}
+        try { if (typeof setInboxCount === 'function') setInboxCount(0); } catch (ignore2) {}
+        try {
+          var home = $('home');
+          if (home && !home.classList.contains('hide') && typeof renderHome === 'function') renderHome();
+        } catch (ignore3) {}
+      }
+      function installCountZeroGuard_() {
+        if (typeof perf3ApplyTaskSummary_ !== 'function' || perf3ApplyTaskSummary_.__hf9Zero) return;
+        var baseApply = perf3ApplyTaskSummary_;
+        var wrappedApply = function (summary) {
+          var counted = summary && ['total', 'returnedLeave', 'attendanceException', 'approval', 'supplement'].every(function (key) {
+            return typeof summary[key] === 'number';
+          });
+          if (!counted) {
+            if (global.__hf9CountsFinal && global.__hf9CountsSnapshot) return baseApply(global.__hf9CountsSnapshot);
+            showCountDash_();
+            return null;
+          }
+          return baseApply(summary);
+        };
+        wrappedApply.__hf9Zero = true;
+        perf3ApplyTaskSummary_ = wrappedApply;
+      }
+      // One count RPC per session. pendingCounts and taskSummary share it, and
+      // a result under 20s old is reused for the same employee.
+      function singleFlightCounts_() {
+        installCountZeroGuard_();
+        var fresh = freshCount_();
+        if (fresh) return Promise.resolve(fresh);
+        if (global.__hf9CountsFailed && global.__hf9CountsFailed.key === countKey_() && Date.now() - global.__hf9CountsFailed.at < COUNT_FRESH_MS) {
+          return Promise.reject(global.__hf9CountsFailed.err);
+        }
+        if (global.__hf9CountsInflight && global.__hf9CountsKey === countKey_()) return global.__hf9CountsInflight;
         applyStaleCounts_();
         global.__hf9CountsKicked = true;
-        var pending = requestCounts_('pendingCounts').then(function (summary) {
+        global.__hf9CountsKey = countKey_();
+        var pending = networkCounts_('pendingCounts').then(function (summary) {
           paintPendingCounts_(summary);
+          rememberFlight_(summary);
           return summary;
         }, function () {
-          allowTaskSummaryNetwork = true;
-          return requestCounts_('taskSummary').then(function (summary) {
-            allowTaskSummaryNetwork = false;
+          return networkCounts_('taskSummary').then(function (summary) {
             paintPendingCounts_(summary);
+            rememberFlight_(summary);
             return summary;
-          }, function (err) {
-            allowTaskSummaryNetwork = false;
-            global.__hf9CountsKicked = false;
-            throw err;
           });
         });
         global.__hf9CountsInflight = pending.then(function (summary) {
@@ -10513,32 +10573,48 @@ try {
           return summary;
         }, function (err) {
           global.__hf9CountsInflight = null;
+          global.__hf9CountsKicked = false;
+          global.__hf9CountsFailed = { key: countKey_(), err: err, at: Date.now() };
+          showCountDash_();
           throw err;
         });
         return global.__hf9CountsInflight;
       }
+      function countPayload_(summary) {
+        var plain = plainCounts_(summary);
+        var body = { pendingCounts: plain, taskSummary: plain };
+        if (typeof summary.fastMode === 'boolean') body.fastMode = summary.fastMode;
+        if (summary.source) body.source = summary.source;
+        if (typeof summary.cached === 'boolean') body.cached = summary.cached;
+        return body;
+      }
       api.startTaskSummaryNow = function () {
-        startOrJoinPendingCounts_().catch(function () {});
+        singleFlightCounts_().catch(function () {});
       };
       call = function (action, payload) {
+        installCountZeroGuard_();
         if (action === 'homeBootstrap') {
           payload = Object.assign({}, payload || {}, { deferTaskSummary: true });
         }
-        // PERF3 still calls taskSummary beside homeBootstrap. The pills use
-        // pendingCounts only. A failed taskSummary must not replace numbers
-        // that are already on screen with zeros.
-        if (action === 'taskSummary' && !allowTaskSummaryNetwork) {
-          return startOrJoinPendingCounts_().then(function (summary) {
-            return { taskSummary: plainCounts_(summary) };
+        if (action === 'pendingCounts' || action === 'taskSummary') {
+          return singleFlightCounts_().then(function (summary) {
+            var body = countPayload_(summary);
+            return action === 'taskSummary' ? { taskSummary: body.taskSummary } : body;
           }, function () {
-            if (global.__hf9CountsSnapshot) return { taskSummary: plainCounts_(global.__hf9CountsSnapshot) };
-            return Promise.reject(new Error('taskSummary failed'));
+            if (global.__hf9CountsSnapshot) {
+              var kept = plainCounts_(global.__hf9CountsSnapshot);
+              return action === 'taskSummary' ? { taskSummary: kept } : { pendingCounts: kept, taskSummary: kept };
+            }
+            return Promise.reject(new Error(action + ' failed'));
           });
         }
         if (action === 'taskInbox') {
           return Promise.resolve().then(function () { return baseCall(action, payload); }).then(function (data) {
             var summary = normalizePendingCounts(data);
-            if (summary) rememberCounts_(summary);
+            if (summary) {
+              rememberCounts_(summary);
+              rememberFlight_(summary);
+            }
             return data || {};
           });
         }
@@ -10546,7 +10622,7 @@ try {
           return Promise.resolve().then(function () { return baseCall(action, payload); });
         }
         if (action === 'home' || action === 'homeBootstrap') {
-          try { startOrJoinPendingCounts_().catch(function () {}); } catch (ignore) {}
+          try { singleFlightCounts_().catch(function () {}); } catch (ignore) {}
         }
         var attendanceCall = action === 'myAttendance';
         if (attendanceCall) global.__hf9AttendanceLoading = true;
@@ -10616,7 +10692,7 @@ try {
     if (typeof enterApp === 'function' && !enterApp.__hf9Counts) {
       var baseEnter = enterApp;
       enterApp = function () {
-        try { startTaskSummaryNow_(); } catch (ignore) {}
+        try { if (api.startTaskSummaryNow) api.startTaskSummaryNow(); } catch (ignore) {}
         return baseEnter.apply(this, arguments);
       };
       enterApp.__hf9Counts = true;
@@ -10651,6 +10727,8 @@ try {
         global.__hf9CountsFinal = false;
         global.__hf9CountsSnapshot = null;
         global.__hf9CountsInflight = null;
+        global.__hf9CountFlight = null;
+        global.__hf9CountsFailed = null;
         var token = typeof sessionToken !== 'undefined' ? sessionToken : '';
         clearStores(global.localStorage, global.sessionStorage);
         if (typeof sessionToken !== 'undefined') sessionToken = '';
@@ -10796,9 +10874,15 @@ try {
         var fromHome = global.__hf9NotificationSummary || null;
         var summary = fromList || fromHome;
         var ready = !!(summary && (summary.generalUnread != null || summary.unread != null));
-        var badge = unreadBadgeText(ready ? Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0) : 0, ready);
-        if (!badge) return html;
         var empty = typeof fht_ === 'function' ? fht_('noNotice') : '目前沒有新通知';
+        if (!ready) {
+          if (String(html).indexOf(empty) >= 0 || String(html).indexOf('fh-empty') >= 0) {
+            return '<div class="fh-notice-row"><span class="hf9-skel" aria-hidden="true"></span><span class="fh-notice-text">' + t('loading') + '</span></div>';
+          }
+          return html;
+        }
+        var badge = unreadBadgeText(Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0), true);
+        if (!badge) return html;
         if (String(html).indexOf(empty) < 0 && String(html).indexOf('fh-empty') < 0) return html;
         var items = typeof fhNoticeItems_ === 'function' ? fhNoticeItems_() : [];
         if (items && items.length) {
@@ -10834,22 +10918,28 @@ try {
       home.querySelectorAll('.fh-status-row').forEach(function (row) {
         var label = row.querySelector('.fh-status-label');
         var value = row.querySelector('.fh-status-value');
-        if (!value) return;
+        var pill = row.querySelector('.fh-status-pill');
+        if (!value && !pill) return;
         var name = label ? String(label.textContent || '').trim() : '';
         var clock = /上班時間|下班時間|Giờ vào|Giờ ra|เวลาเข้า|เวลาออก|^In$|^Out$/.test(name);
         var shift = /今日班別|Ca hôm nay|กะวันนี้|^Shift$/.test(name);
-        if (shift) {
+        var status = /今日狀態|Trạng thái|สถานะวันนี้|^Status$/.test(name);
+        if (status && pill && !todayRow) {
+          pill.textContent = loadingAttendance ? t('loading') : '—';
+          return;
+        }
+        if (shift && value) {
           if (value.textContent !== shiftText) value.textContent = shiftText;
           return;
         }
-        if (!clock) return;
+        if (!clock || !value) return;
         var raw = value.querySelector('.hf9-skel') ? '—' : value.textContent;
-        if (loadingAttendance) {
-          if (clockBlank(raw)) value.textContent = t('loading');
+        if (!todayRow) {
+          value.textContent = loadingAttendance ? t('loading') : '—';
           return;
         }
-        if (!todayRow) {
-          if (value.querySelector('.hf9-skel') || clockBlank(raw) || raw === t('noPunchYet')) value.textContent = '—';
+        if (loadingAttendance) {
+          if (clockBlank(raw)) value.textContent = t('loading');
           return;
         }
         if (raw === t('loading')) raw = '—';
@@ -10887,9 +10977,11 @@ try {
         var home = $('home');
         if (!home) return;
         if (typeof taskSummaryCache === 'undefined' || taskSummaryCache == null) {
-          home.querySelectorAll('.fh-task b').forEach(function (node) {
-            if (node.textContent === '—' || node.textContent === '-') node.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
-          });
+          if (!global.__hf9CountsFailed) {
+            home.querySelectorAll('.fh-task b').forEach(function (node) {
+              if (node.textContent === '—' || node.textContent === '-') node.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
+            });
+          }
         } else if (taskSummaryCache.__hf9Stale) {
           home.querySelectorAll('.fh-task').forEach(function (node) {
             node.classList.add('hf9-count-stale');
@@ -10932,13 +11024,23 @@ try {
       fhTodayAttendance_ = function () {
         var day = baseToday();
         if (!day) return day;
+        var date = String(day.date || '').slice(0, 10);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date !== attendanceTodayKey()) return null;
         var shift = shiftLabel(day);
         var recent = recentLabel(day);
-        if (!shift && !recent) return day;
+        var code = String(typeof currentLang === 'string' ? currentLang : 'ZH').toUpperCase();
+        if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
+        var labels = day.shiftLabels;
+        var missingLang = code !== 'ZH' && !(labels && typeof labels === 'object' && labels[code]);
+        if (!shift && !recent && !missingLang) return day;
         var copy = {};
         var key;
         for (key in day) if (Object.prototype.hasOwnProperty.call(day, key)) copy[key] = day[key];
         if (shift) copy.shiftName = shift;
+        else if (missingLang) {
+          copy.shiftName = '—';
+          copy.shiftCode = '';
+        }
         if (recent && !copy.anomalyDescription) copy.anomalyDescription = recent;
         return copy;
       };
