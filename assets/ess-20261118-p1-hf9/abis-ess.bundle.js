@@ -830,7 +830,7 @@ function fhFmt_(s,n){return String(s||'').replace('{n}',String(n))}
 function fhLocale_(){return currentLang==='VI'?'vi-VN':currentLang==='TH'?'th-TH':'zh-TW'}
 function fhDate_(){try{return new Intl.DateTimeFormat(fhLocale_(),{year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(new Date())}catch(e){return new Date().toLocaleDateString()}}
 function fhTime_(v){if(!v)return '—';const x=String(v);const m=x.match(/(?:T|\s)(\d{2}:\d{2})/);return m?m[1]:(/^\d{1,2}:\d{2}/.test(x)?x.slice(0,5):x)}
-function fhTodayAttendance_(){const days=attendanceCache&&Array.isArray(attendanceCache.days)?attendanceCache.days:[];const d=new Date(),key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');return days.find(x=>String(x.date)===key)||(homeData&&(homeData.todayAttendance||homeData.today))||null}
+function fhTodayAttendance_(){const days=attendanceCache&&Array.isArray(attendanceCache.days)?attendanceCache.days:[];const d=new Date(),key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const fromDays=days.find(x=>String(x.date)===key);if(fromDays)return fromDays;const home=homeData||{},cards=home.cards||{};return home.todayAttendance||home.today||cards.today||null}
 function fhTodayStatus_(d){
   if(!d)return '—';
   const leave=p5a2LeaveForDate_(d.date),noPunch=!d.firstIn&&!d.lastOut&&Number(d.actualHours||0)<=0;
@@ -876,7 +876,7 @@ function fhTodayStatus_(d){
   }
   if(d.missingIn)return fht_('missingIn');
   if(d.missingOut)return fht_('missingOut');
-  if(Number(d.lateMinutes||0)>0)return fht_('late');
+  if(Number(d.lateMinutes||0)>=16)return fht_('late');
   if(Number(d.earlyMinutes||0)>0)return fht_('early');
   if(d.firstIn&&!d.lastOut)return fht_('inProgress');
   if(d.lastOut)return fht_('normal');
@@ -1018,9 +1018,10 @@ function p5a2AttendanceStatus_(d){
   if(d.anomalyCode||(d.exceptions&&d.exceptions.length)||d.missingIn||d.missingOut||Number(d.lateMinutes||0)>=16||Number(d.earlyMinutes||0)>0)return {key:'bad',text:a2t('anomaly')};
   return {key:'normal',text:a2t('normal')};
 }
-function p5a2AttendanceSummaryHtml_(data){const s=data.summary||{};return `<h3>${escapeHtml(a2t('summary'))}</h3><div class="att-summary"><div class="att-kpi"><b>${Number(s.attendanceDays||0)}</b><span>${escapeHtml(a2t('attendanceDays'))}</span></div><div class="att-kpi"><b>${Number(s.lateCount||0)} / ${p5a2AttendanceFmt_(s.lateMinutes,0)}</b><span>${escapeHtml(a2t('late'))} (${escapeHtml(a2t('times'))}/${escapeHtml(a2t('minutes'))})</span></div><div class="att-kpi"><b>${Number(s.earlyCount||0)} / ${p5a2AttendanceFmt_(s.earlyMinutes,0)}</b><span>${escapeHtml(a2t('early'))} (${escapeHtml(a2t('times'))}/${escapeHtml(a2t('minutes'))})</span></div><div class="att-kpi"><b>${Number(s.exceptionDays||0)}</b><span>${escapeHtml(a2t('exceptions'))}</span></div><div class="att-kpi"><b>${p5a2AttendanceFmt_(s.leaveHours)} HR</b><span>${escapeHtml(a2t('leaveHours'))}</span></div><div class="att-kpi"><b>${p5a2AttendanceFmt_(s.overtimeHours)} HR</b><span>${escapeHtml(a2t('overtimeHours'))}</span></div><div class="att-kpi"><b>${p5a2AttendanceFmt_(s.actualHours)} HR</b><span>${escapeHtml(a2t('actualHours'))}</span></div><div class="att-kpi"><b>${p5a2AttendanceFmt_(s.expectedHours)} HR</b><span>${escapeHtml(a2t('expectedHours'))}</span></div><div class="att-kpi"><b>${Number(s.missingPunchDays||0)}</b><span>${escapeHtml(a2t('missingPunch'))}</span></div></div>`}
+function p5a2CountedLate_(days){let count=0,minutes=0;(days||[]).forEach(function(d){const late=Number(d&&d.lateMinutes||0);if(late>=16){count+=1;minutes+=late;}});return {lateCount:count,lateMinutes:minutes};}
+function p5a2AttendanceSummaryHtml_(data){const s=data.summary||{};const counted=Array.isArray(data.days)?p5a2CountedLate_(data.days):{lateCount:Number(s.lateCount||0),lateMinutes:Number(s.lateMinutes||0)};return `<h3>${escapeHtml(a2t('summary'))}</h3><div class="att-summary"><div class="att-kpi"><b>${Number(s.attendanceDays||0)}</b><span>${escapeHtml(a2t('attendanceDays'))}</span></div><div class="att-kpi"><b>${counted.lateCount} / ${p5a2AttendanceFmt_(counted.lateMinutes,0)}</b><span>${escapeHtml(a2t('late'))} (${escapeHtml(a2t('times'))}/${escapeHtml(a2t('minutes'))})</span></div><div class="att-kpi"><b>${Number(s.earlyCount||0)} / ${p5a2AttendanceFmt_(s.earlyMinutes,0)}</b><span>${escapeHtml(a2t('early'))} (${escapeHtml(a2t('times'))}/${escapeHtml(a2t('minutes'))})</span></div><div class="att-kpi"><b>${Number(s.exceptionDays||0)}</b><span>${escapeHtml(a2t('exceptions'))}</span></div><div class="att-kpi"><b>${p5a2AttendanceFmt_(s.leaveHours)} HR</b><span>${escapeHtml(a2t('leaveHours'))}</span></div><div class="att-kpi"><b>${p5a2AttendanceFmt_(s.overtimeHours)} HR</b><span>${escapeHtml(a2t('overtimeHours'))}</span></div><div class="att-kpi"><b>${p5a2AttendanceFmt_(s.actualHours)} HR</b><span>${escapeHtml(a2t('actualHours'))}</span></div><div class="att-kpi"><b>${p5a2AttendanceFmt_(s.expectedHours)} HR</b><span>${escapeHtml(a2t('expectedHours'))}</span></div><div class="att-kpi"><b>${Number(s.missingPunchDays||0)}</b><span>${escapeHtml(a2t('missingPunch'))}</span></div></div>`}
 function p5a2AttendanceWarningsHtml_(data){let h=`<div class="notice tiny">${escapeHtml(a2t('readOnly'))}</div>`;if(String(data.month||'')<'2026-10'||(data.days||[]).some(x=>String(x.closingStatus||'').toUpperCase()==='PILOT'))h+=`<div class="att-warning">${escapeHtml(a2t('pilot'))}</div>`;if((data.coverageWarnings||[]).length)h+=`<div class="att-warning"><b>${escapeHtml(a2t('coverageGap'))}</b><br>${(data.coverageWarnings||[]).map(x=>`${escapeHtml(x.firstAffectedDate||'')} ~ ${escapeHtml(x.lastAffectedDate||'')}`).join('<br>')}</div>`;return h}
-function p5a2AttendanceCalendarHtml_(data){const map={};(data.days||[]).forEach(d=>map[d.date]=d);const [y,m]=String(data.month||'').split('-').map(Number);if(!y||!m)return '';const first=new Date(y,m-1,1),last=new Date(y,m,0),start=first.getDay();const heads=currentLang==='VI'?['CN','T2','T3','T4','T5','T6','T7']:currentLang==='TH'?['อา','จ','อ','พ','พฤ','ศ','ส']:['日','一','二','三','四','五','六'];let cells='';for(let i=0;i<start;i++)cells+='<div class="att-day empty"></div>';for(let day=1;day<=last.getDate();day++){const key=`${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`,d=map[key],st=p5a2AttendanceStatus_(d);let line='';if(d){const bits=[];if(Number(d.actualHours||0)>0)bits.push(`${p5a2AttendanceFmt_(d.actualHours)}HR`);if(Number(d.lateMinutes||0)>0)bits.push(`${a2t('late')} ${p5a2AttendanceFmt_(d.lateMinutes,0)}${a2t('minutes')}`);if(Number(d.leaveHours||0)>0)bits.push(`${a2t('leave')} ${p5a2AttendanceFmt_(d.leaveHours)}HR`);if(d.anomalyCode)bits.push(d.anomalyCode);line=bits.slice(0,2).map(escapeHtml).join('<br>')}cells+=`<div class="att-day ${escapeHtml(st.key)}"><div class="att-day-num">${day}</div><div class="att-day-status"><b>${escapeHtml(st.text)}</b>${line?'<br>'+line:''}</div></div>`}return `<div class="att-calendar-head">${heads.map(x=>`<div>${escapeHtml(x)}</div>`).join('')}</div><div class="att-calendar">${cells}</div>`}
+function p5a2AttendanceCalendarHtml_(data){const map={};(data.days||[]).forEach(d=>map[d.date]=d);const [y,m]=String(data.month||'').split('-').map(Number);if(!y||!m)return '';const first=new Date(y,m-1,1),last=new Date(y,m,0),start=first.getDay();const heads=currentLang==='VI'?['CN','T2','T3','T4','T5','T6','T7']:currentLang==='TH'?['อา','จ','อ','พ','พฤ','ศ','ส']:['日','一','二','三','四','五','六'];let cells='';for(let i=0;i<start;i++)cells+='<div class="att-day empty"></div>';for(let day=1;day<=last.getDate();day++){const key=`${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`,d=map[key],st=p5a2AttendanceStatus_(d);let line='';if(d){const bits=[];if(Number(d.actualHours||0)>0)bits.push(`${p5a2AttendanceFmt_(d.actualHours)}HR`);if(Number(d.lateMinutes||0)>=16)bits.push(`${a2t('late')} ${p5a2AttendanceFmt_(d.lateMinutes,0)}${a2t('minutes')}`);if(Number(d.leaveHours||0)>0)bits.push(`${a2t('leave')} ${p5a2AttendanceFmt_(d.leaveHours)}HR`);if(d.anomalyCode)bits.push(p5a2AnomalyCodeLabel_(d.anomalyCode));line=bits.slice(0,2).map(escapeHtml).join('<br>')}cells+=`<div class="att-day ${escapeHtml(st.key)}"><div class="att-day-num">${day}</div><div class="att-day-status"><b>${escapeHtml(st.text)}</b>${line?'<br>'+line:''}</div></div>`}return `<div class="att-calendar-head">${heads.map(x=>`<div>${escapeHtml(x)}</div>`).join('')}</div><div class="att-calendar">${cells}</div>`}
 function p5a202CorrectionStatusLabel_(status){const x=String(status||'').toUpperCase();if(x==='SUBMITTED')return c2t('pending');if(x==='MANAGER_CONFIRMED')return c2t('managerConfirmed');if(x==='MANAGER_REJECTED')return c2t('managerRejected');if(x==='HR_PENDING')return c2t('hrPending');if(x==='APPLY_PENDING')return currentLang==='ZH'?'已核准／等待系統重算':currentLang==='VI'?'Đã duyệt / chờ hệ thống tính lại':'อนุมัติแล้ว / รอระบบคำนวณใหม่';if(x==='HR_REJECTED')return currentLang==='ZH'?'HR 未採認':currentLang==='VI'?'HR không chấp nhận':'HR ไม่รับรอง';if(x==='COMPLETED')return c2t('completed');if(x==='CANCELLED')return c2t('cancelled');return x||'-'}
 function p5a202CorrectionTypeLabel_(type){const m={MISSING_IN:'missingIn',MISSING_OUT:'missingOut',MISSING_BOTH:'missingBoth',WRONG_IN:'wrongIn',WRONG_OUT:'wrongOut',SHIFT_SCHEDULE:'shift',OTHER:'other'};return c2t(m[String(type||'').toUpperCase()]||'other')}
 function p5a202CorrectionStateHtml_(d){const items=Array.isArray(d.correctionRequests)?d.correctionRequests:[];const active=d.activeCorrection||null;const latest=items.length?items[0]:null;const activeAppeal=d.activeAppeal||null;let html='';if(active){html+=`<div class="att-correction-state pending"><b>${escapeHtml(c2t('requestHistory'))}：</b>${escapeHtml(p5a202CorrectionTypeLabel_(active.requestType))}｜${escapeHtml(p5a202CorrectionStatusLabel_(active.status))}${active.submittedAt?'｜'+escapeHtml(active.submittedAt):''}</div>`}else if(latest){const st=String(latest.status||'').toUpperCase(),cls=(st==='MANAGER_REJECTED'||st==='HR_REJECTED')?'reject':'done';html+=`<div class="att-correction-state ${cls}"><b>${escapeHtml(c2t('requestHistory'))}：</b>${escapeHtml(p5a202CorrectionTypeLabel_(latest.requestType))}｜${escapeHtml(p5a202CorrectionStatusLabel_(latest.status))}</div>`;if(['COMPLETED','MANAGER_REJECTED','HR_REJECTED'].includes(st)){if(activeAppeal)html+=`<div class="tiny">${escapeHtml(a2rct('appeal'))}：${escapeHtml(activeAppeal.status||'')}</div>`;else html+=`<div class="att-correction-actions"><button type="button" class="secondary small" onclick="openAttendanceAppeal_('${encodeURIComponent(latest.correctionRequestId||'')}','${encodeURIComponent(d.attendanceKey||'')}',this)">${escapeHtml(a2rct('appeal'))}</button></div>`}}if(d.correctionEnabled&&!active){html+=`<div class="att-correction-actions"><button type="button" class="secondary small" onclick="openAttendanceCorrection_('${encodeURIComponent(d.attendanceKey||'')}')">${escapeHtml(c2t('request'))}</button></div>`}return html}
@@ -1051,7 +1052,12 @@ function rc2NewestFirst_(rows){
     return rc2RecordStableKey_(b).localeCompare(rc2RecordStableKey_(a));
   });
 }
-function p5a2AttendanceDetailHtml_(data){const days=rc2NewestFirst_(data.days||[]);if(!days.length)return `<div class="muted">${escapeHtml(a2t('noDataMonth'))}</div>`;return days.map(d=>{const st=p5a2AttendanceStatus_(d),raw=(d.rawPunches||[]);const rawHtml=raw.length?raw.map(p=>escapeHtml(p5a2TimeOnly_(p.dateTime||p.time||''))).join(' · '):escapeHtml(a2t('none'));const ex=(d.exceptions||[]).map(x=>escapeHtml(x.name||x.code||'')).join('、');return `<div id="attendance-day-${rc2SafeDomId_(d.date||'')}" class="att-detail" data-attendance-date="${escapeHtml(d.date||'')}"><div><b>${escapeHtml(d.date||'')}</b> <span class="pill">${escapeHtml(st.text)}</span></div><div class="tiny">${escapeHtml(a2t('shift'))}：${escapeHtml(d.shiftName||d.shiftCode||'-')}</div><div class="att-detail-grid"><div>${escapeHtml(a2t('expected'))}：${escapeHtml(p5a2TimeOnly_(d.expectedStart))}–${escapeHtml(p5a2TimeOnly_(d.expectedEnd))} / ${p5a2AttendanceFmt_(d.expectedHours)} HR</div><div>${escapeHtml(a2t('actual'))}：${p5a2AttendanceFmt_(d.actualHours)} HR</div><div>${escapeHtml(a2t('firstIn'))}：${escapeHtml(p5a2TimeOnly_(d.firstIn))}</div><div>${escapeHtml(a2t('lastOut'))}：${escapeHtml(p5a2TimeOnly_(d.lastOut))}</div><div>${escapeHtml(a2t('late'))}：${p5a2AttendanceFmt_(d.lateMinutes,0)} ${escapeHtml(a2t('minutes'))}</div><div>${escapeHtml(a2t('early'))}：${p5a2AttendanceFmt_(d.earlyMinutes,0)} ${escapeHtml(a2t('minutes'))}</div><div>${escapeHtml(a2t('leave'))}：${p5a2AttendanceFmt_(d.leaveHours)} HR</div><div>${escapeHtml(a2t('overtime'))}：${p5a2AttendanceFmt_(d.overtimeHours)} HR</div><div>${escapeHtml(a2t('missingIn'))}：${d.missingIn?'Y':'N'}</div><div>${escapeHtml(a2t('missingOut'))}：${d.missingOut?'Y':'N'}</div><div>${escapeHtml(a2t('adjustment'))}：${p5a2AttendanceFmt_(d.adjustmentHours)} HR</div><div>${escapeHtml(a2t('closing'))}：${escapeHtml(d.closingStatus||'-')}</div></div><div class="att-punches"><b>${escapeHtml(a2t('rawPunch'))}</b>：${rawHtml}</div><div class="tiny" style="margin-top:6px"><b>${escapeHtml(a2t('systemDecision'))}</b>：${escapeHtml(d.attendanceStatus||'-')}${d.anomalyCode?'｜'+escapeHtml(d.anomalyCode):''}${d.anomalyDescription?'｜'+escapeHtml(d.anomalyDescription):''}${ex?'｜'+ex:''}</div>${p5a202CorrectionStateHtml_(d)}</div>`}).join('')}
+function p5a2AnomalyCodeLabel_(code){const key=String(code||'').trim().toUpperCase();const zh={LATE:'遲到',LATE_OVER_30:'遲到超過 30 分'};const vi={LATE:'Đi muộn',LATE_OVER_30:'Đi muộn trên 30 phút'};const th={LATE:'มาสาย',LATE_OVER_30:'มาสายเกิน 30 นาที'};const dict=currentLang==='VI'?vi:currentLang==='TH'?th:zh;return dict[key]||String(code||'');}
+function p5a2ExceptionLabel_(x){const code=String(x&&(x.code||'')||'').trim().toUpperCase();const labeled=p5a2AnomalyCodeLabel_(code);if(labeled&&labeled!==code)return labeled;return String(x&&(x.name||x.code)||'');}
+function p5a2Cjk_(text){return /[\u4e00-\u9fff]/.test(String(text||''));}
+function p5a2SystemDecisionLabel_(){var fromDict='';try{if(typeof a2t==='function')fromDict=String(a2t('systemDecision')||'');}catch(e){}if(currentLang==='VI'){if(fromDict&&fromDict!=='systemDecision'&&!p5a2Cjk_(fromDict))return fromDict;return 'Kết luận hệ thống';}if(currentLang==='TH'){if(fromDict&&fromDict!=='systemDecision'&&!p5a2Cjk_(fromDict))return fromDict;return 'ผลตัดสินของระบบ';}return (fromDict&&fromDict!=='systemDecision')?fromDict:'系統判定';}
+function p5a2SystemDecisionValue_(status){var raw=String(status||'').trim();if(!raw||raw==='-')return '-';var code=raw.toUpperCase().replace(/[\s-]+/g,'_');var kind=(raw==='正常'||raw==='出勤'||code==='NORMAL'||code==='COMPLETE'||code==='COMPLETED')?'normal':(raw==='異常'||raw==='出勤異常'||code==='ANOMALY'||code==='ABNORMAL')?'anomaly':'';if(!kind)return raw;if(currentLang==='VI')return kind==='normal'?'Bình thường':'Bất thường';if(currentLang==='TH')return kind==='normal'?'ปกติ':'ผิดปกติ';return kind==='normal'?'正常':'異常';}
+function p5a2AttendanceDetailHtml_(data){const days=rc2NewestFirst_(data.days||[]);if(!days.length)return `<div class="muted">${escapeHtml(a2t('noDataMonth'))}</div>`;return days.map(d=>{const st=p5a2AttendanceStatus_(d),raw=(d.rawPunches||[]);const rawHtml=raw.length?raw.map(p=>escapeHtml(p5a2TimeOnly_(p.dateTime||p.time||''))).join(' · '):escapeHtml(a2t('none'));const ex=(d.exceptions||[]).map(x=>escapeHtml(p5a2ExceptionLabel_(x))).join('、');return `<div id="attendance-day-${rc2SafeDomId_(d.date||'')}" class="att-detail" data-attendance-date="${escapeHtml(d.date||'')}"><div><b>${escapeHtml(d.date||'')}</b> <span class="pill">${escapeHtml(st.text)}</span></div><div class="tiny">${escapeHtml(a2t('shift'))}：${escapeHtml(d.shiftName||d.shiftCode||'-')}</div><div class="att-detail-grid"><div>${escapeHtml(a2t('expected'))}：${escapeHtml(p5a2TimeOnly_(d.expectedStart))}–${escapeHtml(p5a2TimeOnly_(d.expectedEnd))} / ${p5a2AttendanceFmt_(d.expectedHours)} HR</div><div>${escapeHtml(a2t('actual'))}：${p5a2AttendanceFmt_(d.actualHours)} HR</div><div>${escapeHtml(a2t('firstIn'))}：${escapeHtml(p5a2TimeOnly_(d.firstIn))}</div><div>${escapeHtml(a2t('lastOut'))}：${escapeHtml(p5a2TimeOnly_(d.lastOut))}</div><div>${escapeHtml(a2t('late'))}：${p5a2AttendanceFmt_(d.lateMinutes,0)} ${escapeHtml(a2t('minutes'))}</div><div>${escapeHtml(a2t('early'))}：${p5a2AttendanceFmt_(d.earlyMinutes,0)} ${escapeHtml(a2t('minutes'))}</div><div>${escapeHtml(a2t('leave'))}：${p5a2AttendanceFmt_(d.leaveHours)} HR</div><div>${escapeHtml(a2t('overtime'))}：${p5a2AttendanceFmt_(d.overtimeHours)} HR</div><div>${escapeHtml(a2t('missingIn'))}：${d.missingIn?'Y':'N'}</div><div>${escapeHtml(a2t('missingOut'))}：${d.missingOut?'Y':'N'}</div><div>${escapeHtml(a2t('adjustment'))}：${p5a2AttendanceFmt_(d.adjustmentHours)} HR</div><div>${escapeHtml(a2t('closing'))}：${escapeHtml(d.closingStatus||'-')}</div></div><div class="att-punches"><b>${escapeHtml(a2t('rawPunch'))}</b>：${rawHtml}</div><div class="tiny" style="margin-top:6px"><b>${escapeHtml(p5a2SystemDecisionLabel_())}</b>：${escapeHtml(p5a2SystemDecisionValue_(d.attendanceStatus))}${d.anomalyCode?'｜'+escapeHtml(p5a2AnomalyCodeLabel_(d.anomalyCode)):''}${d.anomalyDescription?'｜'+escapeHtml(d.anomalyDescription):''}${ex?'｜'+ex:''}</div>${p5a202CorrectionStateHtml_(d)}</div>`}).join('')}
 function p5a202FindDay_(attendanceKey){return attendanceCache&&Array.isArray(attendanceCache.days)?attendanceCache.days.find(d=>String(d.attendanceKey||'')===String(attendanceKey||'')):null}
 function p5a202DateAddOne_(dateKey){const p=String(dateKey||'').split('-').map(Number);if(p.length!==3)return dateKey;const d=new Date(p[0],p[1]-1,p[2]+1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function p5a202DateTimeLocal_(d,value,isOut){const v=String(value||'').trim();let m=v.match(/(\d{4}-\d{2}-\d{2})[ T](\d{2}):(\d{2})/);if(m)return `${m[1]}T${m[2]}:${m[3]}`;const t=p5a2TimeOnly_(v);if(!/^\d{2}:\d{2}$/.test(t))return '';let date=d.date;const expectedStart=p5a2TimeOnly_(d.expectedStart),expectedEnd=p5a2TimeOnly_(d.expectedEnd);if(isOut&&expectedStart&&expectedEnd&&expectedEnd<expectedStart&&t<expectedStart)date=p5a202DateAddOne_(date);return `${date}T${t}`}
@@ -9862,6 +9868,11 @@ try {
       rule: '出勤規則',
       importBatch: '打卡紀錄匯入',
       loading: '載入中',
+      leaveFail: '假單載入失敗',
+      leaveRetry: '重新載入',
+      noticeFail: '通知暫時無法載入',
+      noticeRetry: '重新載入',
+      punchExempt: '免打卡',
       tempPin: '臨時 PIN',
       coveragePending: '打卡來源待確認',
       coverageProof: '打卡來源證明',
@@ -9894,6 +9905,11 @@ try {
       rule: 'Attendance rule',
       importBatch: 'Punch Import Batch',
       loading: 'Loading',
+      leaveFail: 'Could not load leave requests',
+      leaveRetry: 'Reload',
+      noticeFail: 'Could not load notices',
+      noticeRetry: 'Reload',
+      punchExempt: 'No punch required',
       tempPin: 'Temporary PIN',
       coveragePending: 'device coverage pending',
       coverageProof: 'COVERAGE_PROOF',
@@ -9926,6 +9942,11 @@ try {
       rule: 'Quy tắc chấm công',
       importBatch: 'Bản ghi chấm công được nhập',
       loading: 'Đang tải',
+      leaveFail: 'Không tải được đơn nghỉ',
+      leaveRetry: 'Tải lại',
+      noticeFail: 'Không tải được thông báo',
+      noticeRetry: 'Tải lại',
+      punchExempt: 'Miễn chấm công',
       tempPin: 'PIN tạm thời',
       coveragePending: 'nguồn chấm công đang chờ xác nhận',
       coverageProof: 'bằng chứng nguồn chấm công',
@@ -9958,6 +9979,11 @@ try {
       rule: 'กติกาเวลาทำงาน',
       importBatch: 'บันทึกเวลาที่นำเข้า',
       loading: 'กำลังโหลด',
+      leaveFail: 'โหลดใบลาไม่สำเร็จ',
+      leaveRetry: 'โหลดอีกครั้ง',
+      noticeFail: 'โหลดการแจ้งเตือนไม่สำเร็จ',
+      noticeRetry: 'โหลดอีกครั้ง',
+      punchExempt: 'ยกเว้นลงเวลา',
       tempPin: 'PIN ชั่วคราว',
       coveragePending: 'แหล่งข้อมูลลงเวลารอการยืนยัน',
       coverageProof: 'หลักฐานแหล่งข้อมูลลงเวลา',
@@ -10158,6 +10184,17 @@ try {
     return '';
   }
 
+  function glossaryShiftName_(name) {
+    var packs = ['ZH', 'EN', 'VI', 'TH'];
+    var i;
+    for (i = 0; i < packs.length; i++) {
+      var pack = PACK[packs[i]];
+      if (!pack) continue;
+      if (name === pack.officeDay || name === pack.factoryNight) return true;
+    }
+    return false;
+  }
+
   function shiftLabel(day, language) {
     var code = String(language || lang()).toUpperCase();
     if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
@@ -10166,12 +10203,7 @@ try {
     if (named) return named;
     // Slim bootstrap days carry only the zh shiftName. vi/th wait for
     // shiftLabels[lang] or use the glossary, and do not flash the zh name.
-    if (code !== 'ZH') return authoritativeShiftName(day, code) || '';
-    var previous = typeof currentLang === 'string' ? currentLang : 'ZH';
-    if (typeof currentLang !== 'undefined') currentLang = code;
-    var raw = humanize(day && (day.shiftName || day.shiftCode) || '');
-    if (typeof currentLang !== 'undefined') currentLang = previous;
-    return raw;
+    return authoritativeShiftName(day, code) || '';
   }
 
   function recentLabel(day, language) {
@@ -10302,6 +10334,9 @@ try {
       return '';
     }
     var name = String(day.shiftName || '').trim();
+    // Production home (@188) has no shiftLabels. zh still shows the same name
+    // the attendance page shows: OFFICE_DAY and 辦公室固定日班 are 辦公室日班.
+    if (code === 'ZH' && (shiftCode === 'OFFICE_DAY' || name === '辦公室固定日班' || name.toUpperCase() === 'OFFICE_DAY')) return '辦公室日班';
     if (!name) return '';
     if (shiftCode && name.toUpperCase() === shiftCode) return '';
     if (/^[A-Z][A-Z0-9_]{2,}$/.test(name)) return '';
@@ -10344,6 +10379,51 @@ try {
 
   function confirmedTodayRow() {
     return attendanceTodayRow() || confirmedHomeToday(typeof homeData !== 'undefined' ? homeData : null);
+  }
+
+  // #230 puts shiftName plus shiftLabels {zh-TW, vi, th} on cards.today and
+  // todayAttendance. Prefer that labeled row. A dated row with no labels
+  // still falls through to the zh OFFICE_DAY name.
+  function shiftNameRow_() {
+    var home = null;
+    try { if (typeof homeData !== 'undefined') home = homeData; } catch (ignore) {}
+    var cards = home && home.cards;
+    var candidates = [attendanceTodayRow(), home && home.todayAttendance, home && home.today, cards && cards.today];
+    var today = attendanceTodayKey();
+    var i;
+    for (i = 0; i < candidates.length; i++) {
+      var row = candidates[i];
+      if (!row || typeof row !== 'object') continue;
+      var date = String(row.date || '').slice(0, 10);
+      if (date !== today) continue;
+      if (shiftLabelsText_(row.shiftLabels, lang())) return row;
+    }
+    return confirmedTodayRow();
+  }
+
+  // Approval-only accounts have no today row, so the status stays 「—」
+  // unless the payload says the person does not punch.
+  function punchExemptHome_() {
+    var home = typeof homeData !== 'undefined' ? homeData : null;
+    var employee = home && home.employee;
+    var row = home && (home.todayAttendance || home.today || (home.cards && home.cards.today));
+    var values = [
+      employee && employee.punchExempt,
+      employee && employee.attendanceType,
+      employee && employee.workType,
+      row && row.attendanceStatus,
+      row && row.punchExempt,
+      home && home.todayStatus
+    ];
+    var i;
+    for (i = 0; i < values.length; i++) {
+      if (values[i] === true) return true;
+      var text = String(values[i] == null ? '' : values[i]).trim().toUpperCase();
+      if (!text) continue;
+      // #230: punchExempt is 'Y'; attendanceType is 'EXEMPT' or 'EXTERNAL'.
+      if (text === 'Y' || text === 'YES' || text === 'TRUE' || text === '1' || text === 'PUNCH_EXEMPT' || text === 'EXEMPT' || text === 'EXTERNAL' || text === '免打卡' || text.indexOf('免打卡') >= 0) return true;
+    }
+    return false;
   }
 
   function clearStores(localStore, sessionStore) {
@@ -10661,7 +10741,16 @@ try {
           return once().then(function (data) {
             finishAttendance();
             if (action === 'notifications' && data && data.summary && typeof data.summary === 'object') {
-              try { data.summary.__hf9FromList = true; } catch (ignore) {}
+              try {
+                var listedItems = data.items || data.notifications || data.list;
+                var listedEmpty = !listedItems || !listedItems.length;
+                var listedCount = Number(data.summary.generalUnread != null ? data.summary.generalUnread : data.summary.unread || 0);
+                var homeSummary = global.__hf9NotificationSummary;
+                var homeCount = homeSummary ? Number(homeSummary.generalUnread != null ? homeSummary.generalUnread : homeSummary.unread || 0) : 0;
+                // An empty list with a zero summary must not wipe a home total.
+                // The center and the home then still show the same known count.
+                if (!(listedEmpty && listedCount === 0 && homeCount > 0)) data.summary.__hf9FromList = true;
+              } catch (ignore) {}
             }
             return data;
           }, function (err) {
@@ -10927,6 +11016,150 @@ try {
       fhNoticesHtml_.__hf9Round = true;
     }
 
+    // Home uses notificationSummary. The center uses notifications.items.
+    // An empty or failed list must not say 「目前沒有通知」 while the count is known
+    // or still unknown.
+    function noticeKnownCount_() {
+      try {
+        if (typeof p5a1Rc2GeneralUnreadCount_ === 'function') return Number(p5a1Rc2GeneralUnreadCount_() || 0);
+      } catch (ignore) {}
+      return 0;
+    }
+    function noticeListItems_(data) {
+      if (!data || typeof data !== 'object') return [];
+      if (Array.isArray(data.items)) return data.items;
+      if (Array.isArray(data.notifications)) return data.notifications;
+      if (Array.isArray(data.list)) return data.list;
+      return [];
+    }
+    if (typeof renderNotificationCenter_ === 'function' && !renderNotificationCenter_.__hf9List) {
+      var baseNoticeCenter = renderNotificationCenter_;
+      renderNotificationCenter_ = function () {
+        baseNoticeCenter();
+        var list = $('notificationCenterList');
+        if (!list) return;
+        var state = global.__hf9NoticeListState || 'unknown';
+        var empty = typeof p5a1Rc2NotificationT_ === 'function' ? p5a1Rc2NotificationT_('noNotice') : '目前沒有通知';
+        var text = String(list.textContent || '');
+        if (state !== 'ready') {
+          if (state === 'error') {
+            list.innerHTML = '<div class="notification-empty">' + t('noticeFail') + '</div><button type="button" class="secondary" onclick="refreshNotifications_(\'ALL\')">' + t('noticeRetry') + '</button>';
+            return;
+          }
+          if (text.indexOf(empty) >= 0 || !text.trim()) {
+            list.innerHTML = '<div class="notification-empty">' + t('loading') + '</div>';
+          }
+          return;
+        }
+        var count = noticeKnownCount_();
+        if (count > 0 && text.indexOf(empty) >= 0) {
+          list.innerHTML = '<div class="notification-empty">' + t('unread').replace('{n}', String(count)) + '</div>';
+        }
+      };
+      renderNotificationCenter_.__hf9List = true;
+    }
+    if (typeof refreshNotifications_ === 'function' && !refreshNotifications_.__hf9List) {
+      var baseRefreshNotes = refreshNotifications_;
+      refreshNotifications_ = async function (filter) {
+        global.__hf9NoticeListState = 'loading';
+        var data = null;
+        try {
+          data = await baseRefreshNotes(filter);
+        } catch (err) {
+          global.__hf9NoticeListState = 'error';
+          try { renderNotificationCenter_(); } catch (ignore) {}
+          throw err;
+        }
+        var items = noticeListItems_(data);
+        if (data == null) global.__hf9NoticeListState = 'error';
+        else global.__hf9NoticeListState = 'ready';
+        if (data && !Array.isArray(data.items) && items.length) {
+          try { data.items = items; } catch (ignore2) {}
+        }
+        try { renderNotificationCenter_(); } catch (ignore3) {}
+        return data;
+      };
+      refreshNotifications_.__hf9List = true;
+    }
+    if (typeof refreshLeaves === 'function' && !refreshLeaves.__hf9Timeout) {
+      var baseRefreshLeaves = refreshLeaves;
+      function clearLeaveFlights_() {
+        try { if (typeof ABIS_PERF2_INFLIGHT_ === 'object' && ABIS_PERF2_INFLIGHT_) delete ABIS_PERF2_INFLIGHT_.leaves; } catch (ignore) {}
+        // #230: PERF3_Client.html (included by Index.html) owns PERF3_INFLIGHT_.
+        // Keys look like "leaves\\n" + token + "\\n" + seq. perf3ClearInflight_('leaves')
+        // drops them. Production @188 does not have that function yet.
+        var clearedByHelper = false;
+        try {
+          if (typeof perf3ClearInflight_ === 'function') {
+            perf3ClearInflight_('leaves');
+            clearedByHelper = true;
+          }
+        } catch (ignore2) {}
+        if (clearedByHelper) return;
+        var bags = [];
+        try { if (typeof PERF3_INFLIGHT_ === 'object' && PERF3_INFLIGHT_) bags.push(PERF3_INFLIGHT_); } catch (ignore3) {}
+        try { if (global.PERF3_INFLIGHT_ && bags.indexOf(global.PERF3_INFLIGHT_) < 0) bags.push(global.PERF3_INFLIGHT_); } catch (ignore4) {}
+        bags.forEach(function (bag) {
+          Object.keys(bag).forEach(function (key) {
+            var name = String(key);
+            if (name === 'leaves' || name.indexOf('leaves\n') === 0 || name === 'myLeaves' || name.indexOf('myLeaves\n') === 0) delete bag[key];
+          });
+        });
+      }
+      function showLeaveFail_() {
+        clearLeaveFlights_();
+        try { if (typeof clearOperationTimers_ === 'function') clearOperationTimers_(); } catch (ignore) {}
+        try {
+          var op = $('opStatus');
+          if (op) { op.classList.add('hide'); op.innerHTML = ''; }
+        } catch (ignore2) {}
+        var root = $('leaveList');
+        if (root) {
+          root.innerHTML = '<div class="muted">' + t('leaveFail') + '</div><button type="button" class="secondary" onclick="hf9RetryLeaves_()">' + t('leaveRetry') + '</button>';
+        }
+      }
+      function hf9RetryLeaves_() {
+        clearLeaveFlights_();
+        return refreshLeaves();
+      }
+      try { global.hf9RetryLeaves_ = hf9RetryLeaves_; } catch (ignoreRetry) {}
+      function leaveListStillLoading_() {
+        var root = $('leaveList');
+        if (!root) return false;
+        var text = String(root.textContent || '');
+        return text.indexOf('載入中') >= 0 || text.indexOf(t('loading')) >= 0;
+      }
+      refreshLeaves = async function (focusLeaveId) {
+        // A healthy in-flight myLeaves must survive leaving and re-entering.
+        // clearLeaveFlights_ runs only from the timeout/error UI and hf9RetryLeaves_.
+        var ms = Number(global.__hf9LeaveTimeoutMs || 20000);
+        var timed = new Promise(function (resolve, reject) {
+          var timer = setTimeout(function () {
+            var err = new Error('myLeaves timed out');
+            err.code = 'HF9_LEAVE_TIMEOUT';
+            reject(err);
+          }, ms);
+          Promise.resolve(baseRefreshLeaves(focusLeaveId)).then(function (value) {
+            clearTimeout(timer);
+            resolve(value);
+          }, function (err) {
+            clearTimeout(timer);
+            reject(err);
+          });
+        });
+        try {
+          var value = await timed;
+          if (value == null && leaveListStillLoading_()) showLeaveFail_();
+          return value;
+        } catch (err) {
+          showLeaveFail_();
+          if (err && err.code === 'HF9_LEAVE_TIMEOUT') return null;
+          return null;
+        }
+      };
+      refreshLeaves.__hf9Timeout = true;
+    }
+
     // A finished homeBootstrap today row counts. The fast4 login partial and a
     // bare __perf3 flag do not. 尚未打卡 only when that row has no punch.
     function todayAttendanceKnown() {
@@ -10943,7 +11176,7 @@ try {
       if (!home || !home.querySelectorAll) return;
       var loadingAttendance = !!global.__hf9AttendanceLoading && !confirmedTodayRow();
       var todayRow = confirmedTodayRow();
-      var shiftText = loadingAttendance ? t('loading') : (authoritativeShiftName(todayRow) || '—');
+      var shiftText = loadingAttendance ? t('loading') : (authoritativeShiftName(shiftNameRow_()) || '—');
       home.querySelectorAll('.fh-status-row').forEach(function (row) {
         var label = row.querySelector('.fh-status-label');
         var value = row.querySelector('.fh-status-value');
@@ -10954,7 +11187,7 @@ try {
         var shift = /今日班別|Ca hôm nay|กะวันนี้|^Shift$/.test(name);
         var status = /今日狀態|Trạng thái|สถานะวันนี้|^Status$/.test(name);
         if (status && pill && !todayRow) {
-          pill.textContent = loadingAttendance ? t('loading') : '—';
+          pill.textContent = loadingAttendance ? t('loading') : (punchExemptHome_() ? t('punchExempt') : '—');
           return;
         }
         if (shift && value) {
