@@ -10,6 +10,7 @@ const vm = require('node:vm');
 const { test } = require('node:test');
 
 const root = path.resolve(__dirname, '..');
+const css = fs.readFileSync(path.join(root, 'assets/ess-20261118-p1-hf9/abis-ess.css'), 'utf8');
 const bundle = fs.readFileSync(path.join(root, 'assets/ess-20261118-p1-hf9/abis-ess.bundle.js'), 'utf8');
 const sccSource = fs.readFileSync(path.join(root, 'assets/ess-20261118-supervisor-correction-confirm/supervisor-correction-confirm.js'), 'utf8');
 const start = bundle.indexOf('/* HF9_UI_ROUND_START');
@@ -28,12 +29,21 @@ function scc(lang) {
 
 const INTERNAL_NOTE = '當日 3 筆出勤事件（含核准人工調整，如有）；目前以首筆/末筆計算；該日期已有有效 Punch Import Batch 或員工據點設備覆蓋證明；確認排班但整個工作時段無有效打卡';
 
+test('P3: mark-all button can wrap inside a 320px viewport', () => {
+  const rule = css.slice(css.lastIndexOf('@media(max-width:360px)'));
+  assert.match(rule, /\.notification-mark-all/);
+  assert.match(rule, /max-width:100%/);
+  assert.match(rule, /white-space:normal/);
+});
+
 test('P2-A: OFFICE_DAY reads as the SHIFT_RULE master name in zh', () => {
   hf9Context.currentLang = 'ZH';
   assert.equal(ui.humanize('OFFICE_DAY'), '辦公室固定日班');
-  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '');
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '辦公室日班');
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室固定日班' }), '辦公室日班');
   assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }), '辦公室日班');
-  assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室固定日班' }), '');
+  assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室固定日班' }), '辦公室日班');
+  assert.equal(ui.authoritativeShiftName({ shiftName: '工廠日班D1' }), '工廠日班D1');
 });
 
 test('P2-C: Punch Import Batch and other engineering terms are translated in zh/vi/th', () => {
@@ -113,7 +123,18 @@ test('P2-C: several codes, plain zh notes, and fallbacks', () => {
 test('P2-A: home shift uses the attendance name, not the OFFICE_DAY placeholder', () => {
   hf9Context.currentLang = 'ZH';
   assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }), '辦公室日班');
-  assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '');
+  assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '辦公室日班');
+  assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室固定日班' }), '辦公室日班');
+  assert.equal(ui.authoritativeShiftName({
+    shiftCode: 'OFFICE_DAY',
+    shiftName: '辦公室固定日班',
+    shiftLabels: { ZH: '辦公室日班' }
+  }), '辦公室日班');
+  assert.equal(ui.authoritativeShiftName({
+    shiftCode: 'D1',
+    shiftName: '工廠日班D1',
+    shiftLabels: { zh: '自訂日班' }
+  }), '自訂日班');
   assert.equal(ui.authoritativeShiftName({
     shiftCode: 'OFFICE_DAY',
     shiftName: 'OFFICE_DAY',
@@ -264,6 +285,43 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   home.innerHTML = row;
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.fh-status-value')[0].textContent, '尚未打卡');
+  assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '辦公室日班');
+  window.eval('attendanceCache = { days: [{ date: ' + JSON.stringify(key) + ', firstIn: "", lastOut: "", shiftCode: "OFFICE_DAY", shiftName: "辦公室固定日班" }] }');
+  home.innerHTML = row;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '辦公室日班');
+  window.eval('attendanceCache = { days: [{ date: ' + JSON.stringify(key) + ', firstIn: "", lastOut: "", shiftCode: "D1", shiftName: "工廠日班D1" }] }');
+  home.innerHTML = row;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '工廠日班D1');
+  window.eval('attendanceCache = { days: [{ date: ' + JSON.stringify(key) + ', firstIn: "", lastOut: "", shiftCode: "OFFICE_DAY", shiftName: "辦公室固定日班", shiftLabels: { zh: "自訂班" } }] }');
+  home.innerHTML = row;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '自訂班');
+  const labeled = {
+    date: key,
+    shiftCode: 'OFFICE_DAY',
+    shiftName: '辦公室固定日班',
+    shiftLabels: { 'zh-TW': '辦公室日班', vi: 'Ca van phong', th: 'กะออฟฟิศ' }
+  };
+  window.eval('attendanceCache = null; homeData = ' + JSON.stringify({
+    todayAttendance: labeled,
+    cards: { today: labeled }
+  }));
+  home.innerHTML = row;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '辦公室日班');
+  window.setLanguage('VI', false);
+  window.__hf9RefreshHomeClock(window.document.getElementById('home'));
+  const viValues = [...window.document.querySelectorAll('.fh-status-value')].map((node) => node.textContent);
+  assert.ok(viValues.includes('Ca van phong'), viValues.join(' | '));
+  window.setLanguage('ZH', false);
+  window.eval('attendanceCache = null; homeData = ' + JSON.stringify({
+    todayAttendance: { date: key, shiftCode: 'OFFICE_DAY', shiftName: '辦公室固定日班' },
+    cards: { today: { date: key, shiftCode: 'OFFICE_DAY', shiftName: '辦公室固定日班' } }
+  }));
+  home.innerHTML = row;
+  window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.fh-status-value')[1].textContent, '辦公室日班');
   const staleRow = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value">08:12</span></div>' +
     '<div class="fh-status-row"><span class="fh-status-label">今日班別</span><span class="fh-status-value">辦公室日班</span></div>' +
@@ -595,19 +653,119 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   assert.match(emptyNotes, /60/);
 
   if (typeof window.I18N === 'undefined') window.I18N = { ZH: { loading: '載入中...' }, VI: {}, TH: {}, EN: {} };
-  window.__hf9LeaveTimeoutMs = 40;
+  if (typeof window.p4a14t !== 'function') window.p4a14t = () => '';
   window.eval('myLeavesCache = null;');
+  window.__hf9LeaveTimeoutMs = 5000;
   window.google.script.run = {
     withSuccessHandler() {
-      return { withFailureHandler() { return { api() {} }; } };
+      return {
+        withFailureHandler(fail) {
+          return { api(action) { if (action === 'myLeaves') fail(new Error('busy')); } };
+        }
+      };
     }
   };
+  const fastLeave = window.refreshLeaves();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  assert.equal(await fastLeave, null);
+  const fastText = doc.getElementById('leaveList').textContent;
+  assert.match(fastText, /假單載入失敗/);
+  assert.match(fastText, /重新載入/);
+  assert.equal(fastText.includes('載入中'), false);
+
+  window.__hf9LeaveTimeoutMs = 40;
+  window.eval('myLeavesCache = null;');
+  window.PERF3_INFLIGHT_ = {};
+  const clearCalls = [];
+  window.perf3ClearInflight_ = (section) => {
+    clearCalls.push(section);
+    Object.keys(window.PERF3_INFLIGHT_).forEach((flightKey) => {
+      if (flightKey === section || flightKey.indexOf(section + '\n') === 0) delete window.PERF3_INFLIGHT_[flightKey];
+    });
+  };
+  let myLeavesCalls = 0;
+  const rawCall = window.call;
+  function heldLeaveFlight() {
+    const bag = window.PERF3_INFLIGHT_ || {};
+    const flightKey = Object.keys(bag).find((name) => name === 'leaves' || name.indexOf('leaves\n') === 0 || name === 'myLeaves');
+    return flightKey ? bag[flightKey] : null;
+  }
+  window.call = function (action, payload) {
+    if (action === 'myLeaves') {
+      const held = heldLeaveFlight();
+      if (held) return held;
+    }
+    return rawCall.call(window, action, payload);
+  };
+  window.google.script.run = {
+    withSuccessHandler(ok) {
+      return {
+        withFailureHandler() {
+          return {
+            api(action) {
+              if (action !== 'myLeaves') return;
+              myLeavesCalls += 1;
+              if (myLeavesCalls === 1) {
+                window.PERF3_INFLIGHT_['leaves\ntok\n1'] = new Promise(() => {});
+                return;
+              }
+              ok({ ok: true, data: [] });
+            }
+          };
+        }
+      };
+    }
+  };
+  const op = doc.getElementById('opStatus');
+  op.classList.remove('hide');
+  op.textContent = '網路較慢，仍在等待伺服器回應…';
   const leaveResult = window.refreshLeaves();
   await new Promise((resolve) => setTimeout(resolve, 80));
   assert.equal(await leaveResult, null);
   const leaveText = doc.getElementById('leaveList').textContent;
   assert.match(leaveText, /假單載入失敗/);
   assert.match(leaveText, /重新載入/);
+  assert.equal(window.PERF3_INFLIGHT_['leaves\ntok\n1'], undefined);
+  assert.ok(clearCalls.includes('leaves'));
+  assert.equal(op.classList.contains('hide'), true);
+  assert.equal(op.textContent, '');
+  const retryButton = doc.getElementById('leaveList').querySelector('button');
+  const retryClick = retryButton.getAttribute('onclick');
+  assert.ok(retryClick.indexOf("perf3ClearInflight_('leaves')") < retryClick.indexOf('refreshLeaves()'));
+  window.PERF3_INFLIGHT_['leaves\ntok\n1'] = new Promise(() => {});
+  const beforeRetry = myLeavesCalls;
+  const clearsBeforeRetry = clearCalls.length;
+  retryButton.click();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  assert.equal(myLeavesCalls - beforeRetry, 1);
+  assert.ok(clearCalls.length > clearsBeforeRetry);
+  assert.equal(clearCalls[clearsBeforeRetry], 'leaves');
+  delete window.perf3ClearInflight_;
+  if (typeof window.abisPerf2Invalidate_ === 'function') window.abisPerf2Invalidate_('leaves');
+  window.eval('myLeavesCache = null;');
+  window.PERF3_INFLIGHT_['leaves\nold\n1'] = new Promise(() => {});
+  const beforeFallback = myLeavesCalls;
+  const fallback = window.refreshLeaves();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  await fallback;
+  assert.equal(myLeavesCalls - beforeFallback, 1);
+  assert.equal(window.PERF3_INFLIGHT_['leaves\nold\n1'], undefined);
+  window.call = rawCall;
+  if (typeof window.clearOperationTimers_ === 'function') window.clearOperationTimers_();
+
+  window.setLanguage('ZH', false);
+  const detail = window.p5a2AttendanceDetailHtml_({ days: [
+    { date: '2026-11-12', anomalyCode: 'LATE', lateMinutes: 16, exceptions: [{ code: 'LATE' }] },
+    { date: '2026-11-13', anomalyCode: 'LATE_OVER_30', lateMinutes: 31, exceptions: [{ code: 'LATE_OVER_30' }] }
+  ] });
+  assert.doesNotMatch(detail, /LATE/);
+  assert.match(detail, /遲到超過 30 分/);
+  assert.match(detail, /｜遲到/);
+  window.setLanguage('VI', false);
+  assert.match(window.p5a2AttendanceDetailHtml_({ days: [{ date: '2026-11-13', anomalyCode: 'LATE_OVER_30' }] }), /Đi muộn trên 30 phút/);
+  window.setLanguage('TH', false);
+  assert.match(window.p5a2AttendanceDetailHtml_({ days: [{ date: '2026-11-12', anomalyCode: 'LATE' }] }), /｜มาสาย/);
+  window.setLanguage('ZH', false);
 
   const exempt = '<div class="fh-status-row"><span class="fh-status-label">今日狀態</span><span class="fh-status-pill">—</span></div>';
   window.eval('homeData = { employee: { id: "A09701", punchExempt: "Y", attendanceType: "EXEMPT" } }; attendanceCache = null;');

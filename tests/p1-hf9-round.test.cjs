@@ -167,9 +167,11 @@ test('shift and recent labels follow the active language', () => {
   context.currentLang = 'TH';
   assert.equal(ui.shiftLabel(day), 'กะออฟฟิศ');
   context.currentLang = 'ZH';
-  // A raw OFFICE_DAY is not shown as the glossary 辦公室固定日班. The attendance name is.
-  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '');
+  // No shiftLabels: zh maps OFFICE_DAY and the glossary name to 辦公室日班.
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '辦公室日班');
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室固定日班' }), '辦公室日班');
   assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }), '辦公室日班');
+  assert.equal(ui.shiftLabel({ shiftCode: 'D1', shiftName: '工廠日班D1' }), '工廠日班D1');
 });
 
 test('logout clears the session keys the bundle stores', () => {
