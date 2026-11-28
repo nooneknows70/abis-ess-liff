@@ -3207,4 +3207,10 @@ body.inner-view #opStatus{top:64px}
     box-sizing:border-box!important;max-width:100%!important;min-width:0!important;
     padding:6px 8px!important;white-space:normal!important;line-height:1.25!important;
   }
+  body.inner-view .notification-tabs{
+    flex-wrap:wrap!important;overflow:visible!important;row-gap:6px;
+  }
+  body.inner-view .notification-tabs button{
+    padding:6px 8px!important;font-size:12px!important;
+  }
 }

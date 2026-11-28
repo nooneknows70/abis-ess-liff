@@ -29,11 +29,12 @@ function scc(lang) {
 
 const INTERNAL_NOTE = '當日 3 筆出勤事件（含核准人工調整，如有）；目前以首筆/末筆計算；該日期已有有效 Punch Import Batch 或員工據點設備覆蓋證明；確認排班但整個工作時段無有效打卡';
 
-test('P3: mark-all button can wrap inside a 320px viewport', () => {
+test('P3: mark-all button and notification tabs fit a 320px viewport', () => {
   const rule = css.slice(css.lastIndexOf('@media(max-width:360px)'));
   assert.match(rule, /\.notification-mark-all/);
   assert.match(rule, /max-width:100%/);
   assert.match(rule, /white-space:normal/);
+  assert.match(rule, /\.notification-tabs\{[^}]*flex-wrap:wrap/);
 });
 
 test('P2-A: OFFICE_DAY reads as the SHIFT_RULE master name in zh', () => {
@@ -673,6 +674,61 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   assert.match(fastText, /重新載入/);
   assert.equal(fastText.includes('載入中'), false);
 
+  window.__hf9LeaveTimeoutMs = 60000;
+  window.eval('myLeavesCache = null;');
+  window.PERF3_INFLIGHT_ = {};
+  const reenterClears = [];
+  window.perf3ClearInflight_ = (section) => {
+    reenterClears.push(section);
+    Object.keys(window.PERF3_INFLIGHT_).forEach((flightKey) => {
+      if (flightKey === section || flightKey.indexOf(section + '\n') === 0) delete window.PERF3_INFLIGHT_[flightKey];
+    });
+  };
+  let reenterCalls = 0;
+  let finishSlow;
+  const rawCallForReenter = window.call;
+  window.call = function (action, payload) {
+    if (action === 'myLeaves' && window.PERF3_INFLIGHT_) {
+      const heldKey = Object.keys(window.PERF3_INFLIGHT_).find((name) => name === 'leaves' || name.indexOf('leaves\n') === 0);
+      if (heldKey) return window.PERF3_INFLIGHT_[heldKey];
+    }
+    return rawCallForReenter.call(window, action, payload);
+  };
+  window.google.script.run = {
+    withSuccessHandler(ok) {
+      return {
+        withFailureHandler() {
+          return {
+            api(action) {
+              if (action !== 'myLeaves') return;
+              reenterCalls += 1;
+              if (reenterCalls === 1) {
+                window.PERF3_INFLIGHT_['leaves\nslow\n1'] = new Promise(() => {});
+                finishSlow = () => ok({ ok: true, data: [] });
+                return;
+              }
+              ok({ ok: true, data: [] });
+            }
+          };
+        }
+      };
+    }
+  };
+  const slowEntry = window.refreshLeaves();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  const duringSlow = window.refreshLeaves();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  assert.equal(reenterCalls, 1);
+  assert.equal(reenterClears.length, 0);
+  finishSlow();
+  await slowEntry;
+  await duringSlow;
+  if (typeof window.abisPerf2Invalidate_ === 'function') window.abisPerf2Invalidate_('leaves');
+  window.eval('myLeavesCache = null;');
+  delete window.PERF3_INFLIGHT_['leaves\nslow\n1'];
+  window.call = rawCallForReenter;
+  if (typeof window.clearOperationTimers_ === 'function') window.clearOperationTimers_();
+
   window.__hf9LeaveTimeoutMs = 40;
   window.eval('myLeavesCache = null;');
   window.PERF3_INFLIGHT_ = {};
@@ -730,8 +786,7 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   assert.equal(op.classList.contains('hide'), true);
   assert.equal(op.textContent, '');
   const retryButton = doc.getElementById('leaveList').querySelector('button');
-  const retryClick = retryButton.getAttribute('onclick');
-  assert.ok(retryClick.indexOf("perf3ClearInflight_('leaves')") < retryClick.indexOf('refreshLeaves()'));
+  assert.match(retryButton.getAttribute('onclick'), /hf9RetryLeaves_\(\)/);
   window.PERF3_INFLIGHT_['leaves\ntok\n1'] = new Promise(() => {});
   const beforeRetry = myLeavesCalls;
   const clearsBeforeRetry = clearCalls.length;
@@ -745,7 +800,7 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   window.eval('myLeavesCache = null;');
   window.PERF3_INFLIGHT_['leaves\nold\n1'] = new Promise(() => {});
   const beforeFallback = myLeavesCalls;
-  const fallback = window.refreshLeaves();
+  const fallback = window.hf9RetryLeaves_();
   await new Promise((resolve) => setTimeout(resolve, 30));
   await fallback;
   assert.equal(myLeavesCalls - beforeFallback, 1);
@@ -762,10 +817,25 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   assert.match(detail, /遲到超過 30 分/);
   assert.match(detail, /｜遲到/);
   window.setLanguage('VI', false);
-  assert.match(window.p5a2AttendanceDetailHtml_({ days: [{ date: '2026-11-13', anomalyCode: 'LATE_OVER_30' }] }), /Đi muộn trên 30 phút/);
+  const viDetail = window.p5a2AttendanceDetailHtml_({ days: [
+    { date: '2026-11-13', anomalyCode: 'LATE_OVER_30', attendanceStatus: '異常' },
+    { date: '2026-11-14', attendanceStatus: '正常' }
+  ] });
+  assert.match(viDetail, /Đi muộn trên 30 phút/);
+  assert.match(viDetail, /Kết luận hệ thống<\/b>：Bất thường/);
+  assert.match(viDetail, /Kết luận hệ thống<\/b>：Bình thường/);
+  assert.equal(viDetail.includes('系統判定'), false);
   window.setLanguage('TH', false);
-  assert.match(window.p5a2AttendanceDetailHtml_({ days: [{ date: '2026-11-12', anomalyCode: 'LATE' }] }), /｜มาสาย/);
+  const thDetail = window.p5a2AttendanceDetailHtml_({ days: [
+    { date: '2026-11-12', anomalyCode: 'LATE', attendanceStatus: '正常' },
+    { date: '2026-11-13', attendanceStatus: '異常' }
+  ] });
+  assert.match(thDetail, /｜มาสาย/);
+  assert.match(thDetail, /ผลตัดสินของระบบ<\/b>：ปกติ/);
+  assert.match(thDetail, /ผลตัดสินของระบบ<\/b>：ผิดปกติ/);
+  assert.equal(thDetail.includes('系統判定'), false);
   window.setLanguage('ZH', false);
+  assert.match(window.p5a2AttendanceDetailHtml_({ days: [{ date: '2026-11-12', attendanceStatus: '正常', expectedHours: 8, actualHours: 8 }] }), /系統判定<\/b>：正常/);
 
   const exempt = '<div class="fh-status-row"><span class="fh-status-label">今日狀態</span><span class="fh-status-pill">—</span></div>';
   window.eval('homeData = { employee: { id: "A09701", punchExempt: "Y", attendanceType: "EXEMPT" } }; attendanceCache = null;');
