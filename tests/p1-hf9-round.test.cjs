@@ -167,8 +167,9 @@ test('shift and recent labels follow the active language', () => {
   context.currentLang = 'TH';
   assert.equal(ui.shiftLabel(day), 'กะออฟฟิศ');
   context.currentLang = 'ZH';
-  // V154-P2A: matches SHIFT_RULE master name for OFFICE_DAY.
-  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '辦公室固定日班');
+  // A raw OFFICE_DAY is not shown as the glossary 辦公室固定日班. The attendance name is.
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '');
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }), '辦公室日班');
 });
 
 test('logout clears the session keys the bundle stores', () => {

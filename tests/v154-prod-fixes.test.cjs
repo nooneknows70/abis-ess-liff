@@ -31,7 +31,9 @@ const INTERNAL_NOTE = '當日 3 筆出勤事件（含核准人工調整，如有
 test('P2-A: OFFICE_DAY reads as the SHIFT_RULE master name in zh', () => {
   hf9Context.currentLang = 'ZH';
   assert.equal(ui.humanize('OFFICE_DAY'), '辦公室固定日班');
-  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '辦公室固定日班');
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: 'OFFICE_DAY' }), '');
+  assert.equal(ui.shiftLabel({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室日班' }), '辦公室日班');
+  assert.equal(ui.authoritativeShiftName({ shiftCode: 'OFFICE_DAY', shiftName: '辦公室固定日班' }), '');
 });
 
 test('P2-C: Punch Import Batch and other engineering terms are translated in zh/vi/th', () => {
@@ -549,6 +551,52 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   const loadingNotices = window.fhNoticesHtml_(2);
   assert.equal(loadingNotices.includes('目前沒有新通知'), false);
   assert.match(loadingNotices, /載入中|hf9-skel/);
+
+  window.a2t = (key) => ({
+    late: '遲到', normal: '正常', anomaly: '異常', rest: '休', leaveDay: '請假',
+    summary: 'summary', readOnly: 'readOnly', pilot: 'pilot', coverageGap: 'coverageGap'
+  }[key] || key);
+  const lateDay = { date: '2026-11-02', expectedHours: 8, actualHours: 8, firstIn: '08:02', lastOut: '17:30', lateMinutes: 2 };
+  assert.equal(window.p5a2AttendanceStatus_(lateDay).text, '遲到');
+  assert.equal(window.rc2AttCalendarSymbols_(lateDay).some((mark) => mark.glyph === '▲'), true);
+  assert.equal(window.p5a2AttendanceStatus_({ date: '2026-11-03', expectedHours: 8, actualHours: 8, firstIn: '08:00', lastOut: '17:30', lateMinutes: 0 }).text, '正常');
+
+  window.__hf9NoticeListState = 'error';
+  window.__hf9NotificationSummary = { unread: 60, generalUnread: 60, __hf9FromHome: true };
+  window.eval('activeNotificationFilter = "ALL"; activeNotificationData = null; notificationCache = null;');
+  window.renderNotificationCenter_();
+  const failedNotes = doc.getElementById('notificationCenterList').textContent;
+  assert.equal(failedNotes.includes('目前沒有通知'), false);
+  assert.match(failedNotes, /通知暫時無法載入/);
+  window.__hf9NoticeListState = 'ready';
+  window.eval('activeNotificationData = { items: [] }; notificationCache = { items: [], summary: { unread: 60, generalUnread: 60 } };');
+  window.renderNotificationCenter_();
+  const emptyNotes = doc.getElementById('notificationCenterList').textContent;
+  assert.equal(emptyNotes.includes('目前沒有通知'), false);
+  assert.match(emptyNotes, /60/);
+
+  if (typeof window.I18N === 'undefined') window.I18N = { ZH: { loading: '載入中...' }, VI: {}, TH: {}, EN: {} };
+  window.__hf9LeaveTimeoutMs = 40;
+  window.eval('myLeavesCache = null;');
+  window.google.script.run = {
+    withSuccessHandler() {
+      return { withFailureHandler() { return { api() {} }; } };
+    }
+  };
+  const leaveResult = window.refreshLeaves();
+  await new Promise((resolve) => setTimeout(resolve, 80));
+  assert.equal(await leaveResult, null);
+  const leaveText = doc.getElementById('leaveList').textContent;
+  assert.match(leaveText, /假單載入失敗/);
+  assert.match(leaveText, /重新載入/);
+
+  window.eval('homeData = { employee: { id: "A09701", punchExempt: true } }; attendanceCache = null;');
+  const exempt = '<div class="fh-status-row"><span class="fh-status-label">今日狀態</span><span class="fh-status-pill">—</span></div>';
+  home.innerHTML = exempt;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelector('.fh-status-pill').textContent, '免打卡');
+  window.__hf9NotificationSummary = null;
+  window.__hf9NoticeListState = 'unknown';
 
   // P3: one line per affected range. (a2t is inlined by the backend, not the fixture.)
   if (typeof window.a2t !== 'function') window.a2t = (key) => key;
