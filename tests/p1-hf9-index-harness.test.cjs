@@ -144,14 +144,18 @@ test('home summary uses notificationSummary and does not claim there are no noti
   const { dom } = await openHarness((action) => {
     if (action === 'homeBootstrap' || action === 'home') return readyHome();
     return { ok: true, data: {} };
-  });
+  }, { utf8: true });
   await afterLoad(dom);
   const window = dom.window;
-  window.__hf9NotificationSummary = { unread: 2, generalUnread: 1 };
+  window.__hf9NotificationSummary = { unread: 137, generalUnread: 137, __hf9FromHome: true };
   if (typeof window.fhNoticesHtml_ === 'function') {
     const html = window.fhNoticesHtml_(2);
+    assert.match(html, /137/);
     assert.equal(html.includes('目前沒有新通知'), false);
-    assert.match(html, /1/);
+    const capped = Array.from({ length: 100 }, () => ({ unread: true, isActionable: false, title: 'n' }));
+    window.eval('notificationCache = ' + JSON.stringify({ items: capped, summary: { unread: 100, generalUnread: 100 } }));
+    assert.equal(window.p5a1Rc2GeneralUnreadCount_(), 137);
+    assert.doesNotMatch(String(window.p5a1Rc2GeneralUnreadCount_()), /^100$/);
   }
   assert.ok(window.p5a1Rc2GeneralUnreadCount_() >= 1);
   dom.window.close();
@@ -202,6 +206,59 @@ async function cdp(ws, method, params, sessionId) {
   });
 }
 
+function chromeEnv() {
+  const env = Object.assign({}, process.env);
+  // A bus address Chrome cannot parse ("Unknown address type") keeps the
+  // debug port from opening. Drop it and retry the process instead.
+  delete env.DBUS_SESSION_BUS_ADDRESS;
+  return env;
+}
+
+async function launchChrome(bin) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const profile = fs.mkdtempSync(path.join('/tmp', 'hf9-chrome-'));
+    const chrome = spawn(bin, [
+      '--headless=new',
+      '--remote-debugging-port=0',
+      '--user-data-dir=' + profile,
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--disable-gpu',
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
+      'about:blank'
+    ], { stdio: ['ignore', 'pipe', 'pipe'], env: chromeEnv() });
+    let chromeLog = '';
+    try {
+      const debugPort = await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('chrome did not open a debug port: ' + chromeLog.slice(-500))), 20000);
+        function look(buf) {
+          chromeLog += String(buf);
+          const match = chromeLog.match(/DevTools listening on ws:\/\/127\.0\.0\.1:(\d+)\//);
+          if (match) {
+            clearTimeout(timer);
+            resolve(Number(match[1]));
+          }
+        }
+        chrome.stderr.on('data', look);
+        chrome.stdout.on('data', look);
+        chrome.on('exit', (code) => {
+          clearTimeout(timer);
+          reject(new Error('chrome exited ' + code + ': ' + chromeLog.slice(-500)));
+        });
+      });
+      return { chrome, profile, debugPort };
+    } catch (err) {
+      lastError = err;
+      try { chrome.kill('SIGKILL'); } catch (ignore) {}
+      try { fs.rmSync(profile, { recursive: true, force: true }); } catch (ignore) {}
+      if (attempt < 3) await settle(400);
+    }
+  }
+  throw lastError;
+}
+
 async function withChrome(run) {
   const bin = chromeBin();
   if (!bin) {
@@ -211,38 +268,17 @@ async function withChrome(run) {
   const server = serveRoot();
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   const port = server.address().port;
-  const profile = fs.mkdtempSync(path.join('/tmp', 'hf9-chrome-'));
-  const chrome = spawn(bin, [
-    '--headless=new',
-    '--remote-debugging-port=0',
-    '--user-data-dir=' + profile,
-    '--no-first-run',
-    '--no-default-browser-check',
-    '--disable-gpu',
-    '--no-sandbox',
-    '--disable-dev-shm-usage',
-    'about:blank'
-  ], { stdio: ['ignore', 'pipe', 'pipe'] });
-  let debugPort = 0;
-  let chromeLog = '';
+  let launched;
   try {
-    debugPort = await new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('chrome did not open a debug port: ' + chromeLog.slice(-500))), 20000);
-      function look(buf) {
-        chromeLog += String(buf);
-        const match = chromeLog.match(/DevTools listening on ws:\/\/127\.0\.0\.1:(\d+)\//);
-        if (match) {
-          clearTimeout(timer);
-          resolve(Number(match[1]));
-        }
-      }
-      chrome.stderr.on('data', look);
-      chrome.stdout.on('data', look);
-      chrome.on('exit', (code) => {
-        clearTimeout(timer);
-        reject(new Error('chrome exited ' + code + ': ' + chromeLog.slice(-500)));
-      });
-    });
+    launched = await launchChrome(bin);
+  } catch (err) {
+    server.close();
+    throw err;
+  }
+  const chrome = launched.chrome;
+  const profile = launched.profile;
+  const debugPort = launched.debugPort;
+  try {
     const version = await fetch('http://127.0.0.1:' + debugPort + '/json/version').then((res) => res.json());
     const browser = new WebSocket(version.webSocketDebuggerUrl);
     await new Promise((resolve, reject) => {
@@ -528,7 +564,7 @@ for (const outcome of ['ok', 'fail']) {
     assert.equal(window.__hf9AttendanceLoading, true);
     const during = clockRows(window);
     assert.equal(during.length, 2, JSON.stringify(during));
-    assert.deepEqual(during.map((row) => row.skel), [true, true], 'expected loading skeletons ' + JSON.stringify(during));
+    assert.deepEqual(during.map((row) => row.text), ['載入中', '載入中'], 'expected loading text ' + JSON.stringify(during));
     const drawsBefore = state.draws;
     await pending;
     await settle(60);
@@ -567,13 +603,16 @@ test('the clock pass also clears a skeleton when home cannot be redrawn (R7 N1)'
   window.__hf9AttendanceLoading = false;
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.hf9-skel').length, 0);
-  // V154-P2A: today is still unknown (no attendance, home not from homeBootstrap).
+  // Bootstrap __perf3 is not confirmation, so an empty clock stays "—".
   assert.equal(clockRows(window)[0].text, '—');
-  // Once homeBootstrap has delivered today's state, an empty clock is a fact.
-  window.eval('attendanceCache = null; homeData = Object.assign({}, homeData || {}, { __perf3: true })');
+  window.eval('attendanceCache = null; homeData = Object.assign({}, homeData || {}, { __perf3: true, today: { shiftCode: "OFFICE_DAY" } })');
   home.innerHTML = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value"><span class="hf9-skel"></span></span></div>';
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelectorAll('.hf9-skel').length, 0);
+  assert.equal(clockRows(window)[0].text, '—');
+  window.eval('attendanceCache = { days: [{ date: ' + JSON.stringify(todayKey()) + ', firstIn: "", lastOut: "" }] }');
+  home.innerHTML = '<div class="fh-status-row"><span class="fh-status-label">上班時間</span><span class="fh-status-value">—</span></div>';
+  window.__hf9RefreshHomeClock(home);
   assert.equal(clockRows(window)[0].text, '尚未打卡');
   dom.window.close();
 });

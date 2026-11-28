@@ -820,10 +820,10 @@ function rc2ScrollLeave_(leaveId){const id='leave-detail-'+rc2SafeDomId_(leaveId
 async function openLeaveDetail_(encodedLeaveId){const leaveId=decodeURIComponent(String(encodedLeaveId||''));await refreshLeaves(leaveId)}
 
 const FROZEN_HOME_I18N={
-EN:{requestLeave:'Request leave',requestLeaveSub:'Choose a leave type',myLeaves:'My requests',myLeavesSub:'Check status',myAttendance:'My attendance',myAttendanceSub:'Punches and records',inbox:'Waiting for me',inboxSub:'Approvals and tasks',quick:'Shortcuts',today:'Today',tasks:'To do',recent:'Recent records',notices:'Notices',viewAll:'View all',dashboard:'Dashboard',tagline:'Simpler work. Better days.',viaLine:'From LINE',viaWeb:'Web sign-in',todayShift:'Shift',clockIn:'In',clockOut:'Out',todayState:'Status',safe:'A safe day\nis a good start',returned:'Returned',attendanceException:'Exceptions',pendingApproval:'To approve',supplement:'More info',noNotice:'No new notices',noRecent:'No recent records',notificationCenter:'Notifications'},
-ZH:{tagline:'更簡單的工作．更好的每一天',viaLine:'由 LINE 進入',viaWeb:'WEB 登入',dashboard:'總覽',today:'今日狀態',todayShift:'今日班別',clockIn:'上班時間',clockOut:'下班時間',todayState:'今日狀態',normal:'正常',notYet:'尚未到班',waiting:'等待打卡',inProgress:'出勤中',leaveDay:'請假',restDay:'排休',missingIn:'缺上班卡',missingOut:'缺下班卡',late:'遲到',early:'早退',correctionPending:'補正處理中',anomaly:'出勤異常',safe:'平安出勤\n是最好的開始！',tasks:'待處理事項',viewAll:'查看全部',returned:'請假退回',attendanceException:'出勤異常',pendingApproval:'待簽核',supplement:'補件',recent:'近期紀錄',quick:'快捷入口',requestLeave:'我要請假',requestLeaveSub:'申請各類假別',myLeaves:'我的假單',myLeavesSub:'查詢申請進度',myAttendance:'我的出勤',myAttendanceSub:'查看打卡與出勤紀錄',inbox:'待我處理',inboxSub:'審核與待辦事項',notices:'通知摘要',noNotice:'目前沒有新通知',noRecent:'目前沒有近期紀錄',leaveReturnedNotice:'有 {n} 筆假單被退回，請確認內容',attendanceNotice:'有 {n} 筆出勤異常待確認',approvalNotice:'有 {n} 筆待處理事項',justNow:'目前',loading:'載入中',notificationCenter:'通知中心'},
-VI:{tagline:'Công việc đơn giản hơn · Mỗi ngày tốt hơn',viaLine:'Mở từ LINE',viaWeb:'Đăng nhập WEB',dashboard:'Tổng quan',today:'Hôm nay',todayShift:'Ca hôm nay',clockIn:'Giờ vào',clockOut:'Giờ ra',todayState:'Trạng thái',normal:'Bình thường',notYet:'Chưa đến ca',waiting:'Chờ chấm công',inProgress:'Đang làm việc',leaveDay:'Nghỉ phép',restDay:'Ngày nghỉ',missingIn:'Thiếu giờ vào',missingOut:'Thiếu giờ ra',late:'Đi muộn',early:'Về sớm',correctionPending:'Đang xử lý điều chỉnh',anomaly:'Bất thường',safe:'Đi làm an toàn\nKhởi đầu ngày tốt đẹp!',tasks:'Việc cần xử lý',viewAll:'Xem tất cả',returned:'Đơn bị trả',attendanceException:'Bất thường',pendingApproval:'Chờ duyệt',supplement:'Bổ sung',recent:'Gần đây',quick:'Truy cập nhanh',requestLeave:'Xin nghỉ',requestLeaveSub:'Gửi đơn nghỉ',myLeaves:'Đơn của tôi',myLeavesSub:'Xem tiến độ',myAttendance:'Chấm công',myAttendanceSub:'Xem chấm công',inbox:'Chờ tôi xử lý',inboxSub:'Duyệt và xử lý',notices:'Thông báo',noNotice:'Hiện không có thông báo mới',noRecent:'Hiện không có bản ghi gần đây',leaveReturnedNotice:'Có {n} đơn bị trả lại',attendanceNotice:'Có {n} bất thường chấm công cần xác nhận',approvalNotice:'Có {n} việc đang chờ xử lý',justNow:'Hiện tại',loading:'Đang tải',notificationCenter:'Trung tâm thông báo'},
-TH:{tagline:'ทำงานง่ายขึ้น · ทุกวันดีขึ้น',viaLine:'เข้าจาก LINE',viaWeb:'เข้าสู่ระบบ WEB',dashboard:'ภาพรวม',today:'สถานะวันนี้',todayShift:'กะวันนี้',clockIn:'เวลาเข้า',clockOut:'เวลาออก',todayState:'สถานะวันนี้',normal:'ปกติ',notYet:'ยังไม่ถึงเวลาเข้างาน',waiting:'รอลงเวลาเข้างาน',inProgress:'กำลังทำงาน',leaveDay:'ลา',restDay:'วันหยุด',missingIn:'ขาดเวลาเข้า',missingOut:'ขาดเวลาออก',late:'มาสาย',early:'ออกก่อนเวลา',correctionPending:'กำลังดำเนินการแก้ไข',anomaly:'เวลาผิดปกติ',safe:'เข้างานอย่างปลอดภัย\nเริ่มต้นวันที่ดี!',tasks:'งานที่ต้องจัดการ',viewAll:'ดูทั้งหมด',returned:'ใบลาถูกส่งกลับ',attendanceException:'เวลาผิดปกติ',pendingApproval:'รออนุมัติ',supplement:'เอกสารเพิ่ม',recent:'รายการล่าสุด',quick:'ทางลัด',requestLeave:'ขอลา',requestLeaveSub:'ยื่นคำขอลา',myLeaves:'ใบลาของฉัน',myLeavesSub:'ดูความคืบหน้า',myAttendance:'เวลาทำงาน',myAttendanceSub:'ดูบันทึกเวลา',inbox:'รอฉันจัดการ',inboxSub:'อนุมัติและงานค้าง',notices:'สรุปการแจ้งเตือน',noNotice:'ไม่มีการแจ้งเตือนใหม่',noRecent:'ไม่มีรายการล่าสุด',leaveReturnedNotice:'มีใบลาถูกส่งกลับ {n} รายการ',attendanceNotice:'มีข้อมูลเวลาผิดปกติ {n} รายการ',approvalNotice:'มีงานรอดำเนินการ {n} รายการ',justNow:'ขณะนี้',loading:'กำลังโหลด',notificationCenter:'ศูนย์แจ้งเตือน'}
+EN:{requestLeave:'Request leave',requestLeaveSub:'Choose a leave type',myLeaves:'My requests',myLeavesSub:'Check status',myAttendance:'My attendance',myAttendanceSub:'Punches and records',inbox:'Waiting for me',inboxSub:'Approvals and tasks',quick:'Shortcuts',today:'Today',tasks:'To do',recent:'Recent records',notices:'Notices',viewAll:'View all',dashboard:'Dashboard',homeTitle:'Home',tagline:'Simpler work. Better days.',viaLine:'From LINE',viaWeb:'Web sign-in',todayShift:'Shift',clockIn:'In',clockOut:'Out',todayState:'Status',safe:'A safe day\nis a good start',returned:'Returned',attendanceException:'Exceptions',pendingApproval:'To approve',supplement:'More info',noNotice:'No new notices',noRecent:'No recent records',notificationCenter:'Notifications'},
+ZH:{tagline:'更簡單的工作．更好的每一天',viaLine:'由 LINE 進入',viaWeb:'WEB 登入',dashboard:'總覽',homeTitle:'首頁',today:'今日狀態',todayShift:'今日班別',clockIn:'上班時間',clockOut:'下班時間',todayState:'今日狀態',normal:'正常',notYet:'尚未到班',waiting:'等待打卡',inProgress:'出勤中',leaveDay:'請假',restDay:'排休',missingIn:'缺上班卡',missingOut:'缺下班卡',late:'遲到',early:'早退',correctionPending:'補正處理中',anomaly:'出勤異常',safe:'平安出勤\n是最好的開始！',tasks:'待處理事項',viewAll:'查看全部',returned:'請假退回',attendanceException:'出勤異常',pendingApproval:'待簽核',supplement:'補件',recent:'近期紀錄',quick:'快捷入口',requestLeave:'我要請假',requestLeaveSub:'申請各類假別',myLeaves:'我的假單',myLeavesSub:'查詢申請進度',myAttendance:'我的出勤',myAttendanceSub:'查看打卡與出勤紀錄',inbox:'待我處理',inboxSub:'審核與待辦事項',notices:'通知摘要',noNotice:'目前沒有新通知',noRecent:'目前沒有近期紀錄',leaveReturnedNotice:'有 {n} 筆假單被退回，請確認內容',attendanceNotice:'有 {n} 筆出勤異常待確認',approvalNotice:'有 {n} 筆待處理事項',justNow:'目前',loading:'載入中',notificationCenter:'通知中心'},
+VI:{tagline:'Công việc đơn giản hơn · Mỗi ngày tốt hơn',viaLine:'Mở từ LINE',viaWeb:'Đăng nhập WEB',dashboard:'Tổng quan',homeTitle:'Trang chủ',today:'Hôm nay',todayShift:'Ca hôm nay',clockIn:'Giờ vào',clockOut:'Giờ ra',todayState:'Trạng thái',normal:'Bình thường',notYet:'Chưa đến ca',waiting:'Chờ chấm công',inProgress:'Đang làm việc',leaveDay:'Nghỉ phép',restDay:'Ngày nghỉ',missingIn:'Thiếu giờ vào',missingOut:'Thiếu giờ ra',late:'Đi muộn',early:'Về sớm',correctionPending:'Đang xử lý điều chỉnh',anomaly:'Bất thường',safe:'Đi làm an toàn\nKhởi đầu ngày tốt đẹp!',tasks:'Việc cần xử lý',viewAll:'Xem tất cả',returned:'Đơn bị trả',attendanceException:'Bất thường',pendingApproval:'Chờ duyệt',supplement:'Bổ sung',recent:'Gần đây',quick:'Truy cập nhanh',requestLeave:'Xin nghỉ',requestLeaveSub:'Gửi đơn nghỉ',myLeaves:'Đơn của tôi',myLeavesSub:'Xem tiến độ',myAttendance:'Chấm công',myAttendanceSub:'Xem chấm công',inbox:'Chờ tôi xử lý',inboxSub:'Duyệt và xử lý',notices:'Thông báo',noNotice:'Hiện không có thông báo mới',noRecent:'Hiện không có bản ghi gần đây',leaveReturnedNotice:'Có {n} đơn bị trả lại',attendanceNotice:'Có {n} bất thường chấm công cần xác nhận',approvalNotice:'Có {n} việc đang chờ xử lý',justNow:'Hiện tại',loading:'Đang tải',notificationCenter:'Trung tâm thông báo'},
+TH:{tagline:'ทำงานง่ายขึ้น · ทุกวันดีขึ้น',viaLine:'เข้าจาก LINE',viaWeb:'เข้าสู่ระบบ WEB',dashboard:'ภาพรวม',homeTitle:'หน้าแรก',today:'สถานะวันนี้',todayShift:'กะวันนี้',clockIn:'เวลาเข้า',clockOut:'เวลาออก',todayState:'สถานะวันนี้',normal:'ปกติ',notYet:'ยังไม่ถึงเวลาเข้างาน',waiting:'รอลงเวลาเข้างาน',inProgress:'กำลังทำงาน',leaveDay:'ลา',restDay:'วันหยุด',missingIn:'ขาดเวลาเข้า',missingOut:'ขาดเวลาออก',late:'มาสาย',early:'ออกก่อนเวลา',correctionPending:'กำลังดำเนินการแก้ไข',anomaly:'เวลาผิดปกติ',safe:'เข้างานอย่างปลอดภัย\nเริ่มต้นวันที่ดี!',tasks:'งานที่ต้องจัดการ',viewAll:'ดูทั้งหมด',returned:'ใบลาถูกส่งกลับ',attendanceException:'เวลาผิดปกติ',pendingApproval:'รออนุมัติ',supplement:'เอกสารเพิ่ม',recent:'รายการล่าสุด',quick:'ทางลัด',requestLeave:'ขอลา',requestLeaveSub:'ยื่นคำขอลา',myLeaves:'ใบลาของฉัน',myLeavesSub:'ดูความคืบหน้า',myAttendance:'เวลาทำงาน',myAttendanceSub:'ดูบันทึกเวลา',inbox:'รอฉันจัดการ',inboxSub:'อนุมัติและงานค้าง',notices:'สรุปการแจ้งเตือน',noNotice:'ไม่มีการแจ้งเตือนใหม่',noRecent:'ไม่มีรายการล่าสุด',leaveReturnedNotice:'มีใบลาถูกส่งกลับ {n} รายการ',attendanceNotice:'มีข้อมูลเวลาผิดปกติ {n} รายการ',approvalNotice:'มีงานรอดำเนินการ {n} รายการ',justNow:'ขณะนี้',loading:'กำลังโหลด',notificationCenter:'ศูนย์แจ้งเตือน'}
 };
 function fht_(k){return (FROZEN_HOME_I18N[currentLang]&&FROZEN_HOME_I18N[currentLang][k])||FROZEN_HOME_I18N.ZH[k]||k}
 function fhFmt_(s,n){return String(s||'').replace('{n}',String(n))}
@@ -909,7 +909,7 @@ async function openNotification_(encodedNotificationId){const notificationId=dec
 
 function fhUpdateHeader_(e){const name=String(e&&e.name||'ABIS'),avatar=$('headerAvatar'),nameEl=$('headerUserName'),sourceEl=$('entrySourceText');if(avatar)avatar.textContent=(name.trim().charAt(0)||'A').toUpperCase();if(nameEl)nameEl.textContent=name;if(sourceEl)sourceEl.textContent=p5a1IsLineBoot_()?fht_('viaLine'):fht_('viaWeb');document.querySelectorAll('[data-home-i18n]').forEach(el=>{const k=el.getAttribute('data-home-i18n');el.textContent=fht_(k)});const dot=$('homeBellDot');if(dot)dot.classList.toggle('hide',p5a1Rc2GeneralUnreadCount_()===0)}
 function renderHome(){if(!homeData)return;const e=homeData.employee||{},today=fhTodayAttendance_(),taskSummary=taskSummaryCache||null,inbox=taskSummary?Number(taskSummary.approval||0):'—',returned=taskSummary?Number(taskSummary.returnedLeave||0):'—',ex=taskSummary?Number(taskSummary.attendanceException||0):'—',supp=taskSummary?Number(taskSummary.supplement||0):'—';fhUpdateHeader_(e);document.body.classList.add('home-view');const shift=(today&&(today.shiftName||today.shiftCode))||e.shift||'—',inTime=fhTime_(today&&today.firstIn),outTime=fhTime_(today&&today.lastOut),status=today?fhTodayStatus_(today):(homeData.todayStatus||'—');$('leaveNav').classList.toggle('hide',!homeData.canSubmitLeave);$('home').innerHTML=`
-<div class="home-dashboard-title"><strong>${escapeHtml(tr('home'))}</strong><span>${escapeHtml(fht_('dashboard'))}</span></div>
+<div class="home-dashboard-title"><strong>${escapeHtml(fht_('homeTitle'))}</strong></div>
 <div class="fh-card fh-today-clickable" role="button" tabindex="0" onclick="openTodayAttendance_()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTodayAttendance_()}"><div class="fh-card-head"><div class="fh-head-left"><span class="fh-round-icon">${fhIcon_('calendar')}</span><span class="fh-card-title">${escapeHtml(fht_('today'))}</span></div><span class="fh-date">${escapeHtml(fhDate_())}</span></div><div class="fh-today-grid"><div class="fh-status-list"><div class="fh-status-row">${fhIcon_('building')}<span class="fh-status-label">${escapeHtml(fht_('todayShift'))}</span><span class="fh-status-value">${escapeHtml(shift)}</span></div><div class="fh-status-row">${fhIcon_('clock')}<span class="fh-status-label">${escapeHtml(fht_('clockIn'))}</span><span class="fh-status-value">${escapeHtml(inTime)}</span></div><div class="fh-status-row">${fhIcon_('clock')}<span class="fh-status-label">${escapeHtml(fht_('clockOut'))}</span><span class="fh-status-value">${escapeHtml(outTime)}</span></div><div class="fh-status-row">${fhIcon_('check')}<span class="fh-status-label">${escapeHtml(fht_('todayState'))}</span><span class="fh-status-pill">${escapeHtml(status)}</span></div></div><div class="fh-today-art">${escapeHtml(fht_('safe')).replace('\\n','<br>')}</div></div></div>
 <div class="fh-card"><div class="fh-card-head"><div class="fh-head-left"><span class="fh-round-icon">${fhIcon_('list')}</span><span class="fh-card-title">${escapeHtml(fht_('tasks'))}</span></div><button class="fh-head-action" type="button" onclick="refreshInbox('ALL')">${escapeHtml(fht_('viewAll'))} ›</button></div><div class="fh-task-grid"><button class="fh-task red" type="button" onclick="refreshInbox('RETURNED_LEAVE')"><span class="fh-task-label">${escapeHtml(fht_('returned'))}</span><b>${returned}</b></button><button class="fh-task orange" type="button" onclick="refreshInbox('ATTENDANCE_EXCEPTION')"><span class="fh-task-label">${escapeHtml(fht_('attendanceException'))}</span><b>${ex}</b></button><button class="fh-task blue" type="button" onclick="refreshInbox('APPROVAL')"><span class="fh-task-label">${escapeHtml(fht_('pendingApproval'))}</span><b>${inbox}</b></button><button class="fh-task purple" type="button" onclick="refreshInbox('SUPPLEMENT')"><span class="fh-task-label">${escapeHtml(fht_('supplement'))}</span><b>${supp}</b></button></div></div>
 <div class="fh-card"><div class="fh-card-head"><div class="fh-head-left"><span class="fh-round-icon">${fhIcon_('grid')}</span><span class="fh-card-title">${escapeHtml(fht_('quick'))}</span></div></div><div class="fh-quick-grid"><button class="fh-quick green" type="button" onclick="showLeaveForm()"><span class="fh-quick-icon">${fhIcon_('calendar')}</span><span class="fh-quick-copy"><b>${escapeHtml(fht_('requestLeave'))}</b><span>${escapeHtml(fht_('requestLeaveSub'))}</span></span><span class="fh-chevron">›</span></button><button class="fh-quick blue" type="button" onclick="refreshLeaves()"><span class="fh-quick-icon">${fhIcon_('doc')}</span><span class="fh-quick-copy"><b>${escapeHtml(fht_('myLeaves'))}</b><span>${escapeHtml(fht_('myLeavesSub'))}</span></span><span class="fh-chevron">›</span></button><button class="fh-quick teal" type="button" onclick="refreshMyAttendance(this)"><span class="fh-quick-icon">${fhIcon_('clock')}</span><span class="fh-quick-copy"><b>${escapeHtml(fht_('myAttendance'))}</b><span>${escapeHtml(fht_('myAttendanceSub'))}</span></span><span class="fh-chevron">›</span></button><button class="fh-quick orange" type="button" onclick="refreshInbox()"><span class="fh-quick-icon">${fhIcon_('userlist')}</span><span class="fh-quick-copy"><b>${escapeHtml(fht_('inbox'))}</b><span>${escapeHtml(fht_('inboxSub'))}</span></span><span class="fh-chevron">›</span></button></div></div>
@@ -9860,7 +9860,9 @@ try {
       hours: '小時',
       leaveRef: '假單',
       rule: '出勤規則',
-      importBatch: '打卡匯入批次',
+      importBatch: '打卡紀錄匯入',
+      loading: '載入中',
+      tempPin: '臨時 PIN',
       coveragePending: '打卡來源待確認',
       coverageProof: '打卡來源證明',
       overtimeFact: '加班紀錄',
@@ -9891,6 +9893,8 @@ try {
       leaveRef: 'Leave',
       rule: 'Attendance rule',
       importBatch: 'Punch Import Batch',
+      loading: 'Loading',
+      tempPin: 'Temporary PIN',
       coveragePending: 'device coverage pending',
       coverageProof: 'COVERAGE_PROOF',
       overtimeFact: 'OVERTIME_FACT',
@@ -9920,7 +9924,9 @@ try {
       hours: 'giờ',
       leaveRef: 'Đơn nghỉ',
       rule: 'Quy tắc chấm công',
-      importBatch: 'đợt nhập dữ liệu chấm công',
+      importBatch: 'Bản ghi chấm công được nhập',
+      loading: 'Đang tải',
+      tempPin: 'PIN tạm thời',
       coveragePending: 'nguồn chấm công đang chờ xác nhận',
       coverageProof: 'bằng chứng nguồn chấm công',
       overtimeFact: 'dữ liệu tăng ca',
@@ -9950,7 +9956,9 @@ try {
       hours: 'ชั่วโมง',
       leaveRef: 'ใบลา',
       rule: 'กติกาเวลาทำงาน',
-      importBatch: 'ชุดนำเข้าข้อมูลลงเวลา',
+      importBatch: 'บันทึกเวลาที่นำเข้า',
+      loading: 'กำลังโหลด',
+      tempPin: 'PIN ชั่วคราว',
       coveragePending: 'แหล่งข้อมูลลงเวลารอการยืนยัน',
       coverageProof: 'หลักฐานแหล่งข้อมูลลงเวลา',
       overtimeFact: 'ข้อมูลการทำงานล่วงเวลา',
@@ -10017,6 +10025,7 @@ try {
     // V154-P2C: in zh the code sits right after a CJK word ("員工 NO_PUNCH");
     // drop that gap so the result reads 員工未打卡, not 員工 未打卡.
     if (lang() === 'ZH') text = text.replace(/([\u3400-\u9fff])[ \t]+(?=(?:NO_PUNCH|MISSING_OUT|MISSING_IN)\b)/g, '$1');
+    text = text.replace(/\bPUNCH_IMPORT_BATCH\b/g, t('importBatch'));
     text = text.replace(/\bMISSING_OUT\b/g, t('missingOut'));
     text = text.replace(/\bMISSING_IN\b/g, t('missingIn'));
     text = text.replace(/\bNO_PUNCH\b/g, t('noPunch'));
@@ -10031,6 +10040,7 @@ try {
     // V154-P2C: engineering terms that reach approval pages (zh/vi/th only).
     if (lang() !== 'EN') {
       text = text.replace(/Punch Import Batch/gi, t('importBatch'));
+      text = text.replace(/Temporary PIN/gi, t('tempPin'));
       text = text.replace(/device coverage pending/gi, t('coveragePending'));
       text = text.replace(/\bCOVERAGE_PROOF\b/g, t('coverageProof'));
       text = text.replace(/\bOVERTIME_FACT\b/g, t('overtimeFact'));
@@ -10041,6 +10051,9 @@ try {
       return t('leaveRef') + ' · ' + id.slice(-4);
     });
     text = text.replace(/(\d+(?:\.\d+)?)\s*HR\b/g, '$1 ' + t('hours'));
+    text = text.replace(/([\u3400-\u9fff])[ \t]+(未打卡|缺下班卡|缺上班卡)/g, '$1$2');
+    // "員工 未打卡" is a front-end join. The status itself is 無打卡 / 未打卡.
+    text = text.replace(/(^|[^\u3400-\u9fff])員工[ \t]*(未打卡|無打卡)/g, '$1$2');
     text = formatDateText(text);
     if (/^\s*(shadow notice|shadow|影子模式|影子資料)\s*$/i.test(text)) return '';
     return text;
@@ -10119,11 +10132,41 @@ try {
     });
   }
 
+  // Bootstrap sends {zh-TW, vi, th}. myAttendance sends {ZH, VI, TH}.
+  function shiftLabelsText_(labels, code) {
+    if (!labels || typeof labels !== 'object') return '';
+    var upper = String(code || '').toUpperCase();
+    var keys = upper === 'ZH'
+      ? ['zh-TW', 'ZH-TW', 'zh-tw', 'zh_TW', 'ZH_TW', 'ZH', 'zh', 'zh-CN', 'ZH-CN']
+      : upper === 'VI'
+        ? ['vi', 'VI', 'vi-VN', 'VI-VN']
+        : upper === 'TH'
+          ? ['th', 'TH', 'th-TH', 'TH-TH']
+          : upper === 'EN'
+            ? ['en', 'EN', 'en-US', 'EN-US']
+            : [code];
+    var i;
+    for (i = 0; i < keys.length; i++) {
+      if (labels[keys[i]]) return String(labels[keys[i]]);
+    }
+    var name;
+    for (name in labels) {
+      if (!Object.prototype.hasOwnProperty.call(labels, name) || !labels[name]) continue;
+      var folded = String(name).toUpperCase();
+      if (folded === upper || (upper === 'ZH' && folded.indexOf('ZH') === 0)) return String(labels[name]);
+    }
+    return '';
+  }
+
   function shiftLabel(day, language) {
     var code = String(language || lang()).toUpperCase();
     if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
     var labels = day && day.shiftLabels;
-    if (labels && typeof labels === 'object' && labels[code]) return String(labels[code]);
+    var named = shiftLabelsText_(labels, code);
+    if (named) return named;
+    // Slim bootstrap days carry only the zh shiftName. vi/th wait for
+    // shiftLabels[lang] or use the glossary, and do not flash the zh name.
+    if (code !== 'ZH') return authoritativeShiftName(day, code) || '';
     var previous = typeof currentLang === 'string' ? currentLang : 'ZH';
     if (typeof currentLang !== 'undefined') currentLang = code;
     var raw = humanize(day && (day.shiftName || day.shiftCode) || '');
@@ -10170,8 +10213,138 @@ try {
     'abis_p5a1_line_fast_until_v1',
     'abis_p5a1_line_timeout_draft_v1',
     'abis_p4a13_pending_submit_v1',
-    'abis_p4a132_pending_approval_v1'
+    'abis_p4a132_pending_approval_v1',
+    'abis_hf9_task_counts_v1'
   ];
+
+  var TASK_COUNT_FIELDS = ['total', 'returnedLeave', 'attendanceException', 'approval', 'supplement'];
+
+  function finiteCount(value) {
+    var n = Number(value);
+    return isFinite(n) && n >= 0 ? n : null;
+  }
+
+  // Last-known pill counts are safe only for the same employee. Another
+  // employee's numbers, or a partial object, are dropped.
+  function parseStoredCounts(raw, employeeId) {
+    var data;
+    try { data = JSON.parse(String(raw || '')); } catch (ignore) { return null; }
+    if (!data || typeof data !== 'object' || !employeeId) return null;
+    if (String(data.employeeId || '').toUpperCase() !== String(employeeId).toUpperCase()) return null;
+    var counts = { __hf9Stale: true };
+    var i;
+    for (i = 0; i < TASK_COUNT_FIELDS.length; i++) {
+      var n = finiteCount(data.counts && data.counts[TASK_COUNT_FIELDS[i]]);
+      if (n == null) return null;
+      counts[TASK_COUNT_FIELDS[i]] = n;
+    }
+    return counts;
+  }
+
+  function serializeCounts(employeeId, counts) {
+    if (!employeeId) return '';
+    var out = { employeeId: String(employeeId).toUpperCase(), counts: {} };
+    var i;
+    for (i = 0; i < TASK_COUNT_FIELDS.length; i++) {
+      var n = finiteCount(counts && counts[TASK_COUNT_FIELDS[i]]);
+      if (n == null) return '';
+      out.counts[TASK_COUNT_FIELDS[i]] = n;
+    }
+    return JSON.stringify(out);
+  }
+
+  // Empty until the notifications summary is final. Callers show 「—」.
+  // The list is capped at 100, so that length is not a total.
+  function unreadBadgeText(count, ready) {
+    if (!ready) return '';
+    var n = Number(count);
+    if (!isFinite(n) || n <= 0) return '';
+    return String(n);
+  }
+
+  // pendingCounts (fast or legacy) and the older taskSummary share one shape.
+  // Missing fastMode/source/cached is fine: the flag defaults OFF.
+  function normalizePendingCounts(data) {
+    if (!data || typeof data !== 'object') return null;
+    var block = data.pendingCounts || data.taskSummary;
+    if (!block || typeof block !== 'object') return null;
+    var counts = { __hf9Final: true };
+    var i;
+    for (i = 0; i < TASK_COUNT_FIELDS.length; i++) {
+      var n = finiteCount(block[TASK_COUNT_FIELDS[i]]);
+      if (n == null) return null;
+      counts[TASK_COUNT_FIELDS[i]] = n;
+    }
+    var fastMode = typeof data.fastMode === 'boolean' ? data.fastMode : block.fastMode;
+    var source = data.source || block.source || '';
+    var cached = typeof data.cached === 'boolean' ? data.cached : block.cached;
+    if (typeof fastMode === 'boolean') counts.fastMode = fastMode;
+    if (source) counts.source = String(source);
+    if (typeof cached === 'boolean') counts.cached = cached;
+    return counts;
+  }
+
+  // Home 今日班別 uses the attendance payload's name. A raw code such as
+  // OFFICE_DAY is not a name; the glossary placeholder is not shown first.
+  function authoritativeShiftName(day, language) {
+    if (!day) return '';
+    var code = String(language || lang()).toUpperCase();
+    if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
+    var named = shiftLabelsText_(day.shiftLabels, code);
+    if (named) return named;
+    var shiftCode = String(day.shiftCode || '').toUpperCase();
+    var pack = PACK[code] || PACK.ZH;
+    // A slim day often has only the zh shiftName. vi/th must not show that
+    // Chinese name while shiftLabels[lang] is still missing.
+    if (code !== 'ZH') {
+      if (shiftCode === 'OFFICE_DAY') return pack.officeDay || '';
+      if (shiftCode === 'FACTORY_NIGHT_2000_0400') return pack.factoryNight || '';
+      return '';
+    }
+    var name = String(day.shiftName || '').trim();
+    if (!name) return '';
+    if (shiftCode && name.toUpperCase() === shiftCode) return '';
+    if (/^[A-Z][A-Z0-9_]{2,}$/.test(name)) return '';
+    return name;
+  }
+
+  function attendanceTodayKey() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  // myAttendance's today row. A fast4 partial home is not this.
+  function attendanceTodayRow() {
+    var days = null;
+    try {
+      if (typeof attendanceCache !== 'undefined' && attendanceCache && Array.isArray(attendanceCache.days)) days = attendanceCache.days;
+    } catch (ignore) {}
+    if (!days) return null;
+    var key = attendanceTodayKey();
+    var i;
+    for (i = 0; i < days.length; i++) {
+      if (days[i] && String(days[i].date || '').slice(0, 10) === key) return days[i];
+    }
+    return null;
+  }
+
+  // A finished home/homeBootstrap today row is the same daily record as
+  // myAttendance. The login fast4 partial and a bare __perf3 flag are not.
+  function confirmedHomeToday(home) {
+    if (!home || home.__fast4Partial || home.__fast4Resume) return null;
+    var cards = home.cards;
+    var row = home.todayAttendance || home.today || (cards && cards.today) || null;
+    if (!row || typeof row !== 'object') return null;
+    var date = String(row.date || '').slice(0, 10);
+    // Yesterday, or punch times with no date, is not today's row.
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+    if (date !== attendanceTodayKey()) return null;
+    return row;
+  }
+
+  function confirmedTodayRow() {
+    return attendanceTodayRow() || confirmedHomeToday(typeof homeData !== 'undefined' ? homeData : null);
+  }
 
   function clearStores(localStore, sessionStore) {
     SESSION_KEYS.forEach(function (key) {
@@ -10196,10 +10369,33 @@ try {
     expandRange: expandRange,
     shiftLabel: shiftLabel,
     recentLabel: recentLabel,
+    authoritativeShiftName: authoritativeShiftName,
+    attendanceTodayRow: attendanceTodayRow,
+    confirmedHomeToday: confirmedHomeToday,
+    parseStoredCounts: parseStoredCounts,
+    serializeCounts: serializeCounts,
+    normalizePendingCounts: normalizePendingCounts,
+    unreadBadgeText: unreadBadgeText,
     sessionKeys: SESSION_KEYS.slice(),
     clearStores: clearStores,
     localeTag: localeTag,
-    pack: function () { return PACK[lang()]; }
+    pack: function () { return PACK[lang()]; },
+    // Pill counts the home reads. home/homeBootstrap do not carry them.
+    pendingCountContract: {
+      pills: {
+        returnedLeave: '請假退回',
+        attendanceException: '出勤異常',
+        approval: '待簽核',
+        supplement: '補件'
+      },
+      primaryAction: 'pendingCounts',
+      fallbackAction: 'taskSummary',
+      primaryPayload: ['sessionToken'],
+      primaryResponse: 'data.pendingCounts and data.taskSummary.{total,returnedLeave,attendanceException,approval,supplement,fastMode,source,cached}',
+      sources: ['LEGACY', 'FAST', 'FAST_CACHE', 'LEGACY_FALLBACK'],
+      alsoOverwritesFrom: 'taskInbox data.taskSummary when filter is sent as {sessionToken, filter}',
+      notIn: 'home and homeBootstrap (pendingApprovalCount is only the nav badge)'
+    }
   };
   global.HF9_UI_ROUND = api;
 
@@ -10209,6 +10405,58 @@ try {
     if (typeof document === 'undefined' || api.installed) return;
     api.installed = true;
     api.sessionToken = function () { return sessionToken; };
+
+    function currentEmployeeId_() {
+      try {
+        if (typeof homeData !== 'undefined' && homeData && homeData.employee && homeData.employee.id) return String(homeData.employee.id).toUpperCase();
+      } catch (ignore) {}
+      try {
+        if (typeof rememberedEmployeeId !== 'undefined' && rememberedEmployeeId) return String(rememberedEmployeeId).toUpperCase();
+      } catch (ignore2) {}
+      return '';
+    }
+    function applyStaleCounts_() {
+      var id = currentEmployeeId_();
+      if (!id || typeof taskSummaryCache !== 'undefined' && taskSummaryCache && !taskSummaryCache.__hf9Stale) return;
+      var raw = '';
+      try { raw = global.sessionStorage ? global.sessionStorage.getItem('abis_hf9_task_counts_v1') || '' : ''; } catch (ignore) {}
+      var counts = parseStoredCounts(raw, id);
+      if (!counts) return;
+      try { taskSummaryCache = counts; } catch (ignore2) {}
+    }
+    function storeFreshCounts_(summary) {
+      var id = currentEmployeeId_();
+      var raw = serializeCounts(id, summary);
+      if (!raw) return;
+      try { if (global.sessionStorage) global.sessionStorage.setItem('abis_hf9_task_counts_v1', raw); } catch (ignore) {}
+    }
+    function plainCounts_(summary) {
+      return {
+        total: Number(summary && summary.total || 0),
+        returnedLeave: Number(summary && summary.returnedLeave || 0),
+        attendanceException: Number(summary && summary.attendanceException || 0),
+        approval: Number(summary && summary.approval || 0),
+        supplement: Number(summary && summary.supplement || 0)
+      };
+    }
+    function rememberCounts_(summary) {
+      if (!summary) return;
+      global.__hf9CountsSnapshot = plainCounts_(summary);
+      global.__hf9CountsFinal = true;
+    }
+    function paintPendingCounts_(summary) {
+      if (!summary) return;
+      rememberCounts_(summary);
+      try { taskSummaryCache = summary; } catch (ignore) {}
+      try { if (typeof abisPerf2Mark_ === 'function') abisPerf2Mark_('taskSummary'); } catch (ignore2) {}
+      storeFreshCounts_(summary);
+      try { if (typeof setInboxCount === 'function') setInboxCount(Number(summary.total || 0)); } catch (ignore3) {}
+      try {
+        var home = $('home');
+        if (home && !home.classList.contains('hide') && typeof renderHome === 'function') renderHome();
+      } catch (ignore4) {}
+    }
+    api.startTaskSummaryNow = function () {};
 
     if (typeof message === 'function' && !message.__hf9Round) {
       var baseMessage = message;
@@ -10259,15 +10507,152 @@ try {
         if (!summary) return;
         global.__hf9NotificationSummary = {
           unread: Number(summary.unread || 0),
-          generalUnread: Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0)
+          generalUnread: Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0),
+          __hf9FromHome: true
         };
         try {
           if (typeof notificationCache === 'undefined' || !notificationCache) notificationCache = { items: [], summary: global.__hf9NotificationSummary };
           else if (!(notificationCache.summary && notificationCache.summary.__hf9FromList)) notificationCache.summary = Object.assign({}, notificationCache.summary || {}, global.__hf9NotificationSummary);
         } catch (ignore) {}
       }
+      var COUNT_FRESH_MS = 20000;
+      // Session token only. The employee id is unknown until homeBootstrap
+      // returns, and putting it in the key made the second pendingCounts look
+      // like a new request. Stored pill counts are still matched by employee id.
+      function countKey_() {
+        var token = '';
+        try { token = String(typeof sessionToken === 'undefined' ? '' : (sessionToken || '')); } catch (ignore) {}
+        return token;
+      }
+      function rememberFlight_(summary) {
+        global.__hf9CountFlight = { key: countKey_(), summary: summary, at: Date.now() };
+      }
+      function freshCount_() {
+        var hit = global.__hf9CountFlight;
+        if (!hit || !hit.summary || hit.key !== countKey_()) return null;
+        if (Date.now() - Number(hit.at || 0) >= COUNT_FRESH_MS) return null;
+        return hit.summary;
+      }
+      function networkCounts_(action) {
+        return Promise.resolve().then(function () {
+          return baseCall(action, { sessionToken: sessionToken });
+        }).then(function (data) {
+          var summary = normalizePendingCounts(data);
+          if (!summary) {
+            var missing = new Error(action + ' returned no counts');
+            missing.code = 'PENDING_COUNTS_MISSING';
+            throw missing;
+          }
+          return summary;
+        });
+      }
+      function showCountDash_() {
+        if (global.__hf9CountsFinal && global.__hf9CountsSnapshot) return;
+        try { taskSummaryCache = null; } catch (ignore) {}
+        try { if (typeof setInboxCount === 'function') setInboxCount(0); } catch (ignore2) {}
+        try {
+          var home = $('home');
+          if (home && !home.classList.contains('hide') && typeof renderHome === 'function') renderHome();
+        } catch (ignore3) {}
+      }
+      function installCountZeroGuard_() {
+        if (typeof perf3ApplyTaskSummary_ !== 'function' || perf3ApplyTaskSummary_.__hf9Zero) return;
+        var baseApply = perf3ApplyTaskSummary_;
+        var wrappedApply = function (summary) {
+          var counted = summary && ['total', 'returnedLeave', 'attendanceException', 'approval', 'supplement'].every(function (key) {
+            return typeof summary[key] === 'number';
+          });
+          if (!counted) {
+            if (global.__hf9CountsFinal && global.__hf9CountsSnapshot) return baseApply(global.__hf9CountsSnapshot);
+            showCountDash_();
+            return null;
+          }
+          return baseApply(summary);
+        };
+        wrappedApply.__hf9Zero = true;
+        perf3ApplyTaskSummary_ = wrappedApply;
+      }
+      // One count RPC per session token. pendingCounts and taskSummary share it,
+      // including a call that starts before the employee id is known. A result
+      // under 20s old is reused for that same session.
+      function singleFlightCounts_() {
+        installCountZeroGuard_();
+        var fresh = freshCount_();
+        if (fresh) return Promise.resolve(fresh);
+        if (global.__hf9CountsFailed && global.__hf9CountsFailed.key === countKey_() && Date.now() - global.__hf9CountsFailed.at < COUNT_FRESH_MS) {
+          return Promise.reject(global.__hf9CountsFailed.err);
+        }
+        if (global.__hf9CountsInflight && global.__hf9CountsKey === countKey_()) return global.__hf9CountsInflight;
+        applyStaleCounts_();
+        global.__hf9CountsKicked = true;
+        global.__hf9CountsKey = countKey_();
+        var pending = networkCounts_('pendingCounts').then(function (summary) {
+          paintPendingCounts_(summary);
+          rememberFlight_(summary);
+          return summary;
+        }, function () {
+          return networkCounts_('taskSummary').then(function (summary) {
+            paintPendingCounts_(summary);
+            rememberFlight_(summary);
+            return summary;
+          });
+        });
+        global.__hf9CountsInflight = pending.then(function (summary) {
+          global.__hf9CountsInflight = null;
+          return summary;
+        }, function (err) {
+          global.__hf9CountsInflight = null;
+          global.__hf9CountsKicked = false;
+          global.__hf9CountsFailed = { key: countKey_(), err: err, at: Date.now() };
+          showCountDash_();
+          throw err;
+        });
+        return global.__hf9CountsInflight;
+      }
+      function countPayload_(summary) {
+        var plain = plainCounts_(summary);
+        var body = { pendingCounts: plain, taskSummary: plain };
+        if (typeof summary.fastMode === 'boolean') body.fastMode = summary.fastMode;
+        if (summary.source) body.source = summary.source;
+        if (typeof summary.cached === 'boolean') body.cached = summary.cached;
+        return body;
+      }
+      api.startTaskSummaryNow = function () {
+        singleFlightCounts_().catch(function () {});
+      };
       call = function (action, payload) {
-        function once() { return Promise.resolve().then(function () { return baseCall(action, payload); }); }
+        installCountZeroGuard_();
+        if (action === 'homeBootstrap') {
+          payload = Object.assign({}, payload || {}, { deferTaskSummary: true });
+        }
+        if (action === 'pendingCounts' || action === 'taskSummary') {
+          return singleFlightCounts_().then(function (summary) {
+            var body = countPayload_(summary);
+            return action === 'taskSummary' ? { taskSummary: body.taskSummary } : body;
+          }, function () {
+            if (global.__hf9CountsSnapshot) {
+              var kept = plainCounts_(global.__hf9CountsSnapshot);
+              return action === 'taskSummary' ? { taskSummary: kept } : { pendingCounts: kept, taskSummary: kept };
+            }
+            return Promise.reject(new Error(action + ' failed'));
+          });
+        }
+        if (action === 'taskInbox') {
+          return Promise.resolve().then(function () { return baseCall(action, payload); }).then(function (data) {
+            var summary = normalizePendingCounts(data);
+            if (summary) {
+              rememberCounts_(summary);
+              rememberFlight_(summary);
+            }
+            return data || {};
+          });
+        }
+        function once() {
+          return Promise.resolve().then(function () { return baseCall(action, payload); });
+        }
+        if (action === 'home' || action === 'homeBootstrap') {
+          try { singleFlightCounts_().catch(function () {}); } catch (ignore) {}
+        }
         var attendanceCall = action === 'myAttendance';
         if (attendanceCall) global.__hf9AttendanceLoading = true;
         function finishAttendance() { if (!attendanceCall) return; global.__hf9AttendanceLoading = false; refreshHomeAfterAttendance(); }
@@ -10333,6 +10718,16 @@ try {
       global.__hf9CallWrapped = true;
     }
 
+    if (typeof enterApp === 'function' && !enterApp.__hf9Counts) {
+      var baseEnter = enterApp;
+      enterApp = function () {
+        try { if (api.startTaskSummaryNow) api.startTaskSummaryNow(); } catch (ignore) {}
+        return baseEnter.apply(this, arguments);
+      };
+      enterApp.__hf9Counts = true;
+      enterApp.__hf9Round = true;
+    }
+
     if (typeof login === 'function' && !login.__hf9Round) {
       var baseLogin = login;
       login = async function () {
@@ -10357,6 +10752,12 @@ try {
       logout = async function () {
         global.__hf9HoldSession = false;
         global.__hf9RetryExhausted = false;
+        global.__hf9CountsKicked = false;
+        global.__hf9CountsFinal = false;
+        global.__hf9CountsSnapshot = null;
+        global.__hf9CountsInflight = null;
+        global.__hf9CountFlight = null;
+        global.__hf9CountsFailed = null;
         var token = typeof sessionToken !== 'undefined' ? sessionToken : '';
         clearStores(global.localStorage, global.sessionStorage);
         if (typeof sessionToken !== 'undefined') sessionToken = '';
@@ -10454,7 +10855,15 @@ try {
         var jobs = [];
         function push(run) { jobs.push(run().catch(function (err) { try { console.error(err); } catch (ignore) {} })); }
         if (typeof abisPerf2LoadLeaves_ === 'function') push(function () { return abisPerf2LoadLeaves_().then(function () { if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); }); });
-        if (typeof abisPerf2LoadTaskSummary_ === 'function') push(function () { return abisPerf2LoadTaskSummary_().then(function () { if (typeof setInboxCount === 'function') setInboxCount(Number(taskSummaryCache && taskSummaryCache.total || 0)); if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); }); });
+        if (typeof abisPerf2LoadTaskSummary_ === 'function') push(function () {
+          try {
+            if (global.__hf9CountsKicked || (typeof taskSummaryCache !== 'undefined' && taskSummaryCache && !taskSummaryCache.__hf9Stale)) {
+              if (typeof taskSummaryCache !== 'undefined' && taskSummaryCache && !taskSummaryCache.__hf9Stale && typeof setInboxCount === 'function') setInboxCount(Number(taskSummaryCache.total || 0));
+              return Promise.resolve(taskSummaryCache || null);
+            }
+          } catch (ignore) {}
+          return abisPerf2LoadTaskSummary_().then(function () { if (typeof setInboxCount === 'function') setInboxCount(Number(taskSummaryCache && taskSummaryCache.total || 0)); if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); });
+        });
         if (typeof abisPerf2LoadNotifications_ === 'function') push(function () { return abisPerf2LoadNotifications_('ALL').then(function () { if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); }); });
         if (typeof abisPerf2LoadAttendance_ === 'function' && typeof currentMonthKey === 'function') push(function () { return abisPerf2LoadAttendance_(currentMonthKey()).then(function () { if ($('home') && !$('home').classList.contains('hide') && typeof renderHome === 'function') renderHome(); }); });
         if (typeof abisPerf2LoadTaskInbox_ === 'function') push(function () { return abisPerf2LoadTaskInbox_('ALL'); });
@@ -10473,12 +10882,6 @@ try {
     }
     if (typeof p5a1Rc2GeneralUnreadCount_ === 'function' && !p5a1Rc2GeneralUnreadCount_.__hf9Round) {
       p5a1Rc2GeneralUnreadCount_ = function () {
-        var fromItems = 0;
-        var hadItems = false;
-        if (typeof notificationCache !== 'undefined' && notificationCache && Array.isArray(notificationCache.items) && notificationCache.items.length && typeof p5a1Rc2GeneralNotifications_ === 'function') {
-          hadItems = true;
-          fromItems = p5a1Rc2GeneralNotifications_().filter(function (item) { return item && item.unread && !item.isActionable; }).length;
-        }
         var summary = global.__hf9NotificationSummary || (typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary) || null;
         var fromSummary = summary ? Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0) : 0;
         // V154-P3: the loaded list is capped (limit 100), so counting its items
@@ -10487,8 +10890,8 @@ try {
         var listSummary = typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary && notificationCache.summary.__hf9FromList ? notificationCache.summary : null;
         if (listSummary) return Number(listSummary.generalUnread != null ? listSummary.generalUnread : listSummary.unread || 0);
         if (summary) return fromSummary;
-        if (hadItems) return fromItems;
-        return fromSummary || Number(notificationCache && notificationCache.summary && notificationCache.summary.generalUnread || 0);
+        // Never count the capped list (limit 100). That count is what jumped to 100.
+        return fromSummary;
       };
       p5a1Rc2GeneralUnreadCount_.__hf9Round = true;
     }
@@ -10496,13 +10899,19 @@ try {
       var baseNoticeHtml = fhNoticesHtml_;
       fhNoticesHtml_ = function (limit) {
         var html = baseNoticeHtml(limit);
-        var summary = global.__hf9NotificationSummary;
-        var pending = summary ? Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0) : 0;
-        var bell = 0;
-        try { if (typeof p5a1Rc2GeneralUnreadCount_ === 'function') bell = Number(p5a1Rc2GeneralUnreadCount_() || 0); } catch (ignore) {}
-        var unread = bell || pending;
-        if (unread <= 0) return html;
+        var fromList = typeof notificationCache !== 'undefined' && notificationCache && notificationCache.summary && notificationCache.summary.__hf9FromList ? notificationCache.summary : null;
+        var fromHome = global.__hf9NotificationSummary || null;
+        var summary = fromList || fromHome;
+        var ready = !!(summary && (summary.generalUnread != null || summary.unread != null));
         var empty = typeof fht_ === 'function' ? fht_('noNotice') : '目前沒有新通知';
+        if (!ready) {
+          if (String(html).indexOf(empty) >= 0 || String(html).indexOf('fh-empty') >= 0) {
+            return '<div class="fh-notice-row"><span class="hf9-skel" aria-hidden="true"></span><span class="fh-notice-text">' + t('loading') + '</span></div>';
+          }
+          return html;
+        }
+        var badge = unreadBadgeText(Number(summary.generalUnread != null ? summary.generalUnread : summary.unread || 0), true);
+        if (!badge) return html;
         if (String(html).indexOf(empty) < 0 && String(html).indexOf('fh-empty') < 0) return html;
         var items = typeof fhNoticeItems_ === 'function' ? fhNoticeItems_() : [];
         if (items && items.length) {
@@ -10513,48 +10922,58 @@ try {
           }).join('');
         }
         return '<div class="fh-notice-row"><span class="fh-notice-dot"></span><span class="fh-notice-text">' +
-          t('unread').replace('{n}', String(unread)) + '</span></div>';
+          t('unread').replace('{n}', badge) + '</span></div>';
       };
       fhNoticesHtml_.__hf9Round = true;
     }
 
-    // Clock rows on an already drawn home: skeleton while myAttendance is loading,
-    // otherwise the punch time or "no punch yet". Shared by renderHome and the
-    // myAttendance completion path (R7 N1).
-    // V154-P2A: "no punch yet" is a fact only once today's attendance is known
-    // (month attendance loaded, or a home that carries today / came from
-    // homeBootstrap). Before that the row keeps "—" instead of claiming 尚未打卡.
+    // A finished homeBootstrap today row counts. The fast4 login partial and a
+    // bare __perf3 flag do not. 尚未打卡 only when that row has no punch.
     function todayAttendanceKnown() {
-      try { if (typeof attendanceCache !== 'undefined' && attendanceCache) return true; } catch (ignore) {}
-      try {
-        if (typeof homeData !== 'undefined' && homeData && (homeData.__perf3 || homeData.todayAttendance || homeData.today)) return true;
-      } catch (ignore) {}
-      return false;
+      return !!confirmedTodayRow();
+    }
+
+    function clockBlank(text) {
+      var value = String(text || '').replace(/\s+/g, '');
+      return !value || value === '—' || value === '-' || value === '–' || value === t('loading') || value === t('noPunchYet');
     }
 
     function refreshHomeClock(home) {
       home = home || $('home');
       if (!home || !home.querySelectorAll) return;
-      var loadingAttendance = !!global.__hf9AttendanceLoading;
-      var known = todayAttendanceKnown();
+      var loadingAttendance = !!global.__hf9AttendanceLoading && !confirmedTodayRow();
+      var todayRow = confirmedTodayRow();
+      var shiftText = loadingAttendance ? t('loading') : (authoritativeShiftName(todayRow) || '—');
       home.querySelectorAll('.fh-status-row').forEach(function (row) {
         var label = row.querySelector('.fh-status-label');
         var value = row.querySelector('.fh-status-value');
-        if (!value) return;
-        var clock = label && /上班時間|下班時間|Giờ vào|Giờ ra|เวลาเข้า|เวลาออก|^In$|^Out$/.test(String(label.textContent || '').trim());
-        if (!clock) return;
-        if (loadingAttendance && (value.textContent === '—' || value.textContent === '-' || value.textContent === '–')) {
-          value.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
+        var pill = row.querySelector('.fh-status-pill');
+        if (!value && !pill) return;
+        var name = label ? String(label.textContent || '').trim() : '';
+        var clock = /上班時間|下班時間|Giờ vào|Giờ ra|เวลาเข้า|เวลาออก|^In$|^Out$/.test(name);
+        var shift = /今日班別|Ca hôm nay|กะวันนี้|^Shift$/.test(name);
+        var status = /今日狀態|Trạng thái|สถานะวันนี้|^Status$/.test(name);
+        if (status && pill && !todayRow) {
+          pill.textContent = loadingAttendance ? t('loading') : '—';
           return;
         }
-        if (!loadingAttendance && !known) {
-          if (value.querySelector('.hf9-skel') || value.textContent === '' ) value.textContent = '—';
+        if (shift && value) {
+          if (value.textContent !== shiftText) value.textContent = shiftText;
           return;
         }
-        if (!loadingAttendance) {
-          var shown = homeClockText(false, value.querySelector('.hf9-skel') ? '—' : value.textContent);
-          if (value.textContent !== shown) value.textContent = shown;
+        if (!clock || !value) return;
+        var raw = value.querySelector('.hf9-skel') ? '—' : value.textContent;
+        if (!todayRow) {
+          value.textContent = loadingAttendance ? t('loading') : '—';
+          return;
         }
+        if (loadingAttendance) {
+          if (clockBlank(raw)) value.textContent = t('loading');
+          return;
+        }
+        if (raw === t('loading')) raw = '—';
+        var shown = homeClockText(false, value.querySelector('.hf9-skel') ? '—' : raw);
+        if (value.textContent !== shown) value.textContent = shown;
       });
     }
 
@@ -10587,8 +11006,15 @@ try {
         var home = $('home');
         if (!home) return;
         if (typeof taskSummaryCache === 'undefined' || taskSummaryCache == null) {
-          home.querySelectorAll('.fh-task b').forEach(function (node) {
-            if (node.textContent === '—' || node.textContent === '-') node.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
+          if (!global.__hf9CountsFailed) {
+            home.querySelectorAll('.fh-task b').forEach(function (node) {
+              if (node.textContent === '—' || node.textContent === '-') node.innerHTML = '<span class="hf9-skel" aria-hidden="true"></span>';
+            });
+          }
+        } else if (taskSummaryCache.__hf9Stale) {
+          home.querySelectorAll('.fh-task').forEach(function (node) {
+            node.classList.add('hf9-count-stale');
+            node.setAttribute('data-stale', '1');
           });
         }
         refreshHomeClock(home);
@@ -10627,13 +11053,22 @@ try {
       fhTodayAttendance_ = function () {
         var day = baseToday();
         if (!day) return day;
+        var date = String(day.date || '').slice(0, 10);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date !== attendanceTodayKey()) return null;
         var shift = shiftLabel(day);
         var recent = recentLabel(day);
-        if (!shift && !recent) return day;
+        var code = String(typeof currentLang === 'string' ? currentLang : 'ZH').toUpperCase();
+        if (code !== 'EN' && code !== 'VI' && code !== 'TH') code = 'ZH';
+        var missingLang = code !== 'ZH' && !shiftLabelsText_(day.shiftLabels, code);
+        if (!shift && !recent && !missingLang) return day;
         var copy = {};
         var key;
         for (key in day) if (Object.prototype.hasOwnProperty.call(day, key)) copy[key] = day[key];
         if (shift) copy.shiftName = shift;
+        else if (missingLang) {
+          copy.shiftName = '—';
+          copy.shiftCode = '';
+        }
         if (recent && !copy.anomalyDescription) copy.anomalyDescription = recent;
         return copy;
       };
@@ -10759,6 +11194,15 @@ try {
         return result;
       };
       setLanguage.__hf9Round = true;
+    }
+    if (typeof document !== 'undefined' && document.addEventListener && !global.__hf9LangClick) {
+      global.__hf9LangClick = true;
+      document.addEventListener('click', function (event) {
+        var node = event.target;
+        var btn = node && node.closest ? node.closest('#langZH, #langVI, #langTH, [data-lang]') : null;
+        if (!btn) return;
+        setTimeout(function () { try { refreshHeaderLanguage(); } catch (ignore) {} }, 0);
+      }, true);
     }
 
     function paintShell() {
