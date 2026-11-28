@@ -556,10 +556,29 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
     late: '遲到', normal: '正常', anomaly: '異常', rest: '休', leaveDay: '請假',
     summary: 'summary', readOnly: 'readOnly', pilot: 'pilot', coverageGap: 'coverageGap'
   }[key] || key);
-  const lateDay = { date: '2026-11-02', expectedHours: 8, actualHours: 8, firstIn: '08:02', lastOut: '17:30', lateMinutes: 2 };
-  assert.equal(window.p5a2AttendanceStatus_(lateDay).text, '遲到');
+  const graceDays = Array.from({ length: 11 }, (_, index) => ({
+    date: '2026-11-' + String(index + 1).padStart(2, '0'),
+    expectedHours: 8,
+    actualHours: 8,
+    firstIn: '08:05',
+    lastOut: '17:30',
+    lateMinutes: index + 1
+  }));
+  graceDays.forEach((day) => {
+    assert.equal(window.p5a2AttendanceStatus_(day).text, '正常');
+    assert.equal(window.rc2AttCalendarSymbols_(day).some((mark) => mark.glyph === '▲'), false);
+  });
+  const graceLate = window.p5a2CountedLate_(graceDays);
+  assert.equal(graceLate.lateCount, 0);
+  assert.equal(graceLate.lateMinutes, 0);
+  const lateDay = { date: '2026-11-12', expectedHours: 8, actualHours: 8, firstIn: '08:16', lastOut: '17:30', lateMinutes: 16 };
+  assert.equal(window.p5a2AttendanceStatus_(lateDay).text, '異常');
   assert.equal(window.rc2AttCalendarSymbols_(lateDay).some((mark) => mark.glyph === '▲'), true);
-  assert.equal(window.p5a2AttendanceStatus_({ date: '2026-11-03', expectedHours: 8, actualHours: 8, firstIn: '08:00', lastOut: '17:30', lateMinutes: 0 }).text, '正常');
+  const oneLate = window.p5a2CountedLate_(graceDays.concat([lateDay]));
+  assert.equal(oneLate.lateCount, 1);
+  assert.equal(oneLate.lateMinutes, 16);
+  const summaryHtml = window.p5a2AttendanceSummaryHtml_({ summary: { lateCount: 11, lateMinutes: 25 }, days: graceDays });
+  assert.match(summaryHtml, />0 \/ 0</);
 
   window.__hf9NoticeListState = 'error';
   window.__hf9NotificationSummary = { unread: 60, generalUnread: 60, __hf9FromHome: true };
@@ -590,8 +609,12 @@ test('P2-A/P3 in a page: clock rows, duplicate warning, unread count, login head
   assert.match(leaveText, /假單載入失敗/);
   assert.match(leaveText, /重新載入/);
 
-  window.eval('homeData = { employee: { id: "A09701", punchExempt: true } }; attendanceCache = null;');
   const exempt = '<div class="fh-status-row"><span class="fh-status-label">今日狀態</span><span class="fh-status-pill">—</span></div>';
+  window.eval('homeData = { employee: { id: "A09701", punchExempt: "Y", attendanceType: "EXEMPT" } }; attendanceCache = null;');
+  home.innerHTML = exempt;
+  window.__hf9RefreshHomeClock(home);
+  assert.equal(home.querySelector('.fh-status-pill').textContent, '免打卡');
+  window.eval('homeData = { employee: { id: "A09701", punchExempt: "N", attendanceType: "EXTERNAL" } };');
   home.innerHTML = exempt;
   window.__hf9RefreshHomeClock(home);
   assert.equal(home.querySelector('.fh-status-pill').textContent, '免打卡');
